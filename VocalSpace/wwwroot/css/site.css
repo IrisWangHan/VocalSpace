@@ -1,13 +1,25 @@
+:root {
+    --header-height: 50px;
+    --footer-height: 40px;
+    --dark-theme: #000000;
+    --light-theme:#d7d7d7;
+    --fsize-menu: 0.8rem; /* 字體大小為 16px 的 1.5 倍，即 24px */
+}
 html {
-  font-size: 14px;
+  font-size: 16px;
 }
 
-@media (min-width: 768px) {
+
+@media (max-width: 992px) {
   html {
     font-size: 16px;
   }
 }
-
+@media (max-width: 576px) {
+    html {
+        font-size: 18px;
+    }
+}
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
@@ -19,4 +31,12 @@ html {
 
 body {
   margin-bottom: 60px;
+}
+
+.show--element {
+    display: block;
+}
+
+.hide--elment {
+    display: none;
 }

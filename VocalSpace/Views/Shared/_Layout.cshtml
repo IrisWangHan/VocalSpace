@@ -1,49 +1,205 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - VocalSpace</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/VocalSpace.styles.css" asp-append-version="true" />
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"] - VocalSpace</title>
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/VocalSpace.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">VocalSpace</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+	<header class="header">
+		<nav class=" navbar-expand-lg navbar-light  box-shadow ">
+			<div class="container-fluid header__container">
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - VocalSpace - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+				<div class="header__logo">
+					<a href="/Home/Index">
+						<img class="header__logo-img" src="@Url.Content("~/image/logo7.png")" alt="Logo圖片" />
+					</a>
+				</div>
+				<div class="header__menu-btn">
+					<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" class="bi bi-list " viewBox="0 0 16 16" fill="black">
+						<path fill="white" fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
+					</svg>
+				</div>
+
+
+				<div class=" d-lg-inline-flex header__menu">
+					<ul class="navbar-nav ms-auto align-items-center header__menu-list">
+						<li class="nav-item header__menu-item">
+							<a class=" header__menu-item--theme" href="/Home/Index">發現音樂</a>
+						</li>
+						<li><hr class="header__menu-hr" /></li>
+
+						<li class="nav-item header__menu-item">
+							<a class=" header__menu-item--theme" href="/Home/Index">Hot熱門</a>
+						</li>
+						<li><hr class="header__menu-hr" /></li>
+
+						<li class="nav-item header__menu-item">
+							<a class=" header__menu-item--theme" href="/Home/Index">活動演出</a>
+						</li>
+						<li><hr class="header__menu-hr" /></li>
+
+						<li class="nav-item header__menu-item">
+							<a class=" header__menu-item--theme" href="/Home/Index">上傳作品</a>
+						</li>
+						<li><hr class="header__menu-hr" /></li>
+
+						<li class="nav-item header__menu-item">
+							<a class=" header__menu-item--theme" href="/Home/Index">徵選</a>
+						</li>
+						<li><hr class="header__menu-hr" /></li>
+
+						<li class="nav-item header__menu-item">
+							<a class=" header__menu-item--theme" href="/Home/Index">關於我們</a>
+						</li>
+					</ul>
+				</div>
+				<div class=" d-lg-inline-flex header__icon">
+					<ul class="navbar-nav ms-auto flex-grow-1 justify-content-end align-items-center header__icon-list">
+						<li class="header__icon-search">
+							<a href="/Home/Index">
+								<svg class="bi bi-search header__icon-search-svg" xmlns="http://www.w3.org/2000/svg" width="25" height="20" viewBox="0 0 16 16">
+									<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+								</svg>
+							</a>
+						</li>&nbsp;&nbsp;&nbsp;
+						<li class=" header__icon-mode">
+							<div class=" header__icon-mode-div">
+								<svg class="bi bi-circle-fill header__icon-mode-svg" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 16 16">
+									<circle cx="8" cy="8" r="8" />
+								</svg>
+								<span class=" header__icon-mode-span">Dark</span>
+							</div>
+
+						</li>&nbsp;&nbsp;&nbsp;
+						@* <li>
+							<button type="button" class="btn btn-success ">登入 / 註冊</button>
+						</li>&nbsp;&nbsp;&nbsp; *@
+						<li class=" header__icon-profile">
+							<label>
+								<svg class="bi bi-person-circle  header__icon-profile-svg" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 16 16">
+									<path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+									<path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+								</svg>
+								<input type="checkbox" class="header__icon-checkbox hide--elment" />
+							</label>
+						</li>
+					</ul>
+				</div>
+				<div class=" d-lg-inline-flex header__menu-login">
+					<ul class="  header__menu-list-login">
+						<li><a class="header__menu-item-login" href="/Home/Index">個人頁面</a></li>
+						<li><hr class="header__menu-hr" /></li>
+						<li><a class="header__menu-item-login" href="/Home/Index">帳號設定</a></li>
+						<li><hr class="header__menu-hr" /></li>
+						<li><a class="header__menu-item-login" href="/Home/Index">蒐藏庫</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</header>
+	<div class="container">
+		<main role="main" class="pb-3">
+			@RenderBody()
+		</main>
+	</div>
+
+	<footer class="border-top footer text-muted">
+		<div class="container footer__container">
+			<div class="footer__logo">
+				<a href="/Home/Index">
+					<img class="footer__logo-img" src="@Url.Content("~/image/logo5.png")" alt="Logo圖片" />
+				</a>
+			</div>
+			<div class="footer__copyright">
+				&copy; 2025 - VocalSpace - 本網站僅限資策會課程上使用
+			</div>
+			<div class="footer__link">
+				<a href="#">
+					<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-facebook" viewBox="0 0 16 16">
+						<path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951" />
+					</svg>
+				</a>
+				<a href="#">
+					<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-instagram" viewBox="0 0 16 16">
+						<path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.5 2.5 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.5 2.5 0 0 1-.92-.598 2.5 2.5 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233s.008-2.388.046-3.231c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92s.546-.453.92-.598c.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334" />
+					</svg>
+				</a>
+				<a href="#">
+					<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-youtube" viewBox="0 0 16 16">
+						<path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.01 2.01 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.01 2.01 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31 31 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.01 2.01 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A100 100 0 0 1 7.858 2zM6.4 5.209v4.818l4.157-2.408z" />
+					</svg>
+				</a>
+			</div>
+		</div>
+	</footer>
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
+	<script>
+			$(document).ready(function() {
+				 let moveRight = true; // 記錄方向
+
+			$(".header__icon-mode").on("click", function() {
+				if (moveRight) {
+
+
+				$(".header__icon-mode-svg").animate(
+					{ left: "42px" }, 1000);
+
+				$(".header__icon-mode-span").animate(
+					{
+						left: "10px",          // 移動元素
+						opacity: 0             // 改變透明度為 0（完全透明）
+					},800,function() {                 // 動畫結束後的回調函數
+							$(this).css("opacity", 1);  // 動畫結束後，恢復不透明
+					});
+									setTimeout(function() {
+				$(".header__icon-mode-span").text("Light");
+			}, 600);
+
+				} else {
+					$(".header__icon-mode-svg").animate({ left: "0px" }, 1000);
+					$(".header__icon-mode-span").animate(
+						{
+							left: "28px",          // 移動元素
+							opacity: 0             // 改變透明度為 0（完全透明）
+						},
+						800,                        // 1秒（1000毫秒）動畫
+						function() {                 // 動畫結束後的回調函數
+							$(this).css("opacity", 1);  // 動畫結束後，恢復不透明
+						});
+
+					setTimeout(function() {
+						$(".header__icon-mode-span").text("Dark");
+					}, 600);
+				}
+				moveRight = !moveRight; // 切換方向
+			});
+
+
+			$(".header__icon-checkbox").on("click",function(){
+				$(".header__menu-list-login").toggle().toggleClass("show--element");
+
+			})
+			$(".header__menu-btn").on("click",function(){
+				$(".header__menu").toggle().toggleClass("show--element");
+
+			})
+
+
+					// 當使用者點擊其他地方，隱藏選單
+			$(document).on("click", function(e) {
+				// 檢查點擊目標是否在選單或觸發按鈕內
+				if (!$(e.target).closest(".header__menu-list-login, .header__icon-checkbox").length) {
+					$(".header__menu-list-login").hide().removeClass("show--element");
+				}
+			});
+		})
+	</script>
+	@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
