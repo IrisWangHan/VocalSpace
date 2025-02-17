@@ -7,58 +7,7 @@
     Extra extra large	xxl	≥1400px
     本專案NAV選單使用 lg 
 */
-/*:root {
-    --bs-blue: #0d6efd;
-    --bs-indigo: #6610f2;
-    --bs-purple: #6f42c1;
-    --bs-pink: #d63384;
-    --bs-red: #dc3545;
-    --bs-orange: #fd7e14;
-    --bs-yellow: #ffc107;
-    --bs-green: #198754;
-    --bs-teal: #20c997;
-    --bs-cyan: #0dcaf0;
-    --bs-white: #fff;
-    --bs-gray: #6c757d;
-    --bs-gray-dark: #343a40;
-    --bs-gray-100: #f8f9fa;
-    --bs-gray-200: #e9ecef;
-    --bs-gray-300: #dee2e6;
-    --bs-gray-400: #ced4da;
-    --bs-gray-500: #adb5bd;
-    --bs-gray-600: #6c757d;
-    --bs-gray-700: #495057;
-    --bs-gray-800: #343a40;
-    --bs-gray-900: #212529;
-    --bs-primary: #0d6efd;
-    --bs-secondary: #6c757d;
-    --bs-success: #198754;
-    --bs-info: #0dcaf0;
-    --bs-warning: #ffc107;
-    --bs-danger: #dc3545;
-    --bs-light: #f8f9fa;
-    --bs-dark: #212529;
-    --bs-primary-rgb: 13, 110, 253;
-    --bs-secondary-rgb: 108, 117, 125;
-    --bs-success-rgb: 25, 135, 84;
-    --bs-info-rgb: 13, 202, 240;
-    --bs-warning-rgb: 255, 193, 7;
-    --bs-danger-rgb: 220, 53, 69;
-    --bs-light-rgb: 248, 249, 250;
-    --bs-dark-rgb: 33, 37, 41;
-    --bs-white-rgb: 255, 255, 255;
-    --bs-black-rgb: 0, 0, 0;
-    --bs-body-rgb: 33, 37, 41;
-    --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-    --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
-    --bs-body-font-family: var(--bs-font-sans-serif);
-    --bs-body-font-size: 1rem;
-    --bs-body-font-weight: 400;
-    --bs-body-line-height: 1.5;
-    --bs-body-color: #212529;
-    --bs-body-bg: #fff;
-}*/
+
 /*
 
 區塊> 以該區功能命名   >>.haeder  .nav  .main .footer .container
@@ -93,25 +42,37 @@
 */
 
 
+
+/*顯示或隱藏用*/
+.show--element {
+    display: block;
+}
+
+.hide--element {
+    display: none;
+}
+
+
 /*【header】
-  調整背景色: 黑色 
-  設定寬高 */
+  設定寬高 
+  加入下底線*/
 .header {
-    background-color: var(--dark-theme);
     height: var(--header-height);
     width: 100%;
     border-bottom: 1px solid var(--bs-gray-400);
 }
 
 
-/*【container】 
-  設定高100%吃header設定 */
+/*【header__container】 
+  設定高100% 吃header設定 
+  選單內容水平垂直對齊
+*/
 .header__container {
     height: 100%;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    position:relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
 }
 
 /*【header__logo】
@@ -126,62 +87,55 @@
 }
 
 /*【header__logo-img】
-   設定圖片填滿header高度*/
+   設定圖片填滿header高度-5px*/
 .header__logo-img {
-    height:calc(var(--header-height) - 5px);
+    height: calc(var(--header-height) - 5px);
 }
 
 /*【header__menu】
-   設定清單預設寬度 與最小寬度避免文字被壓縮
-   設定清單背景主題色 與header顏色搭配*/
+   設定清單預設寬度 與最小寬度避免文字被壓縮*/
 .header__menu {
     width: 50%;
     height: 100%;
     min-width: 480px;
-    background-color: var(--dark-theme);
 }
+
 .header__menu-list {
     justify-content: space-around;
     width: 100%;
 }
 
 /*【header__menu-item--theme】
-   設定文字主題顏色 與header相反
    取消超連結底線
    設定清單間padding*/
 .header__menu-item--theme {
-    color: var( --light-theme);
     text-decoration: none;
     padding: 10px 10px;
     font-size: var(--fsize-menu);
     font-weight: bold;
 }
 
-/*【header__menu-item--theme:hover】
-    設定文字主題顏色 與header相反
+    /*【header__menu-item--theme:hover】
     顯示底線+圓滑*/
     .header__menu-item--theme:hover {
-        color: var(--light-theme);
         border-radius: 5px;
         border-bottom: 1px solid var(--bs-gray-400);
-       
+        /*border-top: 1px solid var(--bs-gray-400);*/
     }
-.header__menu-item{
-    cursor:pointer;
+
+.header__menu-item {
+    cursor: pointer;
 }
-.header__menu-item:hover {
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%);
-    /*padding-left: 25px;*/ /* 讓 hover 有向右的流動感 */
-    /*padding-right: 25px;*/
-    border-radius: 10px;
-}
+
+    .header__menu-item:hover {
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%);
+        border-radius: 10px;
+        transform: scale(1.1);
+    }
 /*【header__menu-icon】
-   設定內容高度 與header同高
-   設定清單背景主題色 與header顏色搭配*/
+   設定內容高度 與header同高*/
 .header__menu-icon {
     height: 100%;
-    background-color: var(--dark-theme);
-    background-color: #ffd800;
 }
 /*【header__menu-btn】
    調整position絕對定位在最右側
@@ -190,30 +144,40 @@
     position: absolute;
     left: 5px;
     top: 10px;
-    cursor:pointer;
-    display:none;
+    cursor: pointer;
+    display: none;
 }
 
-/*【header__menu-login】user頭像的清單
+/*【header__icon-profile-popup】user頭像的清單
+  【header__icon-search-popup】搜尋icon的清單
    調整外框架寬高
    絕對定位在header下的位置*/
-.header__menu-login {
-    width: 150px;
+.header__icon-profile-popup, .header__icon-search-popup {
     height: auto;
     position: absolute;
     top: calc(var(--header-height) + 5px);
-    right: 20px;
+}
 
+.header__icon-profile-popup {
+    width: 150px;
+    right: 20px;
 }
 
 
-/*【header__menu-list-login】user頭像的清單
+.header__icon-search-popup {
+    width: 250px;
+    right: 150px;
+}
+
+
+/*【header__menu-list-profile】user頭像的清單
+  【header__menu-list-search】搜尋icon的清單
    清除ul的預留空間與符號
    絕對定位在header下的位置
    設定寬度與框架相同並加入圓滑框線
    設定背景色
    設定清單文字置中*/
-.header__menu-list-login {
+.header__menu-list-profile, .header__menu-list-search {
     list-style: none;
     margin: 0;
     padding: 0;
@@ -225,28 +189,90 @@
     display: none;
 }
 
-/*【header__menu-item-login】user頭像的清單
+.header__menu-list-search {
+    padding: 10px 15px;
+    position: relative;
+}
+/*【header__menu-item-profile】user頭像的清單
+  【header__menu-item-search】搜尋icon的清單
    調整個清單上下距離
    拿掉超連結預設底線
    設置文字顏色與粗體*/
-.header__menu-item-login {
+.header__menu-item-profile, .header__menu-item-search {
     display: inline-block;
     padding: 5px 0px;
+    color: #000000;
+    font-weight: bold;
+}
+
+.header__menu-item-search {
+    width: 100%;
+}
+
+/*【header__search-input】查詢清單的input輸入框
+  【header__search-btn】查詢清單的清空button
+*/
+.header__search-input, .header__search-btn {
+    border-radius: 5px;
+}
+
+.header__search-input {
+    padding-left: 5px;
+}
+
+.header__search-title {
+    text-align: left;
+    position: relative;
+}
+
+.header__search-btn {
+    position: absolute;
+    right: 0px;
+}
+
+.header__search-record {
+    color: var(--bs-gray-600);
+    font-size: var(--fsize-menu);
+    margin-top: 15px;
+    background-color: antiquewhite
+}
+
+.header__search-data {
+    width: 88%;
+    min-height: 20px;
+    height: auto;
+    position: absolute;
+    top: 42px;
+    left: 0px;
+    border: 1px solid var(--bs-gray-600);
+    border-radius: 2px;
+    margin-left: 15px;
+    z-index: 2;
+    background-color: #FFFFFF;
+    display: none;
+    color: var(--bs-gray-600);
+    font-size: var(--fsize-menu);
+    text-align: left;
+    padding-left:5px;
+    padding-top:15px;
+}
+
+.header__menu-item-profile {
     text-decoration: none;
-    color: var(--dark-theme);
-    font-weight:bold;
-
-
 }
 
 
-/*【header__menu-item-login:hover 】user頭像的清單
-    文字變小
-    變更滑鼠指標*/
-.header__menu-item-login:hover {
-        transform: scale(0.9);
-        cursor: pointer;
-    }
+/*【header__menu-item-profile:hover 】user頭像的清單
+【header__menu-item-search:hover】搜尋icon的清單
+文字變小
+變更滑鼠指標*/
+.header__menu-item-profile:hover, .header__menu-item-search:hover {
+    cursor: pointer;
+}
+
+.header__menu-item-profile:hover {
+    transform: scale(0.9);
+}
 
 /*【header__menu-hr-login 】user頭像的清單
     取消hr預設的間隔
@@ -257,18 +283,28 @@
 }
 
 
+/*【ICON】*/
+.header__icon {
+    flex: 1;
+    padding-right: 10px;
+}
+/*【ICON - 明暗模式】*/
 .header__icon-mode {
     cursor: pointer;
 }
+
 .header__icon-mode-svg {
     position: absolute;
+    fill: #000000;
 }
+
 .header__icon-mode-span {
     position: absolute;
     right: 10px;
-    font-size: 12px ;
-    color: var(--dark-theme);
+    font-size: 12px;
+    color: #000000;
 }
+
 .header__icon-mode-div {
     position: relative;
     width: 65px;
@@ -277,39 +313,41 @@
     border-radius: 10px;
     display: flex;
     align-items: center;
-    background-color: var(--light-theme);
+    background-color: #d7d7d7;
 }
-
+/*【ICON - 個人設定】*/
 .header__icon-profile {
-    cursor: pointer;
     border-radius: 10px;
 }
+
 .header__icon-profile-svg {
     cursor: pointer;
-    fill: var(--light-theme);
 }
+
 .header__icon-profile:hover {
     transform: scale(0.9);
 }
 
-
+/*【ICON - 搜尋】*/
 .header__icon-search {
     border-radius: 10px;
 }
+
     .header__icon-search:hover {
         transform: scale(0.9);
     }
-    .header__icon-mode:hover {
-        transform: scale(0.9);
-    }
+
 .header__icon-search-svg {
-    fill: var(--light-theme);
+    cursor: pointer;
 }
 
-.header__icon {
-    flex: 1;
-    padding-right: 10px;
+.header__icon-mode:hover {
+    transform: scale(0.9);
 }
+
+
+
+
 
 .btn-primary {
     color: #fff;
@@ -335,121 +373,140 @@ button.accept-policy {
     line-height: inherit;
 }
 
+
+/*【footer】*/
 .footer {
     position: absolute;
     bottom: 0;
     width: 100%;
-    white-space: nowrap;
-    height: var(--footer-height);
-}
-.footer__container{
-    display:flex;
-    height:100%;
-}
-.footer__logo {
-    width: 30%;
-    /*background-color: antiquewhite;*/
-    display: flex;
-    justify-content:flex-start;
-    align-items:center
-}
-.footer__copyright {
-    width: 50%;
-    /*background-color: aqua;*/
     display: flex;
     justify-content: center;
-    align-items: center
+    align-items: center;
+    white-space: nowrap;
+    min-height: var(--footer-height);
 }
-.footer__link {
-    flex: 1;
-    /*background-color: blueviolet;*/
+/*【footer Flex容器】*/
+.footer__container {
     display: flex;
-    justify-content: space-around;
+    height: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+/*【footer logo】*/
+.footer__logo {
+    width: 20%;
+    min-width: 300px;
+    display: flex;
+    justify-content: center;
     align-items: center;
 }
 .footer__logo-img {
     height: 25px;
 }
+/*【footer copyright】*/
+.footer__copyright {
+    flex: 1;
+    min-width: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: var(--fsize-menu);
+}
+/*【footer ig fb yt】*/
+.footer__link {
+    width: 20%;
+    min-width: 150px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+
 
 /* 在小於 768px 的螢幕下顯示底線
    當切換成漢堡條選單時 li清單有底線
     請搭配 navbar-expand-{lg}
 */
 @media (max-width: 992px) {
-    .header__menu-item:hover {
-        background: linear-gradient(90deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%);
-        padding-left: 25px; /* 讓 hover 有向右的流動感 */
-        /*padding-right: 25px;*/
-        /*border-radius: 10px;*/
+    /*【footer】*/
+    .footer__logo {
+        width: 50%;
     }
-    .header__icon-search:hover {
-        transform: translateY(50%) scale(0.8);
+
+    .footer__copyright {
+        width: 60%;
     }
-    .header__icon-search {
-        position: absolute;
-        /*top: calc(var(--header-height) / 2);*/
-        right: 10px;
-        transform: translateY(50%);
+
+    .footer__link {
+        display: none;
     }
+
+    /*【menu】*/
     .header__menu-btn {
         display: block;
-    }
-    .header__logo {
-        position: absolute;
-        left: 50%; /* 讓左邊緣對齊視窗 50% */
-        /*top: calc(var(--header-height) / 2);*/
-        transform: translate(-45%,50%); /* 向左移動自身寬度的一半，使其真正置中 */
-    }
-    .header__icon-mode, .header__icon-profile{
-        display:none;
     }
     .header__menu {
         height: auto;
         width: 100%;
         position: absolute;
         top: var(--header-height);
-        background-color: var(--dark-theme);
+        background-color: var(--bs-gray-700);
         min-width: 100%;
         display: none;
     }
+
     .header__menu-item {
-        border-bottom: 1px solid var(--bs-gray-400);
+        border-bottom: 1px solid var(--bs-gray-500);
         width: 100%;
         height: 50px;
         display: inline-flex;
-       
-        align-items: center;  
-        justify-content: center;  
+        align-items: center;
+        justify-content: center;
+        /*color: var(--bs-gray-800);*/
+    }
+    .header__menu-item:hover {
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%);
+        padding-left: 25px; /* 讓 hover 有向右的流動感 */
+    }
+    .header__menu-item--theme {
+        font-size: var(--fsize-menu-lg);
     }
     .header__menu-item--theme:hover {
         border-radius: 0px;
         border-bottom: none;
-
-    }
-    /*.header__menu-list {
-        border-bottom: 1px solid var(--bs-gray-400);*/ /* 淡灰色底線 */ /* 設定底線顏色與厚度 */
-        /*
-        display: flex;
-        align-items: center;
     }
 
-    .header__menu-item--theme {
-        display: inline-flex;*/ /* 使用 flexbox */
-        /*align-items: center;*/ /* 垂直置中 */
-        /*justify-content: center;*/ /* 水平置中 */
-        /*width: 100%;
-        height: 100%;
-        font-weight: bold;
-    }*/
-    .header__menu-item:hover {
-        color: var(--bs-dark);
+
+    /*【ICON】*/
+    .header__icon-search-popup {
+        right: 20px;
     }
+    .header__icon-search:hover {
+        transform: translateY(50%) scale(0.8);
+    }
+    .header__icon-search {
+        position: absolute;
+        right: 10px;
+        transform: translateY(50%);
+    }
+    .header__icon-mode, .header__icon-profile {
+        display: none;
+    }
+
+    /*【logo】*/
+    .header__logo {
+        position: absolute;
+        left: 50%; /* 讓左邊緣對齊視窗 50% */
+        transform: translate(-45%,50%); /* 向左移動自身寬度的一半，使其真正置中 */
+    }
+
+
 
 }
 
 @media (max-width: 576px) {
-/*    ..header__menu-item--theme{
-        font-size:
+    .header__menu-item--theme {
+        font-size: var(--fsize-menu);
     }
-*/
 }

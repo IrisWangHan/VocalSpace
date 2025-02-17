@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -15,12 +15,12 @@
 
 				<div class="header__logo">
 					<a href="/Home/Index">
-						<img class="header__logo-img" src="@Url.Content("~/image/logo7.png")" alt="Logo圖片" />
+						<img class="header__logo-img" src="@Url.Content("~/image/logo8.png")" alt="Logo圖片" />
 					</a>
 				</div>
 				<div class="header__menu-btn">
-					<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" class="bi bi-list " viewBox="0 0 16 16" fill="black">
-						<path fill="white" fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
+					<svg class="bi bi-list" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 16 16">
+						<path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
 					</svg>
 				</div>
 
@@ -60,11 +60,9 @@
 				<div class=" d-lg-inline-flex header__icon">
 					<ul class="navbar-nav ms-auto flex-grow-1 justify-content-end align-items-center header__icon-list">
 						<li class="header__icon-search">
-							<a href="/Home/Index">
-								<svg class="bi bi-search header__icon-search-svg" xmlns="http://www.w3.org/2000/svg" width="25" height="20" viewBox="0 0 16 16">
-									<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
-								</svg>
-							</a>
+							<svg class="bi bi-search header__icon-search-svg" xmlns="http://www.w3.org/2000/svg" width="25" height="20" viewBox="0 0 16 16">
+								<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+							</svg>
 						</li>&nbsp;&nbsp;&nbsp;
 						<li class=" header__icon-mode">
 							<div class=" header__icon-mode-div">
@@ -84,19 +82,40 @@
 									<path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
 									<path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
 								</svg>
-								<input type="checkbox" class="header__icon-checkbox hide--elment" />
 							</label>
 						</li>
 					</ul>
 				</div>
-				<div class=" d-lg-inline-flex header__menu-login">
-					<ul class="  header__menu-list-login">
-						<li><a class="header__menu-item-login" href="/Home/Index">個人頁面</a></li>
+				<div class=" d-lg-inline-flex header__icon-profile-popup ">
+					<ul class="header__menu-list-profile">
+						<li><a class="header__menu-item-profile" href="/Home/Index">個人頁面</a></li>
 						<li><hr class="header__menu-hr" /></li>
-						<li><a class="header__menu-item-login" href="/Home/Index">帳號設定</a></li>
+						<li><a class="header__menu-item-profile" href="/Home/Index">帳號設定</a></li>
 						<li><hr class="header__menu-hr" /></li>
-						<li><a class="header__menu-item-login" href="/Home/Index">蒐藏庫</a></li>
+						<li><a class="header__menu-item-profile" href="/Home/Index">蒐藏庫</a></li>
 					</ul>
+				</div>
+				<div class=" d-lg-inline-flex header__icon-search-popup">
+					<ul class="header__menu-list-search">
+						<li><input type="text" placeholder="找音樂?" class="header__menu-item-search header__search-input" /></li>
+						<li>
+							<div class="header__search-data">
+								<p class="border-bottom">1</p>
+								<p class="border-bottom">1</p>
+								<p class="border-bottom">1</p>
+							</div>
+						</li>
+						<li><hr /></li>
+						<li>
+							<span class="header__menu-item-search  header__search-title">
+								搜尋紀錄
+								<button type="button" class="btn btn-secondary header__search-btn">清空</button>
+							</span>
+
+						</li>
+						<li><p class="header__menu-item-search  header__search-record">你還沒有搜尋紀錄....</p></li>
+					</ul>
+
 				</div>
 			</div>
 		</nav>
@@ -111,7 +130,7 @@
 		<div class="container footer__container">
 			<div class="footer__logo">
 				<a href="/Home/Index">
-					<img class="footer__logo-img" src="@Url.Content("~/image/logo5.png")" alt="Logo圖片" />
+					<img class="footer__logo-img" src="@Url.Content("~/image/logo8.png")" alt="Logo圖片" />
 				</a>
 			</div>
 			<div class="footer__copyright">
@@ -140,65 +159,106 @@
 	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="~/js/site.js" asp-append-version="true"></script>
 	<script>
-			$(document).ready(function() {
-				 let moveRight = true; // 記錄方向
+		$(document).ready(function() {
 
-			$(".header__icon-mode").on("click", function() {
-				if (moveRight) {
+			  //【當用戶點下mode icon,交換icon及文字 位置的效果】
+			  let moveRight = true; // 記錄方向
+				$(".header__icon-mode").on("click", function() {
+
+					// 1. 切換主題 (利用 data-theme 屬性)
+					var currentTheme = $("html").attr("data-theme");
+					if (currentTheme === "dark") {
+					  $("html").attr("data-theme", "light");
+					} else {
+					  $("html").attr("data-theme", "dark");
+					}
+
+					if (moveRight) {
 
 
-				$(".header__icon-mode-svg").animate(
-					{ left: "42px" }, 1000);
+					$(".header__icon-mode-svg").animate(
+						{ left: "42px" }, 1000);
 
-				$(".header__icon-mode-span").animate(
-					{
-						left: "10px",          // 移動元素
-						opacity: 0             // 改變透明度為 0（完全透明）
-					},800,function() {                 // 動畫結束後的回調函數
-							$(this).css("opacity", 1);  // 動畫結束後，恢復不透明
-					});
-									setTimeout(function() {
-				$(".header__icon-mode-span").text("Light");
-			}, 600);
-
-				} else {
-					$(".header__icon-mode-svg").animate({ left: "0px" }, 1000);
 					$(".header__icon-mode-span").animate(
 						{
-							left: "28px",          // 移動元素
+							left: "10px",          // 移動元素
 							opacity: 0             // 改變透明度為 0（完全透明）
-						},
-						800,                        // 1秒（1000毫秒）動畫
-						function() {                 // 動畫結束後的回調函數
-							$(this).css("opacity", 1);  // 動畫結束後，恢復不透明
+						},800,function() {                 // 動畫結束後的回調函數
+								$(this).css("opacity", 1);  // 動畫結束後，恢復不透明
 						});
+										setTimeout(function() {
+					$(".header__icon-mode-span").text("Light");
+				}, 600);
 
-					setTimeout(function() {
-						$(".header__icon-mode-span").text("Dark");
-					}, 600);
-				}
-				moveRight = !moveRight; // 切換方向
-			});
+					} else {
+						$(".header__icon-mode-svg").animate({ left: "0px" }, 1000);
+						$(".header__icon-mode-span").animate(
+							{
+								left: "28px",          // 移動元素
+								opacity: 0             // 改變透明度為 0（完全透明）
+							},
+							800,                        // 1秒（1000毫秒）動畫
+							function() {                 // 動畫結束後的回調函數
+								$(this).css("opacity", 1);  // 動畫結束後，恢復不透明
+							});
+
+						setTimeout(function() {
+							$(".header__icon-mode-span").text("Dark");
+						}, 600);
+					}
+					moveRight = !moveRight; // 切換方向
+				});
 
 
-			$(".header__icon-checkbox").on("click",function(){
-				$(".header__menu-list-login").toggle().toggleClass("show--element");
+				//【當滑鼠移到icon上,給予使用者時間移到清單】
+				let hideTimeout;
+				 // 取消隱藏計時
+				$(".header__icon-search").mouseenter(function () {
+					clearTimeout(hideTimeout);
+					$(".header__menu-list-search").show();
+				});
+				$(".header__icon-profile").mouseenter(function () {
+					clearTimeout(hideTimeout);
+					$(".header__menu-list-profile").show();
+				});
+				// 如果滑鼠進入選單，取消隱藏計時
+				$(".header__menu-list-search").mouseenter(function () {
+					clearTimeout(hideTimeout);
+				});
+				$(".header__menu-list-profile").mouseenter(function () {
+					clearTimeout(hideTimeout);
+				});
+				// 延遲 300ms 隱藏
+				$(".header__icon-search, .header__menu-list-search").mouseleave(function () {
+					hideTimeout = setTimeout(function () {
+						$(".header__menu-list-search").hide();
+					}, 300);
+				});
+				$(".header__icon-profile, .header__menu-list-profile").mouseleave(function () {
+					hideTimeout = setTimeout(function () {
+						$(".header__menu-list-profile").hide();
+					}, 300);
+				});
 
+
+				//【當使用者點選input搜尋框 則秀出相關查詢字樣】
+			   $(".header__search-input").on("focus", function() {
+					  $(".header__search-data").show();  
+					}).on("blur", function() {
+					  $(".header__search-data").hide(); 
+				});
+
+				//【當用戶點下(search icon/profile icon/漢堡條) 顯示或隱藏選單】
+				$(".header__menu-btn").on("click",function(){
+					$(".header__menu").toggle().toggleClass("show--element");
+				})
+
+				//【當用戶點下 清除-搜尋紀錄按鈕】 只保留預設文字
+				$(".header__search-btn").on("click",function(){
+					console.log("222");
+							$(".header__search-record").text("你還沒有搜尋紀錄....");
+				})
 			})
-			$(".header__menu-btn").on("click",function(){
-				$(".header__menu").toggle().toggleClass("show--element");
-
-			})
-
-
-					// 當使用者點擊其他地方，隱藏選單
-			$(document).on("click", function(e) {
-				// 檢查點擊目標是否在選單或觸發按鈕內
-				if (!$(e.target).closest(".header__menu-list-login, .header__icon-checkbox").length) {
-					$(".header__menu-list-login").hide().removeClass("show--element");
-				}
-			});
-		})
 	</script>
 	@await RenderSectionAsync("Scripts", required: false)
 </body>
