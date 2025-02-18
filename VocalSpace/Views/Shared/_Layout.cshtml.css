@@ -132,6 +132,10 @@
         border-radius: 10px;
         transform: scale(1.1);
     }
+
+.header__menu-item2 {
+    display: none;
+}
 /*【header__menu-icon】
    設定內容高度 與header同高*/
 .header__menu-icon {
@@ -253,8 +257,8 @@
     color: var(--bs-gray-600);
     font-size: var(--fsize-menu);
     text-align: left;
-    padding-left:5px;
-    padding-top:15px;
+    padding-left: 5px;
+    padding-top: 15px;
 }
 
 .header__menu-item-profile {
@@ -262,17 +266,17 @@
 }
 
 
-/*【header__menu-item-profile:hover 】user頭像的清單
+    /*【header__menu-item-profile:hover 】user頭像的清單
 【header__menu-item-search:hover】搜尋icon的清單
 文字變小
 變更滑鼠指標*/
-.header__menu-item-profile:hover, .header__menu-item-search:hover {
-    cursor: pointer;
-}
+    .header__menu-item-profile:hover, .header__menu-item-search:hover {
+        cursor: pointer;
+    }
 
-.header__menu-item-profile:hover {
-    transform: scale(0.9);
-}
+    .header__menu-item-profile:hover {
+        transform: scale(0.9);
+    }
 
 /*【header__menu-hr-login 】user頭像的清單
     取消hr預設的間隔
@@ -346,7 +350,12 @@
 }
 
 
-
+.header__btn-login {
+    width: 95px;
+    /* position: absolute;
+    right: 10px;
+    top: calc(var(--header-height: 50px)/2);*/
+}
 
 
 .btn-primary {
@@ -401,6 +410,7 @@ button.accept-policy {
     justify-content: center;
     align-items: center;
 }
+
 .footer__logo-img {
     height: 25px;
 }
@@ -429,6 +439,8 @@ button.accept-policy {
     請搭配 navbar-expand-{lg}
 */
 @media (max-width: 992px) {
+
+
     /*【footer】*/
     .footer__logo {
         width: 50%;
@@ -446,6 +458,7 @@ button.accept-policy {
     .header__menu-btn {
         display: block;
     }
+
     .header__menu {
         height: auto;
         width: 100%;
@@ -465,44 +478,53 @@ button.accept-policy {
         justify-content: center;
         /*color: var(--bs-gray-800);*/
     }
-    .header__menu-item:hover {
-        background: linear-gradient(90deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%);
-        padding-left: 25px; /* 讓 hover 有向右的流動感 */
-    }
+
+        .header__menu-item:hover {
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%);
+            padding-left: 25px; /* 讓 hover 有向右的流動感 */
+        }
+
     .header__menu-item--theme {
         font-size: var(--fsize-menu-lg);
     }
-    .header__menu-item--theme:hover {
-        border-radius: 0px;
-        border-bottom: none;
-    }
 
+        .header__menu-item--theme:hover {
+            border-radius: 0px;
+            border-bottom: none;
+        }
+
+    .header__menu-item2 {
+        display: inline-flex;
+    }
 
     /*【ICON】*/
     .header__icon-search-popup {
         right: 20px;
     }
+
     .header__icon-search:hover {
         transform: translateY(50%) scale(0.8);
     }
+
     .header__icon-search {
         position: absolute;
         right: 10px;
         transform: translateY(50%);
     }
+
     .header__icon-mode, .header__icon-profile {
         display: none;
     }
 
+    .header__icon > .header__btn-logout, .header__icon > .header__btn-login {
+        display: none;
+    }
     /*【logo】*/
     .header__logo {
         position: absolute;
         left: 50%; /* 讓左邊緣對齊視窗 50% */
-        transform: translate(-45%,50%); /* 向左移動自身寬度的一半，使其真正置中 */
+        transform: translate(-40%); /* 向左移動自身寬度的一半，使其真正置中 */
     }
-
-
-
 }
 
 @media (max-width: 576px) {

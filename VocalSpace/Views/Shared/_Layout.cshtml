@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@{
+	var isLogin = false;
+}
+<!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
 	<meta charset="utf-8" />
@@ -55,6 +58,28 @@
 						<li class="nav-item header__menu-item">
 							<a class=" header__menu-item--theme" href="/Home/Index">關於我們</a>
 						</li>
+						<li class="nav-item header__menu-item header__menu-item2">
+							<a class="header__menu-item--theme" href="/Home/Index">個人頁面</a>
+						</li>
+						<li class="nav-item header__menu-item header__menu-item2">
+							<a class="header__menu-item--theme" href="/Home/Index">帳號設定</a>
+						</li>
+						<li class="nav-item header__menu-item header__menu-item2">
+							<a class="header__menu-item--theme" href="/Home/Index">蒐藏庫</a>
+						</li>
+
+						@if (isLogin)
+						{
+							<li class="nav-item header__menu-item header__menu-item2">
+								<button type="button" class=" header__btn-logout btn-cancel--theme ">登出</button>
+							</li>
+						}
+						else
+						{
+							<li class="nav-item header__menu-item header__menu-item2">
+								<button type="button" class=" header__btn-login btn-submit--theme">登入 / 註冊</button>
+							</li>
+						}
 					</ul>
 				</div>
 				<div class=" d-lg-inline-flex header__icon">
@@ -71,20 +96,30 @@
 								</svg>
 								<span class=" header__icon-mode-span">Dark</span>
 							</div>
-
 						</li>&nbsp;&nbsp;&nbsp;
-						@* <li>
-							<button type="button" class="btn btn-success ">登入 / 註冊</button>
-						</li>&nbsp;&nbsp;&nbsp; *@
-						<li class=" header__icon-profile">
-							<label>
-								<svg class="bi bi-person-circle  header__icon-profile-svg" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 16 16">
-									<path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-									<path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
-								</svg>
-							</label>
-						</li>
+						@if (isLogin)
+						{
+							<li class=" header__icon-profile">
+								<label>
+									<svg class="bi bi-person-circle  header__icon-profile-svg" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 16 16">
+										<path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+										<path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+									</svg>
+								</label>
+							</li>
+						}&nbsp;&nbsp;&nbsp;
 					</ul>
+					@if (isLogin)
+					{
+						<button type="button" class=" header__btn-logout btn-cancel--theme ">登出</button>
+					}
+					else
+					{
+						<button type="button" class=" header__btn-login btn-submit--theme">登入 / 註冊</button>
+					}
+					&nbsp;&nbsp;&nbsp;
+
+
 				</div>
 				<div class=" d-lg-inline-flex header__icon-profile-popup ">
 					<ul class="header__menu-list-profile">
@@ -243,9 +278,9 @@
 
 				//【當使用者點選input搜尋框 則秀出相關查詢字樣】
 			   $(".header__search-input").on("focus", function() {
-					  $(".header__search-data").show();  
+					  $(".header__search-data").show();
 					}).on("blur", function() {
-					  $(".header__search-data").hide(); 
+					  $(".header__search-data").hide();
 				});
 
 				//【當用戶點下(search icon/profile icon/漢堡條) 顯示或隱藏選單】
