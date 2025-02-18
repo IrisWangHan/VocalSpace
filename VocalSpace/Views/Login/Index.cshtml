@@ -1,0 +1,44 @@
+﻿@{}
+
+<div class="container">
+	<div class="left-panel">
+		<!-- 左邊區塊可以放圖片，這裡可以放廣告 -->
+		<div id="google_image_div">
+			@* <img src="/image/login/login_advertise.jpg" alt="廣告" class="advertisement-image" /> *@
+			<img src="/image/login/login_advertise.jpg" border="0" width="100%" height="560" alt="" class="img_ad">
+		</div>
+		
+		
+	</div>
+	<div class="right-panel">
+		<h3>歡迎使用 Vocal Space</h3>
+		<form asp-action="Login" method="post">
+			<div class="form-group">
+				<label for="Username">帳號 / 電子信箱</label>
+				<input type="text" id="Username" name="Username" class="form-control" required />
+			</div>
+			<div class="form-group">
+				<label for="Password">密碼</label>
+				<input type="password" id="Password" name="Password" class="form-control" required />
+			</div>
+			<div class="form-group form-check">
+				<input type="checkbox" class="form-check-input" name="remember_me" id="remember_me" checked="">
+				<label class="form-check-label">保持登入狀態</label>
+				<a href="#" class="form-forget">忘記密碼</a>
+			</div>
+			<button type="submit" class="btn btn-primary">登入</button>
+			<a href="/accounts/login/facebook/?next=/" class="btn btn-fb btn-block btn-lg" data-ga-on="click" data-ga-event-category="login" data-ga-event-type="SNS login" no-data-pjax="">
+				<span class="icon-fb mr-2"></span>使用 Facebook 登入
+			</a>
+			<a href="/accounts/login/facebook/?next=/" class="btn btn-google btn-block btn-lg" data-ga-on="click" data-ga-event-category="login" data-ga-event-type="SNS login" no-data-pjax="">
+				<span class="icon-google mr-2"></span>使用 google 登入
+			</a>
+		</form>
+		<a href="#" class="btn btn-link btn-lg btn-block mt-3"> 
+			<span class="text-red">立即註冊</span>
+		</a>
+	</div>
+</div>
+
+
+

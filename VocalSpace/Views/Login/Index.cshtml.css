@@ -1,0 +1,23 @@
+﻿h1 {
+    color: red;
+}
+
+.container {
+    display: flex;
+}
+
+.left-panel {
+    width: 50%; /* 左邊區塊寬度 */
+    padding: 20px;
+    text-align: center;
+}
+
+.right-panel {
+    width: 50%; /* 右邊區塊寬度 */
+    padding: 20px;
+}
+
+.advertisement-image {
+    width: 100%; /* 圖片自適應區塊寬度 */
+    height: auto;
+}
