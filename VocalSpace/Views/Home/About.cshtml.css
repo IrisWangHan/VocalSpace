@@ -8,43 +8,54 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     background-image: url('background.jpg');
     z-index: -1;
 }
 
-/* 內容排版 */
-/*main con*/
-
-/*.content {
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden; 
-}*/
-
 .section {
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     display: flex;
-    justify-content: center;
-    align-items: center;
     position: relative;
 }
-
+/*大標題 LOGO置中*/
 .section1 {
-    flex-direction: column; /* 讓元素上下排列 */
+    flex-direction: column;
+    text-align: end;
+    justify-content: center;
+    align-items: center;
 }
 
-.loogo {
-    width: 15000px; /* 設定圖片的寬度 */
-    height: 111111px; /* 高度自動調整，保持圖片的比例 */
-    margin-bottom: 20px; /* 設定圖片與標題之間的距離 */
-    display: none; /* 讓圖片顯示為區塊元素，這樣可以控制垂直對齊 */
+/*section2 圖靠左 文字靠右*/
+.section2 {
+    text-align: end;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.section3 {
+    text-align: left;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.section4 {
+    text-align: end;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .empty-space {
     height: 100px; /* 增加空白區域的高度 */
+}
+
+
+.logo {
+    width: 80%;
+    height: auto;
+    margin-bottom: 20px;
 }
 
 .title {
