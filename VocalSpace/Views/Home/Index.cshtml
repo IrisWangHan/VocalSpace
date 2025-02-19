@@ -1,8 +1,79 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+	ViewData["Title"] = "Home Page";
 }
+@* <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/96/three.min.js" ></script> *@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script src="/js/three.js"></script>
+<section class="banner ">
+	<canvas id="banner_earth" style=""></canvas>
+	<div id="banner_text">
+		<h1 class="typing"> </h1>
+		<h2 class="typing2"> </h2><br />
+
+		<div class="introduce">
+			<span>想要聽音樂的好朋友 直接前往[發現音樂]</span><br />
+			<span>想要分享你的好聲音 直接前往[上傳作品]</span><br />
+			<span>想要參加聲音選秀 直接前往[發徵選]</span><br />
+		</div>
+		<button class="btn  banner_btn">
+			<span>踏上屬於你的音樂之旅</span>
+		</button>
+	</div>
+</section>
+
+<script>
+	$(function () {
+	  const text1 = "Welcome To VocalSpace";
+	  const text2 = "Enjoy your journey!";
+	  const speed = 70; // 打字速度 (毫秒)
+
+	  function typeEffect(element, text) {
+		return new Promise((resolve) => {
+		  let index = 0;
+		  function type() {
+			if (index < text.length) {
+			  $(element).html($(element).html() + text.charAt(index));
+			  index++;
+			  setTimeout(type, speed);
+			} else {
+			  resolve(); // 當打字完成後，執行下一個
+			}
+		  }
+		  type();
+		});
+	  }
+
+	  // 先打完 `.typing`，再打 `.typing2`
+	  typeEffect(".typing", text1).then(() => {
+		return typeEffect(".typing2", text2);
+	  });
+
+	  $(".banner_btn").on('click',function(){
+		 window.location.href = '/Home/Index'; // 跳轉到指定 URL
+
+	  });
+
+
+	   // 監聽視窗大小變化，讓 canvas 自適應
+	function resizeCanvas() {
+			const canvas = document.getElementById("banner_earth");
+			const size = Math.min(window.innerWidth * 0.4, 400); // 取較小值，確保畫布不超過 400px
+			canvas.width = size;
+			canvas.height = size; // 強制高度等於寬度，保持正方形
+		}
+
+	// 初始化 canvas 大小
+	resizeCanvas();
+
+	// 當視窗大小變化時，更新 canvas 大小
+	$(window).on("resize", resizeCanvas);
+	});
+
+
+
+</script>
