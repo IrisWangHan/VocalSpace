@@ -1,23 +1,136 @@
-﻿h1 {
-    color: red;
+﻿h3 {
+    font-weight:bold;
 }
 
 .container {
     display: flex;
+    justify-content: center;
+    flex-wrap: wrap; /* 允許換行，適應不同螢幕 */
 }
 
 .left-panel {
-    width: 50%; /* 左邊區塊寬度 */
+    width: 70%;      
     padding: 20px;
     text-align: center;
 }
 
 .right-panel {
-    width: 50%; /* 右邊區塊寬度 */
+    /* panel裡面元素的排版*/
+    display: flex;
+    flex-direction: column; /* 讓內部元素垂直排列 */
+    align-items: center; /* 水平置中 */
+    text-align: center;
+
+    /* right-panel的外觀*/
+    margin:auto;
+    width: 30%; 
     padding: 20px;
+    border: 1px solid #cccccc84; 
+    border-radius: 5px; 
+    padding: 20px; 
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
+}
+
+.button-container {
+    font-weight:bold;
+    display: inline-block;
+    flex-direction: column; /* 讓按鈕垂直排列 */
+    justify-content: center; /* 垂直置中 */
+    align-items: center; /* 水平置中 */
+    width: 100%; /* 設定一個最大寬度，避免過大 */
+    margin: 5vh auto; /* 水平置中 */
+}
+
+.button-container > button, a {
+    font-weight: bold;
+}
+.button-container > a > svg {
+    transform: translateY(-2px);
 }
 
 .advertisement-image {
-    width: 100%; /* 圖片自適應區塊寬度 */
+    width: 100%;
     height: auto;
+    object-fit: cover
+}
+
+.btn-login {
+    background-color: #F9595F;
+    border: 0px;
+    border-radius: 5px;
+}
+
+.btn-login:hover {
+    background-color: #FF3C43; 
+    border-color: #FF3C43;
+}
+
+.btn-google {
+    background-color: white;
+    border: 1px solid #E5E5E5;
+    border-radius: 5px;
+}
+
+.btn-google:hover {
+    background-color: #E5E5E5; /* 設定滑鼠懸停時的顏色 */
+    border-color: #E5E5E5;
+    box-shadow: 0px 0px 0.5px rgba(0, 0, 0, 0.05); /* 陰影效果 */
+}
+
+.btn-fb {
+    background-color: #3A5795;
+    color: white;
+}
+.btn-fb:hover {
+    background-color: #30529C; /* 設定滑鼠懸停時的顏色 */
+    border-color: #30529C;
+}
+
+.button-container .btn {
+    width: 100%;  /*設定按鈕寬度為容器寬度 */
+    margin-bottom: 10px;  /*按鈕間距*/ 
+}
+
+.form-check-input{
+    margin-right:3px;
+}
+
+.form-group {
+    margin-top: 20px;
+/*    position: relative;*/
+}
+
+a.btn.btn-link {
+    text-decoration: none;
+    color: #F9595F;
+}
+
+/*試一下隱藏/顯示密碼icon*/
+.password-toggle {
+    position: absolute;
+    right: 10px; /* 靠右對齊 */
+    top: 50%;
+    transform: translateY(-50%); /* 垂直置中 */
+    cursor: pointer;
+    font-size: 1.2rem;
+    color:gray;
+}
+
+
+/*RWD 測試*/
+@media (max-width: 999px) {
+    .container {
+        flex-direction: column; /* 變成垂直排列 */
+        align-items: center; 
+    }
+
+    .right-panel {
+        width: 80%; /* 讓 right-panel 變寬一點 */
+        order: 19; /* 讓 right-panel 顯示在上面 */
+    }
+
+    .left-panel {
+        width: 100%; /* 讓 left-panel 佔滿可用寬度 */
+        order: 20;
+    }
 }
