@@ -1,0 +1,67 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@* https://localhost:7145/Home/About_test *@
+
+
+<style>
+	:root {
+		--base-color: #000000; /* 變數:基底顏色 */
+		--color: #ffffff; /* 變數:顏色 */
+		--vp-unit: calc(1vw + 1vh + 1rem); /* 變數:視窗單位 */
+		--ratio: calc(16/9); /* 變數:視窗寬高比 */
+		--secwidth: calc(15*var(--vp-unit)); /* 寬度 */
+		--secheight: calc(var(--width)/var(--ratio)); /* 高度  **與影片不同，須注意*/
+	}
+
+	*{
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+	}
+
+	html{
+		/* font-size:62.5%; */
+	}
+
+	body{
+		/* background-color:var(--base-color); */
+		/* color:var(--color); */
+		/* font: 200 calc (.9* var(--vp-unit)) "poppins"; */
+	}
+
+	.portrait{
+		width: var(--secwidth) ;
+		height: var(--secheight) ;
+		border: 1px solid red;
+	}
+
+	.landscape{
+		width: var(--secheight);
+		height: var(--secwidth);
+		border: 1px solid blue;
+	}
+
+
+	.about__container {
+	}
+
+</style>
+
+<div class="about__container">
+
+	<section class="layer">
+		<div class="content">
+			<h1>關於VocalSpace</h1>
+		</div>
+	</section>
+	<section class="layer">
+		<div class="content">
+			<img class="portrait" src="/image/logo3.png">
+			<h1 class="landscape">第一段文字描述</h1>
+		</div>
+	</section>
+</div>

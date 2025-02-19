@@ -28,6 +28,10 @@ namespace VocalSpace.Controllers
             return View();
         }
 
+        public IActionResult About_test()
+        {
+            return View();
+        }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
