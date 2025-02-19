@@ -60,6 +60,7 @@
     height: var(--header-height);
     width: 100%;
     border-bottom: 1px solid var(--bs-gray-400);
+    z-index:99;
 }
 
 
@@ -98,6 +99,7 @@
     width: 50%;
     height: 100%;
     min-width: 480px;
+    z-index: 99;
 }
 
 .header__menu-list {
@@ -160,6 +162,7 @@
     height: auto;
     position: absolute;
     top: calc(var(--header-height) + 5px);
+    z-index:99;
 }
 
 .header__icon-profile-popup {
@@ -385,7 +388,7 @@ button.accept-policy {
 
 /*【footer】*/
 .footer {
-    position: absolute;
+    position: relative;
     bottom: 0;
     width: 100%;
     display: flex;

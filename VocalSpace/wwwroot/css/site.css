@@ -38,7 +38,7 @@ body {
     color: var(--text-color);
     fill: var(--text-color);
     transition: background 0.3s, color 0.3s; /* 加入動畫效果 */
-    margin-bottom: 60px;
+    /*margin-bottom: 60px;*/
 }
 
 
