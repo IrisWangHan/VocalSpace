@@ -1,0 +1,77 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<h1>帳號設定</h1>
+
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-lg-4">
+                <div class="border">
+                    <nav>
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <!-- d-none d-md-block : md以上，才會出現"會員資料" -->
+                                <h2 class="nav-link d-none d-md-block">會員資料</h2>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link active">
+                                    基本資料
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    頭像與封面
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    電子信箱
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <hr class="my-3">
+                            </li>
+                            <li class="nav-item">
+                                <h2 class="nav-link d-none d-md-block">帳號管理</h2>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    變更密碼
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    刪除帳號
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="col-md-8 col-lg-8">
+                <form>
+                    <div class="form-group">
+                        <h2>基本資料</h2>
+                    </div>
+                    <div class="form-group">
+                        <h3>你的名字(顯示名稱)</h3>
+                        <input class="form-control" name="username" placeholder="請輸入名字">
+                    </div>
+                    <div class="form-group">
+                        <h3>性別</h3>
+                    </div>
+                    <div class="form-group">
+                        <h3>生日</h3>
+                    </div>
+                    <div class="form-group">
+                        <h3>介紹</h3>
+                        <textarea class="form-control" name="introduction" placeholder="請輸入介紹"></textarea>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
