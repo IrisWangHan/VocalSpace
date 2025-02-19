@@ -1,0 +1,192 @@
+﻿body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+}
+
+.container {
+    width: 80%;
+    margin: 20px auto;
+}
+
+h1 {
+    text-align: left;
+}
+
+.content {
+    display: flex;
+}
+
+li:hover {
+    background-color: #f9f9f9;
+}
+
+/* 選取後的樣式 */
+li.selected {
+    border-left: 3px solid red;
+    background-color: #f9f9f9;
+    color: red;
+}
+
+.sidebar {
+    width: 20%;
+    background: white;
+    padding: 10px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+    .sidebar ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .sidebar li {
+        padding: 10px;
+        cursor: pointer;
+    }
+
+        .sidebar li.active {
+            color: red;
+            font-weight: bold;
+        }
+
+.ranking {
+    width: 75%;
+    margin-left: 20px;
+}
+
+.tabs button {
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    background-color: lightcoral;
+    color: white;
+    margin-right: 5px;
+}
+
+    .tabs button.active {
+        background-color: red;
+    }
+
+.ranking-list {
+    background: white;
+    padding: 10px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.ranking-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.rank {
+    width: 30px;
+    font-weight: bold;
+    text-align: center;
+}
+
+img {
+    width: 50px;
+    height: 50px;
+    margin: 0 10px;
+    border-radius: 5px;
+}
+
+.info {
+    flex-grow: 1;
+}
+
+.btn-outline-secondary.heart {
+    margin-right: 10px;
+}
+
+    .btn-outline-secondary.heart:hover {
+        margin-right: 10px;
+        background-color: lightcoral;
+    }
+
+    .btn-outline-secondary.heart.selected {
+        margin-right: 10px;
+        background-color: lightcoral;
+        color: #f9f9f9;
+    }
+
+.btn-outline-secondary.add {
+    margin-right: 10px;
+}
+
+.btn-outline-secondary.share {
+    margin-right: 10px;
+}
+
+@media screen and (max-width: 1000px) {
+    .btn-outline-secondary.heart {
+        display: none;
+    }
+
+    .btn-outline-secondary.play {
+        display: none;
+    }
+
+    .btn-outline-secondary.add {
+        display: none;
+    }
+
+    .btn-outline-secondary.share {
+        display: none;
+    }
+}
+
+@media (min-width: 992px) {
+    .col-lg-auto {
+        flex: 0 0 auto;
+        width: auto;
+        max-width: none;
+    }
+}
+
+.btn-danger {
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    display: block;
+    margin-top: 10px;
+    margin-left: auto;
+    position: relative;
+}
+
+.playAll {
+    display: flex;
+    justify-content: right;
+}
+
+.artist {
+    font-size: small;
+    color: lightslategray;
+}
+
+.Randomplay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+}
+
+    .Randomplay .btn-danger {
+        display: flex;
+        justify-content: right;
+    }
+
+.h2-row {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* 控制各標籤間距 */
+}
+
+.red {
+    color: red;
+}
