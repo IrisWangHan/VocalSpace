@@ -12,5 +12,9 @@ namespace VocalSpace.Controllers
         {
             return View();
         }
+        public IActionResult ForgetPasswordDone()
+        {
+            return View();
+        }
     }
 }

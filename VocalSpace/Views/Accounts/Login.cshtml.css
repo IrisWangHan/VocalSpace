@@ -48,10 +48,10 @@
     color: white;
 }
 
-    .btn-fb:hover {
-        background-color: #30529C; /* 設定滑鼠懸停時的顏色 */
-        border-color: #30529C;
-    }
+.btn-fb:hover {
+    background-color: #30529C; /* 設定滑鼠懸停時的顏色 */
+    border-color: #30529C;
+}
 
 .button-container .btn {
     width: 100%; /*設定按鈕寬度為容器寬度 */
@@ -60,6 +60,10 @@
 
 .form-check-input {
     margin-right: 3px;
+}
+
+.form-check-label{
+    font-weight: bold;
 }
 
 .form-group {

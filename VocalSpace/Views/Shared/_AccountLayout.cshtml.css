@@ -3,6 +3,7 @@
     display: flex;
     justify-content: center;
     flex-wrap: wrap; /* 允許換行，適應不同螢幕 */
+    margin-bottom: 5em;
 }
 .left-panel {
     width: 70%;
@@ -19,6 +20,7 @@
     /* right-panel的外觀*/
     margin: auto;
     width: 30%;
+    height: 550px;
     padding: 20px;
     border: 1px solid #cccccc84;
     border-radius: 5px;
