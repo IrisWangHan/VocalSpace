@@ -1,214 +1,214 @@
 ﻿.banner {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    background-color: #152153;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  background-color: #152153;
 }
 
 .banner__left {
-    width: 45%;
+  width: 45%;
 }
 
 .banner__right {
-    width: 55%;
+  width: 55%;
 }
 
 .banner__left {
-    text-align: right; /*讓大聲公圖片靠右對齊*/
-    position: relative; /*讓按鈕對齊*/
+  text-align: right; /*讓大聲公圖片靠右對齊*/
+  position: relative; /*讓按鈕對齊*/
 }
 
 .banner__left-btn {
-    width: 200px;
-    height: 40px;
-    font-size: 18px;
-    font-weight: bold;
-    position: absolute;
-    bottom: 40px;
-    right: 30px;
+  width: 200px;
+  height: 40px;
+  font-size: 18px;
+  font-weight: bold;
+  position: absolute;
+  bottom: 40px;
+  right: 30px;
 }
 @media (max-width: 576px) {
-    .banner__left-btn {
-        width: 90px;
-        height: 30px;
-        font-size: var(--fsize-menu);
-        bottom: 10px;
-        right: 0px;
-    }
+  .banner__left-btn {
+    width: 90px;
+    height: 30px;
+    font-size: var(--fsize-menu);
+    bottom: 10px;
+    right: 0px;
+  }
 }
 
-
 .content {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    background-color: #152153;
-    padding: 20px 10%;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  background-color: #152153;
+  padding: 20px 10%;
 }
 
 @media (max-width: 768px) {
-    .content {
-        padding: 20px 40px;
-    }
+  .content {
+    padding: 20px 40px;
+  }
 }
 
 @media (max-width: 576px) {
-
-    /*內容區*/
-    .content {
-        padding: 0;
-    }
+  /*內容區*/
+  .content {
+    padding: 0;
+  }
 }
 
 .content__card-area {
-    width: 100%;
-    height: auto;
-    min-height: 600px;
-    border-radius: 10px;
-    background-color: #FFFFFF;
-    color: black;
-    padding: 60px 20px 10px 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    position: relative;
+  width: 100%;
+  height: auto;
+  min-height: 600px;
+  border-radius: 10px;
+  background-color: #ffffff;
+  color: black;
+  padding: 60px 20px 10px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  position: relative;
 }
 
 @media (max-width: 576px) {
-
-    /*內部卡片大區塊邊框*/
-    .content__card-area {
-        border-radius: 0px;
-        padding: 0px;
-    }
+  /*內部卡片大區塊邊框*/
+  .content__card-area {
+    border-radius: 0px;
+    padding: 0px;
+  }
 }
 
 /* 每筆卡片 */
 .card__item {
-    width: 250px;
-    height: auto;
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin: 30px;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  width: 250px;
+  height: auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 30px;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 @media (max-width: 768px) {
-    /*每筆卡片*/
-    .card__item {
-        width: 80%;
-        padding: 40px 20px 10px 20px;
-    }
+  /*每筆卡片*/
+  .card__item {
+    width: 80%;
+    padding: 40px 20px 10px 20px;
+  }
 }
 
 @media (max-width: 576px) {
-    /*每筆卡片*/
-    .card__item {
-        width: 100%;
-        padding: 10px;
-        margin: 10px;
-    }
+  /*每筆卡片*/
+  .card__item {
+    width: 100%;
+    padding: 10px;
+    margin: 10px;
+  }
 }
 /* 調整寬高與間距-圖片盒子/圖片 */
-.card__img-box, .card__img {
-    width: 230px;
-    height: 230px;
-    margin-bottom: 10px;
-    border-radius: 5px;
+.card__img-box,
+.card__img {
+  width: 230px;
+  height: 230px;
+  margin-bottom: 10px;
+  border-radius: 5px;
 }
 
 /* 圖片盒子 */
 .card__img-box {
-    position: relative;
-    cursor: pointer;
+  position: relative;
+  cursor: pointer;
 }
 @media (max-width: 576px) {
-    /*每筆卡片*/
-    .card__img-box, .card__img {
-        width: 100%;
-        height: 100%;
-    }
+  /*每筆卡片*/
+  .card__img-box,
+  .card__img {
+    width: 100%;
+    height: 100%;
+  }
 }
 /* 圖片 */
 .card__img {
-    height: 100%;
-    object-fit: cover; /*放大圖片填滿*/
+  height: 100%;
+  object-fit: cover; /*放大圖片填滿*/
 }
 
 /* 每筆卡片的標題 */
 .card__item h6 {
-    font-weight: bold;
-    color: black;
+  font-weight: bold;
+  color: black;
 }
 
 /* 每筆卡片的內文 */
 .card__item p {
-    margin: 0 0 10px 0;
-    color: dimgray;
-    font-weight: bold;
-    font-size: var(--fsize-menu);
+  margin: 0 0 10px 0;
+  color: dimgray;
+  font-weight: bold;
+  font-size: var(--fsize-menu);
 }
 
 /* 每筆卡片的徵選與投票狀態文字 */
 .card__item label {
-    font-weight: bold;
-    color: dimgray;
-    /* font-size: var(--fsize-menu); */
+  font-weight: bold;
+  color: dimgray;
+  /* font-size: var(--fsize-menu); */
 }
-
 
 /* 每筆卡片的按鈕盒子 */
 .card__btn-box {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    margin-top: 5px;
-    width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 5px;
+  width: 100%;
 }
 
 @media (max-width: 768px) {
-    /*每筆卡片*/
-    .card__btn-box {
-        width: 80%;
-        padding: 10px 20px 10px 20px;
-    }
+  /*每筆卡片*/
+  .card__btn-box {
+    width: 80%;
+    padding: 10px 20px 10px 20px;
+  }
 }
 @media (max-width: 576px) {
-    /*每筆卡片*/
-    .card__btn-box {
-        width: 100%;
-        flex-wrap:wrap;
-    }
+  /*每筆卡片*/
+  .card__btn-box {
+    width: 100%;
+    flex-wrap: wrap;
+  }
 }
 
-.card__btn-vote, .card__btn-join {
-    width: 45%;
-    height: 40px;
-    font-weight: bold;
-    font-size: 16px;
-    /* text-align: center; /* 文字水平居中 */
-    padding: 0px;
-    line-height: 28px;
+.card__btn-vote,
+.card__btn-join {
+  width: 45%;
+  height: 40px;
+  font-weight: bold;
+  font-size: 16px;
+  /* text-align: center; /* 文字水平居中 */
+  padding: 0px;
+  line-height: 28px;
 }
 
 @media (max-width: 576px) {
-    /*每筆卡片*/
-    .card__btn-vote, .card__btn-join {
-        font-size: var(--fsize-menu);
-        width: 100%;
-        height: 30px;
-        margin:5px;
-    }
+  /*每筆卡片*/
+  .card__btn-vote,
+  .card__btn-join {
+    font-size: var(--fsize-menu);
+    width: 100%;
+    height: 30px;
+    margin: 5px;
+  }
 }
 .card__btn-vote {
-    background-color: #FB7318;
+  background-color: #fb7318;
 }
 
-    .card__btn-vote:hover {
-        background-color: #e85c00; /* 深橘色 */
-    }
+.card__btn-vote:hover {
+  background-color: #e85c00; /* 深橘色 */
+}
