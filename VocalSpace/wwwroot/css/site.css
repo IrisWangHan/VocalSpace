@@ -39,7 +39,7 @@ body {
     fill: var(--text-color);
     transition: background 0.3s, color 0.3s; /* 加入動畫效果 */
     /*margin-bottom: 60px;*/
-    position: relative;
+    /*position: relative;*/
 }
 
 
