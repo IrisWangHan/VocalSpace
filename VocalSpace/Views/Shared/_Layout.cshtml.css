@@ -42,7 +42,6 @@
 */
 
 
-
 /*顯示或隱藏用*/
 .show--element {
     display: block;
@@ -388,14 +387,15 @@ button.accept-policy {
 
 /*【footer】*/
 .footer {
-    position: absolute;
+/*    position: absolute;
     bottom: 0;
+*/    
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     white-space: nowrap;
-    min-height: var(--footer-height);
+    height: var(--footer-height);
 }
 /*【footer Flex容器】*/
 .footer__container {
