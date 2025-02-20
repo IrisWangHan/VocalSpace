@@ -3,62 +3,16 @@
 *@
 @{
 }
-<section class="banner ">
-	<div class="banner__text-area">
-		<h1>徵選活動</h1>
-		<p>
-			夢想啟航，舞台就在眼前！🎬<br />
-			我們在尋找獨一無二的你，讓世界看見你的光芒！🌟<br />
-			準備好了嗎？立即加入徵選，成就不凡！
-		</p>
-		<button class="btn btn-submit--theme">前往徵選</button>
+<section class="banner">
+	<div class="banner__left">
+		<img class="banner__left-img" src="@Url.Content("~/image/selection/bannerLightning.png")" />
+		<button class="btn btn-submit--theme banner__left-btn">前往徵選</button>
 	</div>
-	<div class="banner__img-area">
-		<img class="banner__img" src="@Url.Content("~/image/logo2.png")" />
+	<div class="banner__right">
+		<img class="banner__right-img" src="@Url.Content("~/image/selection/bannerContent.png")" />
 	</div>
-
 
 </section>
-
-<style>
-	.banner {
-		width: 100%;
-		height: calc(100vh - var(--header-height) - var(--footer-height) - 100px);
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		position: relative;
-		overflow: hidden;
-		background-color: brown;
-	}
-
-	.banner__text-area {
-		width: 60%;
-		/* height: 100%; */
-		/* background-color: antiquewhite; */
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-	}
-
-		.banner__text-area .btn {
-			width: 90px;
-		}
-
-	.banner__img-area {
-		flex: 1;
-		/* height: 100%; */
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		/* background-color: aqua; */
-
-	}
-
-		.banner__img-area .banner__img {
-			width:70%;
-			border: 1px solid;
-		}
-
-</style>
+<section class="content">
+	<div class="content__card-area"></div>
+</section>
