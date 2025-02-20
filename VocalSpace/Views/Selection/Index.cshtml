@@ -14,5 +14,10 @@
 
 </section>
 <section class="content">
-	<div class="content__card-area"></div>
+	<div class="content__card-area">
+		@{
+			await Html.RenderPartialAsync("_CardPartial", 20);
+		}
+
+    </div>
 </section>

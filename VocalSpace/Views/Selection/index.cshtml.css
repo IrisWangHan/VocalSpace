@@ -40,7 +40,9 @@
 }
 .content__card-area {
     width: 100%;
-    height: 600px;
+    height: auto;
+    min-height:600px;
     border-radius: 10px;
     background-color: #FFFFFF;
+    color:black;
 }

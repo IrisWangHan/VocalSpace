@@ -1,0 +1,88 @@
+﻿
+<style>
+	.card-container {
+		padding: 70px 20px 10px 20px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-wrap: wrap;
+	}
+
+	.card__item {
+		border: 1px solid #ccc;
+		padding: 10px;
+		margin: 30px;
+		border-radius: 5px;
+		background-color: #f9f9f9;
+		width: 250px;
+		height: 340px;
+	}
+
+
+
+	.card__img-box, .card__img {
+		width: 230px;
+		height: 230px;
+		margin-bottom: 10px;
+		border-radius: 5px;
+	}
+
+	.card__img {
+		height: 100%;
+		object-fit: cover; /*放大圖片填滿*/
+	}
+
+	.card__item h6 {
+		font-weight: bold;
+	}
+
+	.card__item p {
+		font-size: var(--fsize-menu);
+		margin:0px;
+	}
+
+</style>
+<section class="card-container">
+	@model int?
+	@for (int i = 0; i < Model!.Value; i++)
+	{
+		<div class="card__item">
+			<div class="card__img-box">
+				<img class="card__img" src="/image/selection/selectionBanner.png" />
+			</div>
+			<h6>XXX-@i</h6>
+			<p>XXX</p>
+			@{
+				await Html.RenderPartialAsync("_IconPartial",2);
+			}
+		</div>
+	}
+	@* 
+	@foreach (var item in Model.Items)
+	{
+		<div class="card-header">
+			<h4 class="card-title">@item.Title</h4>
+		</div>
+		<div class="card-body">
+			<p class="card-text">@item.Description</p>
+		</div>
+		<div class="card-footer">
+			<a href="@item.Link" class="btn btn-primary">Go to @item.Title</a>
+		</div>
+	}) *@
+
+
+	@* @if (Model.HasValue)
+{
+    @for (int i = 0; i < Model.Value; i++)
+    {
+        <p>num: @i</p>
+    }
+}
+else
+{
+    <p>Model is null</p>
+}
+
+ *@
+</section>
