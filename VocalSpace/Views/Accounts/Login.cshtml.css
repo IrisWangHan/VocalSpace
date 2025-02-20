@@ -1,0 +1,84 @@
+﻿h3 {
+    font-weight: bold;
+}
+
+.button-container {
+    font-weight: bold;
+    display: inline-block;
+    flex-direction: column; /* 讓按鈕垂直排列 */
+    justify-content: center; /* 垂直置中 */
+    align-items: center; /* 水平置中 */
+    width: 100%; /* 設定一個最大寬度，避免過大 */
+    margin: 5vh auto; /* 水平置中 */
+}
+
+    .button-container > button, a {
+        font-weight: bold;
+    }
+
+    .button-container > a > svg {
+        transform: translateY(-2px);
+    }
+
+.btn-login {
+    background-color: #F9595F;
+    border: 0px;
+    border-radius: 5px;
+}
+
+    .btn-login:hover {
+        background-color: #FF3C43;
+        border-color: #FF3C43;
+    }
+
+.btn-google {
+    background-color: white;
+    border: 1px solid #E5E5E5;
+    border-radius: 5px;
+}
+
+    .btn-google:hover {
+        background-color: #E5E5E5; /* 設定滑鼠懸停時的顏色 */
+        border-color: #E5E5E5;
+        box-shadow: 0px 0px 0.5px rgba(0, 0, 0, 0.05); /* 陰影效果 */
+    }
+
+.btn-fb {
+    background-color: #3A5795;
+    color: white;
+}
+
+    .btn-fb:hover {
+        background-color: #30529C; /* 設定滑鼠懸停時的顏色 */
+        border-color: #30529C;
+    }
+
+.button-container .btn {
+    width: 100%; /*設定按鈕寬度為容器寬度 */
+    margin-bottom: 10px; /*按鈕間距*/
+}
+
+.form-check-input {
+    margin-right: 3px;
+}
+
+.form-group {
+    margin-top: 20px;
+    /*    position: relative;*/
+}
+
+a.btn.btn-link {
+    text-decoration: none;
+    color: #F9595F;
+}
+
+/*試一下隱藏/顯示密碼icon*/
+.password-toggle {
+    position: absolute;
+    right: 10px; /* 靠右對齊 */
+    top: 50%;
+    transform: translateY(-50%); /* 垂直置中 */
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: gray;
+}

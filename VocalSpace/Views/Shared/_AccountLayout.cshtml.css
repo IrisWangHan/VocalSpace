@@ -1,0 +1,45 @@
+﻿
+.container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap; /* 允許換行，適應不同螢幕 */
+}
+.left-panel {
+    width: 70%;
+    padding: 20px;
+    text-align: center;
+}
+
+.right-panel {
+    /* panel裡面元素的排版*/
+    display: flex;
+    flex-direction: column; /* 讓內部元素垂直排列 */
+    align-items: center; /* 水平置中 */
+    text-align: center;
+    /* right-panel的外觀*/
+    margin: auto;
+    width: 30%;
+    padding: 20px;
+    border: 1px solid #cccccc84;
+    border-radius: 5px;
+    padding: 20px;
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
+}
+
+/*RWD 測試*/
+@media (max-width: 999px) {
+    .container {
+        flex-direction: column; /* 變成垂直排列 */
+        align-items: center;
+    }
+
+    .right-panel {
+        width: 80%; /* 讓 right-panel 變寬一點 */
+        order: 19; /* 讓 right-panel 顯示在上面 */
+    }
+
+    .left-panel {
+        width: 100%; /* 讓 left-panel 佔滿可用寬度 */
+        order: 20;
+    }
+}
