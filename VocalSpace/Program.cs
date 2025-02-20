@@ -22,6 +22,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Accounts}/{action=ForgetPassword}/{id?}");
+    pattern: "{controller=Accounts}/{action=ForgetPasswordDone}/{id?}");
 
 app.Run();

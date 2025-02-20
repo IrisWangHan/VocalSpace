@@ -18,9 +18,9 @@
     align-items: center; /* 水平置中 */
     text-align: center;
     /* right-panel的外觀*/
-    margin: auto;
+    margin-top: 1%;
     width: 30%;
-    height: 550px;
+    height: 100%;
     padding: 20px;
     border: 1px solid #cccccc84;
     border-radius: 5px;
