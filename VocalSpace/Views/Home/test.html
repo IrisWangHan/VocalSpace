@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <style>
+        :root {
+            --base-color: #000000;
+            /* 變數:基底顏色 */
+            --color: #ffffff;
+            /* 變數:顏色 */
+            --vp-unit: calc(1vw + 1vh + 1rem);
+            /* 變數:視窗單位 */
+            --ratio: calc(16/9);
+            /* 變數:視窗寬高比 */
+            --secwidth: calc(15*var(--vp-unit));
+            /* 寬度 */
+            --secheight: calc(var(--width)/var(--ratio));
+            /* 高度  **與影片不同，須注意*/
+        }
+
+        html {
+            font-size: 62.5%;
+        }
+
+        body {
+            height:200vh;
+            background-color: var(--base-color);
+            color: var(--color);
+            font: 200 calc(.9*var(--vp-unit)) 'poppins' 'Arial';
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .portrait {
+            width: var(--secwidth);
+            height: var(--secheight);
+            border: 1px solid green;
+        }
+
+        .landscape {
+            width: var(--secheight);
+            height: var(--secwidth);
+            border: 1px solid red;
+        }
+
+        .container {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            perspective: 1600px;
+        }
+
+        .layer {
+            width: 100%;
+            height: 100%;
+        }
+
+        .layer {
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+        .layer h1 {
+            text-transform: uppercase;
+            font-size: calc(2.5* var(--vp-unit));
+            font-weight: 200;
+        }
+
+        .layer p {
+            width: 40ch;
+            font-size: calc(1.5* var(--vp-unit));
+            font-weight: 100;
+        }
+
+        .layer img {
+            object-fit: cover;
+            object-position: center;
+        }
+    </style>
+
+
+
+
+    <div class="container">
+
+        <section class="layer">
+            <div class="content">
+                <img class="portrait" src="/VocalSpace/wwwroot/image/logo3.png">
+            </div>
+        </section>
+
+        <section class="layer">
+            <div class="content">
+                <img class="landscape" src="/VocalSpace/wwwroot/image/logo3.png">
+            </div>
+        </section>
+        <section class="layer">
+            <div class="content">
+                <h1>聲維宇宙 VocalSpace</h1>
+                <p>
+                    一個專為音樂人打造的共享平台<br />
+                    我們相信，每一個聲音都值得被聽建<br />
+                    無論是獨立創作翻唱作品、還是錄製的靈感片段<br />
+                    這裡都是你的音樂空間
+                </p>
+            </div>
+        </section>
+    </div>
+    
+    <script>
+        const layers = document.querySelectorAll('.layer');
+
+        const layer_spacing = -1200;
+
+        const z_values = [];
+
+        handlescroll();
+
+        function handlescroll(){
+            
+            const curr_scroll_pos = window.scrollY;
+            console.log(curr_scroll_pos);
+            
+
+        layers.forEach((layer, index) => {
+            z_values.push(layer_spacing +(layer_spacing * index));
+
+            z_values[index] += curr_scroll_pos;
+
+            let curr_z_value = z_values[index];
+
+            layer.style.transform = `translateZ(${curr_z_value}px)`;
+        })
+    }
+
+    window.addEventListener('scroll', handlescroll);
+    </script>
+</body>
+
+</html>
