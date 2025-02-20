@@ -1,0 +1,45 @@
+﻿section {
+    padding: 0;
+    margin: 0;
+}
+
+/* 當 `data-theme="light"` 時，變成亮色模式 */
+[data-theme="light"] {
+    --bg-color: #F5F5F5;
+    --text-color: #000000;
+}
+
+/* 帳號設定的下方nav文字顏色跟--text-color相同 */
+.nav-name {
+    color: var(--text-color);
+    font-size: 1.5rem;
+    transition: all 0.2s ease;
+}
+
+.nav-h2 {
+    color: var(--text-color);
+}
+
+    .nav-h2:hover {
+        color: var(--text-color);
+    }
+/*.nav-item h2 {
+    color: black;
+}
+
+.nav-item h2:hover {
+        color: black;
+}*/
+/*.nav-item a {
+    color: black;
+    font-size: 1.5rem;
+    transition: all 0.2s ease;
+}*/
+/*.nav-item a:hover {
+        color: red;
+        border-bottom: 3px solid red;
+}*/
+.nav-name:hover {
+    color: red;
+    border-bottom: 3px solid red;
+}
