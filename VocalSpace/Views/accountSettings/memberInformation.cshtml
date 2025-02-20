@@ -3,6 +3,7 @@
 *@
 @{
 }
+
 <h1>帳號設定</h1>
 
 <section>
@@ -62,13 +63,23 @@
                     </div>
                     <div class="form-group">
                         <h3>性別</h3>
+                        <div class="d-flex">
+                            <select class="form-control" style="width: 30%" name="gender" id="">
+                                <option value="M">男</option>
+                                <option value="F">女</option>
+                            </select>
+                            <select class="form-control" style="width: 30%" name="access" id="">
+                                <option value="public">公開</option>
+                                <option value="private">不公開</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="form-group">
                         <h3>生日</h3>
                     </div>
                     <div class="form-group">
                         <h3>介紹</h3>
-                        <textarea class="form-control" name="introduction" placeholder="請輸入介紹"></textarea>
+                        <textarea class="form-control" name="introduction" style="height:10vw" placeholder="請輸入介紹"></textarea>
                     </div>
                 </form>
             </div>
