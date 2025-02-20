@@ -71,7 +71,7 @@ li.selected {
 
 .ranking-list {
     padding: 10px;
-    border:1px solid gray;
+    border: 1px solid gray;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
@@ -101,7 +101,7 @@ img {
 
 .btn-outline-secondary.heart {
     margin-right: 10px;
-    border:1px solid gray;
+    border: 1px solid gray;
 }
 
     .btn-outline-secondary.heart:hover {
@@ -174,7 +174,6 @@ img {
 
 .artist {
     font-size: small;
-    color: lightslategray;
 }
 
 .Randomplay {
@@ -212,11 +211,13 @@ img {
     align-items: flex-start;
     padding-top: 10vh;
 }
-.shareoverlay span{
-    color:black;
-}
+
+    .shareoverlay span {
+        color: black;
+    }
+
 .sharepopup {
-    background: white;
+    background-color:white;
     border-radius: 10px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
     padding: 30px;
@@ -324,7 +325,7 @@ img {
     .addpopup h2 {
         font-size: 22px;
         margin-bottom: 15px;
-        color:Black;
+        color: Black;
     }
 
 /* 搜尋框 */
@@ -364,7 +365,7 @@ img {
 .addplaylist-name {
     font-size: 16px;
     font-weight: bold;
-    color:black;
+    color: black;
 }
 
 .addplaylist-song {
