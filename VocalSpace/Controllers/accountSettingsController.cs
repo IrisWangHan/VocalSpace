@@ -11,6 +11,12 @@ namespace VocalSpace.Controllers
 
         public IActionResult memberInformation() 
         {
+            
+            return View();
+        }
+        public IActionResult imageSetting()
+        {
+
             return View();
         }
     }
