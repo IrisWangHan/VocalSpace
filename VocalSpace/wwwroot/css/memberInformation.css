@@ -9,6 +9,14 @@
     --text-color: #000000;
 }
 
+@media screen and (max-width:576px) {
+    #name{
+        width:90%;
+    }
+}
+
+
+/* partialView的css  */
 /* 帳號設定的下方nav文字顏色跟--text-color相同 */
 .nav-name {
     color: var(--text-color);
@@ -16,30 +24,47 @@
     transition: all 0.2s ease;
 }
 
+ .nav-name:hover {
+        color: red;
+        border-bottom: 3px solid red;
+ }
+
 .nav-h2 {
     color: var(--text-color);
 }
 
-    .nav-h2:hover {
+ .nav-h2:hover {
         color: var(--text-color);
-    }
-/*.nav-item h2 {
-    color: black;
+ }
+
+
+/*  memberInformation.cshtml 的 CSS  */
+.form-group {
+    margin:1vw 0;
 }
 
-.nav-item h2:hover {
-        color: black;
-}*/
-/*.nav-item a {
-    color: black;
-    font-size: 1.5rem;
-    transition: all 0.2s ease;
-}*/
-/*.nav-item a:hover {
-        color: red;
-        border-bottom: 3px solid red;
-}*/
-.nav-name:hover {
-    color: red;
-    border-bottom: 3px solid red;
+button {
+    background-color: red;
+    color: #F5F5F5;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+/*   imageSetting 的 css */
+.btn {
+    background-color: red;
+    color: #F5F5F5;
+    border-radius: 5px;
+    padding: 5px;
+    width:20%;
+}
+
+#avatar {
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.d-flex div {
+    
+    padding: 1vw 0;
 }

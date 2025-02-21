@@ -1,0 +1,46 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<link rel="stylesheet" href="~/css/memberInformation.css" asp-append-version="true" />
+
+<section>
+    <div class="container">
+        <h1>帳號設定</h1>
+        <hr>
+        <div class="row">
+            @await Html.PartialAsync("partialViewAccountSettings")
+            <div class="col-md-8 col-lg-8">
+                <form>
+                    <div class="form-group">
+						<h2>頭像與封面</h2>
+					</div>
+                    <div class="form-group">
+                        <h3>頭像</h3>
+                    </div>
+					<div class="form-group">
+                        <div class="d-flex flex-column">
+                            <div id="avatar">
+                                <img src="~/image/Eevee.png" alt="大頭貼" class="img-thumbnail" style="">
+                            </div>
+                            <div>
+                                <button class="btn btn-primary">上傳頭像</button>
+						    </div>
+                        </div>				
+                    </div>
+                    <div class="form-group">
+                        <div class="d-flex flex-column">
+                            <div>
+                                <img src="~/image/Eevee-Cover.jpg" alt="封面" class="img-thumbnail">
+                            </div>
+                            <div>
+                                <button class="btn btn-primary">上傳封面</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div></>
+        </div>
+   </div>
+</section>
