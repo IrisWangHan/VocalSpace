@@ -27,6 +27,10 @@
 		border-radius: 5px;
 	}
 
+		.card__img-box{
+			position:relative;
+		cursor: pointer;
+		}
 	.card__img {
 		height: 100%;
 		object-fit: cover; /*放大圖片填滿*/
@@ -41,7 +45,49 @@
 		margin:0px;
 	}
 
+	/* 預設隱藏圖示 */
+	.icon__play-circle, .icon__stop-circle {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		display:none;
+		transition: opacity 0.3s ease-in-out;
+		
+	}
+
+	/* 當滑鼠 hover 到圖片容器時顯示 icon */
+	.card__img-box:hover .icon__play-circle {
+		display:block;
+	}
+
+
 </style>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script>
+	// $(".icon__play-circle").on("click",function(){
+	// 	$(".icon__play-circle").hide();
+	// 	$(".icon__stop-circle").show();
+	// })
+	// 	$(".icon__stop-circle").on("click",function(){
+	// 	$(".icon__stop-circle").hide();
+	// 	$(".icon__play-circle").show();
+	// })
+	// 	$(document).ready(function () {
+	// 	$(".icon__play-circle, .icon__stop-circle").on("click", function () {
+	// 		$(".icon__play-circle, .icon__stop-circle").toggle();
+	// 	});
+	// });
+
+		$(document).ready(function () {
+		$(".card__img-box,.icon__play-circle, .icon__stop-circle").on("click", function () {
+			$(this).closest(".card__img-box").find(".icon__play-circle, .icon__stop-circle").toggle();
+		});
+	});
+
+
+</script>
 <section class="card-container">
 	@model int?
 	@for (int i = 0; i < Model!.Value; i++)
@@ -49,6 +95,15 @@
 		<div class="card__item">
 			<div class="card__img-box">
 				<img class="card__img" src="/image/selection/selectionBanner.png" />
+
+				<svg class="icon__play-circle bi bi-play-circle" xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="white" viewBox="0 0 16 16">
+					<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+					<path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445" />
+				</svg>
+				<svg class="icon__stop-circle bi bi-stop-circle-fill" xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="white" viewBox="0 0 16 16">
+					<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+					<path d="M5 6.5A1.5 1.5 0 0 1 6.5 5h3A1.5 1.5 0 0 1 11 6.5v3A1.5 1.5 0 0 1 9.5 11h-3A1.5 1.5 0 0 1 5 9.5z" />
+				</svg>
 			</div>
 			<h6>XXX-@i</h6>
 			<p>XXX</p>
