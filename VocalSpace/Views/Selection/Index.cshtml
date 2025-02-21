@@ -1,8 +1,9 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+	var length = 5;
+	var joinState = "開放中";
+	var voteState = "開放中";
 }
+
 <section class="banner">
 	<div class="banner__left">
 		<img class="banner__left-img" src="@Url.Content("~/image/selection/bannerLightning.png")" />
@@ -11,13 +12,57 @@
 	<div class="banner__right">
 		<img class="banner__right-img" src="@Url.Content("~/image/selection/bannerContent.png")" />
 	</div>
-
 </section>
-<section class="content">
+
+<section class="content ">
 	<div class="content__card-area">
-		@{
-			await Html.RenderPartialAsync("_CardPartial", 20);
+		@for (int i = 0; i < @length; i++)
+		{
+			<div class="card__item">
+				<div class="card__img-box">
+					<img class="card__img" src="/image/selection/selectionBanner.png" />
+				</div>
+				<h6>Selection Home Page - XXX</h6>
+				<p>Selection Home Page Description</p>
+				<label>
+					徵選狀態:
+					<span style="color: @(joinState == "開放中" ? "red" : "gray");">
+						@joinState
+					</span>
+				</label>
+				<label>
+					投票狀態:
+					<span style="color: @(voteState == "開放中" ? "red" : "gray");">
+						@joinState
+					</span>
+				</label>
+				<div class="card__btn-box">
+					<button class="btn btn-submit--theme card__btn-vote">我要投票</button>
+					<button class="btn btn-submit--theme card__btn-join">我要徵選</button>
+				</div>
+			</div>
 		}
-
-    </div>
+	</div>
 </section>
+
+<script>
+		// 當使用者點擊清單中的某項資料
+	$(".card__item-activity").on("click", function() {
+	var selectedItem = $(this).data("id");
+
+	// 發送選中的資料到後端進行後續處理
+	$.ajax({
+		url: '@Url.Action("ProcessSelectedItem", "Selection")', // 處理資料的控制器方法
+		type: 'POST',
+		data: { item: selectedItem }, // 傳送選中的資料
+		success: function(response) {
+			// 顯示後端處理結果
+			alert("選中的資料: " + response);
+			},
+		error: function(xhr, status, error) {
+			console.log("請求失敗: " + error);
+				}
+			});
+		});
+
+</script>

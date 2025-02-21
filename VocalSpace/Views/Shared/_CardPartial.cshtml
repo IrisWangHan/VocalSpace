@@ -14,11 +14,10 @@
 		margin: 30px;
 		border-radius: 5px;
 		background-color: #f9f9f9;
-		width: 250px;
+		width: 300px;
 		height: 340px;
+
 	}
-
-
 
 	.card__img-box, .card__img {
 		width: 230px;
@@ -27,10 +26,11 @@
 		border-radius: 5px;
 	}
 
-		.card__img-box{
-			position:relative;
+	.card__img-box {
+		position: relative;
 		cursor: pointer;
-		}
+	}
+
 	.card__img {
 		height: 100%;
 		object-fit: cover; /*放大圖片填滿*/
@@ -42,7 +42,7 @@
 
 	.card__item p {
 		font-size: var(--fsize-menu);
-		margin:0px;
+		margin: 0px;
 	}
 
 	/* 預設隱藏圖示 */
@@ -51,48 +51,39 @@
 		top: 50%;
 		left: 50%;
 		transform: translate(-50%, -50%);
-		display:none;
+		display: none;
 		transition: opacity 0.3s ease-in-out;
-		
 	}
 
 	/* 當滑鼠 hover 到圖片容器時顯示 icon */
 	.card__img-box:hover .icon__play-circle {
-		display:block;
+		display: block;
 	}
-
 
 </style>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 
 <script>
-	// $(".icon__play-circle").on("click",function(){
-	// 	$(".icon__play-circle").hide();
-	// 	$(".icon__stop-circle").show();
-	// })
-	// 	$(".icon__stop-circle").on("click",function(){
-	// 	$(".icon__stop-circle").hide();
-	// 	$(".icon__play-circle").show();
-	// })
-	// 	$(document).ready(function () {
-	// 	$(".icon__play-circle, .icon__stop-circle").on("click", function () {
-	// 		$(".icon__play-circle, .icon__stop-circle").toggle();
-	// 	});
-	// });
 
-		$(document).ready(function () {
+	// 切換播放鍵與暫停鍵
+	$(document).ready(function () {
 		$(".card__img-box,.icon__play-circle, .icon__stop-circle").on("click", function () {
 			$(this).closest(".card__img-box").find(".icon__play-circle, .icon__stop-circle").toggle();
-		});
 	});
-
 
 </script>
 <section class="card-container">
-	@model int?
-	@for (int i = 0; i < Model!.Value; i++)
+	@model Tuple<int, string>
+
+	@{
+		var count = Model.Item1; // 數量
+		var category = Model.Item2; // 類別
+	}
+
+	@for (int i = 0; i < count; i++)
 	{
-		<div class="card__item">
+
+		<div class="card__item  card__item-music">
 			<div class="card__img-box">
 				<img class="card__img" src="/image/selection/selectionBanner.png" />
 
@@ -105,39 +96,16 @@
 					<path d="M5 6.5A1.5 1.5 0 0 1 6.5 5h3A1.5 1.5 0 0 1 11 6.5v3A1.5 1.5 0 0 1 9.5 11h-3A1.5 1.5 0 0 1 5 9.5z" />
 				</svg>
 			</div>
-			<h6>XXX-@i</h6>
-			<p>XXX</p>
+			<h6>Portfolio - XXX-@i</h6>
+			<p>Portfolio Description</p>
+
 			@{
-				await Html.RenderPartialAsync("_IconPartial",2);
+				await Html.RenderPartialAsync("_IconPartial", 2);
 			}
 		</div>
+
+
 	}
-	@* 
-	@foreach (var item in Model.Items)
-	{
-		<div class="card-header">
-			<h4 class="card-title">@item.Title</h4>
-		</div>
-		<div class="card-body">
-			<p class="card-text">@item.Description</p>
-		</div>
-		<div class="card-footer">
-			<a href="@item.Link" class="btn btn-primary">Go to @item.Title</a>
-		</div>
-	}) *@
 
 
-	@* @if (Model.HasValue)
-{
-    @for (int i = 0; i < Model.Value; i++)
-    {
-        <p>num: @i</p>
-    }
-}
-else
-{
-    <p>Model is null</p>
-}
-
- *@
 </section>
