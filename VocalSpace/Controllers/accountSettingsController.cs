@@ -16,7 +16,20 @@ namespace VocalSpace.Controllers
         }
         public IActionResult imageSetting()
         {
+            return View();
+        }
 
+        public IActionResult changeEmail()
+        {
+            return View();
+        }
+
+        public IActionResult changePassword()
+        {
+            return View();
+        }
+        public IActionResult deleteAccount()
+        {
             return View();
         }
     }

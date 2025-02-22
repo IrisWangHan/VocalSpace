@@ -1,0 +1,34 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<link rel="stylesheet" href="~/css/memberInformation.css" asp-append-version="true" />
+
+<section>
+    <div class="container">
+        <h1>帳號設定</h1>
+        <hr>
+        <div class="row">
+            @await Html.PartialAsync("partialViewAccountSettings")
+            <div class="col-md-8 col-lg-8">
+                <h2 class="mb-4">你確定要刪除你的帳號嗎？</h2>
+                <div class="mb-5">
+                    <p>
+                        為維護你的權益，在刪除帳號之前，請務必詳讀以下事項！<br>
+                        刪除帳號後：
+                    </p>
+                    <ol>
+                        <li>StreetVoice 將不保留你網站上原先的所有內容，務必先自行備份。</li>
+                        <li>刪除帳號會無法再存取已建立的交易記錄，如：拍拍手、周邊購買記錄。</li>
+                        <li>之後將無法再重新啟動此帳號。</li>
+                        <li>因帳號關聯資料眾多，實際完整刪除資料可能需要 48 小時至數天。</li>
+                    </ol>
+                    <p>如你已確認以上事項，再請點擊「刪除帳號」的按鈕！</p>
+                </div>
+                <button>刪除帳號</button>
+            </div>
+		</div>
+   </div>
+</section>
+
