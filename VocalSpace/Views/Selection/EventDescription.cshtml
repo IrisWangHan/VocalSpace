@@ -1,0 +1,103 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<section class="banner">
+	<div class="banner__left">
+		<img class="banner__left-img" src="@Url.Content("~/image/selection/bannerLightning.png")" />
+		<button class="btn btn-submit--theme banner__left-btn">前往徵選</button>
+	</div>
+	<div class="banner__right">
+		<img class="banner__right-img" src="@Url.Content("~/image/selection/bannerContent.png")" />
+	</div>
+</section>
+
+<section class="content ">
+	<div class="content__title">
+		<h1>活動標題</h1>
+		<p>徵選截止日:</p>
+		<p>徵選狀態:</p>
+		<p>投票狀態:</p>
+	</div>
+	<div class="content__menu  border-bottom">
+		<ul>
+			<li class="content__menu-item" data-target="#descrition">活動說明</li>
+			<li class="content__menu-item" data-target="#works">參加作品</li>
+		</ul>
+	</div>
+	<div class="content__card-area">
+		<div class="content-section" id="descrition">
+			<h1>123333</h1>
+		</div>
+		<div class="content-section" id="works">
+			@{
+				await Html.RenderPartialAsync("_CardPartial");
+			}
+		</div>
+
+	</div>
+</section>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script>
+	$(document).ready(function () {
+	$(".content__menu-item").on("click", function () {
+			   // 1️⃣ 先移除所有按鈕的 `active` 狀態
+			   $(".content__menu-item").removeClass("content__menu--click");
+
+			   // 2️⃣ 再把當前點擊的按鈕加上 `active`
+			   $(this).addClass("content__menu--click");
+				 console.log($(this));
+			   // 3️⃣ 取得對應要顯示的區塊 ID
+			   let target = $(this).data("target");
+
+			   // 4️⃣ 隱藏所有 `.content-section`，再顯示對應的區塊
+			   $(".content-section").hide();
+			   $(target).fadeIn();
+			   console.log($(target));
+		   });
+
+		// 預設顯示第一個區塊
+		$(".content__menu li:first").click();
+	});
+
+</script>
+<style>
+	.content__menu--click {
+		background-color: cornflowerblue;
+	}
+
+	.content__menu {
+		margin: 30px 0px;
+	}
+
+		.content__menu ul {
+			color: black;
+			list-style: none;
+			margin: 0;
+			padding: 0;
+			display: flex;
+		}
+
+		.content__menu li {
+			/* border: 1px solid blue; */
+			/* color: black; */
+			width: 200px;
+			height: 50px;
+			margin: 10px;
+			border-radius: 10px;
+			line-height: 50px;
+			text-align: center;
+			background-color: gray;
+			color: aliceblue;
+			font-weight: bold;
+			font-size: 18px;
+			cursor: pointer;
+		}
+
+			.content__menu li:hover {
+				background-color: cornflowerblue;
+			}
+
+</style>

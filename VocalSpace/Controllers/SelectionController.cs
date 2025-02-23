@@ -8,5 +8,9 @@ namespace VocalSpace.Controllers
         {
             return View();
         }
+        public IActionResult EventDescription()
+        {
+            return View();
+        }
     }
 }
