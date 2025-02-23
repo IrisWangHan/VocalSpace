@@ -2,6 +2,14 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
+	var deadline = "2024-01-01";
+	var joinState = "已截止";
+	var voteState = "徵選中";
+	var descriptionContent = @"For more information on enabling MVC for empty projects For more
+				information on enabling MVC for empty projects For more information on enabling MVC for empty projects
+				information on enabling MVC for empty projects For more information on enabling MVC for empty projects
+				information on enabling MVC for empty projects For more information on enabling MVC for empty projects
+				information on enabling MVC for empty projects For more information on enabling MVC for empty projects";
 }
 <section class="banner">
 	<div class="banner__left">
@@ -14,26 +22,64 @@
 </section>
 
 <section class="content ">
-	<div class="content__title">
-		<h1>活動標題</h1>
-		<p>徵選截止日:</p>
-		<p>徵選狀態:</p>
-		<p>投票狀態:</p>
+	<div class="content__header">
+		<div class="content__header-title">
+			<h1>活動標題 </h1>
+			<br />
+			<p>徵選截止日:@deadline</p>
+			<p>
+				徵選狀態: <span style="color:@(joinState == "徵選中" ? "red" : "gray")">@joinState</span>
+			</p>
+			<p>
+				投票狀態: <span style="color:@(voteState == "徵選中" ? "red" : "gray")">@voteState</span>
+			</p>
+			<a href="/" class="btn btn-submit--theme">我要參加徵選</a>
+		</div>
+		<div class="content__header-aside">
+			<div class="content-section works">
+				<img src="/image//selection//voteAD.png" />
+			</div>
+			<div class="content-section descrition">
+				<h5>徵選活動日程</h5>
+				<p>@deadline 開始</p>
+				<p>@deadline 結束</p>
+				<button class="btn btn-submit--theme">加入google行事曆</button>
+			</div>
+		</div>
 	</div>
 	<div class="content__menu  border-bottom">
 		<ul>
-			<li class="content__menu-item" data-target="#descrition">活動說明</li>
-			<li class="content__menu-item" data-target="#works">參加作品</li>
+			<li class="content__menu-item" data-target=".descrition">活動說明</li>
+			<li class="content__menu-item" data-target=".works">參加作品</li>
 		</ul>
 	</div>
 	<div class="content__card-area">
-		<div class="content-section" id="descrition">
-			<h1>123333</h1>
+		<div class="content-section descrition">
+			<p>活動說明</p><br /><br />
+			<span>@descriptionContent</span>
 		</div>
-		<div class="content-section" id="works">
+		<div class="content-section works">
+			<h3 class ="fw-bold">所有參加作品數:</h3>
 			@{
 				await Html.RenderPartialAsync("_CardPartial");
 			}
+			<div aria-label="Page navigation example">
+				<ul class="pagination">
+					<li class="page-item">
+						<a class="page-link" href="#" aria-label="Previous">
+							<span aria-hidden="true">&laquo;</span>
+						</a>
+					</li>
+					<li class="page-item"><a class="page-link" href="#">1</a></li>
+					<li class="page-item"><a class="page-link" href="#">2</a></li>
+					<li class="page-item"><a class="page-link" href="#">3</a></li>
+					<li class="page-item">
+						<a class="page-link" href="#" aria-label="Next">
+							<span aria-hidden="true">&raquo;</span>
+						</a>
+					</li>
+				</ul>
+			</div>
 		</div>
 
 	</div>
@@ -41,63 +87,26 @@
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 
 <script>
-	$(document).ready(function () {
-	$(".content__menu-item").on("click", function () {
-			   // 1️⃣ 先移除所有按鈕的 `active` 狀態
-			   $(".content__menu-item").removeClass("content__menu--click");
+	$(document).ready(function() {
+			$(".content__menu-item").on("click", function () {
+		// 先重置所有選單的背景色
+		$(".content__menu-item").css({
+			"background-color": "gray",
+			"color": "aliceblue"
+		});
 
-			   // 2️⃣ 再把當前點擊的按鈕加上 `active`
-			   $(this).addClass("content__menu--click");
-				 console.log($(this));
-			   // 3️⃣ 取得對應要顯示的區塊 ID
-			   let target = $(this).data("target");
+		// 改變當前選單的背景色
+		$(this).css({
+			"background-color": "cornflowerblue",
+			"color": "white"
+		});
 
-			   // 4️⃣ 隱藏所有 `.content-section`，再顯示對應的區塊
-			   $(".content-section").hide();
-			   $(target).fadeIn();
-			   console.log($(target));
-		   });
-
-		// 預設顯示第一個區塊
-		$(".content__menu li:first").click();
+		let target = $(this).data("target");
+		$(".content-section").hide();
+		$(target).fadeIn();
 	});
+	 // 預設點擊第一個選單
+	$(".content__menu-item:first").trigger("click");
 
+	});
 </script>
-<style>
-	.content__menu--click {
-		background-color: cornflowerblue;
-	}
-
-	.content__menu {
-		margin: 30px 0px;
-	}
-
-		.content__menu ul {
-			color: black;
-			list-style: none;
-			margin: 0;
-			padding: 0;
-			display: flex;
-		}
-
-		.content__menu li {
-			/* border: 1px solid blue; */
-			/* color: black; */
-			width: 200px;
-			height: 50px;
-			margin: 10px;
-			border-radius: 10px;
-			line-height: 50px;
-			text-align: center;
-			background-color: gray;
-			color: aliceblue;
-			font-weight: bold;
-			font-size: 18px;
-			cursor: pointer;
-		}
-
-			.content__menu li:hover {
-				background-color: cornflowerblue;
-			}
-
-</style>
