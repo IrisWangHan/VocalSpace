@@ -6,6 +6,8 @@
 		justify-content: center;
 		align-items: center;
 		flex-wrap: wrap;
+		   background-color: var(--bg-color);
+		color: var(--text-color);
 	}
 
 	.card__item {
@@ -14,9 +16,12 @@
 		margin: 30px;
 		border-radius: 5px;
 		background-color: #f9f9f9;
+		color:black;
 		width: 300px;
 		height: 340px;
-
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 	}
 
 	.card__img-box, .card__img {
@@ -61,28 +66,11 @@
 	}
 
 </style>
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
 
-<script>
-
-	// 切換播放鍵與暫停鍵
-	$(document).ready(function () {
-		$(".card__img-box,.icon__play-circle, .icon__stop-circle").on("click", function () {
-			$(this).closest(".card__img-box").find(".icon__play-circle, .icon__stop-circle").toggle();
-	});
-
-</script>
 <section class="card-container">
-	@model Tuple<int, string>
-
-	@{
-		var count = Model.Item1; // 數量
-		var category = Model.Item2; // 類別
-	}
-
-	@for (int i = 0; i < count; i++)
+	@model int
+	@for (int i = 0; i < 10; i++)
 	{
-
 		<div class="card__item  card__item-music">
 			<div class="card__img-box">
 				<img class="card__img" src="/image/selection/selectionBanner.png" />
@@ -98,14 +86,20 @@
 			</div>
 			<h6>Portfolio - XXX-@i</h6>
 			<p>Portfolio Description</p>
-
 			@{
 				await Html.RenderPartialAsync("_IconPartial", 2);
 			}
 		</div>
-
-
 	}
-
-
 </section>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+	// 切換播放鍵與暫停鍵
+	$(document).ready(function () {
+		$(".card__img-box").on("click", function () {
+			// 找到 .icon__play-circle 和 .icon__stop-circle，並切換顯示狀態
+			$(this).find(".icon__play-circle, .icon__stop-circle").toggle();
+		});
+	});
+
+</script>

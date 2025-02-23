@@ -1,0 +1,112 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+	var deadline = "2024-01-01";
+	var joinState = "已截止";
+	var voteState = "徵選中";
+	var descriptionContent = @"For more information on enabling MVC for empty projects For more
+				information on enabling MVC for empty projects For more information on enabling MVC for empty projects
+				information on enabling MVC for empty projects For more information on enabling MVC for empty projects
+				information on enabling MVC for empty projects For more information on enabling MVC for empty projects
+				information on enabling MVC for empty projects For more information on enabling MVC for empty projects";
+}
+<section class="banner">
+	<div class="banner__left">
+		<img class="banner__left-img" src="@Url.Content("~/image/selection/bannerLightning.png")" />
+		<button class="btn btn-submit--theme banner__left-btn">前往徵選</button>
+	</div>
+	<div class="banner__right">
+		<img class="banner__right-img" src="@Url.Content("~/image/selection/bannerContent.png")" />
+	</div>
+</section>
+
+<section class="content ">
+	<div class="content__header">
+		<div class="content__header-title">
+			<h1>活動標題 </h1>
+			<br />
+			<p>徵選截止日:@deadline</p>
+			<p>
+				徵選狀態: <span style="color:@(joinState == "徵選中" ? "red" : "gray")">@joinState</span>
+			</p>
+			<p>
+				投票狀態: <span style="color:@(voteState == "徵選中" ? "red" : "gray")">@voteState</span>
+			</p>
+			<a href="/" class="btn btn-submit--theme">我要參加徵選</a>
+		</div>
+		<div class="content__header-aside">
+			<div class="content-section works">
+				<img src="/image//selection//voteAD.png" />
+			</div>
+			<div class="content-section descrition">
+				<h5>徵選活動日程</h5>
+				<p>@deadline 開始</p>
+				<p>@deadline 結束</p>
+				<button class="btn btn-submit--theme">加入google行事曆</button>
+			</div>
+		</div>
+	</div>
+	<div class="content__menu  border-bottom">
+		<ul>
+			<li class="content__menu-item" data-target=".descrition">活動說明</li>
+			<li class="content__menu-item" data-target=".works">參加作品</li>
+		</ul>
+	</div>
+	<div class="content__card-area">
+		<div class="content-section descrition">
+			<p>活動說明</p><br /><br />
+			<span>@descriptionContent</span>
+		</div>
+		<div class="content-section works">
+			<h3 class ="fw-bold">所有參加作品數:</h3>
+			@{
+				await Html.RenderPartialAsync("_CardPartial");
+			}
+			<div aria-label="Page navigation example">
+				<ul class="pagination">
+					<li class="page-item">
+						<a class="page-link" href="#" aria-label="Previous">
+							<span aria-hidden="true">&laquo;</span>
+						</a>
+					</li>
+					<li class="page-item"><a class="page-link" href="#">1</a></li>
+					<li class="page-item"><a class="page-link" href="#">2</a></li>
+					<li class="page-item"><a class="page-link" href="#">3</a></li>
+					<li class="page-item">
+						<a class="page-link" href="#" aria-label="Next">
+							<span aria-hidden="true">&raquo;</span>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+	</div>
+</section>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script>
+	$(document).ready(function() {
+			$(".content__menu-item").on("click", function () {
+		// 先重置所有選單的背景色
+		$(".content__menu-item").css({
+			"background-color": "gray",
+			"color": "aliceblue"
+		});
+
+		// 改變當前選單的背景色
+		$(this).css({
+			"background-color": "cornflowerblue",
+			"color": "white"
+		});
+
+		let target = $(this).data("target");
+		$(".content-section").hide();
+		$(target).fadeIn();
+	});
+	 // 預設點擊第一個選單
+	$(".content__menu-item:first").trigger("click");
+
+	});
+</script>
