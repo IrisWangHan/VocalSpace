@@ -4,7 +4,7 @@
 
 
 <h3>歡迎使用 Vocal Space</h3>
-	<form action="/login" method="post" class="Login">
+	<form action="/Home/Index" method="post" class="Login">
 		<div class="form-group">
 			<input type="text" id="Username" name="Username" class="form-control" placeholder="帳號 / 電子信箱" required />
 		</div>
@@ -23,9 +23,7 @@
 			</div>
 			<a href="/Accounts/ForgetPassword" class="form-forget">忘記密碼</a>
 		</div>
-		<div>
-			<p></p>
-		</div>
+
 		<div class="button-container">
 			<button type="submit" class="btn-login btn btn-primary btn-lg">登入</button>
 			<a href="#" class="btn-fb btn btn-block btn-lg">
@@ -42,7 +40,7 @@
 			</a>
 		</div>
 	</form>
-	<a href="/Home/Index" class="btn btn-link btn-lg btn-block"> 
+	<a href="/Accounts/Signup" class="btn btn-link btn-lg btn-block"> 
 		<span class="btn-signup">立即註冊</span>
 	</a>
 

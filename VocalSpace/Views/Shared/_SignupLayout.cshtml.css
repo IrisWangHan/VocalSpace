@@ -1,0 +1,83 @@
+﻿.progress-container {
+  max-width: 1000px;
+  margin: 75px auto 55px auto;
+  padding: 0 20px;
+  position: relative;
+}
+
+.progress-steps {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.progress-line {
+  flex: 1;
+  height: 1px;
+  background: #e0e0e0;
+  margin: 0 10px;
+}
+
+.progress-line.active {
+  background: #f9595f;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+}
+
+.step-circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.step-label {
+  color: #666;
+  font-size: 14px;
+  text-align: center;
+  min-width: max-content;
+  margin-top: 10px;
+}
+
+.step.active .step-circle {
+  background-color: #f9595f;
+}
+
+.step.active .step-label {
+  color: #f9595f;
+}
+
+.signup-step-container {
+  /* 裡面元素的排版*/
+  display: flex;
+  flex-direction: column; /* 讓內部元素垂直排列 */
+  align-items: center; /* 水平置中 */
+  /*    text-align: center;*/
+
+  width: auto;
+  height: 100%;
+  padding: 0 2% 3% 2%;
+  margin: 1% 0 3% 0;
+  border: 1px solid #cccccc84;
+  border-radius: 3px;
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2);
+}
+.main {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

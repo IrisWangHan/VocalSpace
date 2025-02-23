@@ -1,0 +1,163 @@
+﻿@{
+	Layout = "_SignupLayout";  
+}
+<form>
+    <!-- Step 1: 帳號密碼設定 -->
+    <div class="step" id="step1">
+        <h3>帳號密碼設定</h3>
+        <div class="form-group">
+            <h5 >帳號</h5>
+            <p class="text-tip">只能包含英文字母、數字、_ 符號<br />且長度介於 3 ~ 30 個字元，不建議使用私密資訊</p>
+            <input type="text" id="username" name="username" required />
+        </div>
+        <div class="form-group">
+            <h5>密碼</h5>
+            <p class="text-tip">長度須介於 6 ~ 28 個字元</p>
+            <div class="input-group" >
+                <input type="password" id="newPassword" name="newPassword" class="form-control" required />
+                <span class="password-toggle">
+                    <i class="bi bi-eye-fill" id="togglePassword"></i>
+                </span> 
+            </div>
+        </div>
+        <button type="button" class="btn-next" data-step="1" disabled>下一步</button>
+    </div>
+
+    <!-- Step 2: 電子信箱 -->
+    <div class="step" id="step2" style="display: none;">
+        <h3>電子信箱</h3>
+        <div class="form-group">
+            <input type="email" id="email" name="email" placeholder="請輸入電子郵件" required />
+        </div>
+        <div class="g-recaptcha mt-3" data-sitekey="6Lc1ydwqAAAAANi3QFvKUuS-7VinRux5SQtfMJmU"></div>
+        <button type="button" class="btn-next" data-step="2" disabled>下一步</button>
+    </div>
+
+    <!-- Step 3: 接收驗證碼 -->
+    <div class="step" id="step3" style="display: none;">
+        <h3>接收驗證碼</h3>
+        <div class="form-group">
+            <h5>驗證碼</h5>
+            <input type="text" id="verification_code" name="verification_code" required />
+        </div>
+        <button type="button" id="resendCode" disabled>重新發送 (180)</button>
+        <button type="button" class="btn-next" data-step="3" disabled>下一步</button>
+    </div>
+
+    <!-- Step 4: 基本資料 -->
+    <div class="step" id="step4" style="display: none;">
+        <h3>基本資料</h3>
+        <div class="form-group">
+            <h5>暱稱</h5>
+            <input type="text" id="nickname" name="nickname" required />
+        </div>
+        <div class="form-group">
+            <h5 >性別</h5>
+            <select id="gender" name="gender" required>
+                <option value="">請選擇</option>
+                <option value="1">男</option>
+                <option value="2">女</option>
+                <option value="3">其他</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <h5>生日</h5>
+            <input type="date" id="birthdate" name="birthdate" required />
+        </div>
+        <div class="form-group">
+            <h5>介紹 (選填)</h5>
+            <textarea id="bio" name="bio"></textarea>
+        </div>
+        <button type="submit" class="btn-next" data-step="4" disabled>送出</button>
+    </div>
+
+    <div class="step" id="step5" style="display: none;">
+        <h3>完成註冊🎉</h3>
+        <button type="button" onclick="window.location.href='index.html'">回到首頁</button>
+    </div>
+</form>
+
+
+
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="~/js/Accounts.js"></script>
+    <script>
+        $(document).ready(function () {
+            // 監聽所有步驟的 input 和 select
+            $(document).on("input change", "input[required], select[required]", function () {
+                let step = $(this).closest(".step");
+                let nextButton = step.find(".btn-next");
+
+                // 檢查此步驟內的所有 required 欄位是否填寫
+                let allFilled = step.find("input[required], select[required]").filter(function () {
+                    return $(this).val().trim() === "";
+                }).length === 0;
+
+                nextButton.prop("disabled", !allFilled);
+            });
+
+            let countdown = 180; // 初始倒數秒數
+            let timer; // 用來存 setInterval()
+
+            // 下一步按鈕邏輯
+            $(".btn-next").click(function () {
+                let currentStep = $(this).data("step");
+
+                // 如果是 step2，則檢查 reCAPTCHA 是否通過驗證
+                if (currentStep === 2) {
+                    let recaptchaResponse = grecaptcha.getResponse();
+                    if (!recaptchaResponse) {
+                        alert("請完成 reCAPTCHA 驗證再繼續！");
+                        return; // 停止執行，不跳到下一步
+                    }
+                }
+
+                $(`#step${currentStep}`).hide();
+                $(`#step${currentStep + 1}`).show();
+                updateProgress(currentStep+1);
+                if (currentStep === 2) {
+                    startCountdown();
+                }
+            });
+        });
+
+
+
+        document.getElementById("togglePassword").addEventListener("click", function () {
+            let newPasswordField = document.getElementById("newPassword");
+            if (newPasswordField.type === "password") {
+                newPasswordField.type = "text";
+                this.classList.replace("bi-eye-fill", "bi-eye-slash-fill"); // 切換圖標
+            } else {
+                newPasswordField.type = "password";
+                this.classList.replace("bi-eye-slash-fill", "bi-eye-fill"); // 切換回來
+            }
+        });
+
+        // 倒數計時函數
+        function startCountdown() {
+            clearInterval(timer); // 確保不會有重複的計時器
+            countdown = 10;
+            $("#resendCode").prop("disabled", true).text(`重新發送 (${countdown})`);
+
+            timer = setInterval(() => {
+                countdown--;
+                $("#resendCode").text(`重新發送 (${countdown})`);
+
+                if (countdown <= 0) {
+                    clearInterval(timer);
+                    $("#resendCode").prop("disabled", false).text("重新發送");
+                }
+            }, 1000);
+        }
+
+        // 監聽重新發送按鈕
+        $("#resendCode").click(function () {
+            alert("驗證碼已重新發送！");
+            startCountdown();
+        });
+
+    </script>
+}

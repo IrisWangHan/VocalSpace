@@ -1,0 +1,50 @@
+﻿@{
+    Layout = "_Layout";  // 引用全域的 _Layout.cshtml
+}
+
+
+<div class="progress-container">
+    <div class="progress-steps">
+        <div class="step active" data-step="1">
+            <div class="step-circle">1</div>
+            <div class="step-label">帳號密碼設定</div>
+        </div>
+        <div class="progress-line" data-line="1-2"></div>
+        <div class="step active" data-step="2">
+            <div class="step-circle">2</div>
+            <div class="step-label">手機號碼</div>
+        </div>
+        <div class="progress-line" data-line="2-3"></div>
+        <div class="step" data-step="3">
+            <div class="step-circle">3</div>
+            <div class="step-label">接收驗證碼</div>
+        </div>
+        <div class="progress-line" data-line="3-4"></div>
+        <div class="step" data-step="4">
+            <div class="step-circle">4</div>
+            <div class="step-label">完善基本資料</div>
+        </div>
+        <div class="progress-line" data-line="4-5"></div>
+        <div class="step" data-step="5">
+            <div class="step-circle">5</div>
+            <div class="step-label">完成註冊</div>
+        </div>
+    </div>
+</div>
+<div class="main">
+    <div class="signup-step-container">
+        @RenderBody()
+    </div>
+</div>
+@RenderSection("Scripts", required: false)
+
+
+@section Scripts {
+        <script src="~/js/Accounts.js"></script>
+        <script>
+            $(document).ready(function() {
+                updateProgress(1);
+            });
+
+        </script>
+}
