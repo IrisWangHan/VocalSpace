@@ -168,7 +168,7 @@
 				</a>
 			</div>
 			<div class="footer__copyright">
-				&copy; 2025 - VocalSpace - 本網站僅限資策會課程上使用
+				<span>&copy; 2025 - VocalSpace - 本網站僅限資策會課程上使用</span>
 			</div>
 			<div class="footer__link">
 				<a href="#">
@@ -211,34 +211,34 @@
 
 
 					$(".header__icon-mode-svg").animate(
-						{ left: "42px" }, 1000);
+						{ left: "42px" }, 300);
 
 					$(".header__icon-mode-span").animate(
 						{
 							left: "10px",          // 移動元素
 							opacity: 0             // 改變透明度為 0（完全透明）
-						},800,function() {                 // 動畫結束後的回調函數
+						},150,function() {                 // 動畫結束後的回調函數
 								$(this).css("opacity", 1);  // 動畫結束後，恢復不透明
 						});
 										setTimeout(function() {
 					$(".header__icon-mode-span").text("Light");
-				}, 600);
+				}, 150);
 
 					} else {
-						$(".header__icon-mode-svg").animate({ left: "0px" }, 1000);
+						$(".header__icon-mode-svg").animate({ left: "0px" }, 150);
 						$(".header__icon-mode-span").animate(
 							{
 								left: "28px",          // 移動元素
 								opacity: 0             // 改變透明度為 0（完全透明）
 							},
-							800,                        // 1秒（1000毫秒）動畫
+							150,                        // 1秒（1000毫秒）動畫
 							function() {                 // 動畫結束後的回調函數
 								$(this).css("opacity", 1);  // 動畫結束後，恢復不透明
 							});
 
 						setTimeout(function() {
 							$(".header__icon-mode-span").text("Dark");
-						}, 600);
+						}, 150);
 					}
 					moveRight = !moveRight; // 切換方向
 				});
