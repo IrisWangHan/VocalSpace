@@ -4,8 +4,8 @@
     --fsize-menu: 0.8rem;
     --fsize-menu-lg: 1rem;
     /*主題套用顏色*/
-    --bg-color: #000000;
-    --text-color: #F5F5F5;
+    --bg-color: #181818;
+    --text-color: #FAFAFA;
     /*按鈕或文字可套用顏色*/
     --blue-dark: #007bff;
     --blue-light: #339dff;
@@ -13,7 +13,6 @@
     --gray-dark: #d72626;
     --text-gray: #827D7D;
     --text-white: #FFFFFF;
-   
 }
 * {
     box-sizing: border-box;
@@ -47,8 +46,8 @@ main {
 
 /* 當 `data-theme="light"` 時，變成亮色模式 */
 [data-theme="light"] {
-    --bg-color: #F5F5F5;
-    --text-color: #000000;
+    --bg-color: #FAFAFA;
+    --text-color: #181818;
 }
 a {
     color: var(--text-color);
