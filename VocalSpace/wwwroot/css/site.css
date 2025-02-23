@@ -26,6 +26,11 @@ html {
     font-size: 16px;
     position: relative;
 }
+@media (max-width: 576px) {
+    body {
+        font-size: var(--fsize-menu);
+    }
+}
 body {
     width: 100%;
     min-height: 100vh; /* 最小高度等於視窗高度  怕頁面內容太少footer往上跑*/

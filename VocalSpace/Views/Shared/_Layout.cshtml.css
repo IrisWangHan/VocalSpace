@@ -149,7 +149,7 @@
 .header__menu-btn {
     position: absolute;
     left: 5px;
-    top: 10px;
+    /*top: 10px;*/
     cursor: pointer;
     display: none;
 }
@@ -530,7 +530,7 @@ button.accept-policy {
     /*【logo】*/
     .header__logo {
         position: absolute;
-        left: 50%; /* 讓左邊緣對齊視窗 50% */
+        left: 45%; /* 讓左邊緣對齊視窗 50% */
         transform: translate(-40%); /* 向左移動自身寬度的一半，使其真正置中 */
     }
 }
