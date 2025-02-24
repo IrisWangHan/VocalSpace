@@ -1,0 +1,90 @@
+﻿用 「/」「/」 包起來，才表示是 Regular Expression 的語法
+「^」 表示是開始必須符合的格式
+「$ 」表示是結尾必須符合的格式
+「\w」表示英文或數字
+「\d」表示只能為數字
+「\.」表示 「.」，前面的 \ 為跳脫字元 (escape)
+「\-」表示 「-」，前面的 \ 為跳脫字元 (escape)
+「|」表示 or ，即左右兩邊只能出現其中一個
+「+」表示出現 1 次以上
+「*」表示出現 0 次以上
+「A-Z」表示英文大寫 A ~ Z
+「a-z」表示英文小寫 a ~ z
+「0-9」表示數字 0 ~ 9，同「\d」
+[A-Za-z0-9] 表示大小寫英文及數字的組合
+
+[Email]
+	emailRule = /^  \w  + ((-\w+) | (\.\w+))*\@[A-Za-z0-9]  +  ((\.|-)[A-Za-z0-9] + )*\.[A-Za-z]  +  $/;
+
+	  ^\w+：						@之前必須以一個以上的文字&數字開頭，例如 abc
+	  ((-\w+)：					@ 之前可以出現 1 個以上的文字、數字或「-」的組合，例如 -abc-
+	  (\.\w+))：					@ 之前可以出現 1 個以上的文字、數字或「.」的組合，例如 .abc.
+	  ((-\w+)|(\.\w+))*：		以上兩個規則以 or 的關係出現，並且出現 0 次以上 (所以不能 –. 同時出現)
+	  @：						中間一定要出現一個 @
+	  [A-Za-z0-9]+：				@ 之後出現 1 個以上的大小寫英文及數字的組合
+	  (\.|-)：					@ 之後只能出現「.」或是「-」，但這兩個字元不能連續時出現
+	  ((\.|-)[A-Za-z0-9]+)*：	@ 之後出現 0 個以上的「.」或是「-」配上大小寫英文及數字的組合
+	  \.[A-Za-z]+$/：			@ 之後出現 1 個以上的「.」配上大小寫英文及數字的組合，結尾需為大小寫英文
+
+
+    [前端]
+			$.ajax({
+				method: 'post',						 // 方法
+				url: '/Selection/SubmitApplication', // API
+				async: true,						 // 同步與非同步 ( false 為同步，true 為非同步 )
+				data: null,							 // 送出的資料
+				contentType:"application/json",		 // 送出的資料類型
+				datatype: 'json'				     // 回傳的類型	
+			}).done(res => console.log(res))		 // 成功則執行此函式
+				.fail(err => console.log(err))		 // 失敗則執行此函式	
+				.always(res => console.log('完成')); // 不論失敗或成功皆會執行此函式
+	[後端]
+		使用 [FromBody] 屬性來告訴 ASP.NET Core 這是從請求的 Body 中提取的資料，而不是從查詢字符串或表單資料中提取
+
+
+		****上完檔案不能用JSON  請用formdata  搭配[FromForm]
+		let formData = new FormData();
+		formData.append("file", $("input[type='file']")[0].files[0]); // 加入檔案
+		formData.append("userName", $("input[name='userName']").val());
+		formData.append("tel", $("input[name='tel']").val());
+		formData.append("email", $("input[name='email']").val());
+
+		$.ajax({
+			method: "post",
+			url: "/Selection/SubmitApplication",
+			data: formData,
+			processData: false,  // ⛔ 不要讓 jQuery 轉換 FormData
+			contentType: false,  // ⛔ 不要設定 Content-Type，瀏覽器會自動處理
+			success: function(res) {
+				console.log(res);
+				sessionStorage.removeItem("userName");
+				sessionStorage.removeItem("email");
+				sessionStorage.removeItem("tel");
+			},
+			error: function(err) {
+				console.log(err);
+			},
+			complete: function() {
+				console.log("完成");
+			}
+		});
+		FormData 是用來上傳檔案的表單資料，並且會自動將資料編碼為 multipart/form-data 格式，這與 JSON 格式不同。
+
+
+
+		[前後端 名稱大小寫不同時] 使用屬性[JsonProperty("userName")]
+			public class SelectionFormDTO
+			{
+				[JsonProperty("userName")]
+				public string UserName { get; set; }
+
+				[JsonProperty("email")]
+				public string Email { get; set; }
+
+				[JsonProperty("tel")]
+				public string Tel { get; set; }
+
+				[JsonProperty("file")]
+				public IFormFile File { get; set; }
+
+			}
