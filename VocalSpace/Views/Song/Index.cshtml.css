@@ -1,0 +1,79 @@
+﻿main {
+
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    /* 讓 main 元素的高度為視窗高度 */
+}
+
+.page-container {
+    flex:1;
+}
+
+.container {
+    width: 80%;
+    margin-top: 100px;
+    display: flex;
+}
+
+
+.col-md-4 img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 40px;
+}
+
+a {
+    text-decoration: none;
+}
+
+.col-md-4 {
+    max-width: 380px;
+}
+
+.col-md-8 {
+    position: relative;
+    padding-left: 45px;
+    padding-right: 15px;
+}
+
+.song-prop-row {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 45px;
+}
+
+/*.row-item-bottom {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}*/
+
+.row-item {
+    display: flex;
+    justify-content: space-between
+}
+
+.ui-button {}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .col-md-8 {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+@media (max-width: 432px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .col-md-8 {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}

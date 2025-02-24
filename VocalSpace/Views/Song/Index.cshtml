@@ -1,0 +1,69 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<title>聲維宇宙排行榜</title>
+<div class="page-container">
+	<div class="container">
+		<!-- 左側圖片區域 -->
+		<div class="col-md-4">
+			<img src="/image/song1exp.jpeg">
+		</div>
+		<!-- 右側音樂介紹區域 -->
+		<div class="row col-md-8">
+			<h1 class="cols-1">音樂標題</h1>
+			<div class="cols-3 song-prop-row opacity-75">
+				<div class="col-6">
+					<a href="#"><strong>音樂類別</strong></a>
+				</div>
+				<div class="col-6">
+					<a href="#"><strong>專輯名稱</strong></a>
+				</div>
+			</div>
+			<div class="cols-2">
+				<div class="row-item">
+					<ul class="list-inline opacity-75">
+						<li class="list-inline-item">
+							<h4 class="fs-6">播放次數</h4>
+							<h4>0</h4>
+						</li>
+						<li class="list-inline-item">
+							<h4 class="fs-6">喜歡</h4>
+							<h4>0</h4>
+						</li>
+					</ul>
+					<div class="ui-button">
+						@await Html.PartialAsync("_Songdetail_ButtonUI")
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<!-- 放在圖片下方的歌手資訊 -->
+	<div class="row-item opacity-75 d-flex align-items-center mb-3">
+		<!-- 歌手圖片 -->
+		<div class="col-3">
+			<img src="/image/artist.jpg" class="img-fluid rounded-circle" alt="歌手圖片">
+		</div>
+		<!-- 歌手名稱和帳號 -->
+		<div class="col-6">
+			<a>John Doe</a>
+			<a>johndoe</a>
+		</div>
+		<!-- 追蹤按鈕 -->
+		<div class="col-3 text-end">
+			<button class="btn btn-primary">追蹤</button>
+		</div>
+	</div>
+</div>
