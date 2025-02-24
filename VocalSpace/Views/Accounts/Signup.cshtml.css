@@ -27,12 +27,19 @@
     width:100%;
     height:2em;
 }
+#step5-title {
+    font-size: 35px;
+    margin: 15% 0 30% 0;
+    font-weight: bold;
+
+}
 h3{
-    margin:15% 0 20% 0;
+    margin:15% 0 15% 0;
     font-weight: bold;
 }
+
 h5 {
-    margin: 7% 0 5% 0;
+    margin: 5% 0 5% 0;
     font-weight: bold;
 }
 
@@ -49,6 +56,15 @@ input {
     font-size:12px;
 }
 
+#step5 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+}
 #resendCode {
     margin-top: 12px;
     width: 60%;
@@ -67,4 +83,63 @@ input {
     border: 1px solid #dfdfdf;
     border-radius: 5px;
     padding: 5px 10px
+}
+
+#btn-backHome {
+    margin: 2em 0 20px 0;
+    width: 100%;
+    font-weight: bold;
+    font-size: 14px;
+    color: #4e4e4e;
+    border: 1px solid #dfdfdf;
+    border-radius: 5px;
+    padding: 2px 2px;
+    text-decoration: none;
+}
+/* 新增的樣式 */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 8px;
+}
+
+.required::after {
+    content: "必填";
+    font-size: 12px;
+    color: white;
+    background-color: #F9595F;
+    padding: 1px 6px;
+    border-radius: 12px;
+}
+
+/* 新增水平排列的容器 */
+.horizontal-group {
+    display: flex;
+    gap: 20px; /* 左右欄位的間距 */
+}
+
+    .horizontal-group .form-group {
+        flex: 1; /* 讓兩個欄位平均分配寬度 */
+    }
+
+select {
+    width: 100%;
+    height: 30px;
+    border: 1px solid #dfdfdf;
+    border-radius: 5px;
+    padding-left: 10px;
+}
+
+textarea {
+    width: 300px;
+    border: 1px solid #dfdfdf;
+    border-radius: 5px;
+    padding: 5px;
+    resize: none;
+    height: 100px;
 }
