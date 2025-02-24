@@ -1,0 +1,31 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<!-- 音樂人區塊 -->
+<div class="ranking-item">
+    <!-- 圖片改為歌手大頭貼 -->
+    <img src="./img/artistPhoto.jpg" class="cover-block" alt="artist photo">
+
+    <!-- info 區塊：只放「歌手名字」，用原本 .song 樣式即可 -->
+    <div class="info">
+        <p class="song">歌手名字</p>
+    </div>
+
+    <!-- 只保留最右邊的一個按鈕，初始文字為「追蹤」，背景為紅色 -->
+    <button class="btn-follow" onclick="toggleFollow(this)">追蹤</button>
+</div>
+
+<!-- 切換「追蹤」/「已追蹤」的簡易 JS -->
+<script>
+    function toggleFollow(btn) {
+        if (btn.innerText === "追蹤") {
+            btn.innerText = "已追蹤";
+        } else {
+            btn.innerText = "追蹤";
+        }
+    }
+</script>
+

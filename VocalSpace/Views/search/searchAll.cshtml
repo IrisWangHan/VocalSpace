@@ -4,6 +4,8 @@
 @{
 }
 <link rel="stylesheet" href="~/css/search.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/song.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/partialViewArtist.css" asp-append-version="true" />
 
 <div class="container pb-10 pt-5">
     <h1 class="mb-4 position-relative search-title">
@@ -27,8 +29,18 @@
                     <a class="nav-link nav-name" href="#">音樂人</a>
                 </li>
             </ul>
-            <div class="tab-content"></div>
+            <div class="tab-content">
+                
+                @await Html.PartialAsync("partialViewSong")
+                @await Html.PartialAsync("partialViewSong")
+                @await Html.PartialAsync("partialViewArtist")
+            </div>
+            <div class="mt-5 mb-5 text-center">
+                <button class="btn btn-loadmore">點我看更多</button>
+            </div>
         </div>
         <div></div>
     </div>
 </div>
+<script src="~/js/search.js" asp-append-version="true"></script>
+<script src="~/js/partialViewSong.js" asp-append-version="true"></script>

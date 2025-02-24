@@ -117,17 +117,7 @@
                     <button class="btn btn-outline-secondary add" onclick="playSong(1)"><i class="bi bi-play"></i></button>
                 </div>
 
-                <div class="ranking-item">
-                    <img src="~/image/idol.jpg" class="cover-block" alt="song cover">
-                    <div class="info">
-                        <p class="song">打不通的電話</p>
-                        <p class="artist">Sean Ko 高翔</p>
-                    </div>
-                    <button class="btn btn-outline-secondary add"><i class="bi bi-plus-lg"></i></button>
-                    <button class="btn btn-outline-secondary add"><i class="bi bi-share"></i></button>
-                    <button class="btn btn-outline-secondary heart"><i class="bi bi-heart-fill"></i> 684</button>
-                    <button class="btn btn-outline-secondary add" onclick="playSong(2)"><i class="bi bi-play"></i></button>
-                </div>
+				@await Html.PartialAsync("partialViewSong")
             </div>
             <div class="mt-5 mb-5 text-center">
 				<button class="btn btn-lg btn-loadmore">點我看更多</button>
