@@ -22,6 +22,10 @@ namespace VocalSpace.Controllers
         {
             return View();
         }
+        public IActionResult HotRank()
+        {
+            return View();
+        }
 
         public IActionResult About()
         {

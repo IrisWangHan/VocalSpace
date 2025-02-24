@@ -10,6 +10,7 @@
 	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 	<link rel="stylesheet" href="~/VocalSpace.styles.css" asp-append-version="true" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
 </head>
 <body>
@@ -37,7 +38,7 @@
 						<li><hr class="header__menu-hr" /></li>
 
 						<li class="nav-item header__menu-item">
-							<a class=" header__menu-item--theme" href="/Home/Index">Hot熱門</a>
+							<a class=" header__menu-item--theme" href="/Home/HotRank">Hot熱門</a>
 						</li>
 						<li><hr class="header__menu-hr" /></li>
 
@@ -66,7 +67,7 @@
 							<a class="header__menu-item--theme" href="/Home/Index">帳號設定</a>
 						</li>
 						<li class="nav-item header__menu-item header__menu-item2">
-							<a class="header__menu-item--theme" href="/Home/Index">蒐藏庫</a>
+							<a class="header__menu-item--theme" href="/Collection/like">蒐藏庫</a>
 						</li>
 
 						@if (isLogin)
