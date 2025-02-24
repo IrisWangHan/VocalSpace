@@ -1,0 +1,49 @@
+﻿/* 當 `data-theme="light"` 時，變成亮色模式 */
+[data-theme="light"] {
+    --bg-color: #F5F5F5;
+    --text-color: #000000;
+}
+
+a {
+    color: var(--text-color);
+}
+
+a:hover {
+        color: var(--text-color);
+ }
+
+img {
+    max-width: 100%; /*圖片最大寬度父元素的為100% 當圖片太大時,會保持比例放入*/
+    height: auto; /*圖片高度由RWD自動調整 圖片才不會變形*/
+}
+
+
+
+.search-title {
+    display:flex;
+}
+
+.mr-2 {
+    margin-right: .5rem;
+}
+
+.w-100 {
+    width:100%;
+}
+
+.nav-pills {
+    border-bottom: 1px solid #d2d2d2;
+    padding-bottom: 1.2rem;
+}
+
+.nav-name {
+    color: var(--text-color);
+    font-size: 1.5rem;
+    transition: all 0.1s ease;
+}
+
+    .nav-name:hover {
+        color: red;
+        border-bottom: 1px solid red;
+    }
+

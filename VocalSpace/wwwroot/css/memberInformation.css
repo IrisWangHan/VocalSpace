@@ -94,3 +94,29 @@ label {
 ol li {
     margin-bottom: 1rem;
 }
+
+.overlay {
+    position: fixed;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.modal-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    pointer-events: auto;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, .2);
+    border-radius: .3rem;
+    outline: 0;
+}
+/* 彈出視窗字體顏色 */
+.modal-content  p {
+        color: #000000;
+}
+.modal-title {
+    color: #000000;
+}

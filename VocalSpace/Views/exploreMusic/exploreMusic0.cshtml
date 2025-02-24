@@ -4,7 +4,7 @@
 @{
 }
 <link rel="stylesheet" href="~/css/exploreMusic.css" asp-append-version="true" />
-<script src="~/js/exploreMusic.js" asp-append-version="true"></script>
+
 
 <div class="container pb-10 pt-5">
     <h1 class="mb-4">發現音樂</h1>
@@ -14,6 +14,9 @@
             <div class="border-block mb-4">
                 <h2 class="mb-4">類型</h2>
                 <ul class="list-inline">
+                    <li>
+                        <a href="#" class="btn btn-sm btn-tag btn-white mb-2 active">全部</a>
+                    </li>
                     <li>
                         <a href="#" class="btn btn-sm btn-tag btn-white mb-2">搖滾</a>
                     </li>
@@ -37,13 +40,13 @@
                 <h2 class="mb-4">排序</h2>
                 <ul class="list-inline">
                     <li class="list-inline-item">
-                        <a href="#" class="btn btn-sm btn-tag">最新</a>
+                        <a href="#" class="btn btn-sm btn-tag btn-sort">最新</a>
                     </li>
                     <li class="list-inline-item">
-                        <a href="#" class="btn btn-sm btn-tag">最多撥放</a>
+                        <a href="#" class="btn btn-sm btn-tag btn-sort">最多撥放</a>
                     </li>
                     <li class="list-inline-item">
-                        <a href="#" class="btn btn-sm btn-tag">最多喜歡</a>
+                        <a href="#" class="btn btn-sm btn-tag btn-sort">最多喜歡</a>
                     </li>
 
                 </ul>
@@ -51,87 +54,88 @@
             <div class="text-center pb-5 d-lg-block">AD</div>
         </div>
         <div class="col-md-8 col-lg-8 col-xl-8">
-            <ul class="item_box_list list-group list-group-song list-group-flush mb-5">
-                <li class="list-group-item align-items-center justify-content-between work-item item-box">
-                    <div class="cover-block img-lg mr-3">
-                        <a href="#">
-                            <img src="~/image/idol.jpg" alt="Idol">
-                        </a>
+            <div id="realtime" class="ranking-list">
+                <div class="ranking-item">
+                    <img src="~/image/idol.jpg" class="cover-block" alt="song cover">
+                    <div class="info">
+                        <p class="song">打不通的電話</p>
+                        <p class="artist">Sean Ko 高翔</p>
                     </div>
-                    <div class="work-item-info">
-                        <h3 class="text-truncate">
-                            <a href="#">
-                                Idol
-                            </a>
-                        </h3>
-                        <h4>YOASOBI</h4>
+                    <button class="btn btn-outline-secondary add" onclick="addopenPopup()"><i class="bi bi-plus-lg"></i></button>
+                    <!-- 加入歌單彈跳視窗 -->
+                    <div class="addoverlay" id="addoverlay" onclick="addclosePopup()"></div>
+
+                    <!-- 彈跳視窗 -->
+                    <div class="addpopup" id="addpopup">
+                        <h2>加入歌單</h2>
+                        <input type="text" class="addsearch-box" placeholder="搜尋歌單">
+
+                        <!-- 歌單列表 -->
+                        <div class="addplaylist-item">
+                            <div class="addplaylist-info">
+                                <img src="/image/p2.jpeg" alt="封面">
+                                <div>
+                                    <div class="addplaylist-name">tt</div>
+                                    <div class="addplaylist-song">1 首歌曲: ilyynlvl</div>
+                                </div>
+                            </div>
+                            <button class="addbtn-add" onclick="addtoggleSelection(this)">+ 加入歌單</button>
+                        </div>
+
+                        <!-- 底部按鈕 -->
+                        <div class="addpopup-footer">
+                            <button class="addbtn-newPlaylist">+ 新增歌單</button>
+                            <button class="btn addbtn-cancel" onclick="addclosePopup()">取消</button>
+                            <button class="btn addbtn-confirm" onclick="addclosePopup()">確定</button>
+                        </div>
                     </div>
-                    <div class="text-right w-220p ml-3">
-                        <ul class="list-inline">
-                            <li class="list-inline-item">
-                                <a href="#" class="btn btn-circle">
-                                    <i class="fa-solid fa-share"></i>
-                                </a>
-                            </li>
-                            <li class="list-inline-item">
-                                <button type="button" class="btn btn-circle">
-                                    <i class="fa-solid fa-plus"></i>
-                                </button>
-                            </li>
-                            <li class="list-inline-item">
-                                <button type="button" class="btn btn-circle ">
-                                    <i class="fa-solid fa-heart"></i>
-                                </button>
-                            </li>
-                            <li class="list-inline-item">
-                                <button type="button" class="btn btn-play btn-circle ">
-                                    <i class="fa-solid fa-play"></i>
-                                </button>
-                            </li>
-                        </ul>
+
+                    <button class="btn btn-outline-secondary add" onclick="shareshowPopup()"><i class="bi bi-share"></i></button>
+                    <!-- 分享按鈕彈跳視窗 -->
+                    <div class="shareoverlay" id="shareoverlay">
+                        <div class="sharepopup">
+                            <div class="sharepopup-header">
+                                <span>分享歌曲</span>
+                                <span class="shareclose-btn" onclick="shareclosePopup()">&times;</span>
+                            </div>
+                            <div class="sharepopup-content">
+                                <img src="/image/p1.jpg" alt="封面">
+                                <div>
+                                    <strong>打不通的電話 <b>Demo</b></strong>
+                                    <div>Sean Ko 高翔</div>
+                                </div>
+                            </div>
+                            <div class="sharepopup-footer">
+                                <button class="btn fb btn-lg"><i class="bi bi-facebook"></i></button>
+                                <button class="btn ig btn-lg"><i class="bi bi-instagram"></i></button>
+                                <input type="text" value="https://streetvoice.com/seanko/songs/800" readonly>
+                                <button class="copy" onclick="sharecopyLink()">複製</button>
+                            </div>
+                        </div>
                     </div>
-                <li class="list-group-item align-items-center justify-content-between work-item item-box">
-                    <div class="cover-block img-lg mr-3">
-                        <a href="#">
-                            <img src="~/image/idol.jpg" alt="Idol">
-                        </a>
+                    <button class="btn btn-outline-secondary heart"><i class="bi bi-heart-fill"></i>684</button>
+                    <button class="btn btn-outline-secondary add" onclick="playSong(1)"><i class="bi bi-play"></i></button>
+                </div>
+
+                <div class="ranking-item">
+                    <img src="~/image/idol.jpg" class="cover-block" alt="song cover">
+                    <div class="info">
+                        <p class="song">打不通的電話</p>
+                        <p class="artist">Sean Ko 高翔</p>
                     </div>
-                    <div class="work-item-info">
-                        <h3 class="text-truncate">
-                            <a href="#">
-                                Idol
-                            </a>
-                        </h3>
-                        <h4>YOASOBI</h4>
-                    </div>
-                    <div class="text-right w-220p ml-3">
-                        <ul class="list-inline">
-                            <li class="list-inline-item">
-                                <a href="#" class="btn btn-circle">
-                                    <i class="fa-solid fa-share"></i>
-                                </a>
-                            </li>
-                            <li class="list-inline-item">
-                                <button type="button" class="btn btn-circle">
-                                    <i class="fa-solid fa-plus"></i>
-                                </button>
-                            </li>
-                            <li class="list-inline-item">
-                                <button type="button" class="btn btn-circle ">
-                                    <i class="fa-solid fa-heart"></i>
-                                </button>
-                            </li>
-                            <li class="list-inline-item">
-                                <button type="button" class="btn btn-play btn-circle ">
-                                    <i class="fa-solid fa-play"></i>
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
-            </ul>
+                    <button class="btn btn-outline-secondary add"><i class="bi bi-plus-lg"></i></button>
+                    <button class="btn btn-outline-secondary add"><i class="bi bi-share"></i></button>
+                    <button class="btn btn-outline-secondary heart"><i class="bi bi-heart-fill"></i> 684</button>
+                    <button class="btn btn-outline-secondary add" onclick="playSong(2)"><i class="bi bi-play"></i></button>
+                </div>
+            </div>
+            <div class="mt-5 mb-5 text-center">
+				<button class="btn btn-lg btn-loadmore">點我看更多</button>
+            </div>
         </div>
     </div>
 </div>
 
 <script src="https://kit.fontawesome.com/5eeb73de16.js" crossorigin="anonymous"></script>
+<script src="~/js/exploreMusic.js" asp-append-version="true"></script>
 
