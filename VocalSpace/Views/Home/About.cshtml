@@ -1,0 +1,408 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<style>
+	/* -------------------------------
+   桌機版：螢幕寬度 769px 以上
+---------------------------------- */
+	@@media only screen and (min-width: 769px) {
+		:root {
+			--vp-unit: calc(1vw + 1vh);
+			--ratio: calc(16 / 9);
+			--secwidth: calc(10 * var(--vp-unit));
+			--secheight: calc(var(--secwidth) * var(--ratio));
+			--secgap: 5rem;
+			--h1-size: calc(1.5 * var(--vp-unit));
+			--p-size: calc(1 * var(--vp-unit));
+
+		}
+
+		.portrait-center {
+			display: flex;
+			justify-content: center;
+		}
+
+		.portrait-left {
+			position: absolute;
+			left: var(--portrait-pos);
+		}
+
+		.portrait-right {
+			position: absolute;
+			right: var(--portrait-pos);
+		}
+
+		.about_container {
+			perspective-origin: left;
+		}
+	}
+
+	/* -------------------------------
+   平板版：螢幕寬度介於 481px 至 992px 之間
+---------------------------------- */
+		@@media only screen and (min-width: 481px) and (max-width: 992px) {
+		:root {
+			--secwidth: calc(8 * var(--vp-unit));
+			--secheight: calc(var(--secwidth) * var(--ratio));
+			--secgap: 2rem;
+			--h1-size: calc(1.2 * var(--vp-unit));
+			--p-size: calc(0.8 * var(--vp-unit));
+		}
+
+		.portrait-center {
+			display: flex;
+			justify-content: center;
+		}
+
+		.portrait-left {
+			position: absolute;
+			left: var(--portrait-pos);
+		}
+
+		.portrait-right {
+			position: absolute;
+			right: var(--portrait-pos);
+		}
+
+		.about_container {
+			perspective-origin: top;
+		}
+	}
+
+	/* -------------------------------
+        螢幕寬度 480px 以下
+---------------------------------- */
+		@@media only screen and (max-width: 480px) {
+		:root {
+			--secwidth: calc(8 * var(--vp-unit));
+			/* 縮小 46% */
+			--secheight: calc(var(--secwidth) * var(--ratio));
+			--secgap: 1rem;
+			/* 進一步減少間距 */
+			--portrait-pos: calc(var(--secwidth) / -2 - var(--secgap));
+			--portrait-pos-gap: calc(var(--secwidth) / -2 - var(--secgap));
+			--h1-size: calc(1.2 * var(--vp-unit));
+			--p-size: calc(0.8 * var(--vp-unit));
+		}
+
+		.portrait-center {
+			display: flex;
+			justify-content: center;
+		}
+
+
+		.portrait-left {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			top: var(--portrait-pos);
+		}
+
+		.portrait-right {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			bottom: var(--portrait-pos);
+		}
+
+		.about_container {
+			perspective-origin: initial;
+		}
+	}
+
+	/* Global變數*/
+	:root {
+		--vp-unit: calc(1vw + 1vh + 1rem);
+		--ratio: calc(16/9);
+		--portrait-pos: calc(var(--secwidth) / -2 - var(--secgap));
+		--portrait-pos-nogap: calc(var(--secwidth) / -2);
+	}
+
+	body {
+		height: 300vh;
+	}
+
+	.header {
+		position: fixed;
+	}
+
+	.footer {
+		position: fixed;
+		bottom: 0;
+	}
+
+	* {
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+	}
+
+	.portrait {
+		width: var(--secwidth);
+		height: var(--secheight);
+	}
+
+	.landscape {
+		width: 100%;
+		height: var(--secwidth);
+	}
+
+	.about_container {
+		position: fixed;
+		width: 100%;
+		height: 100%;
+		transform-style: preserve-3d;
+		perspective: 1500px;
+	}
+
+	.about_layer {
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		left: 0;
+		top: 0;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		will-change: transform, opacity;
+		transition: .7s cubic-bezier(.07, .4, 0, 1);
+	}
+
+	.about_layer .about_content {
+		position: relative;
+	}
+
+	.about_container>.about_layer:first-child .about_content {
+		transform: scale(1);
+	}
+
+	/* 其他層內容縮小 30% */
+	.about_container>.about_layer:not(:first-child) .about_content {
+		transform: scale(0.7);
+	}
+
+	.about_content {
+		transition: opacity 0.5s ease-out;
+	}
+
+	.about_layer h1 {
+		text-transform: uppercase;
+		font-size: var(--h1-size);
+		text-align: center;
+		border-radius: 15px;
+	}
+
+	.about_layer p {
+		width: 40ch;
+		font-size: var(--p-size);
+		text-align: center;
+		border-radius: 15px;
+	}
+
+	.about_layer img {
+		object-fit: cover;
+		object-position: center;
+		transform: scale(0.8);
+		border-radius: 15px;
+	}
+
+	.about_layer video {
+		object-fit: cover;
+		object-position: center;
+		transform: scale(1);
+		border-radius: 15px;
+	}
+
+	.hide {
+		opacity: 0;
+		visibility: hidden;
+	}
+
+	/* 圖片和文字位置調整 */
+
+
+	.portrait-top {
+		position: absolute;
+		top: var(--portrait-pos);
+	}
+
+	.portrait-bottom {
+		position: absolute;
+		bottom: var(--portrait-pos);
+	}
+
+		@@keyframes glowdk {
+		0% {
+			text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+		}
+
+		50% {
+			text-shadow: 0 0 20px rgba(255, 255, 255, 1);
+		}
+
+		100% {
+			text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+		}
+	}
+
+		@@keyframes glowlt {
+		0% {
+			text-shadow: 0 0 5px rgba(25, 69, 163, 0.3);
+		}
+
+		50% {
+			text-shadow: 0 0 20px rgb(47, 12, 165);
+		}
+
+		100% {
+			text-shadow: 0 0 5px rgba(25, 69, 163, 0.3);
+		}
+	}
+
+		@@keyframes rotate {
+		0% {
+			transform: rotate(0deg);
+		}
+
+		100% {
+			transform: rotate(360deg);
+		}
+	}
+
+
+	[data-theme="dark"] {
+		.glow {
+			animation: glowdk 1.5s ease-in-out infinite;
+		}
+	}
+
+	[data-theme="light"] {
+		.glow {
+			animation: glowlt 1.5s ease-in-out infinite;
+		}
+	}
+	}
+</style>
+
+<div class="about_container">
+	<!-- 第一層 圖片置中 -->
+	<section class="about_layer">
+		<div class="about_content portrait-center" style="flex-direction: column;">
+			<img class="landscape" src="/image/logo3.png">
+			<h1 class="glow">聲維宇宙 VocalSpace</h1>
+		</div>
+	</section>
+
+	<!-- 第二層 圖片左側 -->
+	<section class="about_layer">
+		<div class="about_content portrait-left glow">
+			<img class="landscape" src="/image/about1.jpg">
+
+			<h1>專為音樂人打造的共享平台</h1>
+			<p>
+				無論是獨立創作翻唱作品<br />
+				還是錄製的靈感片段<br />
+				這裡都是你的音樂空間
+			</p>
+		</div>
+	</section>
+
+	<!-- 第三層 文字右側 -->
+	<section class="about_layer">
+		<div class="about_content portrait-right glow">
+			<img class="landscape" src="/image/about2.jpg">
+			<h1>收納各式曲風</h1>
+			<p>
+				無論你喜歡動感十足的節奏<br />
+				還是渴望放鬆的旋律<br />
+				我們都能為你提供最豐富的選擇
+			</p>
+		</div>
+	</section>
+
+	<!-- 第五層 圖片左側 -->
+	<section class="about_layer">
+		<div class="about_content portrait-left">
+			<video class="landscape" autoplay muted loop>
+				<source src="/video/about3.mp4" type="video/mp4">
+				你的瀏覽器不支援影片播放。
+			</video>
+			<h1 class="font-effect-neon">從抒情</h1>
+		</div>
+	</section>
+
+	<!-- 第四層 文字右側 -->
+	<section class="about_layer">
+		<div class="about_content portrait-right">
+			<video class="landscape" autoplay muted loop>
+				<source src="/video/about4.mp4" type="video/mp4">
+				你的瀏覽器不支援影片播放。
+			</video>
+			<h1 class="font-effect-fire-animation">到搖滾</h1>
+		</div>
+	</section>
+
+
+	<!-- 第六層 圖片左側 -->
+	<section class="about_layer">
+		<div class="about_content portrait-center" style="flex-direction: column;">
+			<h1 class="glow">在「聲維宇宙 VocalSpace」</h1>
+			<p class="glow">
+				創作者不只是發表作品<br/>
+				和其他音樂人一起掀起創意風暴品<br/>
+				我們定期舉辦音樂活動<br/>
+				讓你有機會大放異彩<br/>
+			</p>
+		</div>
+	</section>
+
+	<!-- 第七層 文字右側 -->
+	<section class="about_layer">
+		<div class="about_content portrait-center" style="flex-direction: column;">
+			<img class="landscape" src="/image/logo3.png">
+			<h1 class="glow">聲維宇宙 VocalSpace</h1>
+		</div>
+	</section>
+</div>
+
+@section Scripts {
+<script>
+	const about_layers = document.querySelectorAll('.about_layer');
+	const about_layer_spacing = -1200;
+	const z_values = [];
+
+	let prev_scroll_pos = about_layer_spacing / about_layers.length;
+	handlescroll();
+
+	function handlescroll() {
+		const curr_scroll_pos = window.scrollY;
+		const scroll_delta = prev_scroll_pos - curr_scroll_pos;
+		prev_scroll_pos = curr_scroll_pos;
+
+		about_layers.forEach((about_layer, index) => {
+			z_values.push(about_layer_spacing + (about_layer_spacing * index));
+			z_values[index] += (scroll_delta * -about_layers.length) * 1;
+
+			let curr_z_value = z_values[index];
+			about_layer.style.transform = `translateZ(${curr_z_value}px)`;
+
+			let opacity = Math.min(1, Math.max(0, (1500 - Math.abs(curr_z_value)) / 1000));
+			about_layer.querySelector(".about_content").style.opacity = opacity;
+
+			let is_about_layer_hidden = curr_z_value > (about_layer_spacing) / -4;
+			about_layer.classList.toggle('hide', is_about_layer_hidden);
+		});
+	}
+
+	window.addEventListener('scroll', handlescroll);
+	if ('scrollRestoration' in history) {
+		history.scrollRestoration = 'manual';
+	}
+	window.onload = function () {
+		window.scrollTo(0, 0);
+	};
+</script>
+
+}
