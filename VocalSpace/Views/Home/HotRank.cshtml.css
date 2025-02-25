@@ -1,0 +1,434 @@
+﻿body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+}
+
+.container {
+    width: 80%;
+    margin: 20px auto;
+}
+
+h1 {
+    text-align: left;
+}
+
+.content {
+    display: flex;
+}
+
+li:hover {
+    background-color: #2C2A29;
+    color: whitesmoke;
+}
+
+/* 選取後的樣式 */
+li.selected {
+    border-left: 3px solid red;
+    color: red;
+}
+
+.sidebar {
+    width: 20%;
+    border: 1px solid gray;
+    padding: 10px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    height: fit-content;
+}
+
+    .sidebar ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .sidebar li {
+        padding: 10px;
+        cursor: pointer;
+    }
+
+        .sidebar li.active {
+            color: red;
+            font-weight: bold;
+        }
+
+.ranking {
+    width: 75%;
+    margin-left: 20px;
+}
+
+.tabs button {
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    background-color: lightcoral;
+    color: white;
+    margin-right: 5px;
+}
+
+    .tabs button.active {
+        background-color: red;
+    }
+
+.ranking-list {
+    padding: 10px;
+    border:1px solid gray;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.ranking-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.rank {
+    width: 30px;
+    font-weight: bold;
+    text-align: center;
+}
+
+img {
+    width: 50px;
+    height: 50px;
+    margin: 0 10px;
+    border-radius: 5px;
+}
+
+.info {
+    flex-grow: 1;
+}
+
+.btn-outline-secondary.heart {
+    margin-right: 10px;
+    border:1px solid gray;
+}
+
+    .btn-outline-secondary.heart:hover {
+        margin-right: 10px;
+        background-color: rgb(255, 87, 87);
+    }
+
+    .btn-outline-secondary.heart.selected {
+        margin-right: 10px;
+        background-color: #ffffff;
+        border: 1px solid rgb(255, 87, 87);
+        color: rgb(255, 87, 87);
+    }
+
+.btn-outline-secondary.add {
+    margin-right: 10px;
+    border: 1px solid gray;
+}
+
+.btn-outline-secondary.share {
+    margin-right: 10px;
+    border: 1px solid gray;
+}
+
+.btn-outline-secondary.play {
+    border: 1px solid gray;
+}
+
+@media screen and (max-width: 1000px) {
+    .btn-outline-secondary.heart {
+        display: none;
+    }
+
+    .btn-outline-secondary.play {
+        display: none;
+    }
+
+    .btn-outline-secondary.add {
+        display: none;
+    }
+
+    .btn-outline-secondary.share {
+        display: none;
+    }
+}
+
+@media (min-width: 992px) {
+    .col-lg-auto {
+        flex: 0 0 auto;
+        width: auto;
+        max-width: none;
+    }
+}
+
+.btn-danger {
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    display: block;
+    margin-top: 10px;
+    margin-left: auto;
+    position: relative;
+}
+
+.playAll {
+    display: flex;
+    justify-content: right;
+}
+
+.artist {
+    font-size: small;
+    color: lightslategray;
+}
+
+.Randomplay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+}
+
+    .Randomplay .btn-danger {
+        display: flex;
+        justify-content: right;
+    }
+
+.h2-row {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* 控制各標籤間距 */
+}
+
+.red {
+    color: red;
+}
+
+/* 分享歌曲按鈕之彈跳視窗 */
+.shareoverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 10vh;
+}
+.shareoverlay span{
+    color:black;
+}
+.sharepopup {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+    padding: 30px;
+    width: 500px;
+}
+
+.sharepopup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.sharepopup-content {
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+    background: linear-gradient(to right, #000, #654321);
+    border-radius: 10px;
+    padding: 15px;
+    color: white;
+}
+
+    .sharepopup-content img {
+        width: 80px;
+        height: 80px;
+        border-radius: 8px;
+        margin-right: 15px;
+    }
+
+    .sharepopup-content div {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .sharepopup-content strong {
+        font-size: 20px;
+    }
+
+.sharepopup-footer {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+}
+
+    .sharepopup-footer input {
+        margin-left: 15px;
+        flex-grow: 1;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 16px;
+    }
+
+    .sharepopup-footer .copy {
+        background: #ff4d4f;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 8px;
+        margin-left: 15px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+.shareclose-btn {
+    cursor: pointer;
+    font-size: 22px;
+}
+
+/* 加入歌單按鈕之彈跳視窗 */
+
+/* 遮罩層 */
+.addoverlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* 彈跳視窗 */
+.addpopup {
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    width: 500px;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    padding: 25px;
+    z-index: 1001;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out, top 0.3s ease-in-out;
+}
+
+    .addpopup h2 {
+        font-size: 22px;
+        margin-bottom: 15px;
+        color:Black;
+    }
+
+/* 搜尋框 */
+.addsearch-box {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+/* 歌單區域 */
+.addplaylist-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    margin-bottom: 12px;
+}
+
+    .addplaylist-item img {
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
+        margin-right: 12px;
+    }
+
+.addplaylist-info {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.addplaylist-name {
+    font-size: 16px;
+    font-weight: bold;
+    color:black;
+}
+
+.addplaylist-song {
+    font-size: 14px;
+    color: #666;
+}
+
+/* 按鈕 */
+.addbtn-add {
+    background: #ff4d4f;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease-in-out;
+}
+
+    .addbtn-add.selected {
+        background: white;
+        color: #ff4d4f;
+        border: 1px solid #ff4d4f;
+    }
+
+    .addbtn-add:hover {
+        background: #e63946;
+    }
+
+/* 底部按鈕 */
+.addpopup-footer {
+    display: flex;
+    margin-top: 20px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    border: none;
+    font-size: 16px;
+    justify-content: right;
+}
+
+.addbtn-cancel {
+    margin-left: 170px;
+    background: #f0f0f0;
+    margin-right: 12px;
+    justify-content: right;
+}
+
+.addbtn-confirm {
+    margin-left: 15px;
+    background: #f0f0f0;
+    justify-content: right;
+}
+
+.addbtn-newPlaylist {
+    background: #ff4d4f;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+}

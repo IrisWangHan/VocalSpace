@@ -85,15 +85,15 @@ input {
     padding: 5px 10px
 }
 
-#btn-backHome {
-    margin: 2em 0 20px 0;
+.btn-backHome {
+    margin: 3em 0 20px 0;
     width: 100%;
     font-weight: bold;
     font-size: 14px;
     color: #4e4e4e;
     border: 1px solid #dfdfdf;
     border-radius: 5px;
-    padding: 2px 2px;
+    padding: 2px 50px;
     text-decoration: none;
 }
 /* 新增的樣式 */

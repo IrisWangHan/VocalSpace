@@ -1,0 +1,156 @@
+﻿
+<title>蒐藏庫</title>
+
+
+<div class="container">
+    <h1>蒐藏庫</h1>
+    <hr />
+    <div class="content">
+        <aside class="sidebar">
+            <ul id="myList">                    
+                <a asp-action ="like"><li>我的喜歡<i class="bi bi-bookmark-heart"></i></li></a>
+                <a asp-action="mylist"><li>我的歌單</li></a>
+                <a asp-action="playrecord"><li>播放紀錄</li></a>
+                <a asp-action="booking"><li  class="selected">我訂閱的歌單</li></a>
+            </ul>
+        </aside>           
+
+        <main class="ranking">
+            <div class="h2-row"><h2>蒐藏庫  /</h2><h2 class="red">我訂閱的歌單</h2></div>
+
+            <div class="Randomplay">
+
+                <button class="btn-danger addbtn-newPlaylist"><i class="bi bi-plus-lg"></i> 新增歌單</button>
+            </div>
+            <br />
+            <div id="realtime" class="ranking-list">
+
+                <h2>歌單</h2>
+
+                        <div class="ranking-item">
+
+                        <img src="/image/p1.jpg" alt="song cover">
+                        <div class="info">
+                            <p class="song">打不通的電話</p>
+                            <p class="artist">1 首歌曲．Sean Ko 高翔</p>
+                        </div>
+                        <button class="btn btn-outline-secondary deletelist" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-trash"></i></button>                        
+                        <button class="btn btn-outline-secondary editlist" onclick="editlist()"><i class="bi bi-pencil-square"></i></button>
+                        <button class="btn btn-outline-secondary book"><i class="bi bi-bookmark-check-fill"></i></button>
+                        <button class="btn btn-outline-secondary random"><i class="bi bi-shuffle"></i></button>
+                    </div>
+                     <div class="ranking-item">
+
+                        <img src="/image/p1.jpg" alt="song cover">
+                        <div class="info">
+                            <p class="song">打不通的電話</p>
+                            <p class="artist">1 首歌曲．Sean Ko 高翔</p>
+                        </div>
+                        <button class="btn btn-outline-secondary deletelist" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-trash"></i></button>                        
+                        <button class="btn btn-outline-secondary editlist" onclick="editlist()"><i class="bi bi-pencil-square"></i></button>
+                        <button class="btn btn-outline-secondary book"><i class="bi bi-bookmark-check-fill"></i></button>
+                        <button class="btn btn-outline-secondary random"><i class="bi bi-shuffle"></i></button>
+                    </div>
+
+
+                </div>
+
+
+            </main>
+        </div>
+    </div>
+
+    <!-- 刪除歌單彈窗 -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2 class="modal-title" id="exampleModalLabel">刪除</h2>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                你確定要刪除這個歌單？
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">取消</button>
+              <button type="button" class="btn btn-secondary">確定</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+<script>
+
+const list = document.getElementById('myList');
+    const items = list.getElementsByTagName('li');
+
+    // 為每個 list 項目加上 click 事件監聽器
+    for (let i = 0; i < items.length; i++) {
+      items[i].addEventListener('click', function() {
+        // 清除所有項目的選取效果
+        for (let j = 0; j < items.length; j++) {
+          items[j].classList.remove('selected');
+        }
+        // 為被點擊的項目加上選取效果
+        this.classList.add('selected');
+      });
+    }
+ // 取得所有按鈕
+ const buttons = document.querySelectorAll('.btn-outline-secondary.book');
+
+    // 為每個按鈕加上點擊事件
+    buttons.forEach(button => {
+      button.addEventListener('click', function() {
+        // 切換選取效果：如果已選取就取消選取，反之則加入選取效果
+        this.classList.toggle('selected');
+      });
+    });
+
+
+    // 訂閱按鈕效果
+    document.getElementById("toggleButton").addEventListener("click", function() {
+        let icon = document.getElementById("icon");
+        if (icon.classList.contains("bi-bookmark-plus-fill")) {
+            icon.classList.replace("bi-bookmark-plus-fill", "bi-bookmark-check-fill");
+        } else {
+            icon.classList.replace("bi-bookmark-check-fill", "bi-bookmark-plus-fill");
+        }
+    });
+
+
+// 分享歌曲按鈕之彈跳視窗
+function deletelist() {
+  document.getElementById('shareoverlay').style.display = 'flex';
+}
+function shareclosePopup() {
+  document.getElementById('shareoverlay').style.display = 'none';
+}
+
+// 加入歌單按鈕之彈跳視窗
+function addopenPopup() {
+  document.getElementById("addoverlay").style.display = "block";
+  document.getElementById("addpopup").style.display = "block";
+    // 加入淡入效果
+    setTimeout(() => {
+      document.getElementById("addoverlay").style.opacity = "1";
+      document.getElementById("addpopup").style.opacity = "1";
+      document.getElementById("addpopup").style.top = "30%";
+  }, 10);
+}
+
+function addclosePopup() {
+ // 淡出效果
+ document.getElementById("addoverlay").style.opacity = "0";
+ document.getElementById("addpopup").style.opacity = "0";
+ document.getElementById("addpopup").style.top = "20%";
+
+ // 延遲隱藏（等待動畫完成）
+ setTimeout(() => {
+     document.getElementById("addoverlay").style.display = "none";
+     document.getElementById("addpopup").style.display = "none";
+ }, 300);
+}
+
+</script>
+

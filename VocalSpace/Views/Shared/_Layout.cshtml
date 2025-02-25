@@ -10,7 +10,7 @@
 	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 	<link rel="stylesheet" href="~/VocalSpace.styles.css" asp-append-version="true" />
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
 </head>
@@ -39,7 +39,7 @@
 						<li><hr class="header__menu-hr" /></li>
 
 						<li class="nav-item header__menu-item">
-							<a class=" header__menu-item--theme" href="/Home/Index">Hot熱門</a>
+							<a class=" header__menu-item--theme" href="/Home/HotRank">Hot熱門</a>
 						</li>
 						<li><hr class="header__menu-hr" /></li>
 
@@ -59,7 +59,7 @@
 						<li><hr class="header__menu-hr" /></li>
 
 						<li class="nav-item header__menu-item">
-							<a class=" header__menu-item--theme" href="/Home/Index">關於我們</a>
+							<a class=" header__menu-item--theme" href="/Home/About">關於我們</a>
 						</li>
 						<li class="nav-item header__menu-item header__menu-item2">
 							<a class="header__menu-item--theme" href="/Home/Index">個人頁面</a>
@@ -68,7 +68,7 @@
 							<a class="header__menu-item--theme" href="/Home/Index">帳號設定</a>
 						</li>
 						<li class="nav-item header__menu-item header__menu-item2">
-							<a class="header__menu-item--theme" href="/Home/Index">蒐藏庫</a>
+							<a class="header__menu-item--theme" href="/Collection/like">蒐藏庫</a>
 						</li>
 
 						@if (isLogin)
@@ -170,7 +170,7 @@
 				</a>
 			</div>
 			<div class="footer__copyright">
-				&copy; 2025 - VocalSpace - 本網站僅限資策會課程上使用
+				<span>&copy; 2025 - VocalSpace - 本網站僅限資策會課程上使用</span>
 			</div>
 			<div class="footer__link">
 				<a href="#">

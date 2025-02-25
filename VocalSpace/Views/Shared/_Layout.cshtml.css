@@ -82,14 +82,14 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    width: 260px;
-    height: 100%;
+    /*width: 40%;*/
+    height: calc(var(--header-height) - 5px);
 }
 
 /*【header__logo-img】
    設定圖片填滿header高度-5px*/
 .header__logo-img {
-    height: calc(var(--header-height) - 5px);
+    max-height: calc(var(--header-height) - 5px);
 }
 
 /*【header__menu】
@@ -99,6 +99,7 @@
     height: 100%;
     min-width: 480px;
     z-index: 99;
+    margin-top: 5px;
 }
 
 .header__menu-list {
@@ -112,7 +113,7 @@
 .header__menu-item--theme {
     text-decoration: none;
     padding: 10px 10px;
-    font-size: var(--fsize-menu);
+    font-size: var(--fsize-menu-lg);
     font-weight: bold;
 }
 
@@ -148,7 +149,7 @@
 .header__menu-btn {
     position: absolute;
     left: 5px;
-    top: 10px;
+    /*top: 10px;*/
     cursor: pointer;
     display: none;
 }
@@ -293,6 +294,8 @@
 .header__icon {
     flex: 1;
     padding-right: 10px;
+    align-items: center;
+    margin-top: 5px;
 }
 /*【ICON - 明暗模式】*/
 .header__icon-mode {
@@ -408,7 +411,7 @@ button.accept-policy {
 /*【footer logo】*/
 .footer__logo {
     width: 20%;
-    min-width: 300px;
+    /*min-width: 300px;*/
     display: flex;
     justify-content: center;
     align-items: center;
@@ -419,15 +422,17 @@ button.accept-policy {
 }
 /*【footer copyright】*/
 .footer__copyright {
-    flex: 1;
-    min-width: 400px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    text-align: center;
     font-size: var(--fsize-menu);
 }
-/*【footer ig fb yt】*/
-.footer__link {
+    .footer__copyright span {
+        display: inline-block;
+        white-space: normal;
+        text-align:center;
+    }
+
+    /*【footer ig fb yt】*/
+    .footer__link {
     width: 20%;
     min-width: 150px;
     display: flex;
@@ -487,9 +492,9 @@ button.accept-policy {
             padding-left: 25px; /* 讓 hover 有向右的流動感 */
         }
 
-    .header__menu-item--theme {
+/*    .header__menu-item--theme {
         font-size: var(--fsize-menu-lg);
-    }
+    }*/
 
         .header__menu-item--theme:hover {
             border-radius: 0px;
@@ -525,7 +530,7 @@ button.accept-policy {
     /*【logo】*/
     .header__logo {
         position: absolute;
-        left: 50%; /* 讓左邊緣對齊視窗 50% */
+        left: 45%; /* 讓左邊緣對齊視窗 50% */
         transform: translate(-40%); /* 向左移動自身寬度的一半，使其真正置中 */
     }
 }
