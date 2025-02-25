@@ -171,7 +171,7 @@
 				</svg>
 				<img src="/image/nextSong.png" class="music-player__img-play" />
 
-				<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-three-dots " viewBox="0 0 16 16">
+				<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-three-dots music-player__for-lg-dots" viewBox="0 0 16 16">
 					<path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3" />
 				</svg>
 			</div>
@@ -179,13 +179,30 @@
 				<header class="window__header">
 					<div class="window__header-zoom-out"></div>
 				</header>
-				<section class="window__content">
-					<div class="window__view"></div>
-					<h4 class="window__title">CCCCCC</h4>
+				<section class="window__playlist-current">
+					<div class="playlist__item">
+						<img src="/image/logo.png" class="playlist__img-cover playlist__img-cover-current" alt="Album cover" />
+						<div class="playlist__info">
+							<p>XXXx</p>
+							<span>王曉明</span>
+						</div>
+					</div>
+
+					@* <div class="window__view"></div> *@
+					@* 					<h4 class="window__title">CCCCCC</h4>
 					<span class="window__description">XXXx</span>
-				</section>
+ *@				</section>
 				<div class="window__controls">
-					<div class="window__progress-bar"></div>
+					@* <div class="window__progress-bar"></div> *@
+					<img src="/image/circlePlaylist.png" class="music-player__img-play music-player__circle-list" />
+					<img src="/image/preSong.png" class="music-player__img-play  music-player__pre" />
+
+					<svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="currentColor" class="bi bi-play-circle-fill window__controls-icon-play" viewBox="0 0 16 16">
+						<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814z" />
+					</svg>
+					<img src="/image/nextSong.png" class="music-player__img-play  music-player__next" />
+					<img src="/image/circlePlayone.png" class="music-player__img-play music-player__circle-one" />
+
 				</div>
 				<section class="window__playlist">
 
@@ -195,14 +212,16 @@
 							<img src="/image/logo.png" class="playlist__img-cover" alt="Album cover" />
 							<div class="playlist__info">
 								<p>XXXx</p>
+								<span>王曉明</span>
 							</div>
-							<img src="/image/nextSong.png" class="playlist__img-play" alt="Play next song" />
+							<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-play-circle-fill window__controls-icon-play" viewBox="0 0 16 16">
+								<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814z" />
+							</svg>
 						</div>
 					}
 
 				</section>
 			</div>
-
 		</section>
 	</main>
 
@@ -337,6 +356,14 @@
 				$(".header__search-btn").on("click",function(){
 					console.log("222");
 							$(".header__search-record").text("你還沒有搜尋紀錄....");
+				})
+
+				//【音樂撥放器-點選縮小 展開】
+				$(".window__header-zoom-out").on("click",function(){
+					$(".music-player__window").fadeOut();
+				})
+				$(".music-player__for-lg-dots,.music-player__for-md").on("click",function(){
+					$(".music-player__window").fadeIn();
 				})
 			})
 	</script>
