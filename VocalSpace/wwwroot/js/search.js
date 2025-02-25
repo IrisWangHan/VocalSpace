@@ -15,6 +15,7 @@
     }) 
 })
 
+//  音樂人的追蹤按鈕
 function toggleFollow(btn) {
     if (btn.innerText === "追蹤") {
         btn.innerText = "已追蹤";

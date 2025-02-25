@@ -5,7 +5,7 @@
 }
 <link rel="stylesheet" href="~/css/search.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/song.css" asp-append-version="true" />
-<link rel="stylesheet" href="~/css/partialViewArtist.css" asp-append-version="true" />
+
 
 <div class="container pb-10 pt-5">
     <h1 class="mb-4 position-relative search-title">
@@ -34,6 +34,7 @@
                 @await Html.PartialAsync("partialViewSong")
                 @await Html.PartialAsync("partialViewSong")
                 @await Html.PartialAsync("partialViewArtist")
+                @await Html.PartialAsync("partialViewSonglist")
             </div>
             <div class="mt-5 mb-5 text-center">
                 <button class="btn btn-loadmore">點我看更多</button>

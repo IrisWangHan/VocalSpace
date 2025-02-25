@@ -1,4 +1,20 @@
-﻿body {
+﻿
+@media screen and (max-width: 1000px) {
+    .btn-outline-secondary.heart {
+        display: none;
+    }
+
+    .btn-outline-secondary.play {
+        display: none;
+    }
+
+    .btn-outline-secondary.add {
+        display: none;
+    }
+
+    .btn-outline-secondary.share {
+        display: none;
+    }
 }
 
 /* 歌曲區塊 */
@@ -281,20 +297,43 @@
     font-size: 14px;
 }
 
-@media screen and (max-width: 1000px) {
-    .btn-outline-secondary.heart {
-        display: none;
-    }
-
-    .btn-outline-secondary.play {
-        display: none;
-    }
-
-    .btn-outline-secondary.add {
-        display: none;
-    }
-
-    .btn-outline-secondary.share {
-        display: none;
-    }
+/* 音樂人區塊 */
+/* 圓形大頭貼 */
+.artist-cover-block {
+    display: block;
+    width: 50px;
+    height: 50px;
+    margin: 0 10px;
+    border-radius: 50%; /* 變圓形 */
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, .1);
 }
+
+/* 追蹤按鈕：背景紅色、白字、略有圓角 */
+.btn-follow {
+    background-color: red;
+    color: #fff;
+    border: 1px solid red;
+    border-radius: 4px;
+    padding: 5px 12px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+    /* 也可在這裡加個 hover 效果（非必須） */
+/*    .btn-follow:hover {
+        opacity: 0.9;
+    }*/
+
+.artist-name {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+/*ranking-item > btn-outline-secondary {
+    margin-right: 10px;
+    border: 1px solid gray;
+}*/
+
+
+
