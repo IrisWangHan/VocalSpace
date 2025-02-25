@@ -158,6 +158,26 @@
 	</header>
 	<main role="main">
 		@RenderBody()
+		<section class="music-player">
+			<div class="music-player__for-md"></div>
+			<div class="music-player__for-lg">
+				<img src="/image/logo.png" class="music-player__img-cover" />
+				<div>
+					<p>XXXx</p>
+					<p>XXXX</p>
+				</div>
+				<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-play-circle-fill " viewBox="0 0 16 16">
+					<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814z" />
+				</svg>
+				<img src="/image/nextSong.png" class="music-player__img-play" />
+
+				<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-three-dots " viewBox="0 0 16 16">
+					<path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3" />
+				</svg>
+			</div>
+			<div class="music-player__open-window">
+				</div>
+		</section>
 	</main>
 
 	<footer class="border-top footer text-muted">
