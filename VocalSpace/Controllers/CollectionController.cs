@@ -20,6 +20,10 @@ namespace VocalSpace.Controllers
         {
             return View();
         }
+        public IActionResult uploadMusic()
+        {
+            return View();
+        }
 
     }
 }

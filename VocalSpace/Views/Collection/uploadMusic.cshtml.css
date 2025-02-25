@@ -1,0 +1,29 @@
+﻿.container {
+    max-width: 1500px;
+}
+
+.upload-container {
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+#uploadArea:hover {
+    cursor: pointer;
+}
+
+.upload-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed #cecece;
+    border-radius: 0.75rem;
+}
+
+#coverPreview {
+    border: 2px solid #cecece;
+
+}

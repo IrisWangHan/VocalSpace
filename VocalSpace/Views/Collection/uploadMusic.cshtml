@@ -1,0 +1,249 @@
+﻿<div class="container-fluid">
+    <div class="row justify-content-center">
+        <!-- 上傳區域 -->
+        <div class="col-md-10 mb-4">
+            <div class="upload-container my-5 p-5 border border-dashed rounded-3" id="uploadArea">
+                <div class="text-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="75" height="75" fill="currentColor" class="bi bi-cloud-arrow-up" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd" d="M7.646 5.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 6.707V10.5a.5.5 0 0 1-1 0V6.707L6.354 7.854a.5.5 0 1 1-.708-.708z"/>
+                      <path d="M4.406 3.342A5.53 5.53 0 0 1 8 2c2.69 0 4.923 2 5.166 4.579C14.758 6.804 16 8.137 16 9.773 16 11.569 14.502 13 12.687 13H3.781C1.708 13 0 11.366 0 9.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383m.653.757c-.757.653-1.153 1.44-1.153 2.056v.448l-.445.049C2.064 6.805 1 7.952 1 9.318 1 10.785 2.23 12 3.781 12h8.906C13.98 12 15 10.988 15 9.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 4.825 10.328 3 8 3a4.53 4.53 0 0 0-2.941 1.1z"/>
+                    </svg>
+                    <h4 class="mt-4 mb-3">上傳檔案或將檔案拖曳到這裡</h4>
+                    <p class="text-muted small">※ 上傳格式限 MP3，檔案大小上限為 150MB</p>
+                    
+                    <form id="uploadForm" asp-action="UploadFile" asp-controller="File" method="post" enctype="multipart/form-data" class="mt-4">
+                        <div class="d-grid gap-2 col-md-6 mx-auto">
+                            <input type="file" id="fileInput" name="audioFile" class="d-none" accept=".mp3" onchange="handleFileSelection(this)">
+                            <p id="selectedFileName" class="mt-2">未選擇檔案</p>
+                            <button type="button" id="uploadButton" class="btn btn-primary mt-3" onclick="submitForm()">上傳</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 上傳完成後顯示區域 -->
+        <div class="col-md-10" id="uploadResultContainer" style="display: none;">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row">
+                        <!-- 左側封面區域 -->
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <div class="cover-preview mb-3" id="coverPreview">
+                                    <img src="/music/music-cover.jpg" alt="封面預覽" class="img-fluid">
+                                </div>
+                                <p class="small text-muted">建議尺寸：500x500px 以上，圖片檔案大小不可超過 2MB</p>
+                                <label for="coverImageInput" class="btn btn-outline-secondary btn-sm">上傳封面</label>
+                                <input type="file" id="coverImageInput" class="d-none" accept="image/*" onchange="previewCoverImage(this)">
+                            </div>
+                        </div>
+                        
+                        <!-- 右側檔案資訊 -->
+                        <div class="col-md-9">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="flex-grow-1">
+                                    <h5 id="uploadedFileName">TropicalContact.mp3</h5>
+                                    <div class="progress" id="uploadProgressContainer">
+                                        <div id="uploadProgress" class="progress-bar bg-danger" role="progressbar" style="width: 55%;" aria-valuenow="55" aria-valuemin="0" aria-valuemax="100">55%</div>
+                                    </div>
+                                    <div class="alert alert-info mt-2" id="uploadStatusMessage">
+                                        儲存中... 你的檔案正在上傳！在完成之前請不要關閉這個頁面......
+                                    </div>
+                                    <div class="text-end">
+                                        <button class="btn btn-sm btn-outline-danger" id="cancelUploadBtn">取消上傳</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <hr>
+                            
+                            <!-- 歌曲資訊表單 -->
+                            <div class="mt-4">
+                                <h5>歌曲資訊</h5>
+                                <form id="songInfoForm">
+                                    <div class="mb-3">
+                                        <input type="text" class="form-control" id="songTitle" value="TropicalContact" placeholder="歌曲標題">
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <select class="form-select" id="songCategory">
+                                                <option selected value="">專輯：無</option>
+                                                <option>專輯 A</option>
+                                                <option>專輯 B</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <select class="form-select" id="songGenre">
+                                                <option selected value="">分類：未分類</option>
+                                                <option>搖滾</option>
+                                                <option>民謠</option>
+                                                <option>嘻哈</option>
+                                                <option>都會</option>
+                                                <option>電子</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <textarea class="form-control" id="songDescription" rows="6" placeholder="請輸入歌曲介紹"></textarea>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <textarea class="form-control" id="songLyrics" rows="6" placeholder="請輸入歌詞"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="text-end">
+                                        @* <button type="button" class="btn btn-secondary me-2">回到首頁</button> *@
+                                        <button type="submit" class="btn btn-primary">儲存</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+            // 檔案選擇處理
+            function handleFileSelection(input) {
+                var fileNameElement = document.getElementById('selectedFileName');
+                if (input.files && input.files[0]) {
+                    fileNameElement.textContent = input.files[0].name;
+                } else {
+                    fileNameElement.textContent = '未選擇檔案';
+                }
+            }
+
+            // 模擬表單提交並顯示上傳進度
+            function submitForm() {
+                const fileInput = document.getElementById('fileInput');
+                if (!fileInput.files || fileInput.files.length === 0) {
+                    alert('請先選擇一個檔案');
+                    return;
+                }
+
+                // 顯示上傳結果區域
+                document.getElementById('uploadResultContainer').style.display = 'block';
+                document.getElementById('uploadArea').style.display = 'none';
+
+                // 設置檔案名稱
+                document.getElementById('uploadedFileName').textContent = fileInput.files[0].name;
+
+                // 模擬上傳進度
+                simulateUploadProgress();
+            }
+
+            // 模擬上傳進度
+            function simulateUploadProgress() {
+                let progress = 0;
+                const progressBar = document.getElementById('uploadProgress');
+                const statusMessage = document.getElementById('uploadStatusMessage');
+
+                const interval = setInterval(() => {
+                    progress += Math.floor(Math.random() * 10) + 1;
+                    if (progress >= 100) {
+                        progress = 100;
+                        clearInterval(interval);
+
+                        // 上傳完成，更新界面
+                        progressBar.style.width = progress + '%';
+                        progressBar.textContent = progress + '%';
+                        progressBar.classList.remove('bg-danger');
+                        progressBar.classList.add('bg-success');
+
+                        statusMessage.classList.remove('alert-info');
+                        statusMessage.classList.add('alert-success');
+                        statusMessage.innerHTML = '<i class="bi bi-check-circle me-2"></i>檔案上傳成功';
+
+                        // 隱藏取消按鈕
+                        document.getElementById('cancelUploadBtn').style.display = 'none';
+                    } else {
+                        progressBar.style.width = progress + '%';
+                        progressBar.textContent = progress + '%';
+                    }
+                }, 300);
+            }
+
+            // 封面圖片預覽
+            function previewCoverImage(input) {
+                const preview = document.getElementById('coverPreview');
+
+                if (input.files && input.files[0]) {
+                    const reader = new FileReader();
+
+                    reader.onload = function(e) {
+                        preview.innerHTML = `<img src="${e.target.result}" alt="封面預覽" class="img-fluid">`;
+                    }
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+            // 點擊整個上傳區域觸發檔案選擇
+            document.getElementById('uploadArea').addEventListener('click', function(e) {
+                // 避免點擊按鈕時觸發
+                if (e.target.id !== 'uploadButton' && !e.target.closest('#uploadButton')) {
+                    document.getElementById('fileInput').click();
+                }
+            });
+
+            // 拖放功能
+            const uploadContainer = document.querySelector('.upload-container');
+            const fileInput = document.getElementById('fileInput');
+
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                uploadContainer.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                uploadContainer.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                uploadContainer.addEventListener(eventName, unhighlight, false);
+            });
+
+            function highlight() {
+                uploadContainer.classList.add('border-primary');
+            }
+
+            function unhighlight() {
+                uploadContainer.classList.remove('border-primary');
+            }
+
+            uploadContainer.addEventListener('drop', handleDrop, false);
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                fileInput.files = files;
+                handleFileSelection(fileInput);
+            }
+
+            // 初始化工具提示
+            document.addEventListener('DOMContentLoaded', function() {
+                // 啟用所有工具提示
+                const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl);
+                });
+
+                // 取消上傳按鈕事件
+                document.getElementById('cancelUploadBtn').addEventListener('click', function() {
+                    if (confirm('確定要取消上傳嗎？')) {
+                        document.getElementById('uploadResultContainer').style.display = 'none';
+                        document.getElementById('uploadArea').style.display = 'block';
+                    }
+                });
+            });
+    </script>
+}
