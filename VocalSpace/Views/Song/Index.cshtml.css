@@ -1,37 +1,69 @@
 ﻿main {
-
     display: flex;
     flex-direction: column;
     height: 100%;
     /* 讓 main 元素的高度為視窗高度 */
 }
 
+/*container區域*/
+
 .page-container {
     flex:1;
 }
 
-.container {
+.bottom-container{
+    display:flex;
+}
+
+.top-container {
     width: 80%;
-    margin-top: 100px;
+    margin-top: 20px;
     display: flex;
+    margin-bottom:50px;
 }
 
-
-.col-md-4 img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 40px;
+/*[data-theme='dark'] .cbg {
+    z-index: -999;
+    position: absolute;
+    width: 100%;
+    height: 45%;*/ /* 覆蓋整個container */
+    /*background: linear-gradient(to bottom, grey, darkgrey);
 }
 
+[data-theme='light'] .cbg {
+    z-index: -999;
+    position: absolute;
+    width: 100%;
+    height: 45%;*/ /* 覆蓋整個container */
+    /*background: linear-gradient(to bottom, lightgrey, darkgrey);
+}*/
+
+.left-container{
+    margin-right:0;
+    display:flex;
+    flex-direction:column;
+}
+.right-container {
+    margin-left: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.nopad{
+    padding:0px;
+}
+
+/*去除超連結底線*/
 a {
     text-decoration: none;
 }
 
-.col-md-4 {
+/*左邊區塊*/
+songpfp {
     max-width: 380px;
 }
 
-.col-md-8 {
+.songinfo {
     position: relative;
     padding-left: 45px;
     padding-right: 15px;
@@ -43,12 +75,6 @@ a {
     margin-bottom: 45px;
 }
 
-/*.row-item-bottom {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-}*/
-
 .row-item {
     display: flex;
     justify-content: space-between
@@ -56,23 +82,25 @@ a {
 
 .ui-button {}
 
+/*rwd*/
+
 @media (max-width: 768px) {
-    .container {
+    .top-container {
         flex-direction: column;
     }
 
-    .col-md-8 {
+    .songinfo {
         padding-left: 0;
         padding-right: 0;
     }
 }
 
 @media (max-width: 432px) {
-    .container {
+    .top-container {
         flex-direction: column;
     }
 
-    .col-md-8 {
+    .songinfo {
         padding-left: 0;
         padding-right: 0;
     }
