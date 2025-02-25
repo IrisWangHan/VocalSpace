@@ -175,8 +175,34 @@
 					<path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3" />
 				</svg>
 			</div>
-			<div class="music-player__open-window">
+			<div class="music-player__window">
+				<header class="window__header">
+					<div class="window__header-zoom-out"></div>
+				</header>
+				<section class="window__content">
+					<div class="window__view"></div>
+					<h4 class="window__title">CCCCCC</h4>
+					<span class="window__description">XXXx</span>
+				</section>
+				<div class="window__controls">
+					<div class="window__progress-bar"></div>
 				</div>
+				<section class="window__playlist">
+
+					@for (int i = 0; i < 5; i++)
+					{
+						<div class="playlist__item">
+							<img src="/image/logo.png" class="playlist__img-cover" alt="Album cover" />
+							<div class="playlist__info">
+								<p>XXXx</p>
+							</div>
+							<img src="/image/nextSong.png" class="playlist__img-play" alt="Play next song" />
+						</div>
+					}
+
+				</section>
+			</div>
+
 		</section>
 	</main>
 
