@@ -1,7 +1,9 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
+
 @{
+    
 }
 <link rel="stylesheet" href="~/css/search.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/song.css" asp-append-version="true" />
@@ -29,15 +31,16 @@
                     <a class="nav-link nav-name" href="#">音樂人</a>
                 </li>
             </ul>
-            <div class="tab-content">
+            <div class="tab-content" id="tab-content">
                 
                 @await Html.PartialAsync("partialViewSong")
                 @await Html.PartialAsync("partialViewSong")
                 @await Html.PartialAsync("partialViewArtist")
                 @await Html.PartialAsync("partialViewSonglist")
+                @* 按下"點我看更多"button後，插入執行@await Html.PartialAsync("partialViewSong") *@
             </div>
             <div class="mt-5 mb-5 text-center">
-                <button class="btn btn-loadmore">點我看更多</button>
+                <button class="btn btn-loadmore" id="btn-loadmore" onclick="loadmore()">點我看更多</button>
             </div>
         </div>
         <div></div>
