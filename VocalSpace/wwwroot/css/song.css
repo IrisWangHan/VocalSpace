@@ -49,7 +49,7 @@
 
 
 /* 加入歌單按鈕 */
-.btn-outline-secondary.add {
+.btn-outline-secondary {
     margin-right: 10px;
     border: 1px solid gray;
 }
@@ -319,10 +319,6 @@
     font-size: 14px;
 }
 
-    /* 也可在這裡加個 hover 效果（非必須） */
-/*    .btn-follow:hover {
-        opacity: 0.9;
-    }*/
 
 .artist-name {
     font-size: 16px;
@@ -330,10 +326,6 @@
     margin: 0;
 }
 
-/*ranking-item > btn-outline-secondary {
-    margin-right: 10px;
-    border: 1px solid gray;
-}*/
 
 
 

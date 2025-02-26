@@ -8,5 +8,20 @@ namespace VocalSpace.Controllers
         {
             return View();
         }
+
+        public IActionResult searchSongs()
+        {
+            return View();
+        }
+
+        public IActionResult searchSonglists()
+        {
+            return View();
+        }
+
+        public IActionResult searchArtists()
+        {
+            return View();
+        }
     }
 }

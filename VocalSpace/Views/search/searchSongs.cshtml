@@ -3,6 +3,12 @@
 *@
 @{
 }
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
 <link rel="stylesheet" href="~/css/search.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/song.css" asp-append-version="true" />
 
@@ -30,11 +36,10 @@
                 </li>
             </ul>
             <div class="tab-content">
+
+                @await Html.PartialAsync("partialViewSong")
+                @await Html.PartialAsync("partialViewSong")
                 
-                @await Html.PartialAsync("partialViewSong")
-                @await Html.PartialAsync("partialViewSong")
-                @await Html.PartialAsync("partialViewArtist")
-                @await Html.PartialAsync("partialViewSonglist")
             </div>
             <div class="mt-5 mb-5 text-center">
                 <button class="btn btn-loadmore">點我看更多</button>
