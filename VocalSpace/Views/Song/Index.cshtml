@@ -16,14 +16,14 @@
 	<div class="top-container container">
 		<!-- 左側圖片區域 -->
 		<div class="col-md-4 songpfp">
-			<img src="/image/song1exp.jpeg">
+			<img src="/image/p1.jpg">
 		</div>
 		<!-- 右側音樂介紹區域 -->
 		<div class="row col-md-8 songinfo">
-			<h1 class="cols-1">音樂標題</h1>
+			<h1 class="cols-1">打不通的電話</h1>
 			<div class="cols-3 song-prop-row opacity-75">
 				<div class="col-6">
-					<a href="#"><strong>音樂類別</strong></a>
+					<a href="#"><strong>HipHop/Rap</strong></a>
 				</div>
 				<div class="col-6">
 					<a href="#"><strong>專輯名稱</strong></a>
@@ -51,28 +51,64 @@
 	<!-- 放在圖片下方的歌手資訊 -->
 	<div class="bottom-container container">
 		<div class="left-container row col-4">
-			<div class="userinfo row">
-				<div class="col-3 nopad">
-					<img src="/image/song1exp.jpeg">
+			<div class="userinfo container">
+				<div class="col-3">
+					<img class="pfp" src="/image/song1exp.jpeg">
 				</div>
-				<div class="col-6 nopad">
-					<img src="/image/song1exp.jpeg">
+				<div class="col-6">
+					<a class="pf" href="#">Sean Ko 高翔</a><br/>
+					<p class="pftext">@("@" + "username")</p>
 				</div>
-				<div class="col-3 nopad">
-					<img src="/image/song1exp.jpeg">
+				<div class="col-3">
+					<button class="btn-danger follow">追蹤</button>
 				</div>
 			</div>
-			<div class="col-8">
+			<div class="">
 				<img src="/image/song1exp.jpeg">
 			</div>
 		</div>
 		<div class="right-container row col-8">
-			<div class="col-4">
-				<img src="/image/song1exp.jpeg">
+			<h2>介紹</h2>
+			<div class="introduce-area">
+				<div class="introduce">
+					<p>
+						介紹內文<br />
+						介紹內文<br />
+						介紹內文<br />
+						介紹內文<br />
+						介紹內文
+					</p>
+				</div>
+				<button class="btn-danger">查看更多</button>
 			</div>
-			<div class="col-8">
-				<img src="/image/song1exp.jpeg">
+			<hr class="mt-5 mb-5">
+			<h2>歌詞</h2>
+			<div class="introduce-area">
+				<div class="introduce">
+					<p>歌詞內文</p>
+					<p>1</p>
+					<p>2</p>
+					<p>3</p>
+				</div>
+				<button class="btn-danger">查看更多</button>
+			</div>
+			<hr class="mt-5 mb-5">
+			<div class=" comment-area">
+				<div class="comment">
+					<div id="comment-box">
+						<!-- 這裡會根據登入狀態決定顯示哪個區塊 -->
+					</div>
+
+					@* 					留言區partialview
+					@await Html.PartialAsync("_Songdetail_ButtonUI") *@
+
+				</div>
 			</div>
 		</div>
 	</div>
 </div>
+
+@section Scripts {
+	<script>
+	</script>
+}

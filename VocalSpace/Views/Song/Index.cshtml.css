@@ -8,18 +8,20 @@
 /*container區域*/
 
 .page-container {
-    flex:1;
+    flex: 1;
 }
 
-.bottom-container{
-    display:flex;
+.bottom-container {
+    display: flex;
+    border: 5px solid red;
 }
 
 .top-container {
-    width: 80%;
-    margin-top: 20px;
+    width: 100%;
+    margin-top: 80px;
     display: flex;
-    margin-bottom:50px;
+    margin-bottom: 50px;
+    border: 5px solid green;
 }
 
 /*[data-theme='dark'] .cbg {
@@ -27,7 +29,7 @@
     position: absolute;
     width: 100%;
     height: 45%;*/ /* 覆蓋整個container */
-    /*background: linear-gradient(to bottom, grey, darkgrey);
+/*background: linear-gradient(to bottom, grey, darkgrey);
 }
 
 [data-theme='light'] .cbg {
@@ -35,22 +37,23 @@
     position: absolute;
     width: 100%;
     height: 45%;*/ /* 覆蓋整個container */
-    /*background: linear-gradient(to bottom, lightgrey, darkgrey);
+/*background: linear-gradient(to bottom, lightgrey, darkgrey);
 }*/
 
-.left-container{
-    margin-right:0;
-    display:flex;
-    flex-direction:column;
+.left-container {
+    margin-right: 0;
+    display: flex;
+    flex-direction: column;
 }
+
 .right-container {
     margin-left: 0;
     display: flex;
     flex-direction: column;
 }
 
-.nopad{
-    padding:0px;
+.nopad {
+    padding: 0;
 }
 
 /*去除超連結底線*/
@@ -58,7 +61,7 @@ a {
     text-decoration: none;
 }
 
-/*左邊區塊*/
+/*上方區塊*/
 songpfp {
     max-width: 380px;
 }
@@ -79,13 +82,50 @@ songpfp {
     display: flex;
     justify-content: space-between
 }
+/*左邊區塊*/
+.userinfo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center; 
+}
 
-.ui-button {}
+.pfp {
+    width: 100%;
+    max-width: 70px; /* 限制最大寬度 */
+    height: auto; /* 讓高度自動調整，避免變形 */
+    aspect-ratio: 1 / 1; /* 確保圖片是正方形 */
+    border-radius: 50%; /* 讓圖片變圓形 */
+    object-fit: cover; /* 確保圖片填滿框架 */
+}
+
+.pftext{
+    padding:0;
+    margin:0;
+}
+
+.follow {
+    width: 100%;
+}
+
+/*右邊區塊*/
+.introduce-area {
+}
+
+.introduce {
+    max-height: 50px;
+    position: relative;
+    overflow: hidden;
+}
 
 /*rwd*/
 
 @media (max-width: 768px) {
     .top-container {
+        flex-direction: column;
+    }
+
+    .bottom-container {
         flex-direction: column;
     }
 
@@ -97,6 +137,10 @@ songpfp {
 
 @media (max-width: 432px) {
     .top-container {
+        flex-direction: column;
+    }
+
+    .bottom-container {
         flex-direction: column;
     }
 
