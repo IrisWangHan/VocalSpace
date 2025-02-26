@@ -15,7 +15,6 @@
     --gray-dark: #d72626;
     --text-gray: #827D7D;
     --text-white: #FFFFFF;
-   
 }
 * {
     box-sizing: border-box;
@@ -66,13 +65,8 @@ a:hover{
     color: var(--text-color);
 }
 img {
-<<<<<<< HEAD
-    max-width: 100%; /*�Ϥ��̤j�e�פ���������100% ���Ϥ��Ӥj��,�|�O����ҩ�J*/
-    height: auto; /*�Ϥ����ץ�RWD�۰ʽվ� �Ϥ��~���|�ܧ�*/
-=======
     max-width: 100%; /*圖片最大寬度父元素的為100% 當圖片太大時,會保持比例放入*/
     height: auto; /*圖片高度由RWD自動調整 圖片才不會變形*/
->>>>>>> develop
 }
 
 
