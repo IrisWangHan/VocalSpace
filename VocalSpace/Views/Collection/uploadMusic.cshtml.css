@@ -27,3 +27,11 @@
     border: 2px solid #cecece;
 
 }
+
+textarea{
+    resize:none;
+}
+
+#uploadedFileName{
+    color:pink;
+}

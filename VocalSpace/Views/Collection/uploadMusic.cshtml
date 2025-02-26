@@ -14,10 +14,23 @@
                     <form id="uploadForm" asp-action="UploadFile" asp-controller="File" method="post" enctype="multipart/form-data" class="mt-4">
                         <div class="d-grid gap-2 col-md-6 mx-auto">
                             <input type="file" id="fileInput" name="audioFile" class="d-none" accept=".mp3" onchange="handleFileSelection(this)">
-                            <p id="selectedFileName" class="mt-2">未選擇檔案</p>
-                            <button type="button" id="uploadButton" class="btn btn-primary mt-3" onclick="submitForm()">上傳</button>
+                            @* <button type="button" id="uploadButton" class="btn btn-primary mt-3" onclick="submitForm()">上傳</button> *@
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+        @* 上傳失敗的畫面 *@
+        <div class="col-md-10 mb-4" id="errorArea" style="display: none;">
+            <div class="upload-container my-5 p-5 border rounded-3 text-center">
+                <div class="text-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="#F87171" class="bi bi-exclamation-triangle" viewBox="0 0 16 16">
+                        <path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/>
+                        <path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995z"/>
+                    </svg>
+                    <h4 class="mt-4 mb-3 text-danger">上傳失敗</h4>
+                    <p class="text-muted small" id="errorMessage"></p>
+                    <button type="button" class="btn btn-outline-primary mt-3" onclick="resetUpload()">重新上傳</button>
                 </div>
             </div>
         </div>
@@ -33,7 +46,7 @@
                                 <div class="cover-preview mb-3" id="coverPreview">
                                     <img src="/music/music-cover.jpg" alt="封面預覽" class="img-fluid">
                                 </div>
-                                <p class="small text-muted">建議尺寸：500x500px 以上，圖片檔案大小不可超過 2MB</p>
+                                <p class="small text-muted">圖片檔案大小不可超過 2MB</p>
                                 <label for="coverImageInput" class="btn btn-outline-secondary btn-sm">上傳封面</label>
                                 <input type="file" id="coverImageInput" class="d-none" accept="image/*" onchange="previewCoverImage(this)">
                             </div>
@@ -43,6 +56,9 @@
                         <div class="col-md-9">
                             <div class="d-flex align-items-center mb-3">
                                 <div class="flex-grow-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play-circle-fill" viewBox="0 0 16 16">
+                                      <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814z"/>
+                                    </svg>
                                     <h5 id="uploadedFileName">TropicalContact.mp3</h5>
                                     <div class="progress" id="uploadProgressContainer">
                                         <div id="uploadProgress" class="progress-bar bg-danger" role="progressbar" style="width: 55%;" aria-valuenow="55" aria-valuemin="0" aria-valuemax="100">55%</div>
@@ -61,9 +77,9 @@
                             <!-- 歌曲資訊表單 -->
                             <div class="mt-4">
                                 <h5>歌曲資訊</h5>
-                                <form id="songInfoForm">
+                                <form id="songInfoForm"  action="/Home/Index">
                                     <div class="mb-3">
-                                        <input type="text" class="form-control" id="songTitle" value="TropicalContact" placeholder="歌曲標題">
+                                        <input type="text" class="form-control" id="songTitle" value="" placeholder="歌曲標題">
                                     </div>
                                     <div class="row mb-3">
                                         <div class="col-md-6">
@@ -74,13 +90,13 @@
                                             </select>
                                         </div>
                                         <div class="col-md-6">
-                                            <select class="form-select" id="songGenre">
-                                                <option selected value="">分類：未分類</option>
-                                                <option>搖滾</option>
-                                                <option>民謠</option>
-                                                <option>嘻哈</option>
-                                                <option>都會</option>
-                                                <option>電子</option>
+                                            <select class="form-select" id="songGenre" required>
+                                                <option value="0">分類：未分類</option>
+                                                <option value="1">搖滾</option>
+                                                <option value="2">民謠</option>
+                                                <option value="3">嘻哈</option>
+                                                <option value="4">都會</option>
+                                                <option value="5">電子</option>
                                             </select>
                                         </div>
                                     </div>
@@ -109,14 +125,53 @@
 @section Scripts{
     <script>
             // 檔案選擇處理
-            function handleFileSelection(input) {
-                var fileNameElement = document.getElementById('selectedFileName');
-                if (input.files && input.files[0]) {
-                    fileNameElement.textContent = input.files[0].name;
-                } else {
-                    fileNameElement.textContent = '未選擇檔案';
-                }
+            function handleFileSelection(input) { 
+                const maxSizeInBytes = 150 * 1024 * 1024; 
+
+                // 判斷 > 上傳格式限 MP3，檔案大小上限為 150MB 
+                    if (input.files && input.files[0] && input.files.length == 1) { 
+                        const file = input.files[0];
+
+                        // 檢查檔案類型和大小
+                        if (file.type === "audio/mpeg" && file.size <= maxSizeInBytes) { 
+                            // fileNameElement.textContent = file.name; 
+                            submitForm(); 
+                        } else { 
+                            // 顯示錯誤訊息
+                            let errorMsg = "";
+                            if (file.type !== "audio/mpeg") {
+                                errorMsg = "很抱歉！你的檔案不是合格的 MP3，要不要修改後再試試呢？";
+                            } else if (file.size > maxSizeInBytes) {
+                                errorMsg = "很抱歉！你的檔案大小超過 150MB 限制，請上傳較小的檔案。";
+                            }
+                            showErrorMessage(errorMsg);
+                            // fileNameElement.textContent = "上傳失敗"; 
+                        } 
+                            console.log(input.files);
+                    }else{
+                        errorMsg = "很抱歉！一次請上傳一份檔案。";
+                        showErrorMessage(errorMsg);
+                    }
+            } 
+            // 顯示錯誤訊息函數
+            function showErrorMessage(message) {
+                // 隱藏上傳區域
+                document.getElementById('uploadArea').style.display = 'none';
+
+                // 設置錯誤訊息
+                document.getElementById('errorMessage').textContent = message;
+
+                // 顯示錯誤區域
+                document.getElementById('errorArea').style.display = 'block';
             }
+
+            // 重置上傳界面函數
+            function resetUpload() {
+                document.getElementById('errorArea').style.display = 'none';    // 隱藏錯誤區域
+                document.getElementById('fileInput').value = '';                // 重置檔案輸入
+                document.getElementById('uploadArea').style.display = 'block';  // 顯示上傳區域
+            }
+
 
             // 模擬表單提交並顯示上傳進度
             function submitForm() {
@@ -131,7 +186,12 @@
                 document.getElementById('uploadArea').style.display = 'none';
 
                 // 設置檔案名稱
-                document.getElementById('uploadedFileName').textContent = fileInput.files[0].name;
+
+                const fullFileName = fileInput.files[0].name;   // 獲取完整檔案名稱
+ 
+                document.getElementById('uploadedFileName').textContent = fullFileName;
+                document.getElementById('songTitle').value = fullFileName.substring(0, fullFileName.lastIndexOf('.'));
+                // console.log( fileInput.files[0]);
 
                 // 模擬上傳進度
                 simulateUploadProgress();
