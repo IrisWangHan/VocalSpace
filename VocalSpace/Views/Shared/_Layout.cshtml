@@ -1,5 +1,10 @@
 ﻿@{
 	var isLogin = false;
+	var musicList = new[] {
+		new { id = "001", name = "Sweet Day", artist = "Artist 1" },
+		new { id = "002", name = "Lively Night", artist = "Artist 2" },
+		new { id = "003", name = "Dreamy Melody", artist = "Artist 3" }
+	};
 }
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
@@ -166,9 +171,14 @@
 					<p>XXXx</p>
 					<p>XXXX</p>
 				</div>
-				<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-play-circle-fill " viewBox="0 0 16 16">
+				<svg class="icon__play-circle bi bi-play-circle-fill " xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" viewBox="0 0 16 16">
 					<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814z" />
 				</svg>
+				<svg class="icon__stop-circle bi bi-stop-circle-fill" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white" viewBox="0 0 16 16">
+					<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+					<path d="M5 6.5A1.5 1.5 0 0 1 6.5 5h3A1.5 1.5 0 0 1 11 6.5v3A1.5 1.5 0 0 1 9.5 11h-3A1.5 1.5 0 0 1 5 9.5z" />
+				</svg>
+
 				<img src="/image/nextSong.png" class="music-player__img-play" />
 
 				<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-three-dots music-player__for-lg-dots" viewBox="0 0 16 16">
@@ -180,43 +190,46 @@
 					<div class="window__header-zoom-out"></div>
 				</header>
 				<section class="window__playlist-current">
-					<div class="playlist__item">
+					<div class="playlist__item" data-musicID="@(musicList[0].id)">
 						<img src="/image/logo.png" class="playlist__img-cover playlist__img-cover-current" alt="Album cover" />
 						<div class="playlist__info">
-							<p>XXXx</p>
-							<span>王曉明</span>
+							<p>@(musicList[0].name)</p>
+							<span>@(musicList[0].artist)</span>
 						</div>
 					</div>
-
-					@* <div class="window__view"></div> *@
-					@* 					<h4 class="window__title">CCCCCC</h4>
-					<span class="window__description">XXXx</span>
- *@				</section>
+				</section>
 				<div class="window__controls">
-					@* <div class="window__progress-bar"></div> *@
 					<img src="/image/circlePlaylist.png" class="music-player__img-play music-player__circle-list" />
 					<img src="/image/preSong.png" class="music-player__img-play  music-player__pre" />
 
-					<svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="currentColor" class="bi bi-play-circle-fill window__controls-icon-play" viewBox="0 0 16 16">
+					<svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="currentColor" class="icon__play-circle bi bi-play-circle-fill " viewBox="0 0 16 16">
 						<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814z" />
+					</svg>
+					<svg class="icon__stop-circle bi bi-stop-circle-fill" xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="white" viewBox="0 0 16 16">
+						<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+						<path d="M5 6.5A1.5 1.5 0 0 1 6.5 5h3A1.5 1.5 0 0 1 11 6.5v3A1.5 1.5 0 0 1 9.5 11h-3A1.5 1.5 0 0 1 5 9.5z" />
 					</svg>
 					<img src="/image/nextSong.png" class="music-player__img-play  music-player__next" />
 					<img src="/image/circlePlayone.png" class="music-player__img-play music-player__circle-one" />
 
+					<audio id="audioPlayer">
+						<source src="/audio/sample.mp3" type="audio/mpeg">
+						您的瀏覽器不支援音樂播放。
+					</audio>
+					<input type="range" class="window__controls-range" />
+					<span id="songTimeText">00:00</span>
+
 				</div>
 				<section class="window__playlist">
 
-					@for (int i = 0; i < 5; i++)
+					@foreach (var song in musicList)
 					{
-						<div class="playlist__item">
+						<div class="playlist__item" data-musicID="@(song.id)">
 							<img src="/image/logo.png" class="playlist__img-cover" alt="Album cover" />
 							<div class="playlist__info">
-								<p>XXXx</p>
-								<span>王曉明</span>
+								<p>@(song.name)</p>
+								<span>@(song.artist)</span>
 							</div>
-							<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-play-circle-fill window__controls-icon-play" viewBox="0 0 16 16">
-								<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814z" />
-							</svg>
 						</div>
 					}
 
@@ -365,6 +378,93 @@
 				$(".music-player__for-lg-dots,.music-player__for-md").on("click",function(){
 					$(".music-player__window").fadeIn();
 				})
+
+				//【音樂撥放器-播放/暫停按鈕切換】
+				$(".icon__play-circle, .icon__stop-circle").on("click", function () {
+					$(this).toggle(); // 隱藏當前按鈕
+					let $nextIcon = $(this).siblings(".icon__play-circle, .icon__stop-circle").toggle(); // 顯示另一個按鈕
+
+					// 檢查顯示的是暫停按鈕，才變紅
+					if ($nextIcon.hasClass("icon__stop-circle")) {
+						$nextIcon.attr("fill", "red");
+						console.log("撥放");
+						$("#audioPlayer")[0].play();  // 播放音樂
+						startSongTimer();
+
+					}else{
+												console.log("為撥放");
+						$("#audioPlayer")[0].pause();  // 播放音樂
+						stopSongTimer();
+					}
+				});
+
+				/******點選循環撥放時的效果****/
+				$(".music-player__circle-list, .music-player__circle-one").on("click", function () {
+							$(this).toggleClass("active");
+				});
+
+
+				/*****清單中的音樂被點選後要更新到[當前撥放]的文字*****/
+				$(".playlist__item").click(function () {
+					// 取得被點擊的歌曲資訊
+					var songName = $(this).find("p").text();  // 取得歌名
+					var artist = $(this).find("span").text(); // 取得歌手名稱
+					var musicID = $(this).data("musicid");    // 取得音樂 ID
+
+					// 更新上方播放區的資訊
+					$(".window__playlist-current .playlist__info p").text(songName);
+					$(".window__playlist-current .playlist__info span").text(artist);
+
+					// 更新音樂播放器音檔的 src
+					// var audioPlayer = $("#audioPlayer");
+					// audioPlayer.attr("src", "/Music/Play/" + musicID); // 假設你的 Controller 播放路徑為 /Music/Play/{id}
+					// audioPlayer[0].play(); // 自動播放音樂
+				});
+
+			// 時間軸計時器
+			let songTimer;
+			let TimeText;
+				function startSongTimer(){
+					let Interval = 1000;
+					songTimer = setInterval(sliderProgress, Interval);
+					// TimeText = setInterval(songTimeText, Interval);
+				}
+
+				// 停止時間軸計時器
+				function stopSongTimer(){
+					if(songTimer){
+						clearInterval(songTimer);
+						songTimer = null;
+					}
+				}
+				// 時間軸進度條
+				function sliderProgress(){
+					// duration：音源的時間, in seconds(用get方式取得)
+					let duration = $('#audioPlayer').get(0).duration;
+
+					let currentTime = $('#audioPlayer')[0].currentTime;
+
+					let sliderPercent = (currentTime / duration) * 100;
+
+					$('.window__controls-range').val(sliderPercent);
+					// $('#slider').attr('value', sliderPercent);
+
+					songTimeText();
+				}
+
+				// 更新歌曲現在時間，parseint()轉整數
+				function songTimeText(){
+					let currentTime = $('#audioPlayer')[0].currentTime;
+					let min =  parseInt(currentTime / 60);
+					let seconds = parseInt(currentTime % 60);
+
+					// 10秒內，text呈現'00:00'
+					if(seconds < 10){
+						$('#songTimeText').text('0' + min + ':' + '0' + seconds);
+					}else{
+						$('#songTimeText').text('0' + min + ':' + seconds);
+					}
+				}
 			})
 	</script>
 	@await RenderSectionAsync("Scripts", required: false)
