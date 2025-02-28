@@ -116,16 +116,6 @@ input {
     border-radius: 12px;
 }
 
-/* 新增水平排列的容器 */
-.horizontal-group {
-    display: flex;
-    gap: 20px; /* 左右欄位的間距 */
-}
-
-    .horizontal-group .form-group {
-        flex: 1; /* 讓兩個欄位平均分配寬度 */
-    }
-
 select {
     width: 100%;
     height: 30px;

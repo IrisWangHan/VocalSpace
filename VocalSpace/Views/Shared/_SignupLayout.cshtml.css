@@ -81,3 +81,107 @@
   justify-content: center;
   align-items: center;
 }
+
+@media (max-width: 890px) {
+    .step-circle {
+        width: 35px;
+        height: 35px;
+        font-size: 14px;
+    }
+
+    .step-label {
+        font-size: 12px;
+    }
+
+    .progress-line {
+        height: 2.5px;
+    }
+}
+
+@media (max-width: 768px) {
+    .step-circle {
+        width: 30px;
+        height: 30px;
+        font-size: 12px;
+    }
+
+    .step-label {
+        font-size: 11px;
+    }
+
+    .progress-steps {
+        max-width: 95%;
+    }
+}
+
+@media (max-width: 650px) {
+    .step-circle {
+        width: 25px;
+        height: 25px;
+        font-size: 10px;
+    }
+
+    .step-label {
+        font-size: 9px;
+        margin-top: 5px;
+    }
+
+    .progress-line {
+        height: 2px;
+    }
+}
+
+@media (max-width: 590px) {
+    .step-circle {
+        width: 20px;
+        height: 20px;
+        font-size: 9px;
+    }
+
+    .step-label {
+        font-size: 8px;
+    }
+
+    .progress-line {
+        height: 1.5px;
+    }
+
+    .progress-steps {
+        max-width: 100%;
+        padding: 0 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .step-circle {
+        width: 16px;
+        height: 16px;
+        font-size: 8px;
+    }
+
+    .step-label {
+        font-size: 7px;
+        margin-top: 4px;
+    }
+
+    .progress-steps {
+        padding: 0;
+    }
+}
+
+@media (max-width: 400px) {
+    .progress-container {
+        padding: 0 5px;
+    }
+
+    .step-circle {
+        width: 14px;
+        height: 14px;
+        font-size: 7px;
+    }
+
+    .step-label {
+        font-size: 6px;
+        margin-top: 3px;
+    }
+}
