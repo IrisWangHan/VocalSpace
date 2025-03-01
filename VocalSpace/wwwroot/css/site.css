@@ -60,6 +60,7 @@ main {
 }
 a {
     color: var(--text-color);
+    text-decoration: none;
 }
 a:hover{
     color: var(--text-color);
@@ -119,5 +120,4 @@ img {
     .btn-cancel--theme:hover {
         background-color: var(--gray-dark);
     }
-
 
