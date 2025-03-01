@@ -1,4 +1,26 @@
-﻿main {
+﻿/* 通用屬性 */
+a {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+span{
+    color: #f9595f;
+    cursor: pointer;
+}
+
+span:hover {
+    color: #d94a4f; /* 更深的紅色 */
+  }
+
+.Avater-link {
+    display: block;
+    max-width: 70px;
+    width: 100%
+}
+
+
+main {
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -13,7 +35,6 @@
 
 .bottom-container {
     display: flex;
-    border: 5px solid red;
 }
 
 .top-container {
@@ -21,23 +42,19 @@
     margin-top: 80px;
     display: flex;
     margin-bottom: 50px;
-    border: 5px solid green;
+    flex-wrap: wrap;
 }
 
 /*[data-theme='dark'] .cbg {
-    z-index: -999;
     position: absolute;
-    width: 100%;
-    height: 45%;*/ /* 覆蓋整個container */
-/*background: linear-gradient(to bottom, grey, darkgrey);
+    background: linear-gradient(to bottom, lightgrey, darkgrey);
 }
 
 [data-theme='light'] .cbg {
     z-index: -999;
-    position: absolute;
     width: 100%;
-    height: 45%;*/ /* 覆蓋整個container */
-/*background: linear-gradient(to bottom, lightgrey, darkgrey);
+    height: 45%;
+    background: linear-gradient(to bottom, lightgrey, darkgrey);
 }*/
 
 .left-container {
@@ -50,26 +67,28 @@
     margin-left: 0;
     display: flex;
     flex-direction: column;
-    padding-left:0 45px;
+    padding: 0px 15px;
 }
 
-.nopad {
-    padding: 0;
-}
-
-/*去除超連結底線*/
-a {
-    text-decoration: none;
-}
 
 /*上方區塊*/
-songpfp {
+.songpfp img {
+    width: 100%;
     max-width: 380px;
+    border:5px solid ;
+    border-radius: 2px;
+}
+
+.songpfp {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
 }
 
 .songinfo {
     position: relative;
-    padding-left: 45px;
+    padding-left: 15px;
     padding-right: 15px;
 }
 
@@ -83,43 +102,92 @@ songpfp {
     display: flex;
     justify-content: space-between
 }
+
+.ui-button {
+    display: flex;
+    align-items: center;
+}
 /*左邊區塊*/
+/*上傳者區塊*/
 .userinfo {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: center; 
+    justify-content: center;
+}
+
+.userpic {
+    width: 25%;
+}
+
+.userid {
+    width: 50%;
+}
+
+.userfollow {
+    width: 25%;
 }
 
 .pfp {
     width: 100%;
-    max-width: 70px; /* 限制最大寬度 */
-    height: auto; /* 讓高度自動調整，避免變形 */
-    aspect-ratio: 1 / 1; /* 確保圖片是正方形 */
-    border-radius: 50%; /* 讓圖片變圓形 */
-    object-fit: cover; /* 確保圖片填滿框架 */
+    max-width: 70px;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 0 5px;
 }
 
-.pftext{
-    padding:0;
-    margin:0;
+.pftext {
+    padding: 0;
+    margin: 0;
 }
 
 .follow {
     width: 100%;
 }
 
-/*右邊區塊*/
-.introduce-area {
+/*廣告區塊*/
+.ad_container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+
+.ad_container img {
+    width: 100%;
+    max-width: 300px;
+    border-radius: 2px;
+}
+/*右邊區塊*/
+/*介紹 歌詞區*/
 
 .introduce {
     max-height: 50px;
     position: relative;
     overflow: hidden;
+    transition: max-height 0.5s ease-in-out; /* 添加動畫效果 */
 }
 
+
 /*rwd*/
+
+
+@media (min-width: 769px) and (max-width: 992px) {
+
+    .userpic {
+        display: none;
+        width: 25%;
+    }
+
+    .userid {
+        width: 50%;
+    }
+
+    .userfollow {
+        width: 50%;
+    }
+}
 
 @media (max-width: 768px) {
     .top-container {
@@ -133,6 +201,14 @@ songpfp {
     .songinfo {
         padding-left: 0;
         padding-right: 0;
+    }
+
+    .left-container {
+        width: 100%;
+    }
+
+    .right-container {
+        width: 100%;
     }
 }
 
@@ -148,5 +224,13 @@ songpfp {
     .songinfo {
         padding-left: 0;
         padding-right: 0;
+    }
+
+    .left-container {
+        width: 100%;
+    }
+
+    .right-container {
+        width: 100%;
     }
 }

@@ -1,18 +1,9 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@{
 
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
 }
-
 <title>聲維宇宙排行榜</title>
-@* <div class="cbg"></div> *@
 <div class="page-container">
+	<div></div>
 	<div class="top-container container">
 		<!-- 左側圖片區域 -->
 		<div class="col-md-4 songpfp">
@@ -20,13 +11,10 @@
 		</div>
 		<!-- 右側音樂介紹區域 -->
 		<div class="row col-md-8 songinfo">
-			<h1 class="cols-1">打不通的電話</h1>
-			<div class="cols-3 song-prop-row opacity-75">
-				<div class="col-6">
-					<a href="#"><strong>HipHop/Rap</strong></a>
-				</div>
-				<div class="col-6">
-					<a href="#"><strong>專輯名稱</strong></a>
+			<h1>打不通的電話</h1>
+			<div class="opacity-50">
+				<div>
+					<a href="#">HipHop/Rap</a>
 				</div>
 			</div>
 			<div class="cols-2">
@@ -52,20 +40,28 @@
 	<div class="bottom-container container">
 		<div class="left-container  col-4">
 			<div class="userinfo container">
-				<div class="col-3">
+				<div class="userpic">
+					<a class="Avater-link" href="#">
 					<img class="pfp" src="/image/Wchi.png">
+					</a>
 				</div>
-				<div class="col-6">
-					<a class="pf" href="#">Sean Ko 高翔</a><br/>
-					<p class="pftext">@("@" + "username")</p>
+				<div class="userid">
+					<a class="pf" href="#">Wchi</a>
+					<p class="pftext">@@wchiii</p>
 				</div>
-				<div class="col-3">
+				<div class="userfollow">
 					<button class="btn-danger follow">追蹤</button>
 				</div>
 			</div>
+			<div class="container">
+				<hr class="mt-5 mb-2">
+				<p class="text-gray-light mb-2 opacity-50">發布日期:2025/02/28</p>
+				<hr class="mt-2 mb-5">
+			</div>
 			@* 廣告圖 *@
-			<div class="ad_container"></div>
-				<img src="/image/song1exp.jpeg">
+			<div class="ad_container container">
+				<img src="/image/SportMatchad.jpg">
+			</div>
 		</div>
 		<div class="right-container col-8">
 			<h2>介紹</h2>
@@ -79,7 +75,7 @@
 						介紹內文
 					</p>
 				</div>
-				<button class="btn-danger">查看更多</button>
+				<span class="toggle-btn">查看更多</span>
 			</div>
 			<hr class="mt-5 mb-5">
 			<h2>歌詞</h2>
@@ -90,19 +86,14 @@
 					<p>2</p>
 					<p>3</p>
 				</div>
-				<button class="btn-danger">查看更多</button>
+				<span class="toggle-btn">查看更多</span>
 			</div>
 			<hr class="mt-5 mb-5">
-			<div class=" comment-area">
-				<div class="comment">
-					<div id="comment-box">
-						<!-- 這裡會根據登入狀態決定顯示哪個區塊 -->
-					</div>
-
-					@* 					留言區partialview
-					@await Html.PartialAsync("_Songdetail_ButtonUI") *@
-
-				</div>
+			<h2>留言區</h2>
+			<div>
+				<!-- 留言串partialview放這裡 -->
+				@await Html.PartialAsync("_CommentInput")
+				@await Html.PartialAsync("_CommentList")
 			</div>
 		</div>
 	</div>
@@ -110,5 +101,34 @@
 
 @section Scripts {
 	<script>
+		@* document.addEventListener("DOMContentLoaded", function () {
+			var toggleBtn = document.querySelector(".toggle-btn");
+			var introduce = document.querySelector(".introduce");
+
+			toggleBtn.addEventListener("click", function () {
+				if (introduce.classList.contains("expanded")) {
+					// 目前展開，點擊後收合
+					introduce.classList.remove("expanded");
+					toggleBtn.textContent = "查看更多";
+				} else {
+					// 目前收合，點擊後展開
+					introduce.classList.add("expanded");
+					toggleBtn.textContent = "收合";
+				}
+			});
+		}); *@
+
+			$(document).ready(function () {
+				$('.toggle-btn').click(function () {
+					const introduce = $(this).prev('.introduce');
+					if (introduce.css('max-height') === '50px') {
+						introduce.css('max-height', introduce.prop('scrollHeight') + 'px');
+						$(this).text('收起內容');
+					} else {
+						introduce.css('max-height', '50px');
+						$(this).text('查看更多');
+					}
+				});
+			});
 	</script>
 }
