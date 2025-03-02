@@ -1,0 +1,189 @@
+﻿@{
+}
+@* 活動總覽 *@
+<div class="page-container">
+	<div class="container pt-4 mb-4">
+		<div class="nav nav-pills mb-6">
+			<a href="#">所有活動</a>
+			<a href="#">我的活動</a>
+		</div>
+
+		@*輪播圖*@
+		<div id="carouselExample" class="carousel slide container mb-4" data-bs-ride="carousel">
+			<div class="carousel-inner">
+				<div class="carousel-item active">
+					<div class="d-flex">
+						<div class="col-6">
+							<div class="actpic-container">
+								<img src="" alt="活動封面" class="d-block w-100">
+							</div>
+						</div>
+						<div class="col-6">
+							<h2>THE CHAINSMOKERS LIVE IN TAIPEI 2025</h2>
+							<div class="badge bg-danger text-white mb-2">3月<br />22</div>
+							<p>17:00．臺北市．大佳河濱公園</p>
+							<p>
+								THE CHAINSMOKERS 主場震撼登場！
+								全球最受矚目的音樂雙人組合 The Chainsmokers
+								即將帶來一場震撼音樂盛會！這場音樂盛會必定讓您嗨翻全場！
+							</p>
+							<span>The Chainsmokers</span>
+						</div>
+					</div>
+				</div>
+				<div class="carousel-item">
+					<div class="d-flex">
+						<div class="col-6">
+							<div class="actpic-container">
+								<img src="" alt="活動封面" class="d-block w-100">
+							</div>
+						</div>
+						<div class="col-6">
+							<h2>打倒三明治《人生曬百味》</h2>
+							<div class="badge bg-danger text-white mb-2">3月<br />8</div>
+							<p>19:30．台北市．傳音樂展演空間</p>
+							<p>
+								象熱的心已把自己燃成灰，並糾結成一團圈的霧朦；
+								揉過所有顛簸的痕跡，猛然會發現空氣變得新鮮。
+							</p>
+							<span>打倒三明治 Sandwich Fail</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- 導航按鈕 -->
+			<button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Previous</span>
+			</button>
+			<button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+				<span class="carousel-control-next-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Next</span>
+			</button>
+		</div>
+	</div>
+	<!-- 下方 -->
+	<div class="container d-flex flex-row pt-4">
+		<!-- 左側篩選區域 -->
+		<div class="col-3 filter-sidebar">
+			<!-- 搜尋輸入框 -->
+			<div class="mb-3 border-block">
+				<input type="text" class="form-control" placeholder="關鍵字">
+				<hr class="mt-5 mb-5">
+				<!-- 地區 -->
+				<h5>地區</h5>
+				<div class="d-flex flex-wrap">
+					<button type="button" class="btn btn-outline-danger btn-toggle active">全部</button>
+					<button type="button" class="btn btn-outline-danger btn-toggle">北部</button>
+					<button type="button" class="btn btn-outline-danger btn-toggle">中部</button>
+					<button type="button" class="btn btn-outline-danger btn-toggle">南部</button>
+					<button type="button" class="btn btn-outline-danger btn-toggle">東部</button>
+					<button type="button" class="btn btn-outline-danger btn-toggle">外島</button>
+					<button type="button" class="btn btn-outline-danger btn-toggle">其他</button>
+				</div>
+				<hr class="mt-5 mb-5">
+				<!-- 日期 -->
+				<h5 class="mt-3">日期</h5>
+				<select class="form-select" id="dateSelect">
+					<option selected>近期活動</option>
+					<option value="1">14天內</option>
+					<option value="2">這個月</option>
+					<option value="3">下個月</option>
+					<option value="4">選擇日期</option>
+				</select>
+			</div>
+		</div>
+
+		<!-- 右側活動列表 -->
+		<div class="col-9">
+			<div class="row align-items-center mb-4">
+				<div class="container">
+					<h2 id="activityListTitle">活動列表</h2>
+					<!-- 活動列表partialview -->
+					@await Html.PartialAsync("_ActivityList_partialview")
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+@section Scripts {
+	<script>
+		// 讓點擊「地區」按鈕時可以切換 active 狀態
+		const btnToggles = document.querySelectorAll('.btn-toggle');
+		btnToggles.forEach(btn => {
+			btn.addEventListener('click', () => {
+				// 先移除所有按鈕的 active，再為當前點擊的按鈕加上 active
+				btnToggles.forEach(b => b.classList.remove('active'));
+				btn.classList.add('active');
+			});
+		});
+		document.addEventListener("DOMContentLoaded", function () {
+			const dateSelect = document.getElementById("dateSelect");
+			const datePicker = document.getElementById("datePicker");
+			const activityListTitle = document.getElementById("activityListTitle");
+
+			// 日期變更事件
+			dateSelect.addEventListener("change", function () {
+				const today = new Date();
+				let startDate = "";
+				let endDate = "";
+
+				// 根據選項計算日期區間
+				switch (dateSelect.value) {
+					case "1": // 14天內
+						startDate = formatDate(today);
+						endDate = formatDate(addDays(today, 14));
+						break;
+					case "2": // 這個月
+						startDate = formatDate(new Date(today.getFullYear(), today.getMonth(), 1));
+						endDate = formatDate(new Date(today.getFullYear(), today.getMonth() + 1, 0));
+						break;
+					case "3": // 下個月
+						startDate = formatDate(new Date(today.getFullYear(), today.getMonth() + 1, 1));
+						endDate = formatDate(new Date(today.getFullYear(), today.getMonth() + 2, 0));
+						break;
+					case "4": // 選擇日期 (顯示日期選擇器)
+						datePicker.classList.remove("d-none");
+						datePicker.addEventListener("change", function () {
+							startDate = datePicker.value;
+							endDate = startDate;
+							updateTitle(startDate, endDate);
+						});
+						return;
+
+					default: // 近期活動
+						activityListTitle.innerText = "活動列表";
+						datePicker.classList.add("d-none");
+						return;
+				}
+
+				datePicker.classList.add("d-none");
+				updateTitle(startDate, endDate);
+			});
+
+			// 更新活動列表標題
+			function updateTitle(start, end) {
+				activityListTitle.innerText = `活動列表：${start} ~ ${end}`;
+			}
+
+			// 日期格式化 yyyy-MM-dd
+			function formatDate(date) {
+				const year = date.getFullYear();
+				const month = String(date.getMonth() + 1).padStart(2, "0");
+				const day = String(date.getDate()).padStart(2, "0");
+				return `${year}-${month}-${day}`;
+			}
+
+			// 增加天數
+			function addDays(date, days) {
+				const result = new Date(date);
+				result.setDate(result.getDate() + days);
+				return result;
+			}
+		});
+
+
+	</script>
+	}

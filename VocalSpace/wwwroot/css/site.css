@@ -121,3 +121,9 @@ img {
         background-color: var(--gray-dark);
     }
 
+/*全局通用屬性*/
+
+.border-block{
+    padding:2em;
+}
+

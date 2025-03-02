@@ -28,6 +28,6 @@ app.UseSession();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Accounts}/{action=Signup}/{id?}");
+    pattern: "{controller=Activity}/{action=Index}/{id?}");
 
 app.Run();
