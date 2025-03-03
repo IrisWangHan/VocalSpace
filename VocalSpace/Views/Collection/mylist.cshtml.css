@@ -178,7 +178,7 @@ img {
 .Randomplay {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: right;
     margin: auto;
 }
 
@@ -209,4 +209,15 @@ img {
 
 .modal.fade div {
     color: #2C2A29;
+}
+
+/* 新增 RWD 設定 */
+@media (max-width:786px) {
+    .sidebar ul {
+        display: none; /* 隱藏 ul 列表 */
+    }
+
+    .sidebar {
+        display: none; /* 隱藏 sidebar */
+    }
 }

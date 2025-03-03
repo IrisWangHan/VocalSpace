@@ -21,7 +21,7 @@
                 <div class="h2-row"><h2>蒐藏庫  /</h2><h2 class="red">我的喜歡</h2></div>
 
                 
-<br />
+                <br />
                 <div id="realtime" class="ranking-list">
                     <div class="Randomplay">
                     <h3>歌曲</h3>
@@ -65,7 +65,7 @@
 
         <!-- 底部按鈕 -->
         <div class="addpopup-footer">
-            <button class="addbtn-newPlaylist">+ 新增歌單</button>
+            <a asp-action="createlist"><button class="addbtn-newPlaylist">+ 新增歌單</button></a>
             <button class="btn addbtn-cancel" onclick="addclosePopup()">取消</button>
             <button class="btn addbtn-confirm" onclick="addclosePopup()">確定</button>
         </div>
@@ -167,6 +167,7 @@ function sharecopyLink() {
   document.execCommand('copy');
   alert('連結已複製');
 }
+
 
 // 加入歌單按鈕之彈跳視窗
 function addopenPopup() {

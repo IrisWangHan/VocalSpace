@@ -281,7 +281,7 @@ img {
         border: none;
         padding: 8px 15px;
         border-radius: 8px;
-        margin-left: 15px;
+        margin-left: 10px;
         cursor: pointer;
         font-size: 16px;
     }
@@ -433,4 +433,15 @@ img {
     border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
+}
+
+/* 新增 RWD 設定 */
+@media (max-width:786px) {
+    .sidebar ul {
+        display: none; /* 隱藏 ul 列表 */
+    }
+
+    .sidebar {
+        display: none; /* 隱藏 sidebar */
+    }
 }

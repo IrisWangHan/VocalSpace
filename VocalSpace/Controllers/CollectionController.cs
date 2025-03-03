@@ -24,6 +24,11 @@ namespace VocalSpace.Controllers
         {
             return View();
         }
+        public IActionResult createlist()
+        {
+            return View();
+        }
+
 
     }
 }
