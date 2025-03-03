@@ -3,9 +3,9 @@
 @* 活動總覽 *@
 <div class="page-container">
 	<div class="container pt-4 mb-4">
-		<div class="nav nav-pills mb-6">
-			<a href="#">所有活動</a>
-			<a href="#">我的活動</a>
+		<div class="nav nav-pills mb-6 gap-lg-5 ">
+			<a href="#" class="nav-link active">所有活動</a>
+			<a href="#" class="nav-link">我的活動</a>
 		</div>
 
 		@*輪播圖*@
@@ -19,15 +19,25 @@
 							</div>
 						</div>
 						<div class="col-6">
-							<h2>THE CHAINSMOKERS LIVE IN TAIPEI 2025</h2>
-							<div class="badge bg-danger text-white mb-2">3月<br />22</div>
-							<p>17:00．臺北市．大佳河濱公園</p>
-							<p>
-								THE CHAINSMOKERS 主場震撼登場！
-								全球最受矚目的音樂雙人組合 The Chainsmokers
-								即將帶來一場震撼音樂盛會！這場音樂盛會必定讓您嗨翻全場！
-							</p>
-							<span>The Chainsmokers</span>
+							<div class="carousel-textarea">
+								<div class="row row-xs align-items-center">
+									<div class="col-2">
+										<div class="badge bg-danger text-white mb-2">3月<br />22</div>
+									</div>
+									<div class="col-10">
+										<h2 class="text-maxone">THE CHAINSMOKERS LIVE IN TAIPEI 2025</h2>
+									</div>
+								</div>
+								<p>17:00．臺北市．大佳河濱公園</p>
+								<div class="text-maxthree">
+									<p>
+										THE CHAINSMOKERS 主場震撼登場！
+										全球最受矚目的音樂雙人組合 The Chainsmokers
+										即將帶來一場震撼音樂盛會！這場音樂盛會必定讓您嗨翻全場！
+									</p>
+								</div>
+								<span>The Chainsmokers</span>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -39,25 +49,35 @@
 							</div>
 						</div>
 						<div class="col-6">
-							<h2>打倒三明治《人生曬百味》</h2>
-							<div class="badge bg-danger text-white mb-2">3月<br />8</div>
-							<p>19:30．台北市．傳音樂展演空間</p>
-							<p>
-								象熱的心已把自己燃成灰，並糾結成一團圈的霧朦；
-								揉過所有顛簸的痕跡，猛然會發現空氣變得新鮮。
-							</p>
-							<span>打倒三明治 Sandwich Fail</span>
+							<div class="carousel-textarea">
+								<div class="row row-xs align-items-center">
+									<div class="col-2">
+										<div class="badge bg-danger text-white mb-2">3月<br />22</div>
+									</div>
+									<div class="col-10">
+										<h2 class="text-maxone">打倒三明治《人生曬百味》</h2>
+									</div>
+								</div>
+								<p>19:30．台北市．傳音樂展演空間</p>
+								<div class="text-maxthree">
+									<p>
+										象熱的心已把自己燃成灰，並糾結成一團圈的霧朦；
+										揉過所有顛簸的痕跡，猛然會發現空氣變得新鮮。
+									</p>
+								</div>
+								<span>The Chainsmokers</span>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 			<!-- 導航按鈕 -->
-			<button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+			<button class="carousel-control-prev  " type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+				<span class="carousel-control-prev-icon sync-data-theme border rounded-circle " aria-hidden="true"></span>
 				<span class="visually-hidden">Previous</span>
 			</button>
-			<button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-				<span class="carousel-control-next-icon" aria-hidden="true"></span>
+			<button class="carousel-control-next  " type="button" data-bs-target="#carouselExample " data-bs-slide="next">
+				<span class="carousel-control-next-icon sync-data-theme border rounded-circle " aria-hidden="true"></span>
 				<span class="visually-hidden">Next</span>
 			</button>
 		</div>
@@ -93,7 +113,6 @@
 				</select>
 			</div>
 		</div>
-
 		<!-- 右側活動列表 -->
 		<div class="col-9">
 			<div class="row align-items-center mb-4">
@@ -102,6 +121,28 @@
 					<!-- 活動列表partialview -->
 					@await Html.PartialAsync("_ActivityList_partialview")
 				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- 日期篩選 Modal -->
+<div class="modal fade" id="datePickerModal" tabindex="-1" aria-labelledby="datePickerModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="datePickerModalLabel">選擇日期區間</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<label>開始日期</label>
+				<input type="date" id="startDatePicker" class="form-control mb-3">
+				<label>結束日期</label>
+				<input type="date" id="endDatePicker" class="form-control">
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+				<button type="button" class="btn btn-primary" id="confirmDateRange">確定篩選</button>
 			</div>
 		</div>
 	</div>
@@ -119,6 +160,10 @@
 				btn.classList.add('active');
 			});
 		});
+					// 更新活動列表標題
+			function updateTitle(start, end) {
+			activityListTitle.innerText = `活動列表：${start} ~ ${end}`;
+			}
 		document.addEventListener("DOMContentLoaded", function () {
 			const dateSelect = document.getElementById("dateSelect");
 			const datePicker = document.getElementById("datePicker");
@@ -145,28 +190,17 @@
 						endDate = formatDate(new Date(today.getFullYear(), today.getMonth() + 2, 0));
 						break;
 					case "4": // 選擇日期 (顯示日期選擇器)
-						datePicker.classList.remove("d-none");
-						datePicker.addEventListener("change", function () {
-							startDate = datePicker.value;
-							endDate = startDate;
-							updateTitle(startDate, endDate);
-						});
+						const dateModal = new bootstrap.Modal(document.getElementById("datePickerModal"));
+						dateModal.show();
 						return;
 
 					default: // 近期活動
 						activityListTitle.innerText = "活動列表";
-						datePicker.classList.add("d-none");
 						return;
 				}
-
-				datePicker.classList.add("d-none");
-				updateTitle(startDate, endDate);
 			});
 
-			// 更新活動列表標題
-			function updateTitle(start, end) {
-				activityListTitle.innerText = `活動列表：${start} ~ ${end}`;
-			}
+
 
 			// 日期格式化 yyyy-MM-dd
 			function formatDate(date) {
@@ -184,6 +218,25 @@
 			}
 		});
 
+				document.querySelectorAll('.nav-pills .nav-link').forEach(link => {
+				link.addEventListener('click', function () {
+				document.querySelector('.nav-pills .nav-link.active')?.classList.remove('active');
+				this.classList.add('active');
+			});
+		});
+
+				document.getElementById("confirmDateRange").addEventListener("click", function () {
+			const startDate = document.getElementById("startDatePicker").value;
+			const endDate = document.getElementById("endDatePicker").value;
+
+			if (startDate && endDate) {
+				updateTitle(startDate, endDate);
+				const dateModal = bootstrap.Modal.getInstance(document.getElementById("datePickerModal"));
+				dateModal.hide(); // 關閉 Modal
+			} else {
+				alert("請選擇完整的日期區間！");
+			}
+		});
 
 	</script>
-	}
+}

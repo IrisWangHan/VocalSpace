@@ -1,11 +1,60 @@
+/*通用屬性*/
+.text-maxone {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.text-maxthree {
+    height:80px;
+    display: block;
+    display: -webkit-box;
+    margin-left: auto;
+    margin-right: auto;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 /*上方區域*/
+
+/*導航欄*/
+.nav-pills .nav-link {
+    color: var(--text-color); /* 預設文字顏色 */
+    border-radius: 50px; /* 圓角按鈕 */
+    padding: 10px 30px; /* 內距 */
+    transition: background-color 0.3s ease, color 0.3s ease; /* 漸變效果 */
+}
+
+    .nav-pills .nav-link.active {
+        background-color: var(--bs-danger); /* 點選的按鈕顏色 */
+        color: white; /* 文字顏色 */
+    }
+
+    .nav-pills .nav-link:not(.active):hover {
+        color: var(--bs-danger); /* 滑過未選取的項目顏色 */
+    }
+
 .page-container {
     flex: 1;
 }
+
+/*輪播圖容器*/
+#carouselExample {
+    padding: 20px 0px;
+}
+
+.carousel-inner {
+    height: 400px; /* 固定高度 */
+    overflow: hidden; /* 超出部分隱藏 */
+}
+
 /*封面圖*/
 .actpic-container {
     border-radius: 12px;
     overflow: hidden;
+    padding-bottom: 52.333%;
+
 }
 
 .carousel-inner img {
@@ -27,11 +76,49 @@
     width: 70px;
 }
 
-
-
-.carousel-control-prev, .carousel-control-next {
+[data-theme="light"]
+.sync-data-theme {
     filter: invert(100%);
 }
+
+/*輪播圖導航鈕*/
+.carousel-control-prev,
+.carousel-control-next {
+    position: absolute;
+    top: 50%;
+    width: 40px;
+    height: 100%;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+    .carousel-control-prev:hover, .carousel-control-next:hover {
+        background-color: rgba(128,128,128,0.2);
+    }
+
+.carousel-control-prev {
+    left: -50px;
+}
+
+.carousel-control-next {
+    right: -50px;
+}
+/*活動文字欄*/
+.carousel-textarea {
+}
+
+    .carousel-textarea h2 {
+    }
+
+    .carousel-textarea p {
+        opacity:50%;
+    }
+
+    .carousel-textarea span {
+        opacity: 50%;
+    }
 
 .filter-sidebar {
     border: 1px solid #000;
@@ -46,5 +133,3 @@
 .container {
     gap: 30px;
 }
-
-
