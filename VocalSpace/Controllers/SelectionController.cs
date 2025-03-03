@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using VocalSpace.Models.Selection;
 
 namespace VocalSpace.Controllers
 {
@@ -8,5 +9,22 @@ namespace VocalSpace.Controllers
         {
             return View();
         }
+        public IActionResult EventDescription()
+        {
+            return View();
+        }
+        public IActionResult Apply()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult SubmitApplication([FromForm] SelectionFormDTO model)
+        {
+            // 處理表單資料
+            var a= model;
+            var X = 1;
+            return Json(new { success = true, message = "表單提交成功" });
+        }
+
     }
 }
