@@ -161,13 +161,12 @@
 			});
 		});
 					// 更新活動列表標題
-			function updateTitle(start, end) {
-			activityListTitle.innerText = `活動列表：${start} ~ ${end}`;
-			}
+		let dateModal; // 提升全域變數
+
 		document.addEventListener("DOMContentLoaded", function () {
 			const dateSelect = document.getElementById("dateSelect");
-			const datePicker = document.getElementById("datePicker");
 			const activityListTitle = document.getElementById("activityListTitle");
+			dateModal = new bootstrap.Modal(document.getElementById("datePickerModal")); // 只初始化一次
 
 			// 日期變更事件
 			dateSelect.addEventListener("change", function () {
@@ -175,32 +174,30 @@
 				let startDate = "";
 				let endDate = "";
 
-				// 根據選項計算日期區間
 				switch (dateSelect.value) {
 					case "1": // 14天內
 						startDate = formatDate(today);
 						endDate = formatDate(addDays(today, 14));
+						updateTitle(startDate, endDate);
 						break;
 					case "2": // 這個月
 						startDate = formatDate(new Date(today.getFullYear(), today.getMonth(), 1));
 						endDate = formatDate(new Date(today.getFullYear(), today.getMonth() + 1, 0));
+						updateTitle(startDate, endDate);
 						break;
 					case "3": // 下個月
 						startDate = formatDate(new Date(today.getFullYear(), today.getMonth() + 1, 1));
 						endDate = formatDate(new Date(today.getFullYear(), today.getMonth() + 2, 0));
+						updateTitle(startDate, endDate);
 						break;
-					case "4": // 選擇日期 (顯示日期選擇器)
-						const dateModal = new bootstrap.Modal(document.getElementById("datePickerModal"));
-						dateModal.show();
-						return;
-
-					default: // 近期活動
+					case "4": // 選擇日期
+						dateModal.show(); // 直接顯示 Modal
+						return; // 提早結束，避免 updateTitle
+					default:
 						activityListTitle.innerText = "活動列表";
 						return;
 				}
 			});
-
-
 
 			// 日期格式化 yyyy-MM-dd
 			function formatDate(date) {
@@ -218,25 +215,22 @@
 			}
 		});
 
-				document.querySelectorAll('.nav-pills .nav-link').forEach(link => {
-				link.addEventListener('click', function () {
-				document.querySelector('.nav-pills .nav-link.active')?.classList.remove('active');
-				this.classList.add('active');
-			});
-		});
-
-				document.getElementById("confirmDateRange").addEventListener("click", function () {
+		document.getElementById("confirmDateRange").addEventListener("click", function () {
 			const startDate = document.getElementById("startDatePicker").value;
 			const endDate = document.getElementById("endDatePicker").value;
 
 			if (startDate && endDate) {
 				updateTitle(startDate, endDate);
-				const dateModal = bootstrap.Modal.getInstance(document.getElementById("datePickerModal"));
 				dateModal.hide(); // 關閉 Modal
 			} else {
 				alert("請選擇完整的日期區間！");
 			}
 		});
 
+		// 更新標題
+		function updateTitle(start, end) {
+			const activityListTitle = document.getElementById("activityListTitle");
+			activityListTitle.innerText = `活動列表：${start} ~ ${end}`;
+		}
 	</script>
 }
