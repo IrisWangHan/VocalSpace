@@ -185,38 +185,34 @@
     }
 
 /* 分享歌曲按鈕之彈跳視窗 */
-.shareoverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: none;
-    justify-content: center;
-    align-items: flex-start;
-    padding-top: 10vh;
+
+.modal-title {
+    margin-bottom: 0;
+    line-height: 1.5;
+    color:black;
 }
 
-    .shareoverlay span {
-        color: black;
-    }
-
-.sharepopup {
-    background: white;
+.modal-content {
     border-radius: 10px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
     padding: 30px;
-    width: 500px;
 }
 
-.sharepopup-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 22px;
-    font-weight: bold;
+.modal-footer {
+    justify-content: flex-start;
+    padding:0;
 }
+
+    .modal-footer .copy {
+        background: #ff4d4f;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 8px;
+        margin-left: 15px;
+        cursor: pointer;
+        font-size: 16px;
+    }
 
 .sharepopup-content {
     display: flex;
@@ -244,35 +240,12 @@
         font-size: 20px;
     }
 
-.sharepopup-footer {
-    display: flex;
-    align-items: center;
-    margin-top: 20px;
-}
-
-    .sharepopup-footer input {
-        margin-left: 15px;
-        flex-grow: 1;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        font-size: 16px;
-    }
-
-    .sharepopup-footer .copy {
-        background: #ff4d4f;
-        color: white;
-        border: none;
-        padding: 8px 15px;
-        border-radius: 8px;
-        margin-left: 15px;
-        cursor: pointer;
-        font-size: 16px;
-    }
-
-.shareclose-btn {
-    cursor: pointer;
-    font-size: 22px;
+.modal-footer input {
+    flex-grow: 1;
+    padding: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
 }
 
 /* 底部按鈕 */

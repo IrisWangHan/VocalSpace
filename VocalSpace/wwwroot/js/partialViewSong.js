@@ -20,10 +20,10 @@ buttons.forEach(button => {
 
 // 分享歌曲按鈕之彈跳視窗
 function shareshowPopup() {
-    document.getElementById('shareoverlay').style.display = 'flex';
+    //document.getElementById('shareoverlay').style.display = 'flex';
 }
 function shareclosePopup() {
-    document.getElementById('shareoverlay').style.display = 'none';
+    //document.getElementById('shareoverlay').style.display = 'none';
 }
 function sharecopyLink() {
     const input = document.querySelector('.sharepopup-footer input');
