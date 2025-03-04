@@ -160,5 +160,56 @@
             <button class="btn addbtn-cancel" onclick="addclosePopup()">取消</button>
             <button class="btn addbtn-confirm" onclick="addclosePopup()">確定</button>
         </div>
-</div>
+    </div>
 
+    <button class="btn btn-outline-secondary" onclick="shareshowPopup()"><i class="bi bi-share"></i></button>
+    <!-- 分享按鈕彈跳視窗 -->
+    <div class="shareoverlay" id="shareoverlay">
+        <div class="sharepopup">
+            <div class="sharepopup-header">
+                <span>分享歌曲</span>
+                <span class="shareclose-btn" onclick="shareclosePopup()">&times;</span>
+            </div>
+            <div class="sharepopup-content">
+                <img src="/image/p1.jpg" alt="封面">
+                <div>
+                    <strong>打不通的電話 <b>Demo</b></strong>
+                    <div>Sean Ko 高翔</div>
+                </div>
+            </div>
+            <div class="sharepopup-footer">
+                <button class="btn fb btn-lg"><i class="bi bi-facebook"></i></button>
+                <button class="btn ig btn-lg"><i class="bi bi-instagram"></i></button>
+                <input type="text" value="https://streetvoice.com/seanko/songs/800" readonly>
+                <button class="copy" onclick="sharecopyLink()">複製</button>
+            </div>
+        </div>
+    </div>
+    @**@
+    <div class="modal-dialog"></div>
+    <div class="modal-body shareoverlay" id="shareoverlay">
+        <h5>分享歌曲</h5>
+        <div class="sharepopup-content">
+            <img src="/image/p1.jpg" alt="封面">
+            <div>
+                <strong>打不通的電話 <b>Demo</b></strong>
+                <div>Sean Ko 高翔</div>
+            </div>
+        </div>
+        <p>This <a href="#" role="button" class="btn btn-secondary popover-test" title="Popover title" data-bs-content="Popover body content is set in this attribute.">button</a> triggers a popover on click.</p>
+        <hr>
+        <div class="sharepopup-footer">
+            <button class="btn fb btn-lg"><i class="bi bi-facebook"></i></button>
+            <button class="btn ig btn-lg"><i class="bi bi-instagram"></i></button>
+            <input type="text" value="https://streetvoice.com/seanko/songs/800" readonly>
+            <button class="copy" onclick="sharecopyLink()">複製</button>
+        </div>
+    </div>
+
+
+
+
+    @**@
+    <button class="btn btn-outline-secondary heart"><i class="bi bi-heart-fill"></i>684</button>
+    <button class="btn btn-outline-secondary" onclick="playSong(1)"><i class="bi bi-play"></i></button>
+</div>
