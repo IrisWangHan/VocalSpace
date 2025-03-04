@@ -35,7 +35,7 @@
 
  .nav-h2:hover {
         color: var(--text-color);
- }
+    }
 
 
 /*  memberInformation.cshtml 的 CSS  */
@@ -84,6 +84,28 @@ button {
     top: 50%;
     right: 10px;
     transform: translateY(-50%);
+ }
+
+
+/*  memberInformation.cshtml 的 CSS  */
+.form-group {
+    margin:1vw 0;
+}
+
+button {
+    background-color: red;
+    color: #F5F5F5;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+/*   imageSetting 的 css */
+.btn {
+    background-color: red;
+    color: #F5F5F5;
+    border-radius: 5px;
+    padding: 5px;
+    width:20%;
 }
 
 label {

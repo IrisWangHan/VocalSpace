@@ -4,7 +4,7 @@
 @{
 }
 
-
+@* 總共3次 *@
 <div class="ranking-item">
     <img src="~/image/idol.jpg" class="cover-block" alt="song cover">
     <div class="info">
@@ -65,5 +65,100 @@
     </div>
     <button class="btn btn-outline-secondary heart"><i class="bi bi-heart-fill"></i>684</button>
     <button class="btn btn-outline-secondary" onclick="playSong(1)"><i class="bi bi-play"></i></button>
+</div>
+<div class="ranking-item">
+    <img src="~/image/idol.jpg" class="cover-block" alt="song cover">
+    <div class="info">
+        <p class="song">打不通的電話</p>
+        <p class="artist">Sean Ko 高翔</p>
+    </div>
+    <button class="btn btn-outline-secondary" onclick="addopenPopup()"><i class="bi bi-plus-lg"></i></button>
+    <!-- 加入歌單彈跳視窗 -->
+    <div class="addoverlay" id="addoverlay" onclick="addclosePopup()"></div>
+
+    <!-- 彈跳視窗 -->
+    <div class="addpopup" id="addpopup">
+        <h2>加入歌單</h2>
+        <input type="text" class="addsearch-box" placeholder="搜尋歌單">
+
+        <!-- 歌單列表 -->
+        <div class="addplaylist-item">
+            <div class="addplaylist-info">
+                <img src="/image/p2.jpeg" alt="封面">
+                <div>
+                    <div class="addplaylist-name">tt</div>
+                    <div class="addplaylist-song">1 首歌曲: ilyynlvl</div>
+                </div>
+            </div>
+            <button class="addbtn-add" onclick="addtoggleSelection(this)">+ 加入歌單</button>
+        </div>
+
+        <!-- 底部按鈕 -->
+        <div class="addpopup-footer">
+            <button class="addbtn-newPlaylist">+ 新增歌單</button>
+            <button class="btn addbtn-cancel" onclick="addclosePopup()">取消</button>
+            <button class="btn addbtn-confirm" onclick="addclosePopup()">確定</button>
+        </div>
+    </div>
+
+    <button class="btn btn-outline-secondary" onclick="shareshowPopup()"><i class="bi bi-share"></i></button>
+    <!-- 分享按鈕彈跳視窗 -->
+    <div class="shareoverlay" id="shareoverlay">
+        <div class="sharepopup">
+            <div class="sharepopup-header">
+                <span>分享歌曲</span>
+                <span class="shareclose-btn" onclick="shareclosePopup()">&times;</span>
+            </div>
+            <div class="sharepopup-content">
+                <img src="/image/p1.jpg" alt="封面">
+                <div>
+                    <strong>打不通的電話 <b>Demo</b></strong>
+                    <div>Sean Ko 高翔</div>
+                </div>
+            </div>
+            <div class="sharepopup-footer">
+                <button class="btn fb btn-lg"><i class="bi bi-facebook"></i></button>
+                <button class="btn ig btn-lg"><i class="bi bi-instagram"></i></button>
+                <input type="text" value="https://streetvoice.com/seanko/songs/800" readonly>
+                <button class="copy" onclick="sharecopyLink()">複製</button>
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-outline-secondary heart"><i class="bi bi-heart-fill"></i>684</button>
+    <button class="btn btn-outline-secondary" onclick="playSong(1)"><i class="bi bi-play"></i></button>
+</div>
+<div class="ranking-item">
+    <img src="~/image/idol.jpg" class="cover-block" alt="song cover">
+    <div class="info">
+        <p class="song">打不通的電話</p>
+        <p class="artist">Sean Ko 高翔</p>
+    </div>
+    <button class="btn btn-outline-secondary" onclick="addopenPopup()"><i class="bi bi-plus-lg"></i></button>
+    <!-- 加入歌單彈跳視窗 -->
+    <div class="addoverlay" id="addoverlay" onclick="addclosePopup()"></div>
+
+    <!-- 彈跳視窗 -->
+    <div class="addpopup" id="addpopup">
+        <h2>加入歌單</h2>
+        <input type="text" class="addsearch-box" placeholder="搜尋歌單">
+
+        <!-- 歌單列表 -->
+        <div class="addplaylist-item">
+            <div class="addplaylist-info">
+                <img src="/image/p2.jpeg" alt="封面">
+                <div>
+                    <div class="addplaylist-name">tt</div>
+                    <div class="addplaylist-song">1 首歌曲: ilyynlvl</div>
+                </div>
+            </div>
+            <button class="addbtn-add" onclick="addtoggleSelection(this)">+ 加入歌單</button>
+        </div>
+
+        <!-- 底部按鈕 -->
+        <div class="addpopup-footer">
+            <button class="addbtn-newPlaylist">+ 新增歌單</button>
+            <button class="btn addbtn-cancel" onclick="addclosePopup()">取消</button>
+            <button class="btn addbtn-confirm" onclick="addclosePopup()">確定</button>
+        </div>
 </div>
 

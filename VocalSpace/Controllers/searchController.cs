@@ -8,9 +8,6 @@ namespace VocalSpace.Controllers
         
         public IActionResult searchAll()
         {
-            Songs song1 = new Songs();
-            song1.Title = "idol";
-            song1.Artist = "yoasobi";
             return View();
         }
 
@@ -29,10 +26,20 @@ namespace VocalSpace.Controllers
             return View();
         }
         [HttpGet]
-        public IActionResult partialViewSong()
+        public IActionResult loadmore()
         {
+            switch (Request.Query["type"])
+            {
+                case "song":
+                    return PartialView("partialViewSong");
+                case "songlist":
+                    return PartialView("partialViewSonglist");
+                case "artist":
+                    return PartialView("partialViewArtist");
+                default:
+                    return PartialView("partialViewSong");
+            }
             
-            return PartialView("partialViewSong");
         }
     }
 }

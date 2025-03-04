@@ -24,6 +24,31 @@ namespace VocalSpace.Controllers
         {
             return View();
         }
+
+        //  整合  AccountSettings
+        public IActionResult memberInformation()
+        {
+
+            return View();
+        }
+        public IActionResult imageSetting()
+        {
+            return View();
+        }
+
+        public IActionResult changeEmail()
+        {
+            return View();
+        }
+
+        public IActionResult changePassword()
+        {
+            return View();
+        }
+        public IActionResult deleteAccount()
+        {
+            return View();
+        }
     }
 
 }

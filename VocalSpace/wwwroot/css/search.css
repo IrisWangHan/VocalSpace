@@ -1,37 +1,47 @@
-﻿/* 當 `data-theme="light"` 時，變成亮色模式 */
+﻿@media (max-width: 992px) {
+    body {
+        font-size: 16px;
+    }
+    
+}
+
+
+
+
+/* 當 `data-theme="light"` 時，變成亮色模式 */
 [data-theme="light"] {
     --bg-color: #F5F5F5;
     --text-color: #000000;
 }
 
-a {
-    color: var(--text-color);
-}
-
-a:hover {
+    a {
         color: var(--text-color);
- }
+    }
 
-img {
-    max-width: 100%; /*圖片最大寬度父元素的為100% 當圖片太大時,會保持比例放入*/
-    height: auto; /*圖片高度由RWD自動調整 圖片才不會變形*/
-}
+        a:hover {
+            color: var(--text-color);
+        }
+
+    img {
+        max-width: 100%; /*圖片最大寬度父元素的為100% 當圖片太大時,會保持比例放入*/
+        height: auto; /*圖片高度由RWD自動調整 圖片才不會變形*/
+    }
 
 
 
 .search-title {
-    display:flex;
+        display: flex;
 }
 
-.mr-2 {
-    margin-right: .5rem;
-}
+    .mr-2 {
+        margin-right: .5rem;
+    }
 
 .w-100 {
-    width:100%;
+        width: 100%;
 }
 
-/* 依全部，歌曲，歌單，歌手來搜尋 */
+    /* 依全部，歌曲，歌單，歌手來搜尋 */
 .nav-pills {
     border-bottom: 1px solid #d2d2d2;
     padding-bottom: 1.2rem;
@@ -40,27 +50,34 @@ img {
 .nav-name {
     color: var(--text-color);
     font-size: 1.5rem;
-    background-color: var(--bg-color);
-    border-color: var(--bg-color);
+        background-color: var(--bg-color);
+        border-color: var(--bg-color);
     transition: all 0.1s ease;
 }
 
-.nav-name:not(:disabled):not(.disabled).active {
-        background-color: #f9595f;
-}
+    @media (max-width: 576px) {
+        .nav-name {
+            font-size: 1rem;
+        }
 
-.nav-name:hover {
+    
+        }
+
+        .nav-name:not(:disabled):not(.disabled).active {
+            background-color: #f9595f;
+        }
+
+    .nav-name:hover {
         color: red;
         border-bottom: 1px solid red;
 }
 
-/*  點我看更多 */
-.btn-loadmore {
-    color: var(--text-color);
-    border-radius: .65rem;
-    border: 1px solid gray;
-}
 
 
 
-
+    /*  點我看更多 */
+    .btn-loadmore {
+        color: var(--text-color);
+        border-radius: .65rem;
+        border: 1px solid gray;
+    }

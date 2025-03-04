@@ -26,18 +26,51 @@ function toggleFollow(btn) {
 
 //  點 "看更多" 按鈕，顯示更多歌曲，歌單，音樂人
 //  <div class="tab-content">裡面一直加入@await Html.PartialAsync("partialViewSong")，帶入partialViewSong的內容
-function loadmore() {
-    fetch("/search/partialViewSong").
-        then(response => {
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-            return response.text();
-        }).
-        then(responseHTML => {
-            document.querySelector('.tab-content').innerHTML += responseHTML;
-        }).
-        catch(error => {
-            console.error("載入歌曲失敗");
-        });
+function loadmore(type) {
+
+    fetch("search/loadmore?type=" + type).
+            then(response => {
+                //  response.ok 為 true
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.text();
+            }).
+            then(responseHTML => {
+                document.getElementById('tab-content').innerHTML += responseHTML;
+            }).
+            catch(error => {
+                console.error("載入歌曲失敗");
+            })
+
+}
+
+const btnLoadmore = document.getElementById('btn-loadmore');
+function loadmore(type) {
+
+    window.addEventListener('scroll', () => {
+
+
+
+
+        if (window.scrollY != 0 && window.scrollY % 1000 === 0) {
+
+            fetch("search/loadmore?type=" + type).
+                then(response => {
+                    //  response.ok 為 true
+                    if (!response.ok) {
+                        throw new Error("Network response was not ok");
+                    }
+                    return response.text();
+                }).
+                then(responseHTML => {
+                    document.getElementById('tab-content').innerHTML += responseHTML;
+                }).
+                catch(error => {
+                    console.error("載入歌曲失敗");
+                })
+            
+        } 
+
+    })
 }

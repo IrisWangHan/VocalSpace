@@ -1,6 +1,4 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿
 @{
 }
 <link rel="stylesheet" href="~/css/memberInformation.css" asp-append-version="true" />
@@ -13,13 +11,13 @@
             @await Html.PartialAsync("partialViewAccountSettings")
             <div class="col-md-8 col-lg-8">
                 <div class="mb-4">
-                    <h2 class="mb-4">變更電子信箱</h2>
+                <h2 class="mb-4">變更電子信箱</h2>
                     <p></p>
                     <form action="/" method="post">
-                        <div class="form-group">
+                    <div class="form-group">
                             <label class="" for="">舊Email</label>
                             <div class="position-relative">
-                                <span class="badge badge-success ml-3"></span>
+                            <span class="badge badge-success ml-3"></span>
                             </div>
                         </div>
                         <hr />
@@ -34,11 +32,11 @@
                             <div class="position-relative">
                                 <input class="form-control" placeholder="" required>                               
                             </div>
-                        </div>
-                        <button>變更電子信箱</button>
-                    </form>
-                </div>             
+                    </div>
+                <button>變更電子信箱</button>
+                </form>
             </div>
          </div>
+    </div>
     </div>
  </section>

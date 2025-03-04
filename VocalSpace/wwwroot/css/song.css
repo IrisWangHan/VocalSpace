@@ -2,7 +2,7 @@
 @media screen and (max-width: 1000px) {
     .btn-outline-secondary.heart {
         display: none;
-    }
+}
 
     .btn-outline-secondary.play {
         display: none;
@@ -47,6 +47,14 @@
     color: lightslategray;
 }
 
+@media (max-width: 576px) {
+    .artist {
+        font-size: 10px;
+    }
+    .btn {
+        padding: .35rem .5rem;
+    }
+}
 
 /* 加入歌單按鈕 */
 .btn-outline-secondary {
@@ -306,7 +314,7 @@
     margin: 0 10px;
     border-radius: 50%; /* 變圓形 */
     box-shadow: 0 1px 4px 0 rgba(0, 0, 0, .1);
-}
+    }
 
 /* 追蹤按鈕：背景紅色、白字、略有圓角 */
 .btn-follow {
@@ -317,14 +325,14 @@
     padding: 5px 12px;
     cursor: pointer;
     font-size: 14px;
-}
+    }
 
 
 .artist-name {
     font-size: 16px;
     font-weight: bold;
     margin: 0;
-}
+    }
 
 
 
