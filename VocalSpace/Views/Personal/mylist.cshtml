@@ -1,0 +1,64 @@
+﻿@{
+	Layout = "_PersonalLayout";  
+}
+ <nav class="menu" id="myList">
+        <a href="/Personal/mymusic">音樂</a>
+        <a href="/Personal/mylist" class="active">歌單</a>
+        <a href="/Personal/mylike">喜歡</a>
+        <a href="/Personal/myabout">關於</a>
+    </nav>
+<div class="playlist">
+        <div class="playlist-card">
+
+            <h2>歌單</h2>
+            <div class="ranking-item">
+                <img src="p1.jpg" alt="song cover">
+
+                <div class="listinfo">
+                    <p class="song">打不通的電話</p>
+                    <p class="artist">1 首歌曲．Sean Ko 高翔</p>
+                </div>
+
+                <button class="btn btn-outline-secondary deletelist" data-bs-toggle="modal"
+                    data-bs-target="#exampleModal"><i class="bi bi-trash"></i></button>
+                <button class="btn btn-outline-secondary editlist" onclick="editlist()"><i
+                        class="bi bi-pencil-square"></i></button>
+                <button class="btn btn-outline-secondary book"><i class="bi bi-bookmark-check-fill"></i></button>
+                <button class="btn btn-outline-secondary random"><i class="bi bi-shuffle"></i></button>
+            </div>
+
+            <div class="ranking-item">
+
+                <img src="p1.jpg" alt="song cover">
+                <div class="listinfo">
+                    <p class="song">打不通的電話</p>
+                    <p class="artist">1 首歌曲．Sean Ko 高翔</p>
+                </div>
+                <button class="btn btn-outline-secondary deletelist" data-bs-toggle="modal"
+                    data-bs-target="#exampleModal"><i class="bi bi-trash"></i></button>
+                <button class="btn btn-outline-secondary editlist" onclick="editlist()"><i
+                        class="bi bi-pencil-square"></i></button>
+                <button class="btn btn-outline-secondary book"><i class="bi bi-bookmark-check-fill"></i></button>
+                <button class="btn btn-outline-secondary random"><i class="bi bi-shuffle"></i></button>
+            </div>
+        </div>
+    </div>
+    <!-- 刪除歌單彈窗 -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="exampleModalLabel">刪除</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    你確定要刪除這個歌單？
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-secondary">確定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+

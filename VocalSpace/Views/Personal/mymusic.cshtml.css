@@ -1,0 +1,114 @@
+﻿.menu {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 10px 0;
+    margin-left: 0%;
+}
+
+.menu a {
+    text-decoration: none;
+    padding: 5px 15px;
+}
+/*選單選取時樣式*/
+.menu a.active {
+    background: #ff5a5a;
+    color: white;
+    border-radius: 5px;
+}
+
+.w80 {
+    display: flex;
+    justify-content: center;
+}
+
+hr {
+    width: 80%;
+}
+
+.playlist {
+    display: flex;
+    justify-content: center;
+    height: 100%;
+}
+.playlist-card {
+    width: 80%;
+}
+
+.title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.littletitle {
+    width:80%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.littletitle h5 {
+    margin:0;
+}
+
+.littletitle .btn {
+    margin: 0;
+}
+
+/*全部播放按鈕樣式*/
+.btn-danger {
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    display: block;
+    margin-top: 10px;
+    margin-left: auto;
+    position: relative;
+}
+
+.songs {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.song img {
+    width: 200px;
+    height: 200px;
+    border-radius: 10px;
+}
+h5 {
+    font-size: 16px;
+}
+p {
+    color:slategrey;
+    font-size:12px;
+}
+@media screen and (max-width: 768px) {
+
+    .menu {
+        display: flex;
+        justify-content: flex-start;
+        overflow-x: auto;
+        white-space: nowrap;
+        padding: 10px;
+    }
+
+    .menu a {
+        flex-shrink: 0;
+        padding: 10px;
+    }
+
+    hr {
+        width: 100%;
+    }
+
+    .song img {
+        width: 150px;
+        height:150px;
+        border-radius: 10px;
+    }
+}
+

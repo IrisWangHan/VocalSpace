@@ -1,0 +1,79 @@
+﻿@{
+	Layout = "_PersonalLayout";
+}
+<nav class="menu" id="myList">
+	<a href="/Personal/mymusic" class="active">音樂</a>
+	<a href="/Personal/mylist">歌單</a>
+	<a href="/Personal/mylike">喜歡</a>
+	<a href="/Personal/myabout">關於</a>
+</nav>
+
+<div class="w80"><hr></div>
+<div class="title mb-4">
+	<div class="littletitle">
+		<h5>歌曲(4)</h5>
+		<div class="playAll"><button class="btn btn-danger"><i class="bi bi-play"></i>全部播放</button></div>
+	</div>
+</div>
+@{
+	<div class="playlist">
+		<div class="playlist-card">
+			<div class="songs">
+				<div class="container-xxl">
+					<div class="row">
+						@for (var i=1;i<=5;i++)
+						{
+							<div class="col">
+								<div class="song">
+									<img src="/image/p1.jpg" alt="俘留">
+									<h5>俘留 (影集《化外之聲》插曲)</h5>
+									<p>LaDY</p>
+								</div>
+							</div>
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+}
+@* <div class="playlist">
+	<div class="playlist-card">
+		<div class="songs">
+			<div class="container-xxl">
+				<div class="row">
+					<div class="col">
+						<div class="song">
+							<img src="/image/p1.jpg" alt="俘留">
+							<h5>俘留 (影集《化外之聲》插曲)</h5>
+							<p>LaDY</p>
+						</div>
+					</div>
+					<div class="col">
+						<div class="song">
+							<img src="/image/p1.jpg" alt="Xanadu">
+							<h5>Xanadu</h5>
+							<p>LaDY</p>
+						</div>
+					</div>
+					<div class="col">
+						<div class="song">
+							<img src="/image/p1.jpg" alt="Xanadu">
+							<h5>Xanadu</h5>
+							<p>LaDY</p>
+						</div>
+					</div>
+					<div class="col">
+						<div class="song">
+							<img src="/image/p1.jpg" alt="Xanadu">
+							<h5>Xanadu</h5>
+							<p>LaDY</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div> *@
+
+

@@ -1,0 +1,47 @@
+﻿.playlist {
+    margin: 20px;
+    display: flex;
+    justify-content: center;
+    height: 100%;
+}
+.playlist-card {
+    width: 80%;
+    padding: 30px;
+
+}
+.menu {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 10px 0;
+    margin-left: 0%;
+}
+
+    .menu a {
+        text-decoration: none;
+        padding: 5px 15px;
+    }
+
+        .menu a.active {
+            background: #ff5a5a;
+            color: white;
+            border-radius: 5px;
+        }
+
+@media screen and (max-width: 768px) {
+
+    .menu {
+        display: flex;
+        justify-content: flex-start;
+        overflow-x: auto;
+        white-space: nowrap;
+        padding: 10px;
+    }
+
+        .menu a {
+            flex-shrink: 0;
+            padding: 10px;
+        }
+
+}
+

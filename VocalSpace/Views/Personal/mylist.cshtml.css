@@ -1,0 +1,348 @@
+﻿body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f9f9f9;
+    text-align: center;
+}
+
+.profile-header {
+    background: #f9f9f9;
+    color: rgb(0, 0, 0);
+    justify-content: center;
+}
+
+.pro {
+    display: flex;
+    justify-content: center;
+}
+
+.profile-info {
+    display: flex;
+    width: 80%;
+    justify-content: space-between;
+}
+
+.personal-data {
+    display: flex;
+}
+
+.cover {
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(to bottom, #f9f9f9, #1b1b1b);
+    display: flex;
+    justify-content: center;
+}
+
+.coverbutton {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    justify-content: end;
+}
+
+.btn-danger {
+    margin-bottom: 15px;
+    vertical-align: bottom;
+}
+
+/* .avatar {
+            width: 200px;
+            height: 200px;
+            background: gray;
+            border-radius: 50%;
+            margin: -100px 0px 0px;
+            justify-content: left;
+        } */
+
+
+/* 預覽頭貼 */
+.head-container {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    margin: -100px 0px 0px;
+    border: 2px dashed #ccc;
+    overflow: hidden;
+}
+
+.headcover {
+    width: 100%;
+    height: 100%;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+    .headcover img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: none;
+    }
+
+.upload-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.3s;
+    white-space: nowrap;
+}
+
+.headcover-container:hover .upload-btn {
+    opacity: 1;
+}
+
+
+.osinfo {
+    font-size: 12px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    p
+
+{
+    margin: 0px 0px 8px;
+}
+
+}
+
+.stats {
+    font-size: 18px;
+    justify-content: right;
+    display: flex;
+    align-items: flex-end;
+}
+
+
+
+.menu {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 10px 0;
+    margin-left: 0%;
+}
+
+    .menu a {
+        text-decoration: none;
+        padding: 5px 15px;
+    }
+
+        .menu a.active {
+            background: #ff5a5a;
+            color: white;
+            border-radius: 5px;
+        }
+
+
+.playlist {
+    margin: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.playlist-card {
+    width: 80%;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border:1px solid;
+}
+
+    .playlist-card h2 {
+        text-align: left;
+    }
+
+
+
+.likes {
+    color: red;
+    float: right;
+}
+
+
+.ranking-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+    width: 100%;
+}
+
+    .ranking-item img {
+        width: 60px;
+        height: 60px;
+        border-radius: 8px;
+        margin-right: 15px;
+        /* 確保圖片和文字有間距 */
+        flex-shrink: 0;
+        /* 防止圖片被壓縮 */
+    }
+
+    .ranking-item .listinfo {
+        flex-grow: 1;
+        /* 讓 info 佔據剩餘空間 */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: left;
+        overflow: hidden;
+    }
+
+.btn-outline-secondary.book {
+    margin-right: 10px;
+    border: 1px solid gray;
+}
+
+    .btn-outline-secondary.book:hover {
+        margin-right: 10px;
+        background-color: rgb(255, 87, 87);
+    }
+
+    .btn-outline-secondary.book.selected {
+        margin-right: 10px;
+        background-color: #ffffff;
+        border: 1px solid rgb(255, 87, 87);
+        color: rgb(255, 87, 87);
+    }
+
+.btn-outline-secondary.deletelist {
+    margin-right: 10px;
+    border: 1px solid gray;
+}
+
+.btn-outline-secondary.editlist {
+    margin-right: 10px;
+    border: 1px solid gray;
+}
+
+.btn-outline-secondary.random {
+    border: 1px solid gray;
+}
+
+@media screen and (max-width: 1000px) {
+    .btn-outline-secondary.deletelist {
+        display: none;
+    }
+
+    .btn-outline-secondary.editlist {
+        display: none;
+    }
+
+    .btn-outline-secondary.book {
+        display: none;
+    }
+
+    .btn-outline-secondary.random {
+        display: none;
+    }
+}
+
+@media (min-width: 992px) {
+    .col-lg-auto {
+        flex: 0 0 auto;
+        width: auto;
+        max-width: none;
+    }
+}
+
+.btn-danger {
+    color: white;
+    cursor: pointer;
+    display: block;
+    margin-left: auto;
+    position: relative;
+}
+
+.playAll {
+    display: flex;
+    justify-content: right;
+}
+
+
+.artist {
+    font-size: small;
+}
+
+.Randomplay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+}
+
+    .Randomplay .btn-danger {
+        display: flex;
+        justify-content: right;
+    }
+
+@media screen and (max-width: 768px) {
+    .profile-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        white-space: nowrap;
+        padding: 10px;
+    }
+
+    .personal-data {
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
+        min-width: 250px; /* 保持固定寬度，避免壓縮 */
+    }
+
+    .avatar {
+        width: 120px;
+        height: 120px;
+        margin: -60px 0px 0px;
+    }
+
+    .osinfo {
+        text-align: center;
+    }
+
+    .menu {
+        display: flex;
+        justify-content: flex-start;
+        overflow-x: auto;
+        white-space: nowrap;
+        padding: 10px;
+    }
+
+        .menu a {
+            flex-shrink: 0;
+            padding: 10px;
+        }
+
+    .playlist-card {
+        width: 100%;
+        padding: 20px;
+    }
+
+    .ranking-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+        .ranking-item img {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 5px;
+        }
+}
