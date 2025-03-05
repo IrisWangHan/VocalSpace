@@ -42,9 +42,14 @@
     flex-grow: 1;
 }
 
+/*.song {
+    margin-bottom:1rem;
+}*/
+
 .artist {
     font-size: small;
     color: lightslategray;
+    
 }
 
 @media (max-width: 576px) {

@@ -7,29 +7,58 @@ function playAll() {
     alert('播放全部歌曲');
 }
 
-// 取得所有按鈕
-const buttons = document.querySelectorAll('.btn-outline-secondary.heart');
+//  
+//const observer = new MutationObserver((MutationRecords) => {
 
-// 為每個按鈕加上點擊事件
-buttons.forEach(button => {
-    button.addEventListener('click', function () {
-        // 切換選取效果：如果已選取就取消選取，反之則加入選取效果
-        this.classList.toggle('selected');
+//    const tabContent = document.querySelector('.tab-content');
+//    // 取得所有按鈕
+//    const buttons = document.querySelectorAll('.btn-outline-secondary.heart');
+
+//    // 為每個按鈕加上點擊事件
+//    buttons.forEach(button => {
+//        button.addEventListener('click', function () {
+//            // 切換選取效果：如果已選取就取消選取，反之則加入選取效果
+//            this.classList.toggle('selected');
+//        });
+//    });
+
+//    observer.observe( tabContent , {
+//        subtree: true,
+//        childList: true
+//    })
+
+//})
+
+
+
+
+window.addEventListener("DOMContentLoaded", () => {
+    // 取得所有按鈕
+    const buttons = document.querySelectorAll('.btn-outline-secondary.heart');
+
+    // 為每個按鈕加上點擊事件
+    buttons.forEach(button => {
+        button.addEventListener('click', function () {
+            // 切換選取效果：如果已選取就取消選取，反之則加入選取效果
+            this.classList.toggle('selected');
+        });
     });
-});
+})
+
 
 // 分享歌曲按鈕之彈跳視窗
-function shareshowPopup() {
-    //document.getElementById('shareoverlay').style.display = 'flex';
-}
-function shareclosePopup() {
-    //document.getElementById('shareoverlay').style.display = 'none';
-}
-function sharecopyLink() {
-    const input = document.querySelector('.sharepopup-footer input');
-    input.select();
-    document.execCommand('copy');
-    alert('連結已複製');
+//document.querySelector('.copy').addEventListener('click', sharecopyLink);
+
+async function sharecopyLink() {
+    const input = document.querySelector('.share');
+    try {
+        //  複製 input.value 到 剪貼簿
+        await navigator.clipboard.writeText(input.value);
+        alert('連結已複製');
+    } catch (error) {
+            console.error('Failed to copy!', error);
+    }
+   
 }
 
 // 加入歌單按鈕之彈跳視窗

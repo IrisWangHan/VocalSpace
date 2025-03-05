@@ -28,7 +28,7 @@ function toggleFollow(btn) {
 //  <div class="tab-content">裡面一直加入@await Html.PartialAsync("partialViewSong")，帶入partialViewSong的內容
 function loadmore(type) {
 
-    fetch("search/loadmore?type=" + type).
+    fetch("/search/loadmore?type=" + type).
             then(response => {
                 //  response.ok 為 true
                 if (!response.ok) {
@@ -38,6 +38,7 @@ function loadmore(type) {
             }).
             then(responseHTML => {
                 document.getElementById('tab-content').innerHTML += responseHTML;
+
             }).
             catch(error => {
                 console.error("載入歌曲失敗");
@@ -45,32 +46,32 @@ function loadmore(type) {
 
 }
 
-const btnLoadmore = document.getElementById('btn-loadmore');
-function loadmore(type) {
+//const btnLoadmore = document.getElementById('btn-loadmore');
+//function loadmore(type) {
 
-    window.addEventListener('scroll', () => {
-
-
+//    window.addEventListener('scroll', () => {
 
 
-        if (window.scrollY != 0 && window.scrollY % 1000 === 0) {
 
-            fetch("search/loadmore?type=" + type).
-                then(response => {
-                    //  response.ok 為 true
-                    if (!response.ok) {
-                        throw new Error("Network response was not ok");
-                    }
-                    return response.text();
-                }).
-                then(responseHTML => {
-                    document.getElementById('tab-content').innerHTML += responseHTML;
-                }).
-                catch(error => {
-                    console.error("載入歌曲失敗");
-                })
+
+//        if (window.scrollY != 0 && window.scrollY % 1000 === 0) {
+
+//            fetch("search/loadmore?type=" + type).
+//                then(response => {
+//                    //  response.ok 為 true
+//                    if (!response.ok) {
+//                        throw new Error("Network response was not ok");
+//                    }
+//                    return response.text();
+//                }).
+//                then(responseHTML => {
+//                    document.getElementById('tab-content').innerHTML += responseHTML;
+//                }).
+//                catch(error => {
+//                    console.error("載入歌曲失敗");
+//                })
             
-        } 
+//        } 
 
-    })
-}
+//    })
+//}
