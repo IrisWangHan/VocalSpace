@@ -43,10 +43,10 @@
     justify-content: end;
 }
 
-.btn-danger {
+/*.btn-danger {
     margin-bottom: 15px;
     vertical-align: bottom;
-}
+}*/
 
 /* .avatar {
             width: 200px;
@@ -112,12 +112,10 @@
     display: flex;
     flex-direction: column;
     justify-content: left;
-    p
-
-{
-    margin: 0px 0px 8px;
 }
 
+.osinfo p {
+    margin: 0px 0px 8px;
 }
 
 .stats {
@@ -160,7 +158,7 @@
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border:1px solid;
+    border: 1px solid;
 }
 
     .playlist-card h2 {
@@ -232,6 +230,11 @@
 
 .btn-outline-secondary.random {
     border: 1px solid gray;
+}
+
+.webtheme {
+    background-color: #FAFAFA;
+    color: #181818;
 }
 
 @media screen and (max-width: 1000px) {
