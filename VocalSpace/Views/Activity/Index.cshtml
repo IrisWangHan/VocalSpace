@@ -2,11 +2,13 @@
 }
 @* 活動總覽 *@
 <div class="page-container">
+
 	<div class="container pt-4 mb-4">
 		<div class="nav nav-pills mb-6 gap-lg-5 ">
 			<a href="#" class="nav-link active">所有活動</a>
 			<a href="#" class="nav-link">我的活動</a>
 		</div>
+		<hr>
 
 		@*輪播圖*@
 		<div id="carouselExample" class="carousel slide container mb-4" data-bs-ride="carousel">
@@ -22,12 +24,16 @@
 							<div class="carousel-textarea">
 								<div class="row row-xs align-items-center">
 									<div class="col-2">
-										<div class="badge bg-danger text-white mb-2">3月<br />22</div>
+										<div class="calende-border-block p-0 text-center">
+											<div class="bg-danger text-white font-size-sm">3 月</div>
+											<h3 class="mb-1 mt-1 text-black">7</h3>
+										</div>
 									</div>
 									<div class="col-10">
 										<h2 class="text-maxone">THE CHAINSMOKERS LIVE IN TAIPEI 2025</h2>
 									</div>
 								</div>
+								<hr>
 								<p>17:00．臺北市．大佳河濱公園</p>
 								<div class="text-maxthree">
 									<p>
@@ -52,12 +58,16 @@
 							<div class="carousel-textarea">
 								<div class="row row-xs align-items-center">
 									<div class="col-2">
-										<div class="badge bg-danger text-white mb-2">3月<br />22</div>
+										<div class="calende-border-block p-0 text-center">
+											<div class="bg-danger text-white font-size-sm">3 月</div>
+											<h3 class="mb-1 mt-1 text-black">22</h3>
+										</div>
 									</div>
 									<div class="col-10">
 										<h2 class="text-maxone">打倒三明治《人生曬百味》</h2>
 									</div>
 								</div>
+								<hr>
 								<p>19:30．台北市．傳音樂展演空間</p>
 								<div class="text-maxthree">
 									<p>
@@ -65,7 +75,7 @@
 										揉過所有顛簸的痕跡，猛然會發現空氣變得新鮮。
 									</p>
 								</div>
-								<span>The Chainsmokers</span>
+								<span>打倒三明治</span>
 							</div>
 						</div>
 					</div>
@@ -91,15 +101,15 @@
 				<input type="text" class="form-control" placeholder="關鍵字">
 				<hr class="mt-5 mb-5">
 				<!-- 地區 -->
-				<h5>地區</h5>
-				<div class="d-flex flex-wrap">
-					<button type="button" class="btn btn-outline-danger btn-toggle active">全部</button>
-					<button type="button" class="btn btn-outline-danger btn-toggle">北部</button>
-					<button type="button" class="btn btn-outline-danger btn-toggle">中部</button>
-					<button type="button" class="btn btn-outline-danger btn-toggle">南部</button>
-					<button type="button" class="btn btn-outline-danger btn-toggle">東部</button>
-					<button type="button" class="btn btn-outline-danger btn-toggle">外島</button>
-					<button type="button" class="btn btn-outline-danger btn-toggle">其他</button>
+				<h5 class="mb-4">地區</h5>
+				<div class="d-flex flex-wrap gap-3 ">
+					<button type="button" class="btn btn-outline-danger btn-toggle buttoncircle active">全部</button>
+					<button type="button" class="btn btn-outline-danger btn-toggle buttoncircle">北部</button>
+					<button type="button" class="btn btn-outline-danger btn-toggle buttoncircle">中部</button>
+					<button type="button" class="btn btn-outline-danger btn-toggle buttoncircle">南部</button>
+					<button type="button" class="btn btn-outline-danger btn-toggle buttoncircle">東部</button>
+					<button type="button" class="btn btn-outline-danger btn-toggle buttoncircle">外島</button>
+					<button type="button" class="btn btn-outline-danger btn-toggle buttoncircle">其他</button>
 				</div>
 				<hr class="mt-5 mb-5">
 				<!-- 日期 -->
@@ -127,7 +137,7 @@
 </div>
 
 <!-- 日期篩選 Modal -->
-<div class="modal fade" id="datePickerModal" tabindex="-1" aria-labelledby="datePickerModalLabel" aria-hidden="true">
+<div class="modal fade" id="datePickerModal" tabindex="-1" aria-labelledby="datePickerModalLabel" aria-hidden="false">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -142,7 +152,7 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-				<button type="button" class="btn btn-primary" id="confirmDateRange">確定篩選</button>
+				<button type="button" class="btn btn-danger" id="confirmDateRange">確定篩選</button>
 			</div>
 		</div>
 	</div>
@@ -158,6 +168,16 @@
 				// 先移除所有按鈕的 active，再為當前點擊的按鈕加上 active
 				btnToggles.forEach(b => b.classList.remove('active'));
 				btn.classList.add('active');
+			});
+		});
+
+				// 所有活動與我的活動 active 狀態
+		const navlk = document.querySelectorAll('.nav-link');
+		navlk.forEach(nav => {
+			nav.addEventListener('click', () => {
+				// 先移除所有按鈕的 active，再為當前點擊的按鈕加上 active
+				navlk.forEach(n => n.classList.remove('active'));
+				nav.classList.add('active');
 			});
 		});
 					// 更新活動列表標題
@@ -197,6 +217,7 @@
 						activityListTitle.innerText = "活動列表";
 						return;
 				}
+				updateTitle(startDate, endDate);
 			});
 
 			// 日期格式化 yyyy-MM-dd

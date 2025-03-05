@@ -1,4 +1,7 @@
 /*通用屬性*/
+.buttoncircle{
+    border-radius:50em;
+}
 .text-maxone {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -6,7 +9,7 @@
 }
 
 .text-maxthree {
-    height:80px;
+    height: 80px;
     display: block;
     display: -webkit-box;
     margin-left: auto;
@@ -54,7 +57,6 @@
     border-radius: 12px;
     overflow: hidden;
     padding-bottom: 52.333%;
-
 }
 
 .carousel-inner img {
@@ -74,6 +76,21 @@
     border-radius: 12px;
     text-align: center;
     width: 70px;
+}
+
+.calende-border-block {
+    display: block;
+    background-color: white;
+    border: 1px solid #e4e4e4;
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, .1);
+    padding: 1.5rem;
+    border-radius: .4rem;
+    word-wrap: break-word;
+}
+
+.bg-danger, .calende-border-block, .p-0{
+    border-top-left-radius: .4rem;
+    border-top-right-radius: .4rem;
 }
 
 [data-theme="light"]
@@ -113,7 +130,7 @@
     }
 
     .carousel-textarea p {
-        opacity:50%;
+        opacity: 50%;
     }
 
     .carousel-textarea span {
@@ -130,6 +147,18 @@
     word-wrap: break-word;
 }
 
+.btn-outline-danger {
+    padding: 5px 8px; /* 調整內距使按鈕變小 */
+    font-size: 12px; /* 調整字體大小使按鈕變小 */
+}
+
 .container {
     gap: 30px;
+}
+
+
+/*彈窗設定(暫定 之後可能會弄成趴秀)*/
+
+.modal-dialog {
+    background-color: var(--bg-color);
 }
