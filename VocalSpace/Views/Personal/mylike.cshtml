@@ -7,7 +7,41 @@
         <a href="/Personal/mylike" class="active">喜歡</a>
         <a href="/Personal/myabout">關於</a>
 </nav>
-<div class="playlist">
-       <div class="playlist-card">
-       </div>
+
+<div class="w80"><hr></div>
+<div class="title mb-4">
+	<div class="littletitle">
+		<h2>歌曲(8)</h2>
+		<div class="playAll"><button class="btn btn-danger playall"><i class="bi bi-play"></i>全部播放</button></div>
+	</div>
 </div>
+@{
+	<div class="playlist">
+		<div class="playlist-card">
+			<div class="songs">
+
+				<div class="row">
+					@for (var i = 1; i <= 8; i++)
+					{
+						<div class="col-lg-2 col-md-4 col-sm-5 p-1">
+
+							<div class="song">
+								<a href="#"><img src="/image/p1.jpg" class="img-fluid" style="object-fit: cover;" alt="俘留"></a>
+								<div class="songbutton">
+									<div class="songdetail">
+										<a href="#"><h5>俘留 (影集《化外之聲》插曲)</h5></a>
+										<a href="/Personal/mymusic"><p>LaDY</p></a>
+									</div>
+									<div class="button">
+									
+									</div>
+								</div>
+							</div>
+						</div>
+					}
+				</div>
+
+			</div>
+		</div>
+	</div>
+}

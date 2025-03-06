@@ -19,8 +19,8 @@
             <div class="h2-row"><h2>蒐藏庫  /</h2><h2 class="red">我的歌單</h2></div>
 
             <div class="Randomplay">
-
-            <a asp-action="createlist"><button class="btn-danger addbtn-newPlaylist"><i class="bi bi-plus-lg"></i> 新增歌單</button></a></div>
+                <a class="btn-danger addbtn-newPlaylist" href="/Collection/createlist"><i class="bi bi-plus-lg"></i> 新增歌單</a>
+            </div>
             <br />
             <div id="realtime" class="ranking-list">
 
@@ -28,10 +28,12 @@
 
                         <div class="ranking-item">
 
+                    <a href="/Personal/listdetail">
                         <img src="/image/p1.jpg" alt="song cover">
+                    </a>
                         <div class="info">
-                            <p class="song">打不通的電話</p>
-                            <p class="artist">1 首歌曲．Sean Ko 高翔</p>
+                        <a href="/Personal/listdetail"><p class="song">打不通的電話</p></a>
+                        <p class="artist">1 首歌曲．<a href="/Personal/mymusic">Sean Ko 高翔</a></p>
                         </div>
                         <button class="btn btn-outline-secondary deletelist" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-trash"></i></button>                        
                         <button class="btn btn-outline-secondary editlist" onclick="editlist()"><i class="bi bi-pencil-square"></i></button>
@@ -40,10 +42,12 @@
                     </div>
                      <div class="ranking-item">
 
+                    <a href="/Personal/listdetail">
                         <img src="/image/p1.jpg" alt="song cover">
+                    </a>                       
                         <div class="info">
-                            <p class="song">打不通的電話</p>
-                            <p class="artist">1 首歌曲．Sean Ko 高翔</p>
+                        <a href="/Personal/listdetail"><p class="song">打不通的電話</p></a>
+                        <p class="artist">1 首歌曲．<a href="/Personal/mymusic">Sean Ko 高翔</a></p>
                         </div>
                         <button class="btn btn-outline-secondary deletelist" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-trash"></i></button>                        
                         <button class="btn btn-outline-secondary editlist" onclick="editlist()"><i class="bi bi-pencil-square"></i></button>

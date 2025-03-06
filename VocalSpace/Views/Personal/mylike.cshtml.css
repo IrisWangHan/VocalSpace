@@ -1,15 +1,4 @@
-﻿.playlist {
-    margin: 20px;
-    display: flex;
-    justify-content: center;
-    height: 100%;
-}
-.playlist-card {
-    width: 80%;
-    padding: 30px;
-
-}
-.menu {
+﻿.menu {
     display: flex;
     justify-content: center;
     gap: 20px;
@@ -21,12 +10,164 @@
         text-decoration: none;
         padding: 5px 15px;
     }
-
+        /*選單選取時樣式*/
         .menu a.active {
             background: #ff5a5a;
             color: white;
             border-radius: 5px;
         }
+
+.w80 {
+    display: flex;
+    justify-content: center;
+}
+
+hr {
+    width: 80%;
+}
+
+.title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.littletitle {
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    .littletitle h5 {
+        margin: 0;
+    }
+
+    .littletitle .btn {
+        margin: 0;
+    }
+
+/*全部播放按鈕樣式*/
+.btn-danger playall {
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    display: block;
+    margin-top: 10px;
+    margin-left: auto;
+    position: relative;
+}
+
+.playlist {
+    display: flex;
+    justify-content: center;
+    height: 100%;
+}
+
+.playlist-card {
+    width: 80%;
+}
+
+.songs {
+    display: flex;
+    justify-content: center;
+    column-gap: 20px;
+}
+
+.song img {
+    width: 250px;
+    height: 250px;
+    border-radius: 10px;
+}
+
+.row {
+    width: 100%;
+    column-gap: 60px;
+    row-gap: 30px;
+}
+
+.songbutton {
+    display: flex;
+    flex-direction: column;
+}
+
+.songdetail {
+    display: flex;
+    flex-direction: column;
+}
+
+.button {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-outline-secondary.deletelist {
+    margin-right: 10px;
+    border: 1px solid gray;
+    border-radius: 30%;
+}
+
+.btn-outline-secondary.editlist {
+    margin-right: 10px;
+    border: 1px solid gray;
+    border-radius: 30%;
+}
+
+.modal-title, .modal-body {
+    color: black;
+}
+
+p {
+    color: slategrey;
+    font-size: 12px;
+}
+
+@media screen and (max-width: 1801px) {
+    .song img {
+        object-fit: cover;
+        width: 200px;
+        height: 200px;
+    }
+
+    .row {
+        width: 100%;
+        column-gap: 80px;
+    }
+
+    .col-lg-2 {
+        width: 19%;
+    }
+}
+
+@media screen and (max-width:1250px) {
+
+    .row {
+        column-gap: 65px;
+    }
+
+    .col-lg-2 {
+        width: 20%;
+    }
+}
+
+@media screen and (max-width:1218px) {
+
+    .row {
+        column-gap: 60px;
+    }
+}
+
+@media screen and (max-width: 992px) {
+    .song img {
+        width: 150px;
+        height: 150px;
+    }
+
+    .row {
+        column-gap: 0px;
+    }
+}
 
 @media screen and (max-width: 768px) {
 
@@ -35,7 +176,8 @@
         justify-content: flex-start;
         overflow-x: auto;
         white-space: nowrap;
-        padding: 10px;
+        padding-left: 20px;
+        width: 95%;
     }
 
         .menu a {
@@ -43,5 +185,76 @@
             padding: 10px;
         }
 
+    hr {
+        width: 95%;
+    }
+
+    .littletitle {
+        width: 95%;
+    }
+
+    .playlist-card {
+        width: 95%;
+    }
+
+    .row {
+        column-gap: 50px;
+    }
+
+    .col-lg-2 {
+        width: 100%;
+    }
+
+    .song {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap; /* 確保內容換行時不亂掉 */
+    }
+
+    .songdetail {
+        margin-left: 20px;
+        margin-top: 10px;
+    }
+
+    .songbutton {
+        flex-grow: 1; /* 填滿剩餘空間 */
+        min-height: 150px;
+    }
+
+    .button {
+        display: flex;
+        gap: 5px; /* 按鈕間距 */
+        flex-shrink: 0; /* 防止按鈕被壓縮 */
+        margin-top: auto; /* 讓按鈕向下對齊 */
+    }
+
+    .btn-outline-secondary {
+        font-size: 14px; /* 減小字體大小 */
+    }
+
+        .btn-outline-secondary.deletelist,
+        .btn-outline-secondary.editlist {
+            width: 36px; /* 設定固定寬度 */
+            height: 36px; /* 設定固定高度 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 }
 
+@media screen and (max-width: 576px) { /* 適用於小於 576px (超小手機) */
+    .col-sm-6 {
+        flex: 0 0 100%; /* 讓圖片單獨一列 */
+        max-width: 100%;
+    }
+
+    .song img {
+        max-width: 200px; /* 限制圖片最大寬度，避免過大 */
+        height: auto;
+    }
+
+    .playlist-card {
+        width: 95%; /* 增加手機適應度 */
+    }
+}
