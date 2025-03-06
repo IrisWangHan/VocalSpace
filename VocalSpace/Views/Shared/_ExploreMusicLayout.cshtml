@@ -1,7 +1,6 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿
 @{
+	Layout = "_Layout";  // 引用全域的 _Layout.cshtml
 }
 <link rel="stylesheet" href="~/css/exploreMusic.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/song.css" asp-append-version="true" />
@@ -15,25 +14,25 @@
                 <h2 class="mb-4">類型</h2>
                 <ul class="list-inline">
                     <li>
-                        <a href="#" class="btn btn-sm btn-tag btn-white mb-2 active">全部</a>
+                        <a href="/exploreMusic/ExploreMusicAll" class="btn btn-sm btn-tag btn-white mb-2 active">全部</a>
                     </li>
                     <li>
-                        <a href="#" class="btn btn-sm btn-tag btn-white mb-2">搖滾</a>
+                        <a href="/exploreMusic/ExploreMusicRock" class="btn btn-sm btn-tag btn-white mb-2">搖滾</a>
                     </li>
                     <li>
-                        <a href="#" class="btn btn-sm btn-tag btn-white mb-2">民謠</a>
+                        <a href="/exploreMusic/ExploreMusicFolk" class="btn btn-sm btn-tag btn-white mb-2">民謠</a>
                     </li>
                     <li>
-                        <a href="#" class="btn btn-sm btn-tag btn-white mb-2">嘻哈</a>
+                        <a href="/exploreMusic/ExploreMusicHiphop" class="btn btn-sm btn-tag btn-white mb-2">嘻哈</a>
                     </li>
                     <li>
-                        <a href="#" class="btn btn-sm btn-tag btn-white mb-2">都會</a>
+                        <a href="/exploreMusic/ExploreMusicCitypop" class="btn btn-sm btn-tag btn-white mb-2">都會</a>
                     </li>
                     <li>
-                        <a href="#" class="btn btn-sm btn-tag btn-white mb-2">電子</a>
+                        <a href="/exploreMusic/ExploreMusicEDM" class="btn btn-sm btn-tag btn-white mb-2">電子</a>
                     </li>
                     <li>
-                        <a href="#" class="btn btn-sm btn-tag btn-white mb-2">探索</a>
+                        <a href="/exploreMusic/ExploreMusicExplore" class="btn btn-sm btn-tag btn-white mb-2">探索</a>
                     </li>
                 </ul>
                 <hr class="mb-4 mt-4">
@@ -55,13 +54,11 @@
         </div>
         <div class="col-md-8 col-lg-8 col-xl-8">
             <div id="realtime" class="ranking-list tab-content">
-                @await Html.PartialAsync("_partialViewSong")
-				@await Html.PartialAsync("_partialViewSong")
-                @await Html.PartialAsync("_partialViewSong")
+                @RenderBody()
             </div>
             <div class="mt-5 mb-5 text-center">
-				<button class="btn btn-lg btn-loadmore">點我看更多</button>
-                    </div>
+                <button class="btn btn-lg btn-loadmore">點我看更多</button>
+            </div>
         </div>
     </div>
 </div>
@@ -69,4 +66,3 @@
 <script src="https://kit.fontawesome.com/5eeb73de16.js" crossorigin="anonymous"></script>
 <script src="~/js/exploreMusic.js" asp-append-version="true"></script>
 <script src="~/js/partialViewSong.js" asp-append-version="true"></script>
-
