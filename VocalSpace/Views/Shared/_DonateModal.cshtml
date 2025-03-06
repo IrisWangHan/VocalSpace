@@ -1,24 +1,21 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    var artist = "WCHI";
 }
 <style>
-.donation-btn {
-    border-radius: 10px;
-    padding: 10px 20px;
-    font-size: 16px;
-}
-.donation-btn.active {
-    border: 2px solid gold;
-}
 
-.donate-avatar {
-    width: 100px;
-    height: 100px;
-    object-fit: cover; /* 確保圖片填滿區域 */
-    border-radius: 10px; /* 可選，讓圖片略帶圓角 */
-}
+    .donation-btn {
+        border-radius: 10px;
+        padding: 10px 20px;
+        font-size: 16px;
+    }
+
+    .donate-avatar {
+        margin-bottom:1vh;
+        width: 150px;
+        height: 150px;
+        object-fit: cover; 
+        border-radius: 2px;
+    }
 </style>
 <!-- Modal -->
 <div class="modal fade" id="donateModal" tabindex="-1" aria-labelledby="donateModalLabel" aria-hidden="true">
@@ -30,49 +27,43 @@
             </div>
             <div class="modal-body text-center">
                 <img src="/image/Wchi.png" alt="大頭貼" class="donate-avatar">
-                <p class="mb-4">小額贊助，向「WCHI」表示支持</p>
-                <div class="donation-buttons d-flex justify-content-center gap-2">
+                <p class="mb-4">小額贊助，向「@artist」表示支持</p>
+                <div class="donation-buttons d-flex justify-content-center gap-3">
                     <button class="btn btn-outline-light donation-btn" value="30">
-                        <i class="bi bi-music-note d-block"></i> NTD 30
+                        <i class="bi bi-music-note d-block fs-5"></i> NTD 30
                     </button>
                     <button class="btn btn-outline-light donation-btn" value="90">
-                        <i class="bi bi-music-note d-block"></i> NTD 90
+                        <i class="bi bi-music-note d-block fs-5"></i> NTD 90
                     </button>
                     <button class="btn btn-outline-light donation-btn" value="150">
-                        <i class="bi bi-music-note d-block"></i> NTD 150
+                        <i class="bi bi-music-note d-block fs-5"></i> NTD 150
                     </button>
                 </div>
 
-                <!-- 確定按鈕，不要有 .donation-btn -->
-                <div class="modal-footer border-0 d-flex justify-content-center">
+                <div class="modal-footer border-0 d-flex justify-content-center mt-2">
                     <button type="button" class="btn btn-danger" id="confirmDonate">確定</button>
                 </div>
+            </div>
         </div>
     </div>
 </div>
-<!-- 彈窗 -->
-<div id="redirectModal" class="modal fade" tabindex="-1">
+
+<!-- 贊助彈窗 -->
+<div id="redirectModal" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" aria-hidden="true" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content bg-dark text-white text-center p-4">
+        <div class="modal-content bg-dark text-white text-center p-4"  style="width:350px;">
             <p class="mb-0">導向綠界科技 ECPay 中...</p>
         </div>
     </div>
 </div>
-@section Scripts {
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
-    <script>
-        console.log("read js");
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
         $(document).ready(function () {
-            let selectedAmount = null; // 存儲選中的金額
+            let selectedAmount = null; // 儲存選中的金額
 
             $(".donation-btn").click(function () {
-                // 只影響所有 .donation-btn，不影響 #confirmDonate
                 $(".donation-btn").removeClass("btn-outline-warning").addClass("btn-outline-light");
-
-                // 設定被選中的按鈕為黃色
                 $(this).removeClass("btn-outline-light").addClass("btn-outline-warning");
-                console.log("click<3");
                 // 記錄選擇的金額
                 selectedAmount = $(this).val();
             });
@@ -83,16 +74,15 @@
                     return;
                 }
 
-                // 顯示導向彈窗
                 $("#redirectModal").modal("show");
+                $("#donateModal").modal("hide");
 
                 // 偽 API 導向
                 setTimeout(function () {
-                    window.location.href = "https://fake-ecpay.com/payment?amount=" + selectedAmount;
-                }, 2000);
+                    window.location.href = "https://www.ecpay.com.tw/" ;
+                // window.location.href = "https:www.ecpay.com.tw/" + selectedAmount;
+                }, 3000);
             });
         });
 
-
-    </script>
-}
+</script>
