@@ -9,7 +9,12 @@ namespace VocalSpace.Controllers
             return View();
         }
 
-        public IActionResult create()
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        public IActionResult Info()
         {
             return View();
         }

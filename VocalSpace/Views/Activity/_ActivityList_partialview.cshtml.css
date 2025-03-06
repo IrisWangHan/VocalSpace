@@ -1,0 +1,122 @@
+﻿a {
+    color: #181818;
+}
+
+/*日期*/
+.calende-border-block {
+    display: block;
+    align-items: center;
+    width: 80px;
+    background-color: #FAFAFA;
+    flex-direction: column;
+    border: 1px solid #e4e4e4;
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, .1);
+    padding: 0px 15px;
+    border-radius: .4rem;
+    word-wrap: break-word;
+}
+
+.bg-danger, .calende-border-block, .p-0 {
+    border-top-left-radius: .4rem;
+    border-top-right-radius: .4rem;
+}
+
+/*容器*/
+
+.main-container{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+.event-container {
+    display: flex;
+    width:100%;
+    background: #FAFAFA;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    margin: auto;
+    align-items: flex-start;
+}
+
+.left-container{
+    padding:0px 15px;
+}
+
+.right-container {
+    padding: 0px 15px;
+}
+
+.event-list {
+    width: 100%;
+}
+
+.event-item {
+    display: flex;
+    border-top: 1px solid #eee;
+    gap:10px;
+    padding-bottom: 10px;
+}
+
+    .event-item:first-child {
+        border-top: none;
+    }
+
+/*活動圖*/
+.event-image {
+    width: 140px;
+    height: 70px;
+    border-radius: 5px;
+    background: #ddd;
+    overflow: hidden;
+}
+
+    .event-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+/*內容*/
+.event-details {
+    flex: 1;
+    margin-left: 10px;
+}
+
+.event-title {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.event-time-location {
+    color: #666;
+    font-size: 14px;
+}
+/*大頭照*/
+
+.event-performers {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 5px;
+}
+
+
+.performer {
+    font-size: 12px;
+    padding: 4px 8px;
+    border: 1px solid gray;
+    margin-right: 5px;
+    border-radius: 1rem;
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+    .performer img {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        margin-right: .2rem;
+        vertical-align: bottom;
+    }

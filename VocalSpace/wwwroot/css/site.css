@@ -61,6 +61,7 @@ main {
 a {
     color: var(--text-color);
     text-decoration: none;
+    cursor:pointer;
 }
 a:hover{
     color: var(--text-color);
@@ -126,4 +127,11 @@ img {
 .border-block{
     padding:2em;
 }
+
+/* 文字換行屬性 */
+.text-break {
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
 

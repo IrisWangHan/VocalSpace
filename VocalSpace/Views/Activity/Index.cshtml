@@ -1,4 +1,5 @@
 ﻿@{
+
 }
 @* 活動總覽 *@
 <div class="page-container">
@@ -17,7 +18,9 @@
 					<div class="d-flex">
 						<div class="col-6">
 							<div class="actpic-container">
+								<a href="Activity/Info">
 								<img src="/image/Activity/cs.jpg" alt="活動封面">
+								</a>
 							</div>
 						</div>
 						<div class="col-6">
@@ -42,7 +45,7 @@
 										即將帶來一場震撼音樂盛會！這場音樂盛會必定讓您嗨翻全場！
 									</p>
 								</div>
-								<span>The Chainsmokers</span>
+								<a herf="">The Chainsmokers</a>
 							</div>
 						</div>
 					</div>
@@ -51,7 +54,9 @@
 					<div class="d-flex">
 						<div class="col-6">
 							<div class="actpic-container">
+								<a href="Activity/Info">
 								<img src="/image/Activity/sandwich.jpg" alt="活動封面">
+								</a>
 							</div>
 						</div>
 						<div class="col-6">
@@ -93,7 +98,7 @@
 		</div>
 	</div>
 	<!-- 下方 -->
-	<div class="container d-flex flex-row pt-4">
+	<div class="bottom-container container d-flex flex-row pt-4">
 		<!-- 左側篩選區域 -->
 		<div class="col-3 filter-sidebar">
 			<!-- 搜尋輸入框 -->
@@ -102,7 +107,7 @@
 				<hr class="mt-5 mb-5">
 				<!-- 地區 -->
 				<h5 class="mb-4">地區</h5>
-				<div class="d-flex flex-wrap gap-3 ">
+				<div class="d-flex flex-wrap gap-2 ">
 					<button type="button" class="btn btn-outline-danger btn-toggle buttoncircle active">全部</button>
 					<button type="button" class="btn btn-outline-danger btn-toggle buttoncircle">北部</button>
 					<button type="button" class="btn btn-outline-danger btn-toggle buttoncircle">中部</button>
@@ -126,18 +131,19 @@
 		<!-- 右側活動列表 -->
 		<div class="col-9">
 			<div class="row align-items-center mb-4">
-				<div class="container">
+				<div class="d-flex justify-content-between">
 					<h2 id="activityListTitle">活動列表</h2>
-					<!-- 活動列表partialview -->
-					@await Html.PartialAsync("_ActivityList_partialview")
+					<a href="Activity/Create" class="btn btn-danger postbtn">＋ 投稿活動</a>
 				</div>
 			</div>
+			<!-- 活動列表partialview -->
+			@await Html.PartialAsync("_ActivityList_partialview")
 		</div>
 	</div>
 </div>
 
 <!-- 日期篩選 Modal -->
-<div class="modal fade" id="datePickerModal" tabindex="-1" aria-labelledby="datePickerModalLabel" aria-hidden="false">
+<div class="modal fade" id="datePickerModal" tabindex="-1" aria-labelledby="datePickerModalLabel">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -240,7 +246,12 @@
 			const startDate = document.getElementById("startDatePicker").value;
 			const endDate = document.getElementById("endDatePicker").value;
 
+		   // 新增判斷：檢查開始日期是否大於結束日期
 			if (startDate && endDate) {
+				if (new Date(startDate) > new Date(endDate)) {
+					alert("開始日期不能大於結束日期！");
+					return; // 不更新標題，直接退出
+				}
 				updateTitle(startDate, endDate);
 				dateModal.hide(); // 關閉 Modal
 			} else {
