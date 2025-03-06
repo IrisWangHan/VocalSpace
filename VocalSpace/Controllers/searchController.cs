@@ -31,13 +31,13 @@ namespace VocalSpace.Controllers
             switch (Request.Query["type"])
             {
                 case "song":
-                    return PartialView("partialViewSong");
+                    return PartialView("_partialViewSong");
                 case "songlist":
-                    return PartialView("partialViewSonglist");
+                    return PartialView("_partialViewSonglist");
                 case "artist":
-                    return PartialView("partialViewArtist");
+                    return PartialView("_partialViewArtist");
                 default:
-                    return PartialView("partialViewSong");
+                    return PartialView("_partialViewSong");
             }
             
         }

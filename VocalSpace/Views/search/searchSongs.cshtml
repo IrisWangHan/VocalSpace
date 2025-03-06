@@ -32,13 +32,12 @@
                 </li>
             </ul>
             <div class="tab-content">
-
-                @await Html.PartialAsync("partialViewSong")
-                @await Html.PartialAsync("partialViewSong")
+                @await Html.PartialAsync("_partialViewSong")
+                @await Html.PartialAsync("_partialViewSong")
                 
             </div>
             <div class="mt-5 mb-5 text-center">
-                <button class="btn btn-loadmore" onclick="loadmore()">點我看更多</button>
+                <button class="btn btn-loadmore" onclick="loadmore('song')">點我看更多</button>
             </div>
             </div>
         <div class="col-md-3 d-none d-md-block">

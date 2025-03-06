@@ -139,21 +139,7 @@
 }
 
 /* 加入歌單按鈕之彈跳視窗 */
-.addpopup {
-    position: fixed;
-    top: 20%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    width: 500px;
-    border-radius: 12px;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-    padding: 25px;
-    z-index: 1001;
-    display: none;
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out, top 0.3s ease-in-out;
-}
+
 
 .addpopup h2 {
         font-size: 22px;

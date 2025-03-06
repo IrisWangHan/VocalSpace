@@ -30,12 +30,11 @@
                     <a class="nav-link nav-name" href="./searchArtists">音樂人</a>
                 </li>
             </ul>
-            <div class="tab-content" id="tab-content">
-                
-                @await Html.PartialAsync("partialViewSong")
-                @await Html.PartialAsync("partialViewSong")
-                @await Html.PartialAsync("partialViewArtist")
-                @await Html.PartialAsync("partialViewSonglist")
+            <div class="tab-content" id="tab-content">                
+                @await Html.PartialAsync("_partialViewSong")
+                @await Html.PartialAsync("_partialViewSong")
+                @await Html.PartialAsync("_partialViewArtist")
+                @await Html.PartialAsync("_partialViewSonglist")
                 @* 按下"點我看更多"button後，插入執行@await Html.PartialAsync("partialViewSong") *@
             </div>
             <div class="mt-5 mb-5 text-center">
