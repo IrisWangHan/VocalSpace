@@ -48,7 +48,6 @@
 }
 
 .carousel-inner {
-    height: 400px; /* 固定高度 */
     overflow: hidden; /* 超出部分隱藏 */
 }
 
@@ -56,14 +55,19 @@
 .actpic-container {
     border-radius: 12px;
     overflow: hidden;
-    padding-bottom: 52.333%;
+    height: 100%;
+    position: relative;
+    padding: 0px 20px;
+    max-height:270px;
 }
 
-.carousel-inner img {
-    border-radius: 12px;
-    object-fit: cover;
-    height: 300px;
-}
+    .actpic-container img {
+        width: 100%; /* 讓圖片寬度填滿容器 */
+        height: 100%; /* 讓圖片高度填滿容器 */
+        object-fit: cover; /* 保持比例並填滿容器，可能會裁切圖片 */
+    }
+
+
 
 .carousel-item h2 {
     font-weight: bold;

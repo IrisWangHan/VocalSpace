@@ -17,7 +17,7 @@
 					<div class="d-flex">
 						<div class="col-6">
 							<div class="actpic-container">
-								<img src="" alt="活動封面" class="d-block w-100">
+								<img src="/image/Activity/cs.jpg" alt="活動封面">
 							</div>
 						</div>
 						<div class="col-6">
@@ -30,7 +30,7 @@
 										</div>
 									</div>
 									<div class="col-10">
-										<h2 class="text-maxone">THE CHAINSMOKERS LIVE IN TAIPEI 2025</h2>
+										<a><h2 class="text-maxone">THE CHAINSMOKERS LIVE IN TAIPEI 2025</h2></a>
 									</div>
 								</div>
 								<hr>
@@ -51,7 +51,7 @@
 					<div class="d-flex">
 						<div class="col-6">
 							<div class="actpic-container">
-								<img src="" alt="活動封面" class="d-block w-100">
+								<img src="/image/Activity/sandwich.jpg" alt="活動封面">
 							</div>
 						</div>
 						<div class="col-6">
@@ -253,5 +253,13 @@
 			const activityListTitle = document.getElementById("activityListTitle");
 			activityListTitle.innerText = `活動列表：${start} ~ ${end}`;
 		}
+
+		//輪播圖 封面模糊效果
+				document.querySelectorAll('.actpic-container').forEach(container => {
+			const img = container.querySelector('img');
+			if (img) {
+				container.style.setProperty('--cover-url', `url(${img.src})`);
+			}
+		});
 	</script>
 }
