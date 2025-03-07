@@ -1,0 +1,45 @@
+﻿
+@*
+
+*@
+<div class="main-container">
+	@{
+		for (var i = 0; i <= 1; i++)
+		{
+			<div class="event-container">
+				<!-- 日期部分 -->
+				<div class="col-auto left-container">
+					<div class="calende-border-block p-0 text-center">
+						<div class="bg-danger text-white font-size-sm">3 月</div>
+						<h3 class="mb-1 mt-1 text-black">7</h3>
+						<h6 class="mb-1 mt-1 text-black opacity-50">星期五</h6>
+					</div>
+				</div>
+
+				<!-- 活動列表 -->
+				<div class="col right-container">
+					<div class="event-list">
+						<!-- 活動  -->
+						<div class="event-item">
+							<div class="event-image">
+								<a href="Activity/Info">
+									<img src="/image/Activity/cs.jpg" alt="Event 1">
+								</a>
+							</div>
+							<div class="event-details">
+								<a href="Activity/Info" class="event-title">THE CHAINSMOKERS LIVE IN TAIPEI 2025</a>
+								<div class="event-time-location">17:00．臺北市．大佳河濱公園</div>
+								<div class="event-performers">
+									<a class="performer">
+										<img src="/image/p1.jpg">
+										The Chainsmokers
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		}
+	}
+</div>

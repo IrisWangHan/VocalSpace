@@ -1,0 +1,204 @@
+/*通用屬性*/
+.buttoncircle {
+    border-radius: 50em;
+}
+
+.text-maxone {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.text-maxthree {
+    height: 80px;
+    display: block;
+    display: -webkit-box;
+    margin-left: auto;
+    margin-right: auto;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+/*上方區域*/
+
+/*導航欄*/
+.nav-pills .nav-link {
+    color: var(--text-color); /* 預設文字顏色 */
+    border-radius: 50px; /* 圓角按鈕 */
+    padding: 10px 30px; /* 內距 */
+    transition: background-color 0.3s ease, color 0.3s ease; /* 漸變效果 */
+}
+
+    .nav-pills .nav-link.active {
+        background-color: var(--bs-danger); /* 點選的按鈕顏色 */
+        color: white; /* 文字顏色 */
+    }
+
+    .nav-pills .nav-link:not(.active):hover {
+        color: var(--bs-danger); /* 滑過未選取的項目顏色 */
+    }
+
+.page-container {
+    flex: 1;
+}
+
+/*輪播圖容器*/
+#carouselExample {
+    padding: 20px 0px;
+}
+
+.carousel-inner {
+    overflow: hidden; /* 超出部分隱藏 */
+}
+
+/*封面圖*/
+.actpic-container {
+    border-radius: 12px;
+    overflow: hidden;
+    height: 100%;
+    position: relative;
+    padding: 0px 20px;
+    height: 244px;
+    max-height: 244px;
+}
+
+    .actpic-container img {
+        width: 100%; /* 讓圖片寬度填滿容器 */
+        height: 100%; /* 讓圖片高度填滿容器 */
+        object-fit: cover; /* 保持比例並填滿容器，可能會裁切圖片 */
+    }
+
+
+
+.carousel-item h2 {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.badge {
+    font-size: 20px;
+    padding: 10px;
+    border-radius: 12px;
+    text-align: center;
+    width: 70px;
+}
+
+.calende-border-block {
+    display: block;
+    background-color: white;
+    border: 1px solid #e4e4e4;
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, .1);
+    padding: 1.5rem;
+    border-radius: .4rem;
+    word-wrap: break-word;
+}
+
+.bg-danger, .calende-border-block, .p-0 {
+    border-top-left-radius: .4rem;
+    border-top-right-radius: .4rem;
+}
+
+[data-theme="light"]
+.sync-data-theme {
+    filter: invert(100%);
+}
+
+/*輪播圖導航鈕*/
+.carousel-control-prev,
+.carousel-control-next {
+    position: absolute;
+    top: 50%;
+    width: 40px;
+    height: 100%;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+    .carousel-control-prev:hover, .carousel-control-next:hover {
+        background-color: rgba(128,128,128,0.2);
+    }
+
+.carousel-control-prev {
+    left: -50px;
+}
+
+.carousel-control-next {
+    right: -50px;
+}
+/*活動文字欄*/
+.carousel-textarea {
+}
+
+    .carousel-textarea h2 {
+    }
+
+    .carousel-textarea p {
+        opacity: 50%;
+    }
+
+    .carousel-textarea span {
+        opacity: 50%;
+    }
+
+
+
+/*下方區域*/
+
+/*篩選區域*/
+.filter-sidebar {
+    border: 1px solid #000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: block;
+    border: 1px solid #e4e4e4;
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, .1);
+    border-radius: .4rem;
+    word-wrap: break-word;
+}
+
+.btn-outline-danger {
+    padding: 5px 8px; /* 調整內距使按鈕變小 */
+    font-size: 12px; /* 調整字體大小使按鈕變小 */
+}
+
+.bottom-container {
+    gap: 30px;
+}
+
+/*日期下拉*/
+
+/* 修改 select 選項的選取顏色 */
+.custom-select{
+    display:none;
+}
+.custom-select option:checked {
+    background-color: red !important;
+    color: white !important;
+}
+
+/* 修改 hover 時的顏色 */
+.custom-select option:hover {
+    background-color: red !important;
+    color: white !important;
+}
+
+
+/*活動列表*/
+
+.postbtn {
+    height: 32px;
+    border-radius: 10px;
+    display: flex; /* 使用 Flexbox */
+    justify-content: center; /* 水平居中 */
+    align-items: center; /* 垂直居中 */
+}
+
+
+/*彈窗設定(暫定 之後可能會弄成趴秀)*/
+
+.modal-dialog {
+    background-color: #FAFAFA;
+    color: #181818;
+}
