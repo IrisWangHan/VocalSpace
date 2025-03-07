@@ -8,19 +8,15 @@
             <p class="song">打不通的電話</p>
             <p class="artist">1 首歌曲．Sean Ko 高翔</p>
         </div>
-        <button class="btn btn-outline-secondary editlist" onclick="editlist()"><i class="bi bi-pencil-square"></i></button>
-        <button class="btn btn-outline-secondary book"><i class="bi bi-bookmark-check-fill"></i></button>
-        <button class="btn btn-outline-secondary random"><i class="bi bi-shuffle"></i></button>
-    </div>
+    @await Html.PartialAsync("_SongListButtonModal")
+ </div>
 <div class="ranking-item">
     <img src="./image/idol.jpg" class="cover-block" alt="song cover">
     <div class="info">
         <p class="song">打不通的電話</p>
         <p class="artist">1 首歌曲．Sean Ko 高翔</p>
     </div>
-    <button class="btn btn-outline-secondary editlist" onclick="editlist()"><i class="bi bi-pencil-square"></i></button>
-    <button class="btn btn-outline-secondary book"><i class="bi bi-bookmark-check-fill"></i></button>
-    <button class="btn btn-outline-secondary random"><i class="bi bi-shuffle"></i></button>
+    @await Html.PartialAsync("_SongListButtonModal")
 </div>
 <div class="ranking-item">
     <img src="./image/idol.jpg" class="cover-block" alt="song cover">
@@ -28,9 +24,15 @@
         <p class="song">打不通的電話</p>
         <p class="artist">1 首歌曲．Sean Ko 高翔</p>
     </div>
-    <button class="btn btn-outline-secondary editlist" onclick="editlist()"><i class="bi bi-pencil-square"></i></button>
-    <button class="btn btn-outline-secondary book"><i class="bi bi-bookmark-check-fill"></i></button>
-    <button class="btn btn-outline-secondary random"><i class="bi bi-shuffle"></i></button>
+    @await Html.PartialAsync("_SongListButtonModal")
+    </div>
+<div class="ranking-item">
+    <img src="./image/idol.jpg" class="cover-block" alt="song cover">
+    <div class="info">
+        <p class="song">打不通的電話</p>
+        <p class="artist">1 首歌曲．Sean Ko 高翔</p>
+    </div>
+    @await Html.PartialAsync("_SongListButtonModal")
 </div>
 <div class="ranking-item">
     <img src="./image/idol.jpg" class="cover-block" alt="song cover">
@@ -38,20 +40,8 @@
         <p class="song">打不通的電話</p>
         <p class="artist">1 首歌曲．Sean Ko 高翔</p>
     </div>
-    <button class="btn btn-outline-secondary editlist" onclick="editlist()"><i class="bi bi-pencil-square"></i></button>
-    <button class="btn btn-outline-secondary book"><i class="bi bi-bookmark-check-fill"></i></button>
-    <button class="btn btn-outline-secondary random"><i class="bi bi-shuffle"></i></button>
-</div>
-<div class="ranking-item">
-    <img src="./image/idol.jpg" class="cover-block" alt="song cover">
-    <div class="info">
-        <p class="song">打不通的電話</p>
-        <p class="artist">1 首歌曲．Sean Ko 高翔</p>
+    @await Html.PartialAsync("_SongListButtonModal")
     </div>
-    <button class="btn btn-outline-secondary editlist" onclick="editlist()"><i class="bi bi-pencil-square"></i></button>
-    <button class="btn btn-outline-secondary book"><i class="bi bi-bookmark-check-fill"></i></button>
-    <button class="btn btn-outline-secondary random"><i class="bi bi-shuffle"></i></button>
-</div>
     
 
 

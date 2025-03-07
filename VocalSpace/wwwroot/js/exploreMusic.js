@@ -47,37 +47,22 @@ function playAll() {
 
 
 
-// 加入歌單按鈕之彈跳視窗
-function addopenPopup() {
-    document.getElementById("addoverlay").style.display = "block";
-    document.getElementById("addpopup").style.display = "block";
-    // 加入淡入效果
-    setTimeout(() => {
-        document.getElementById("addoverlay").style.opacity = "1";
-        document.getElementById("addpopup").style.opacity = "1";
-        document.getElementById("addpopup").style.top = "30%";
-    }, 10);
-}
+function loadmore(type) {
 
-function addclosePopup() {
-    // 淡出效果
-    document.getElementById("addoverlay").style.opacity = "0";
-    document.getElementById("addpopup").style.opacity = "0";
-    document.getElementById("addpopup").style.top = "20%";
+    fetch("/exploreMusic/loadmore?type=" + type).
+        then(response => {
+            //  response.ok 為 true
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            return response.text();
+        }).
+        then(responseHTML => {
+            document.getElementById('tab-content').innerHTML += responseHTML;
 
-    // 延遲隱藏（等待動畫完成）
-    setTimeout(() => {
-        document.getElementById("addoverlay").style.display = "none";
-        document.getElementById("addpopup").style.display = "none";
-    }, 300);
-}
+        }).
+        catch(error => {
+            console.error("載入歌曲失敗");
+        })
 
-function addtoggleSelection(button) {
-    if (button.classList.contains("selected")) {
-        button.classList.remove("selected");
-        button.textContent = "+ 加入歌單";
-    } else {
-        button.classList.add("selected");
-        button.textContent = "✔ 已選擇";
-    }
 }

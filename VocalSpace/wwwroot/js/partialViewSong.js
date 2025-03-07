@@ -19,14 +19,13 @@ function addtoggleSelection(button) {
 }
 
 //  歌曲，音樂人，歌單區塊父容器
-const tabContent = document.querySelector('.tab-content');
 
+//  歌曲愛心按鈕，收藏歌單
 function ButtonHeart(el) {
     el.classList.toggle('selected');
 } 
 
 // 分享歌曲按鈕之彈跳視窗
-//document.querySelector('.copy').addEventListener('click', sharecopyLink);
 
 async function sharecopyLink() {
     const input = document.querySelector('.share');

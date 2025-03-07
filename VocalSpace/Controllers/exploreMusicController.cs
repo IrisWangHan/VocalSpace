@@ -33,6 +33,22 @@ namespace VocalSpace.Controllers
         {
             return View();
         }
+        [HttpGet]
+        public IActionResult loadmore()
+        {
+            switch (Request.Query["type"])
+            {
+                case "song":
+                    return PartialView("_partialViewSong");
+                case "songlist":
+                    return PartialView("_partialViewSonglist");
+                case "artist":
+                    return PartialView("_partialViewArtist");
+                default:
+                    return PartialView("_partialViewSong");
+            }
+
+        }
 
     }
 }

@@ -29,7 +29,7 @@ app.UseSession();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller}/{action}/{id?}",
-    defaults: new { controller = "exploreMusic", action = "ExploreMusicAll" }
+    defaults: new { controller = "Accounts", action = "memberInformation" }
     );
     
 

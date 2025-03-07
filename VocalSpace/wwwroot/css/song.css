@@ -81,20 +81,7 @@
         color: rgb(255, 87, 87);
     }
 
-/* 加入歌單按鈕之彈跳視窗 */
-/* 遮罩層 */
-/*.addoverlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out;
-}*/
+
 
 /* 加入歌單按鈕之彈跳視窗 */
 .addpopup {
@@ -280,6 +267,14 @@
     font-size: 14px;
 }
 
+/* 歌單，收藏歌單 */
+.btn-outline-secondary.book.selected {
+    margin-right: 10px;
+    background-color: var(--bg-color);
+    border: 1px solid rgb(255, 87, 87);
+    color: rgb(255, 87, 87);
+}
+
 /* 音樂人區塊 */
 /* 圓形大頭貼 */
 .artist-cover-block {
@@ -289,7 +284,7 @@
     margin: 0 10px;
     border-radius: 50%; /* 變圓形 */
     box-shadow: 0 1px 4px 0 rgba(0, 0, 0, .1);
-    }
+}
 
 /* 追蹤按鈕：背景紅色、白字、略有圓角 */
 .btn-follow {

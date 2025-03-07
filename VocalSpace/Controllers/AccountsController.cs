@@ -41,6 +41,12 @@ namespace VocalSpace.Controllers
             return View();
         }
 
+        public IActionResult Income()
+        {
+            return View();
+        }
+
+
         public IActionResult changePassword()
         {
             return View();
