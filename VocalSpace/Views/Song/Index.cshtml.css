@@ -1,0 +1,236 @@
+﻿/* 通用屬性 */
+a {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+span{
+    color: #f9595f;
+    cursor: pointer;
+}
+
+span:hover {
+    color: #d94a4f; /* 更深的紅色 */
+  }
+
+.Avater-link {
+    display: block;
+    max-width: 70px;
+    width: 100%
+}
+
+
+main {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    /* 讓 main 元素的高度為視窗高度 */
+}
+
+/*container區域*/
+
+.page-container {
+    flex: 1;
+}
+
+.bottom-container {
+    display: flex;
+}
+
+.top-container {
+    width: 100%;
+    margin-top: 80px;
+    display: flex;
+    margin-bottom: 50px;
+    flex-wrap: wrap;
+}
+
+/*[data-theme='dark'] .cbg {
+    position: absolute;
+    background: linear-gradient(to bottom, lightgrey, darkgrey);
+}
+
+[data-theme='light'] .cbg {
+    z-index: -999;
+    width: 100%;
+    height: 45%;
+    background: linear-gradient(to bottom, lightgrey, darkgrey);
+}*/
+
+.left-container {
+    margin-right: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.right-container {
+    margin-left: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 0px 15px;
+}
+
+
+/*上方區塊*/
+.songpfp img {
+    width: 100%;
+    max-width: 380px;
+    border:5px solid ;
+    border-radius: 2px;
+}
+
+.songpfp {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+.songinfo {
+    position: relative;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.song-prop-row {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 45px;
+}
+
+.row-item {
+    display: flex;
+    justify-content: space-between
+}
+
+.ui-button {
+    display: flex;
+    align-items: center;
+}
+/*左邊區塊*/
+/*上傳者區塊*/
+.userinfo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.userpic {
+    width: 25%;
+}
+
+.userid {
+    width: 50%;
+}
+
+.userfollow {
+    width: 25%;
+}
+
+.pfp {
+    width: 100%;
+    max-width: 70px;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 0 5px;
+}
+
+.pftext {
+    padding: 0;
+    margin: 0;
+}
+
+.follow {
+    width: 100%;
+}
+
+/*廣告區塊*/
+.ad_container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ad_container img {
+    width: 100%;
+    max-width: 300px;
+    border-radius: 2px;
+}
+/*右邊區塊*/
+/*介紹 歌詞區*/
+
+.introduce {
+    max-height: 50px;
+    position: relative;
+    overflow: hidden;
+    transition: max-height 0.5s ease-in-out; /* 添加動畫效果 */
+}
+
+
+/*rwd*/
+
+
+@media (min-width: 769px) and (max-width: 992px) {
+
+    .userpic {
+        display: none;
+        width: 25%;
+    }
+
+    .userid {
+        width: 50%;
+    }
+
+    .userfollow {
+        width: 50%;
+    }
+}
+
+@media (max-width: 768px) {
+    .top-container {
+        flex-direction: column;
+    }
+
+    .bottom-container {
+        flex-direction: column;
+    }
+
+    .songinfo {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .left-container {
+        width: 100%;
+    }
+
+    .right-container {
+        width: 100%;
+    }
+}
+
+@media (max-width: 432px) {
+    .top-container {
+        flex-direction: column;
+    }
+
+    .bottom-container {
+        flex-direction: column;
+    }
+
+    .songinfo {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .left-container {
+        width: 100%;
+    }
+
+    .right-container {
+        width: 100%;
+    }
+}

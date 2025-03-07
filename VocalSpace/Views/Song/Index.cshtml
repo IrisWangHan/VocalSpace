@@ -1,0 +1,134 @@
+﻿@{
+
+}
+<title>聲維宇宙排行榜</title>
+<div class="page-container">
+	<div></div>
+	<div class="top-container container">
+		<!-- 左側圖片區域 -->
+		<div class="col-md-4 songpfp">
+			<img src="/image/p1.jpg">
+		</div>
+		<!-- 右側音樂介紹區域 -->
+		<div class="row col-md-8 songinfo">
+			<h1>打不通的電話</h1>
+			<div class="opacity-50">
+				<div>
+					<a href="#">搖滾</a>
+				</div>
+			</div>
+			<div class="cols-2">
+				<div class="row-item">
+					<ul class="list-inline opacity-75">
+						<li class="list-inline-item">
+							<h4 class="fs-6">播放次數</h4>
+							<h4>0</h4>
+						</li>
+						<li class="list-inline-item">
+							<h4 class="fs-6">喜歡</h4>
+							<h4>0</h4>
+						</li>
+					</ul>
+					<div class="ui-button">
+						@await Html.PartialAsync("_Songdetail_ButtonUI")
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 放在圖片下方的歌手資訊 -->
+	<div class="bottom-container container">
+		<div class="left-container  col-4">
+			<div class="userinfo container">
+				<div class="userpic">
+					<a class="Avater-link" href="#">
+					<img class="pfp" src="/image/Wchi.png">
+					</a>
+				</div>
+				<div class="userid">
+					<a class="pf" href="#">Wchi</a>
+					<p class="pftext">@@wchiii</p>
+				</div>
+				<div class="userfollow">
+					<button class="btn-danger follow">追蹤</button>
+				</div>
+			</div>
+			<div class="container">
+				<hr class="mt-5 mb-2">
+				<p class="text-gray-light mb-2 opacity-50">發布日期:2025/02/28</p>
+				<hr class="mt-2 mb-5">
+			</div>
+			@* 廣告圖 *@
+			<div class="ad_container container">
+				<img src="/image/SportMatchad.jpg">
+			</div>
+		</div>
+		<div class="right-container col-8">
+			<h2>介紹</h2>
+			<div class="introduce-area">
+				<div class="introduce">
+					<p>
+						介紹內文<br />
+						介紹內文<br />
+						介紹內文<br />
+						介紹內文<br />
+						介紹內文
+					</p>
+				</div>
+				<span class="toggle-btn">查看更多</span>
+			</div>
+			<hr class="mt-5 mb-5">
+			<h2>歌詞</h2>
+			<div class="introduce-area">
+				<div class="introduce">
+					<p>歌詞內文</p>
+					<p>1</p>
+					<p>2</p>
+					<p>3</p>
+				</div>
+				<span class="toggle-btn">查看更多</span>
+			</div>
+			<hr class="mt-5 mb-5">
+			<h2>留言區</h2>
+			<div>
+				<!-- 留言串partialview放這裡 -->
+				@await Html.PartialAsync("_CommentInput")
+				@await Html.PartialAsync("_CommentList")
+			</div>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	<script>
+		@* document.addEventListener("DOMContentLoaded", function () {
+			var toggleBtn = document.querySelector(".toggle-btn");
+			var introduce = document.querySelector(".introduce");
+
+			toggleBtn.addEventListener("click", function () {
+				if (introduce.classList.contains("expanded")) {
+					// 目前展開，點擊後收合
+					introduce.classList.remove("expanded");
+					toggleBtn.textContent = "查看更多";
+				} else {
+					// 目前收合，點擊後展開
+					introduce.classList.add("expanded");
+					toggleBtn.textContent = "收合";
+				}
+			});
+		}); *@
+
+			$(document).ready(function () {
+				$('.toggle-btn').click(function () {
+					const introduce = $(this).prev('.introduce');
+					if (introduce.css('max-height') === '50px') {
+						introduce.css('max-height', introduce.prop('scrollHeight') + 'px');
+						$(this).text('收起內容');
+					} else {
+						introduce.css('max-height', '50px');
+						$(this).text('查看更多');
+					}
+				});
+			});
+	</script>
+}

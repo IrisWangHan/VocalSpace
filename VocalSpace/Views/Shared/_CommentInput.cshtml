@@ -1,0 +1,94 @@
+﻿@* @model IEnumerable<MessageModel> <<<這邊model以後拿來帶留言區資料
+
+*@
+
+@{
+	<!-- 帶入登入狀態 -->
+	var tmp = TempData.Peek("isLogin");
+
+	bool isLogin = false;
+	if (tmp != null)
+	{
+		// 如果 TempData 儲存的是字串 "true" 或 "false"
+		bool.TryParse(tmp.ToString(), out isLogin);
+
+		// 如果你確定 TempData 儲存的是布林值，也可以直接轉型：
+		// isLogin = (bool)tempIsLogin;
+	}
+}
+<style>
+@* 通用屬性 *@
+.RED_HOVER{
+    color: #f9595f;
+    cursor: pointer;
+}
+
+.RED_HOVER:hover {
+    color: #d94a4f; /* 更深的紅色 */
+  }
+
+
+	/* 容器：置中 + 白底 + 邊框 */
+	.comment-container {
+		width: 100%;
+		border-radius: 8px;
+		padding: 15px;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	}
+
+
+	/* 第一行：頭像 + 輸入框 + 圖示 */
+	.comment-input-row {
+		display: flex;
+		align-items: center;
+		margin-bottom: 10px; /* 與第二行分距 */
+	}
+
+	.comment-avatar {
+		margin-right: 10px;
+	}
+
+		.comment-avatar img {
+			width: 40px;
+			height: 40px;
+			border-radius: 50%;
+			object-fit: cover;
+		}
+
+	.comment-input {
+		flex: 1; /* 讓輸入框自動撐滿剩餘空間 */
+		padding: 8px;
+		border: 1px solid #ccc;
+		border-radius: 8px;
+		font-size: 14px;
+		outline: none;
+	}
+
+	/* 第二行：下拉選單 + 按鈕 */
+	.action-row {
+		text-align: right; /* 讓按鈕靠右 */
+	}
+</style>
+	@if (isLogin)
+	{
+		<div class="comment-container">
+			<!-- 第一行：頭像 + 輸入框 + 圖示 -->
+			<div class="comment-input-row">
+				<div class="comment-avatar">
+					<!-- 您可換成自己的頭像或圖示 -->
+					<img src="/image/SadsaucE.png" alt="Avatar">
+				</div>
+				<input type="text" class="comment-input" placeholder="想說點什麼？" />
+			</div>
+				<div class="action-row">
+					<button class="btn btn-danger">留言</button>
+				</div>
+		</div>
+	}
+	else
+	{
+		<div class="comment-alert">
+			<p>欲留言請先 <a class="RED_HOVER" href="#">登入</a> 或 <a class="RED_HOVER" href="#">成為 VocalSpace 的會員。</a></p>
+		</div>
+	}
+

@@ -1,0 +1,86 @@
+﻿<style>
+	.comment-wrapper {
+		width: 100%;
+		height: 100%;
+	}
+
+	/* 第一行：頭像 + 輸入框 + 圖示 */
+
+	.comment-avatar {
+		display: flex;
+		margin-right: 10px;
+	}
+
+		.comment-avatar img {
+			width: 40px;
+			height: 40px;
+			border-radius: 50%;
+			object-fit: cover;
+		}
+
+	.comment-input {
+		flex: 1;
+		/* 讓輸入框自動撐滿剩餘空間 */
+		padding: 8px;
+		border: 1px solid #ccc;
+		border-radius: 8px;
+		font-size: 14px;
+		outline: none;
+	}
+</style>
+<div class="comment-wrapper">
+	<div class="comment-list">
+		<!-- 此處之後代入model資料+迴圈 -->
+		<div class="comment-container">
+			<div class="d-flex">
+				<div class="comment-avatar">
+					<img src="/image/Wchi.png" alt="User1">
+				</div>
+				<div class="comment-content">
+					<a href="#" class="comment-header">Wchi</a>
+					<p class="comment-body">這是我的歌，大家覺得好聽嗎。</p>
+					<p class="opacity-50">2025/02/28</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="comment-container">
+			<div class="d-flex">
+				<div class="comment-avatar">
+					<img src="/image/SadsaucE.png" alt="User1">
+				</div>
+				<div class="comment-content">
+					<a href="#" class="comment-header">SadsaucE</a>
+					<p class="comment-body">我覺得很難聽欸。</p>
+					<p class="opacity-50">2天前</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="comment-container">
+			<div class="d-flex">
+				<div class="comment-avatar">
+					<img src="/image/SadsaucE.png" alt="User1">
+				</div>
+				<div class="comment-content">
+					<a href="#" class="comment-header">SadsaucE</a>
+					<p class="comment-body">加油好嗎。</p>
+					<p class="opacity-50">10分鐘前</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="comment-container">
+			<div class="d-flex">
+				<div class="comment-avatar">
+					<img src="/image/Wchi.png" alt="User1">
+				</div>
+				<div class="comment-content">
+					<a href="#" class="comment-header">Wchi</a>
+					<p class="comment-body">你有聽過一種從天而降的掌法嗎，說白了就是跳起來給你一巴掌。</p>
+					<p class="opacity-50">2分鐘前</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
