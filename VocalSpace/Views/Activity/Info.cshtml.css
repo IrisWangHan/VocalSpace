@@ -17,3 +17,12 @@
     word-wrap: break-word;
 }
 
+.event-date{
+    position:absolute;
+}
+
+.poster-section {
+    padding:20px 0;
+    width:480px;
+}
+
