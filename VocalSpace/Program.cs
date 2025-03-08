@@ -5,6 +5,12 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddSession();
 
+builder.Services.AddSession(options =>
+{
+    options.Cookie.Name = ".VocalSpace.Session";
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+});
+
 var app = builder.Build();
 
 
@@ -29,7 +35,7 @@ app.UseSession();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller}/{action}/{id?}",
-    defaults: new { controller = "Accounts", action = "memberInformation" }
+    defaults: new { controller = "Home", action = "Index" }
     );
     
 

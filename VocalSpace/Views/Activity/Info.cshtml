@@ -1,27 +1,41 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+	<!-- 帶入登入狀態 -->
+	var tmp = TempData.Peek("isLogin");
+
+	bool isLogin = false;
+	if (tmp != null)
+	{
+		// 如果 TempData 儲存的是字串 "true" 或 "false"
+		bool.TryParse(tmp.ToString(), out isLogin);
+
+		// 如果你確定 TempData 儲存的是布林值，也可以直接轉型：
+		// isLogin = (bool)tempIsLogin;
+	}
 }
-<div class="page-container container-xl">
+
+<div class="page-container container-xxl">
 	<div class="col-8 left-container">
 		<div class="event-container">
-			<div class="event-content">
-				<div class="event-cover">
-					<img class="event-image" src="/image/Activity/cs.jpg" alt="活動圖片">
-					<div class="event-date d-flex">
-						<div class="calende-border-block p-0 text-center">
-							<div class="bg-danger text-white font-size-sm">3 月</div>
-							<h3 class="mb-1 mt-1 text-black">7</h3>
-							<h6 class="mb-1 mt-1 text-black opacity-50">星期五</h6>
-						</div>
+			<div class="event-cover">
+				<img class="event-image" src="/image/Activity/cs.jpg" alt="活動圖片">
+				<div class="event-date">
+					<div class="calende-border-block p-0 text-center">
+						<div class="bg-danger text-white font-size-sm T-radius">3 月</div>
+						<h3 class="mb-1 mt-1 text-black">7</h3>
+						<h6 class="mb-1 mt-1 text-black opacity-50">星期五</h6>
 					</div>
 				</div>
-				<h1 class="event-title">THE CHAINSMOKERS LIVE IN TAIPEI 2025</h1>
-				<div class="event-info">
-					<span class="event-time">📅 2025年3日7日 | 19:00</span>
-					<span class="event-location">📍 ．臺北市．大佳河濱公園 <a href="#">查看地圖</a></span>
-				</div>
+			</div>
+			<h1 class="event-title mb-4">THE CHAINSMOKERS LIVE IN TAIPEI 2025</h1>
+			<div class="event-info">
+				<h6 class="text-gray mb-3">
+					<span class="bi bi-calendar2-minus"></span>
+					2025 年 3 月 7 日 | 星期五 | 20:00
+				</h6>
+				<h6 class="text-gray mb-3">
+					<span class="bi bi-geo-alt-fill"></span>
+					臺北市．大佳河濱公園
+				</h6>
 			</div>
 			<hr class="mt-5 mb-2">
 			<div class="poster-section">
@@ -42,16 +56,42 @@
 			</div>
 			<hr class="mt-5 mb-5">
 			@* 預計加入留言板趴秀 *@
-				@await Html.PartialAsync("_CommentInput")
-				@await Html.PartialAsync("_CommentList")
+			@await Html.PartialAsync("_CommentInput")
+			@await Html.PartialAsync("_CommentList")
 		</div>
 	</div>
 	<div class="col-4 right-container">
-		<div class="d-flex w-100">
-			<div class="event-actions">
-				<button class="btn-want">⭐ 我也想去！</button>
-				<button class="btn-calendar">📅 加入行事曆</button>
+		<div class="activity-info">
+			<h3>73 人想去</h3>
+			<div class="activity-buttons">
+				<button class="btn interested-btn" onclick="handleInterested()">★ 我也想去！</button>
+				<button class="btn calendar-btn" onclick="addToCalendar()">📅 加入行事曆</button>
 			</div>
 		</div>
 	</div>
 </div>
+@* 直接加载 Modal，并设为隐藏 *@
+@await Html.PartialAsync("_ShareModal")
+
+@section Scripts {
+	<script>
+		let isLogin = @isLogin.ToString().ToLower(); // 轉成 JS 的 true/false
+		let interestedCount = 73;
+
+		function handleInterested() {
+		if (!isLogin) {
+			// 如果未登入，導向登入頁
+			window.location.href = "/Accounts/Login";
+			return;
+		}
+
+			interestedCount++;
+			document.querySelector(".activity-info h3").innerText = `${interestedCount} 人想去`;
+			var myModal = new bootstrap.Modal(document.getElementById('shareModal'));
+			myModal.show();
+		}
+		function addToCalendar() {
+			window.open("https://calendar.google.com/calendar/r/eventedit", "_blank");
+		}
+	</script>
+}

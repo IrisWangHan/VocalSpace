@@ -1,8 +1,143 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿<div class="page-container container-xxl ">
+	<h2 class="text-center mt-4">投稿活動</h2>
+	<div class="row justify-content-center">
+		<div class="col-md-8">
+			<div class="card">
+				<div class="card-body">
+					<form id="eventForm">
+						<!-- 封面圖片區 -->
+						<div class="w-100 d-flex flex-column cover-row">
+							<div class="cover-container" id="coverContainer">
+								<div class="cover-preview" id="coverPreview">
+								</div>
+							</div>
+								<input type="file" id="coverImageInput" class="d-none" accept="image/*" onchange="previewCoverImage(this)">
+								<label for="coverImageInput" class="btn btn-outline-secondary btn-sm mt-2">選擇圖片</label>
+						</div>
+						<p class="small text-muted">圖片尺寸至少 1200x628px，大小不可超過2MB。</p>
+						<div class="error-feedback mt-1" id="coverError">請上傳封面圖片！</div>
+
+						<!-- 活動資訊區 -->
+						<div class="form-group mt-3">
+							<label for="eventTitle">活動標題 *</label>
+							<input type="text" class="form-control" id="eventTitle">
+							<div class="error-feedback mt-1" id="eventTitleError">請填寫活動標題!</div>
+						</div>
+
+						<div class="form-group mt-3">
+							<label for="eventDate">活動時間 *</label>
+							<input type="datetime-local" class="form-control" id="eventDate">
+							<div class="error-feedback mt-1" id="eventDateError">請選擇活動時間!</div>
+						</div>
+
+						<div class="form-group mt-3">
+							<label for="eventLocation">活動地點 *</label>
+							<input type="text" class="form-control" id="eventLocation">
+							<div class="error-feedback mt-1" id="eventLocationError">這填寫活動地點!</div>
+						</div>
+
+						<div class="form-group mt-3">
+							<label for="eventDescription">活動描述</label>
+							<textarea class="form-control" id="eventDescription" rows="4"></textarea>
+						</div>
+
+						<!-- 按鈕區 -->
+						<div class="d-flex justify-content-between mt-4">
+							<button type="button" class="btn btn-outline-secondary" id="cancelBtn">取消</button>
+							<button type="submit" class="btn btn-danger">確認投稿</button>
+						</div>
+					</form>
+				</div>
+			</div>			
+		</div>
+	</div>
+</div>
+
+@*公用彈窗*@
+@await Html.PartialAsync("_ShareModal")
+
+
+@section Scripts {
+	<script>
+		// 封面圖片預覽與檔案大小驗證
+		function previewCoverImage(input) {
+			const preview = document.getElementById('coverContainer');
+			const maxSizePhoto = 2 * 1024 * 1024; // 2MB 限制
+
+			if (input.files && input.files[0]) {
+				if (input.files[0].size <= maxSizePhoto) {
+					const reader = new FileReader();
+					reader.onload = function (e) {
+						preview.innerHTML = `<img src="${e.target.result}" alt="封面預覽" style="width: 100%; height: 100%; object-fit: cover;">`;
+					};
+					reader.readAsDataURL(input.files[0]);
+				} else {
+					alert("圖片上傳限制為 2MB");
+					input.value = ""; // 清空已選擇的檔案
+				}
+			}
+		}
+
+		// 表單提交驗證
+		document.getElementById("eventForm").addEventListener("submit", function (e) {
+			e.preventDefault(); // 防止表單提交
+
+			let isValid = true;
+
+			function validateField(inputId, errorId) {
+				let inputField = document.getElementById(inputId);
+				let errorMsg = document.getElementById(errorId);
+
+				if (!inputField.value.trim()) {
+					inputField.classList.add("is-invalid"); 
+					errorMsg.style.display = "block"; 
+					isValid = false;
+				} else {
+					inputField.classList.remove("is-invalid"); 
+					errorMsg.style.display = "none";
+				}
+			}
+
+			validateField("eventTitle", "eventTitleError");
+			validateField("eventDate", "eventDateError");
+			validateField("eventLocation", "eventLocationError");
+
+				 // 檢查封面圖片是否已上傳
+		const coverImageInput = document.getElementById('coverImageInput');
+		const coverPreview = document.getElementById('coverContainer');
+		const coverError = document.getElementById('coverError');
+
+		if (!coverImageInput.files.length) {
+			coverPreview.classList.add('is-invalid');
+			coverError.style.display = 'block';
+			isValid = false;
+		} else {
+			coverPreview.classList.remove('is-invalid');
+			coverError.style.display = 'none';
+		}
+
+			if (isValid) {
+				// 這裡可以加入表單提交的邏輯
+					let shareModal = new bootstrap.Modal(document.getElementById("shareModal"));
+					shareModal.show();
+			}
+		});
+
+		// 取消按鈕返回首頁
+		let cancelBtn = document.getElementById("cancelBtn");
+		if (cancelBtn) {
+			cancelBtn.addEventListener("click", function () {
+				window.location.href = '/Activity/index';
+			});
+		}
+
+		// 彈窗關閉返回首頁
+		let shareModalElement = document.getElementById("shareModal");
+		shareModalElement.addEventListener("hidden.bs.modal", function () {
+			window.location.href = '/Activity/index';
+		});
+
+	</script>
 }
-投稿活動
 
 

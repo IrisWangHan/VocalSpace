@@ -10,11 +10,9 @@
 }
 
 .text-maxthree {
-    height: 80px;
-    display: block;
+    min-height: 80px; /* 固定最小高度 */
+    max-height: 80px; /* 避免變化 */
     display: -webkit-box;
-    margin-left: auto;
-    margin-right: auto;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
@@ -50,6 +48,10 @@
 
 .carousel-inner {
     overflow: hidden; /* 超出部分隱藏 */
+}
+
+.carousel-item {
+    min-height: 250px; /* 設定統一高度 */
 }
 
 /*封面圖*/
@@ -99,6 +101,35 @@
     border-top-right-radius: .4rem;
 }
 
+/*上傳者*/
+
+.event-performers {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 5px;
+}
+
+
+.performer {
+    font-size: 12px;
+    padding: 4px 8px;
+    border: 1px solid gray;
+    margin-right: 5px;
+    border-radius: 1rem;
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+    .performer img {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        margin-right: .2rem;
+        vertical-align: bottom;
+    }
+
 [data-theme="light"]
 .sync-data-theme {
     filter: invert(100%);
@@ -130,6 +161,10 @@
 }
 /*活動文字欄*/
 .carousel-textarea {
+    min-height: 300px; /* 設定一個固定的最小高度 */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* 讓內部元素均勻分布 */
 }
 
     .carousel-textarea h2 {
@@ -150,10 +185,10 @@
 /*篩選區域*/
 .filter-sidebar {
     border: 1px solid #000;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
     display: block;
     border: 1px solid #e4e4e4;
-    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, .1);
+    box-shadow: 0 1px 4px;
     border-radius: .4rem;
     word-wrap: break-word;
 }
@@ -166,24 +201,6 @@
 .bottom-container {
     gap: 30px;
 }
-
-/*日期下拉*/
-
-/* 修改 select 選項的選取顏色 */
-.custom-select{
-    display:none;
-}
-.custom-select option:checked {
-    background-color: red !important;
-    color: white !important;
-}
-
-/* 修改 hover 時的顏色 */
-.custom-select option:hover {
-    background-color: red !important;
-    color: white !important;
-}
-
 
 /*活動列表*/
 

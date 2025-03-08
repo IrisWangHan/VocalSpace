@@ -1,0 +1,49 @@
+﻿.page-container {
+    padding-top: 40px;
+    padding-bottom: 120px;
+}
+
+.card-body {
+    background-color: var(--bg-color);
+    color: var(--text-color-light);
+    border: 1px solid #c8c6c6;
+}
+
+.cover-row {
+    align-items:center;
+    justify-content:center;
+}
+
+.cover-container {
+    width: 600px;
+    height: 314px;
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.cover-preview img {
+    width: 100%;
+    height: 100%; 
+}
+
+/* 錯誤訊息 */
+.error-feedback {
+    color: #F9595F;
+    font-size: 14px;
+    margin-top: 5px;
+    display: none;
+}
+
+/* 紅色邊框，表示輸入錯誤 */
+.is-invalid {
+    border: 2px solid #F9595F !important;
+}
+
+.modal-dialog{
+    width:400px;
+}
