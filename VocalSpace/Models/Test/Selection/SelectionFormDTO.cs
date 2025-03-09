@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace VocalSpace.Models.Selection
+namespace VocalSpace.Models.Test.Selection
 {
     public class SelectionFormDTO
     {
