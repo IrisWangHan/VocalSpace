@@ -76,6 +76,10 @@ function searchQuery(content) {
 
     fetch("/search/searchResult?q=" + encodeURIComponent(content)) // 確保 URL 參數編碼正確
         .then(response => {
+function search() {
+    fetch("/search/searchAll/?q=" + searchText.value).
+        then(response => {
+            //  response.ok 為 true
             if (!response.ok) {
                 throw new Error("Network response was not ok");
             }
@@ -84,6 +88,15 @@ function searchQuery(content) {
         .then(data => {
             console.log("搜尋結果:", data);
             //alert("搜尋成功！找到 " + data.length + " 首歌曲");
+            console.log(response.url);
+            return response.url;
+        }).
+        then(responseUrl => {
+            //  導向到搜尋結果url
+            window.location.assign(responseUrl);
+        }).
+        catch(error => {
+            console.error("載入歌曲失敗");
         })
         .catch(error => {
             console.error("載入歌曲失敗:", error);

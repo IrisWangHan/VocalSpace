@@ -14,9 +14,17 @@ public class searchController : Controller
         {
             _context = context;
         }
-        public IActionResult searchAll()
+        [HttpGet]
+        public async Task<IActionResult> searchAll()
         {
-            return View();
+            string? q = Request.Query["q"];
+            
+            
+            List<Song> result = await _context.Songs.Where(data => data.SongName.Contains(q!)).ToListAsync();
+            //   找不到搜尋結果 或 透過URL直接進入searchAll頁面，導向searchError頁面
+
+            var resultView = ( result.Count == 0 || q == null ) ? View("searchError") : View("searchAll", result);
+            return resultView;
         }
 
         public IActionResult searchSongs()
@@ -33,6 +41,12 @@ public class searchController : Controller
         {
             return View();
         }
+
+        public IActionResult searchError()
+        {
+            return View();
+        }
+
         [HttpGet]
         public IActionResult loadmore()
         {

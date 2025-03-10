@@ -1,15 +1,13 @@
-﻿
-@{
-    
+﻿@{
+	 Layout = "_Layout";  
 }
-@model List<Song>
+
 <link rel="stylesheet" href="~/css/search.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/song.css" asp-append-version="true" />
 
 <div class="container pb-10 pt-5">
     <h1 class="mb-4 position-relative search-title">
         <i class="bi bi-search mr-2"></i>
-        <span id="search-query"></span>&nbsp;
         搜尋結果
     </h1>
     <hr class="mb-5">
@@ -29,12 +27,8 @@
                     <a class="nav-link nav-name" href="./searchArtists">音樂人</a>
                 </li>
             </ul>
-            <div class="tab-content" id="tab-content">                
-                @await Html.PartialAsync("_partialViewSong", Model)
-                @await Html.PartialAsync("_partialViewSong")
-                @await Html.PartialAsync("_partialViewArtist")
-                @await Html.PartialAsync("_partialViewSonglist")
-                @* 按下"點我看更多"button後，插入執行@await Html.PartialAsync("partialViewSong") *@
+            <div class="tab-content" id="tab-content">
+				@RenderBody()
             </div>
             <div class="mt-5 mb-5 text-center">
                 <button class="btn btn-loadmore" id="btn-loadmore" onclick="loadmore('song')">點我看更多</button>
@@ -47,3 +41,4 @@
 </div>
 <script src="~/js/search.js" asp-append-version="true"></script>
 <script src="~/js/partialViewSong.js" asp-append-version="true"></script>
+
