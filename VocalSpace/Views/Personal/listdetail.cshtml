@@ -4,8 +4,7 @@
 <link rel="stylesheet" href="~/css/song.css" asp-append-version="true" />
 
 <title>聲維宇宙排行榜</title>
-<div class="page-container">
-	<div></div>
+<div class="page-container mb-5">
 	<div class="top-container container">
 		<!-- 左側圖片區域 -->
 		<div class="col-md-4 songpfp">
@@ -58,12 +57,6 @@
 		<div class="right-container col-8">
 			<h3>曲目</h3>
 				@await Html.PartialAsync("_partialViewSong")
-			<hr class="mt-5 mb-5">
-			<div>
-				<!-- 留言串partialview放這裡 -->
-				@await Html.PartialAsync("_CommentInput")
-				@await Html.PartialAsync("_CommentList")
-			</div>
 		</div>
 	</div>
 </div>
