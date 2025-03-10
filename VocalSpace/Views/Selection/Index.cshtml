@@ -1,13 +1,16 @@
-﻿@{
+﻿@* @{
 	var length = 5;
 	var joinState = "開放中";
 	var voteState = "開放中";
-}
-
+} *@
+<!-- 指定模型類型為 Selection 的集合 -->
+@* @model IEnumerable<Selection> *@
+<!-- 指定模型類型為 SelectionDTO 的集合 -->
+@model IEnumerable<VocalSpace.Models.Test.Selection.SelectionListDTO>
 <section class="banner">
 	<div class="banner__left">
 		<img class="banner__left-img" src="@Url.Content("~/image/selection/bannerLightning.png")" />
-		<button class="btn btn-submit--theme banner__left-btn">前往徵選</button>
+		<button class="btn btn-submit--theme banner__left-btn"> 前往徵選</button>
 	</div>
 	<div class="banner__right">
 		<img class="banner__right-img" src="@Url.Content("~/image/selection/bannerContent.png")" />
@@ -16,29 +19,28 @@
 
 <section class="content ">
 	<div class="content__card-area">
-		@for (int i = 0; i < @length; i++)
+		@foreach(var item in Model)
 		{
 			<div class="card__item">
 				<div class="card__img-box">
-					<img class="card__img" src="/image/selection/selectionBanner.png" />
+					<img class="card__img" src="@(item.SelectionCoverPath)" />
 				</div>
-				<h6>Selection Home Page - XXX</h6>
-				<p>Selection Home Page Description</p>
+				<h6>@(item.Title)</h6>
 				<label>
 					徵選狀態:
-					<span style="color: @(joinState == "開放中" ? "red" : "gray");">
-						@joinState
+					<span style="color: @(item.JoinState == "開放中" ? "red" : "gray");">
+						@(item.JoinState)
 					</span>
 				</label>
 				<label>
 					投票狀態:
-					<span style="color: @(voteState == "開放中" ? "red" : "gray");">
-						@joinState
+					<span style="color: @(item.VoteState == "開放中" ? "red" : "gray");">
+						@(item.VoteState)
 					</span>
 				</label>
 				<div class="card__btn-box">
-					<button onclick="window.location.href='/selection/Apply'" class="btn btn-submit--theme card__btn-vote">我要投票</button>
-					<button onclick="window.location.href='/selection/EventDescription'" class="btn btn-submit--theme card__btn-join">我要徵選</button>
+					<button onclick="window.location.href='/selection/EventDescription/@(item.SelectionId)'" class="btn btn-submit--theme card__btn-vote">了解更多</button>
+					<button onclick="window.location.href='/selection/Apply/@(item.SelectionId)'" class="btn btn-submit--theme card__btn-join">我要報名</button>
 				</div>
 			</div>
 		}
@@ -47,23 +49,23 @@
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 
 <script>
-		// 當使用者點擊清單中的某項資料
-	$(".card__item-activity").on("click", function() {
-	var selectedItem = $(this).data("id");
+	// 	// 當使用者點擊清單中的某項資料
+	// $(".card__item-activity").on("click", function() {
+	// var selectedItem = $(this).data("id");
 
-	// 發送選中的資料到後端進行後續處理
-	$.ajax({
-		url: '@Url.Action("ProcessSelectedItem", "Selection")', // 處理資料的控制器方法
-		type: 'POST',
-		data: { item: selectedItem }, // 傳送選中的資料
-		success: function(response) {
-			// 顯示後端處理結果
-			alert("選中的資料: " + response);
-			},
-		error: function(xhr, status, error) {
-			console.log("請求失敗: " + error);
-				}
-			});
-		});
+	// // 發送選中的資料到後端進行後續處理
+	// $.ajax({
+	// 	url: '@Url.Action("ProcessSelectedItem", "Selection")', // 處理資料的控制器方法
+	// 	type: 'POST',
+	// 	data: { item: selectedItem }, // 傳送選中的資料
+	// 	success: function(response) {
+	// 		// 顯示後端處理結果
+	// 		alert("選中的資料: " + response);
+	// 		},
+	// 	error: function(xhr, status, error) {
+	// 		console.log("請求失敗: " + error);
+	// 			}
+	// 		});
+	// 	});
 
 </script>

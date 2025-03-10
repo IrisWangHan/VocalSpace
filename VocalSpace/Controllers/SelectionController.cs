@@ -1,22 +1,67 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using VocalSpace.Models;
 using VocalSpace.Models.Test.Selection;
+using VocalSpace.Services.Selection;
 
 namespace VocalSpace.Controllers
 {
     public class SelectionController : Controller
     {
-        public IActionResult Index()
+        //控制器的責任 :僅調用Services層方法，不需要直接操作DbContext
+        public SelectionController(SelectionService selectionService)
         {
-            return View();
+             _selectionService = selectionService;
         }
-        public IActionResult EventDescription()
+        private readonly SelectionService _selectionService;
+
+
+        /// <summary>
+        /// 獲取活動列表
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IActionResult> Index()
         {
-            return View();
+            //第三步: 建立Controller 處理請求 (第一步:建立DTO,第二步:建立業務邏輯Services)
+            var selections = await _selectionService.GetSelectionsAsync();
+            return View(selections);
         }
-        public IActionResult Apply()
+
+        /// <summary>
+        /// 活動詳情
+        /// [program.cs的設定]id:活動ID 由url取得
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IActionResult> EventDescription(int id)
         {
-            return View();
+            var selections = await _selectionService.GetEventDescriptionAsync(id);
+            return View(selections);
         }
+
+        /// <summary>
+        /// 徵選現有作品
+        /// [program.cs的設定]id:活動ID 由url取得
+        /// </summary>
+        /// <returns></returns>
+        //public async Task<IActionResult> GetWorks(int id)
+        //{
+
+        //    var selections = await _selectionService.GetWorks(id);
+        //    return View(selections);
+        //}
+
+        /// <summary>
+        /// 申請參加活動
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> Apply(int id)
+        {
+            var selections = await _selectionService.GetEventDescriptionAsync(id);
+            return View(selections);
+        }
+
+
         [HttpPost]
         public IActionResult SubmitApplication([FromForm] SelectionFormDTO model)
         {
