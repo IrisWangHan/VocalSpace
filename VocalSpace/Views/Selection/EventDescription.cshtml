@@ -25,25 +25,31 @@
 			<a href="/selection/Apply/@(Model.SelectionId)" class="btn btn-submit--theme">我要報名</a>
 		</div>
 		<div class="content__header-aside">
-			<div class="content-section works">
-				<img src="/image//selection//voteAD.png" />
-			</div>
-			<div class="content-section descrition">
-				<h5>徵選活動日程</h5>
-				<p>@(Model.StartDate) 開始</p>
-				<p>@(Model.EndDate) 結束</p>
-				<button class="btn btn-submit--theme">加入google行事曆</button>
-			</div>
+			@if (ViewBag.section != null && ViewBag.section.ToString() == "EventDescription")
+			{
+				<div class="content-section works">
+					<img src="/image//selection//voteAD.png" />
+				</div>
+			}
+			@if (ViewBag.section != null && ViewBag.section.ToString() == "Works")
+			{
+				<div class="content-section descrition">
+					<h5>徵選活動日程</h5>
+					<p>@(Model.StartDate) 開始</p>
+					<p>@(Model.EndDate) 結束</p>
+					<button class="btn btn-submit--theme">加入google行事曆</button>
+				</div>
+			}
 		</div>
 	</div>
 	<div class="content__menu  border-bottom">
 		<ul>
-			<li class="content__menu-item" data-target=".descrition">
+			<li class="content__menu-item" data-target=".descrition" id="showDescription">
 				<a href="/selection/EventDescription/@(Model.SelectionId)">
 					活動說明
 				</a>
 			</li>
-			<li class="content__menu-item" data-target=".works">
+			<li class="content__menu-item" data-target=".works" id="showWorks">
 				<a href="/selection/GetWorks/@(Model.SelectionId)">
 					參加作品
 				</a>
@@ -51,40 +57,102 @@
 		</ul>
 	</div>
 	<div class="content__card-area">
-		<div class="content-section descrition">
-			<p>活動說明</p><br /><br />
-			<span>@(Model.Description)</span>
-		</div>
-		@* <div class="content-section works">
-			<h3 class ="fw-bold">所有參加作品數:</h3>
-			@{
-				await Html.RenderPartialAsync("_CardPartial");
-			}
-			<div aria-label="Page navigation example">
-				<ul class="pagination">
-					<li class="page-item">
-						<a class="page-link" href="#" aria-label="Previous">
-							<span aria-hidden="true">&laquo;</span>
-						</a>
-					</li>
-					<li class="page-item"><a class="page-link" href="#">1</a></li>
-					<li class="page-item"><a class="page-link" href="#">2</a></li>
-					<li class="page-item"><a class="page-link" href="#">3</a></li>
-					<li class="page-item">
-						<a class="page-link" href="#" aria-label="Next">
-							<span aria-hidden="true">&raquo;</span>
-						</a>
-					</li>
-				</ul>
+		@if (ViewBag.section != null && ViewBag.section.ToString() == "EventDescription")
+		{
+			<div class="content-section descrition" id="descriptionSection">
+				<p>活動說明</p><br /><br />
+				<span>@(Model.Description)</span>
 			</div>
-		</div> *@
+		}
+		@if (ViewBag.section != null && ViewBag.section.ToString() == "Works")
+		{
+			<div class="content-section works" id="worksSection">
+				<h3 class="fw-bold">所有參加作品數:</h3>
+				@* 			@{
+				await Html.RenderPartialAsync("_CardPartial",Model.Songs);
+			} *@
+				<div id="worksContent">
+					<!-- 這裡顯示作品區塊的內容 -->
+					@{
+						await Html.RenderPartialAsync("_CardPartial", Model.Songs);
+					}
+				</div>
+				<div aria-label="Page navigation example">
+					<ul class="pagination">
+						<li class="page-item">
+							<a class="page-link" href="#" aria-label="Previous">
+								<span aria-hidden="true">&laquo;</span>
+							</a>
+						</li>
+						<li class="page-item"><a class="page-link" href="#">1</a></li>
+						<li class="page-item"><a class="page-link" href="#">2</a></li>
+						<li class="page-item"><a class="page-link" href="#">3</a></li>
+						<li class="page-item">
+							<a class="page-link" href="#" aria-label="Next">
+								<span aria-hidden="true">&raquo;</span>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		}
 
 	</div>
 </section>
+<style>
+	.content__menu-item a{
+		display:inline-block;
+		width:100%;
+	}
+</style>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 
 <script>
-	$(document).ready(function() {
+	// $(document).ready(function() {
+	// 		$(".content__menu-item").on("click", function () {
+	// 	// 先重置所有選單的背景色
+	// 	$(".content__menu-item").css({
+	// 		"background-color": "gray",
+	// 		"color": "aliceblue"
+	// 	});
+
+	// 	// 改變當前選單的背景色
+	// 	$(this).css({
+	// 		"background-color": "cornflowerblue",
+	// 		"color": "white"
+	// 	});
+
+	// 	let target = $(this).data("target");
+	// 	$(".content-section").hide();
+	// 	$(target).fadeIn();
+	// });
+	//  // 預設點擊第一個選單
+	// $(".content__menu-item:first").trigger("click");
+	// });
+
+
+	@*  $(document).ready(function() {
+		// 當點選「作品選單」時發送 AJAX 請求
+		$('#showWorks').click(function() {
+			$.ajax({
+				url: '@Url.Action("GetWorks", "YourController")', // 改成你的控制器名稱
+				type: 'GET',
+				data: { id: @Model.SelectionId }, // 傳遞選擇活動 ID
+				success: function(response) {
+					// 更新作品區塊內容
+					$('#worksContent').html(response);
+					$('#descriptionSection').hide(); // 隱藏說明區塊
+					$('#worksSection').show(); // 顯示作品區塊
+				}
+			});
+		});
+
+		// 當點選「說明選單」時顯示活動說明，並隱藏作品區塊
+		$('#showDescription').click(function() {
+			$('#descriptionSection').show(); // 顯示說明區塊
+			$('#worksSection').hide(); // 隱藏作品區塊
+		});
+
 			$(".content__menu-item").on("click", function () {
 		// 先重置所有選單的背景色
 		$(".content__menu-item").css({
@@ -99,11 +167,6 @@
 		});
 
 		let target = $(this).data("target");
-		$(".content-section").hide();
-		$(target).fadeIn();
-	});
-	 // 預設點擊第一個選單
-	$(".content__menu-item:first").trigger("click");
-
+		$(".content-section").hide(); *@
 	});
 </script>
