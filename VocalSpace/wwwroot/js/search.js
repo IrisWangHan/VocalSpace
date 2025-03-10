@@ -43,8 +43,36 @@ function loadmore(type) {
             catch(error => {
                 console.error("載入歌曲失敗");
             })
-
 }
+
+//  搜尋功能
+let searchText = document.querySelector('.header__search-input');
+
+searchText.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') {
+        console.log('searchText.value:', searchText.value);
+        search();
+        //window.location.href = '/search?q=' + searchText.value;
+    }
+});
+
+function search() {
+    fetch("/search/searchResult?q=" + searchText.value).
+        then(response => {
+            //  response.ok 為 true
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            return response;
+        }).
+        then(response => {
+            window.location.href = response;
+        }).
+        catch(error => {
+            console.error("載入歌曲失敗");
+        })
+}
+
 
 //const btnLoadmore = document.getElementById('btn-loadmore');
 //function loadmore(type) {

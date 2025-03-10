@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using VocalSpace.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -10,6 +13,11 @@ builder.Services.AddSession(options =>
     options.Cookie.Name = ".VocalSpace.Session";
     options.IdleTimeout = TimeSpan.FromMinutes(30);
 });
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddDbContext<VocalSpaceDbContext>(
+        options => options.UseSqlServer(connectionString));
 
 var app = builder.Build();
 
@@ -35,7 +43,7 @@ app.UseSession();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller}/{action}/{id?}",
-    defaults: new { controller = "Home", action = "Index" }
+    defaults: new { controller = "Home", action = "TestDB" }
     );
     
 
