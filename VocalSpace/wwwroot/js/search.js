@@ -57,16 +57,18 @@ searchText.addEventListener('keydown', function (e) {
 });
 
 function search() {
-    fetch("/search/searchResult?q=" + searchText.value).
+    fetch("/search/searchAll/?q=" + searchText.value).
         then(response => {
             //  response.ok 為 true
             if (!response.ok) {
                 throw new Error("Network response was not ok");
             }
-            return response;
+            console.log(response.url);
+            return response.url;
         }).
-        then(response => {
-            window.location.href = response;
+        then(responseUrl => {
+            //  導向到搜尋結果url
+            window.location.assign(responseUrl);
         }).
         catch(error => {
             console.error("載入歌曲失敗");
