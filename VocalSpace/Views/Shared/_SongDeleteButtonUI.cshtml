@@ -1,0 +1,52 @@
+﻿@{
+}
+<button class="btn btn-outline-secondary deletelist" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-trash"></i></button>
+<button class="btn btn-outline-secondary editlist" onclick="editlist()"><i class="bi bi-pencil-square"></i></button>
+<button class="btn btn-outline-secondary book"><i class="bi bi-bookmark-check-fill"></i></button>
+<button class="btn btn-outline-secondary random"><i class="bi bi-shuffle"></i></button>
+
+
+<!-- 刪除歌單彈窗 -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="exampleModalLabel">刪除</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                你確定要刪除這個歌單？
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-secondary">確定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+     // 取得所有按鈕
+     const buttons = document.querySelectorAll('.btn-outline-secondary.book');
+
+        // 為每個按鈕加上點擊事件
+        buttons.forEach(button => {
+          button.addEventListener('click', function() {
+            // 切換選取效果：如果已選取就取消選取，反之則加入選取效果
+            this.classList.toggle('selected');
+          });
+        });
+
+
+        // 訂閱按鈕效果
+        document.getElementById("toggleButton").addEventListener("click", function() {
+            let icon = document.getElementById("icon");
+            if (icon.classList.contains("bi-bookmark-plus-fill")) {
+                icon.classList.replace("bi-bookmark-plus-fill", "bi-bookmark-check-fill");
+            } else {
+                icon.classList.replace("bi-bookmark-check-fill", "bi-bookmark-plus-fill");
+            }
+        });
+</script>
+

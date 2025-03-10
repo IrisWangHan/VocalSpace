@@ -1,0 +1,73 @@
+﻿.btn-outline-secondary.book {
+    margin-right: 10px;
+    border: 1px solid gray;
+    border-radius: 50%;
+}
+
+    .btn-outline-secondary.book:hover {
+        margin-right: 10px;
+        background-color: rgb(255, 87, 87);
+    }
+
+    .btn-outline-secondary.book.selected {
+        margin-right: 10px;
+        background-color: #ffffff;
+        border: 1px solid rgb(255, 87, 87);
+        color: rgb(255, 87, 87);
+    }
+
+.btn-outline-secondary.deletelist {
+    margin-right: 10px;
+    border: 1px solid gray;
+    border-radius: 50%;
+}
+
+.btn-outline-secondary.editlist {
+    margin-right: 10px;
+    border: 1px solid gray;
+    border-radius:50%;
+}
+
+.btn-outline-secondary.random {
+    border: 1px solid gray;
+    border-radius: 50%;
+}
+
+@media screen and (max-width: 1000px) {
+    .btn-outline-secondary.deletelist {
+        display: none;
+    }
+
+    .btn-outline-secondary.editlist {
+        display: none;
+    }
+
+    .btn-outline-secondary.book {
+        display: none;
+    }
+
+    .btn-outline-secondary.random {
+        display: none;
+    }
+}
+
+.btn-danger {
+    color: white;
+    cursor: pointer;
+    display: block;
+    margin-left: auto;
+    position: relative;
+}
+.addbtn-newPlaylist {
+    background: #ff4d4f;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.modal-body {
+    color:black;
+}

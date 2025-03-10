@@ -99,7 +99,7 @@ hr {
 
 .button {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
 }
 
 .btn-outline-secondary.deletelist {
@@ -158,7 +158,7 @@ p {
     }
 }
 
-@media screen and (max-width: 992px) {
+/*@media screen and (max-width: 992px) {
     .song img {
         width: 150px;
         height: 150px;
@@ -167,9 +167,9 @@ p {
     .row {
         column-gap: 0px;
     }
-}
+}*/
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 992px) {
 
     .menu {
         display: flex;
@@ -227,6 +227,7 @@ p {
         gap: 5px; /* 按鈕間距 */
         flex-shrink: 0; /* 防止按鈕被壓縮 */
         margin-top: auto; /* 讓按鈕向下對齊 */
+        justify-content: flex-end;
     }
 
     .btn-outline-secondary {
