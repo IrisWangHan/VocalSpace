@@ -41,10 +41,6 @@
 						<input type="text" class="content-form-input" name="userName" />
 					</li>
 					<li class="border-bottom">
-						<p> 連絡電話</p>
-						<input type="text" class="content-form-input" name="tel" />
-					</li>
-					<li class="border-bottom">
 						<p> 電子信箱</p>
 						<input type="text" class="content-form-input" name="email" />
 					</li>
@@ -333,7 +329,6 @@
 				//取值
 				let userName = $("input[name='userName']");
 				let email = $("input[name='email']");
-				let tel = $("input[name='tel']");
 				let fileInput = $("input[type='file']")[0]; // 取得 DOM 元素
 				let files = fileInput.files; // 獲取檔案清單
 
@@ -349,10 +344,6 @@
 					email.focus();
 					list.push("請填寫電子信箱\n");
 				}
-				if(tel.val()==""){
-					tel.focus();
-					list.push("請填寫電話\n");
-				}
 				if (files.length < 1) {
 					list.push("請上傳檔案\n");
 				}
@@ -364,7 +355,6 @@
 				let formData = new FormData();
 				formData.append("file", $("input[type='file']")[0].files[0]); // 加入檔案
 				formData.append("userName", $("input[name='userName']").val());
-				formData.append("tel", $("input[name='tel']").val());
 				formData.append("email", $("input[name='email']").val());
 
 				$.ajax({
@@ -377,7 +367,6 @@
 						console.log(res);
 						sessionStorage.removeItem("userName");
 						sessionStorage.removeItem("email");
-						sessionStorage.removeItem("tel");
 					},
 					error: function(err) {
 						console.log(err);
@@ -397,7 +386,6 @@
 						sessionStorage.removeItem("tel");
 							$("input[name='userName']").val('');   // 清空 userName 欄位
 							$("input[name='email']").val('');      // 清空 email 欄位
-							$("input[name='tel']").val('');        // 清空 tel 欄位
 							$("input[type='file']").val('');       // 清空檔案選擇欄位
 							$(".upload__item").remove();
 

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using VocalSpace.Models;
+using VocalSpace.Services.Selection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,9 @@ builder.Services.AddSession(options =>
 });
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+// µù¥U SelectionService
+builder.Services.AddScoped<SelectionService>();
 
 builder.Services.AddDbContext<VocalSpaceDbContext>(
         options => options.UseSqlServer(connectionString));
