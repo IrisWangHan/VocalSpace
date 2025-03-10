@@ -52,7 +52,7 @@ searchText.addEventListener('keydown', function (e) {
     if (e.key === 'Enter') {
         console.log('searchText.value:', searchText.value);
         search();
-        //window.location.href = '/search?q=' + searchText.value;
+        
     }
 });
 
