@@ -5,11 +5,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace VocalSpace.Controllers
 {
-    
 
 public class searchController : Controller
     {
         private readonly VocalSpaceDbContext _context;
+        private string? q;
+        private string? type;
+        //  靜態全域變數result
+        private static List<Song>? result;
         public searchController(VocalSpaceDbContext context)
         {
             _context = context;
@@ -20,16 +23,18 @@ public class searchController : Controller
             string? q = Request.Query["q"];
             
             
-            List<Song> result = await _context.Songs.Where(data => data.SongName.Contains(q!)).ToListAsync();
-            //   找不到搜尋結果 或 透過URL直接進入searchAll頁面，導向searchError頁面
+            result = await _context.Songs.Where(data => data.SongName.Contains(q!)).ToListAsync();
 
+            //   找不到搜尋結果 或 透過URL直接進入searchAll頁面，導向searchError頁面
             var resultView = ( result.Count == 0 || q == null ) ? View("searchError") : View("searchAll", result);
             return resultView;
         }
 
         public IActionResult searchSongs()
         {
-            return View();
+           // var resultView = (result!.Count == 0 || q == null) ? View("searchError") : View("searchSongs", result);
+            
+            return View(result);
         }
 
         public IActionResult searchSonglists()
@@ -89,6 +94,25 @@ public class searchController : Controller
                 Console.WriteLine($"發生錯誤: {ex.Message}");
                 return StatusCode(500, "伺服器錯誤");
             }
+            q = Request.Query["q"];
+            type = Request.Query["type"];
+            //Console.WriteLine(Request.Query["q"]);
+            List<Song> result = await _context.Songs.Where(data => data.SongName.Contains(q!)).ToListAsync();
+            Console.WriteLine(result);
+            switch (type)
+            {
+                case "All":
+                    return RedirectToAction("searchAll");
+                case "Song":
+                    return RedirectToAction("searchSongs");
+                case "Songlist":
+                    return RedirectToAction("searchSonglists");
+                case "artist":
+                    return RedirectToAction("searchArtists");
+                default:
+                    return RedirectToAction("searchAll");
+            }
+            
         }
 
 

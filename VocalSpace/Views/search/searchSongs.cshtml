@@ -1,10 +1,8 @@
 ﻿
-@{
-}
-
 
 @{
 }
+@model List<Song>
 <link rel="stylesheet" href="~/css/search.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/song.css" asp-append-version="true" />
 
@@ -32,8 +30,8 @@
                 </li>
             </ul>
             <div class="tab-content">
-                @await Html.PartialAsync("_partialViewSong")
-                @await Html.PartialAsync("_partialViewSong")
+                @await Html.PartialAsync("_partialViewSong", Model)
+                @await Html.PartialAsync("_partialViewSong", Model)
                 
             </div>
             <div class="mt-5 mb-5 text-center">
