@@ -1,11 +1,12 @@
 ﻿@{
-	var isLogin = true;
+	var isLogin = Context.Session.GetString("IsLoggedIn") == "true"; 
+
 	var musicList = new[] {
 		new { id = "001", name = "Sweet Day", artist = "Artist 1" },
 		new { id = "002", name = "Lively Night", artist = "Artist 2" },
 		new { id = "003", name = "Dreamy Melody", artist = "Artist 3" }
 	};
-	TempData["isLogin"] = isLogin;
+	// TempData["isLogin"] = isLogin;
 }
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
@@ -79,7 +80,7 @@
 								<a class="header__menu-item--theme" href="/Collection/like">蒐藏庫</a>
 							</li>
 							<li class="nav-item header__menu-item header__menu-item2">
-								<button type="button" class=" header__btn-logout btn-cancel--theme ">登出</button>
+								<button type="button" id="logoutBtn" class=" header__btn-logout btn-cancel--theme ">登出</button>
 							</li>
 						}
 						else
@@ -424,6 +425,16 @@
 					// audioPlayer[0].play(); // 自動播放音樂
 				});
 
+				// 當點擊登出，會 clear session
+				$(".header__btn-logout").click(function () {
+					$.post("/Accounts/Logout", function () {
+						console.log("Logout API called successfully!");
+						window.location.href = "/Home/Index"; // ✅ 登出後導向登入頁面
+							}).fail(function () {
+						console.error("Failed to call Logout API.");
+					});
+				});
+
 			// 時間軸計時器
 			let songTimer;
 			let TimeText;
@@ -468,7 +479,8 @@
 						$('#songTimeText').text('0' + min + ':' + seconds);
 					}
 				}
-			})
+
+		})
 	</script>
 	@await RenderSectionAsync("Scripts", required: false)
 </body>
