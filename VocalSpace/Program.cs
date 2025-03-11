@@ -12,6 +12,7 @@ builder.Services.AddSession();
 builder.Services.AddSession(options =>
 {
     options.Cookie.Name = ".VocalSpace.Session";
+    options.Cookie.HttpOnly = true;         // 只允許伺服器存取 Cookie，提升安全性
     options.IdleTimeout = TimeSpan.FromMinutes(30);
 });
 
