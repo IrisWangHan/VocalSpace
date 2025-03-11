@@ -9,16 +9,17 @@
 
 .banner__left {
     width: 45%;
+    text-align: right; /*讓大聲公圖片靠右對齊*/
+    position: relative; /*讓按鈕對齊*/
 }
 
 .banner__right {
     width: 55%;
+    display: flex;
+    align-items: center;
 }
 
-.banner__left {
-    text-align: right; /*讓大聲公圖片靠右對齊*/
-    position: relative; /*讓按鈕對齊*/
-}
+
 
 .banner__left-btn {
     width: 200px;
@@ -45,11 +46,23 @@
     flex-wrap: wrap;
     padding: 10px;
 }
-
+@media (max-width: 768px) {
+    .content__header {
+        flex-direction: column;
+        padding: 5%;
+    }
+}
+@media (max-width: 576px) {
+    .content__header {
+        align-items:center;
+        width:90%;
+    }
+}
 .content__header-title {
-    width: 300px;
+    /*width: 300px;*/
     height: 100%;
     color: black;
+    flex:1;
 }
 
     .content__header-title h1 {
@@ -76,7 +89,7 @@
     max-width: 300px;
     width: 100%;
     height: 100%;
-    border: 2px solid black;
+    border: 1px solid #b8b1b1;
     border-radius: 5px;
     display: flex;
     flex-direction: column;
@@ -84,9 +97,16 @@
     align-items: flex-start;
     padding: 10px;
     color: black;
-    background-color:ghostwhite;
+    /*background-color:ghostwhite;*/
 }
 
+@media (max-width: 768px) {
+    .content__header-aside {
+        max-width: 100%;
+        padding: 6% 10%;
+        margin-top: 30px
+    }
+}
 
     .content__header-aside div {
         display: flex;
@@ -97,18 +117,20 @@
 
         .content__header-aside div h5 {
             font-weight: bold;
+            text-align:center;
         }
 
         .content__header-aside div p {
             /*padding: 10px 0px 0px 10px;*/
             font-weight: bold;
             color: red;
+            width:100%;
         }
 
         .content__header-aside div .btn {
-            height: 30px;
-            margin-top: auto;
-            width: 150px;
+            height: 45px;
+            /*margin-top: auto;*/
+            width: auto;
         }
 
 .content__menu--click {
@@ -167,6 +189,7 @@
 @media (max-width: 768px) {
     .content {
         padding: 20px 40px;
+        align-content:center;
     }
 }
 
@@ -229,7 +252,10 @@
         font-size: var(--fsize-menu);
     }
 
-    .content__header-title h1 {
+ /*   .content__header-title h1 {
         font-size: 18px;
-    }
+    }*/
+}
+.googleAdd{
+    background-color:#00bf63;
 }

@@ -6,11 +6,13 @@
 		<button class="btn btn-submit--theme banner__left-btn">前往徵選</button>
 	</div>
 	<div class="banner__right">
-		<img class="banner__right-img" src="@(Model.SelectionCoverPath)" />
+		<img class="banner__right-img" src="@Url.Content("~/image/selection/bannerContent.png")" />
+		
 	</div>
 </section>
 
 <section class="content ">
+	
 	<div class="content__header">
 		<div class="content__header-title">
 			<h1>@(Model.Title) </h1>
@@ -37,7 +39,7 @@
 					<h5>徵選活動日程</h5>
 					<p>@(Model.StartDate) 開始</p>
 					<p>@(Model.EndDate) 結束</p>
-					<button class="btn btn-submit--theme">加入google行事曆</button>
+					<button class="btn btn-submit--theme googleAdd">加入google行事曆</button>
 				</div>
 			}
 		</div>
