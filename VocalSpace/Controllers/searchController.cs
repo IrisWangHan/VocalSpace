@@ -14,10 +14,9 @@ public class searchController : Controller
         private string? q;
         private string? type;
         //  靜態全域變數result
-        private static List<Song> result;
-        //  
-        Song Song1 = new Song();
-        User user1 = new User();
+        private static List<SongInfoDTO>? result;
+        
+        
         public searchController(VocalSpaceDbContext context)
         {
             _context = context;
@@ -28,17 +27,21 @@ public class searchController : Controller
             string? q = Request.Query["q"];
 
 
-            //List<SongInfoDTO> result = await _context.Songs.Join(
-            //        _context.Users,
-            //        song => song.Artist,
-            //        user => user.UserId,
-            //        (song, user) => new SongInfoDTO
-            //        //   Model 轉成 DTO 傳到前端
-            //        {
+            //  搜尋關鍵字符合的歌曲和歌手
+            //  SongsTable Join UsersTable，將資料透過DTO物件傳遞到前端
+            result = await _context.Songs.Join(
+                    _context.Users,
+                    song => song.Artist,
+                    user => user.UserId,
+                    (song, user) => new SongInfoDTO { SongName = song.SongName, UserName = user.UserName, CoverPhotoPath = song.CoverPhotoPath, LikeCount = song.LikeCount })
+                .Where( data => data.SongName!.Contains(q!) || data.UserName!.Contains(q!))
+                .OrderByDescending(data => data.SongName == q)
+                .ThenByDescending(data => data.UserName == q)
+                .ThenByDescending(data => data.SongName!.Contains(q!))
+                .ThenByDescending(data => data.UserName!.Contains(q!))
+                .ToListAsync();
 
-            //        }).Where(data => data.SongName.Contains(q!) || data.UserName!.Contains(q!)).ToListAsync();
-            result = await _context.Songs.Where(data => data.SongName.Contains(q!)).ToListAsync();
-
+            
             //   找不到搜尋結果 或 透過URL直接進入searchAll頁面，導向searchError頁面
             var resultView = ( result.Count == 0 || q == null ) ? View("searchError") : View("searchAll", result);
             return resultView;
