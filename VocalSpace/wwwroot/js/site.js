@@ -200,3 +200,73 @@ $(document).on("click", ".btn-play", function () {
     let songName = $(this).data("songname");  // 取得歌曲名稱
     alert(`現正播放：${songName}`);
 });
+
+//我也想去按鈕
+$(document).on("click", "#btn-interested", function () {
+    let activityId = $(this).data("activity-id");
+    let button = $(this);
+    $.ajax({
+        url: `/Activity/ToggleInterested/${activityId}`,
+        type: "POST",
+        success: function (res) {
+            if (res.success) {
+                // Controller返回 success interested interestedCount message
+                if (res.interested) {
+                    button.addClass("selected");
+                } else {
+                    button.removeClass("selected");
+                }
+
+                // 更新興趣人數
+                $('#interested-count').text(res.interestedCount);
+
+                // 如果是加入感興趣，顯示分享模態框
+                if (res.interested) {
+                    $('#ShareActivityModal').modal('show');
+                }
+            } else {
+                alert(res.message || "操作失敗");
+            }
+        },
+        error: function (xhr) {
+            if (xhr.status === 401) {
+                alert(xhr.responseJSON?.message || "請先登入！");
+                window.location.href = "/Accounts/Login";
+            }
+            else
+                alert(xhr.responseJSON?.message || "發生錯誤，請稍後再試！");
+        }
+    });
+});
+
+// Write your JavaScript code.
+
+//  搜尋功能
+let searchText = document.querySelector('.header__search-input');
+
+searchText.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') {
+        console.log('searchText.value:', searchText.value);
+        search();
+    }
+});
+
+function search() {
+    fetch("/search/searchAll/?q=" + searchText.value).
+        then(response => {
+            //  response.ok 為 true
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            console.log(response.url);
+            //  得到View的URL
+            return response.url;
+        }).
+        then(responseUrl => {
+            //  導向到搜尋結果url
+            window.location.assign(responseUrl);
+        }).
+        catch(error => {
+            console.error("載入歌曲失敗");
+        })
+}
