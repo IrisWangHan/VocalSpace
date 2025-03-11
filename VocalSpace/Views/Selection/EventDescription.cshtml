@@ -1,39 +1,28 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-	var deadline = "2024-01-01";
-	var joinState = "已截止";
-	var voteState = "徵選中";
-	var descriptionContent = @"For more information on enabling MVC for empty projects For more
-				information on enabling MVC for empty projects For more information on enabling MVC for empty projects
-				information on enabling MVC for empty projects For more information on enabling MVC for empty projects
-				information on enabling MVC for empty projects For more information on enabling MVC for empty projects
-				information on enabling MVC for empty projects For more information on enabling MVC for empty projects";
-}
+﻿@model VocalSpace.Models.Test.Selection.SelectionListDTO
+
 <section class="banner">
 	<div class="banner__left">
 		<img class="banner__left-img" src="@Url.Content("~/image/selection/bannerLightning.png")" />
 		<button class="btn btn-submit--theme banner__left-btn">前往徵選</button>
 	</div>
 	<div class="banner__right">
-		<img class="banner__right-img" src="@Url.Content("~/image/selection/bannerContent.png")" />
+		<img class="banner__right-img" src="@(Model.SelectionCoverPath)" />
 	</div>
 </section>
 
 <section class="content ">
 	<div class="content__header">
 		<div class="content__header-title">
-			<h1>活動標題 </h1>
+			<h1>@(Model.Title) </h1>
 			<br />
-			<p>徵選截止日:@deadline</p>
+			<p>徵選截止日:@(Model.EndDate) </p>
 			<p>
-				徵選狀態: <span style="color:@(joinState == "徵選中" ? "red" : "gray")">@joinState</span>
+				徵選狀態: <span style="color:@(Model.JoinState == "徵選中" ? "red" : "gray")">@(Model.JoinState)</span>
 			</p>
 			<p>
-				投票狀態: <span style="color:@(voteState == "徵選中" ? "red" : "gray")">@voteState</span>
+				投票狀態: <span style="color:@(Model.VoteState == "徵選中" ? "red" : "gray")">@(Model.VoteState)</span>
 			</p>
-			<a href="/" class="btn btn-submit--theme">我要參加徵選</a>
+			<a href="/selection/Apply/@(Model.SelectionId)" class="btn btn-submit--theme">我要報名</a>
 		</div>
 		<div class="content__header-aside">
 			@if (ViewBag.section != null && ViewBag.section.ToString() == "EventDescription")

@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using VocalSpace.Models;
 using VocalSpace.Models.Test.Selection;
+using VocalSpace.Services.Selection;
 
 namespace VocalSpace.Controllers
 {
@@ -12,13 +15,20 @@ namespace VocalSpace.Controllers
         /// <param name="selectionService"></param>
         public SelectionController(SelectionService selectionService)
         {
-            return View();
+             _selectionService = selectionService;
         }
-        public IActionResult EventDescription()
+        private readonly SelectionService _selectionService;
+
+
+        /// <summary>
+        /// 獲取活動列表
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IActionResult> Index()
         {
             var selections = await _selectionService.GetSelectionsAsync();
             return View(selections);
-            return View(selections);
+        }
 
         /// <summary>
         /// 活動詳情
@@ -50,11 +60,12 @@ namespace VocalSpace.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         public async Task<IActionResult> Apply(int id)
-        public async Task<IActionResult> Apply(int id)
+        {
             var selections = await _selectionService.GetFormData(id);
             return View(selections);
-            return View(selections);
         }
+
+
         [HttpPost]
         public IActionResult SubmitApplication([FromForm] SelectionFormDTO model)
         {
