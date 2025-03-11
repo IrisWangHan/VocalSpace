@@ -27,7 +27,7 @@ public partial class Song
 
     public byte SongCategoryId { get; set; }
 
-    public string SongName { get; set; } = null!;
+    public string? SongName { get; set; } = null!;
 
     public int? PlayCount { get; set; }
 

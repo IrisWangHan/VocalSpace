@@ -2,26 +2,20 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
+    
 }
-
+@model List<Song>
 @* 總共3次 *@
 @for (int k = 0;k < Model.Count; k++)
 {
     <div class="ranking-item">
-        <img src="~/image/idol.jpg" class="cover-block" alt="song cover">
+        <img src="@Model[k].CoverPhotoPath" class="cover-block" alt="song cover">
         <div class="info">
             <p><a href="#">@Model[k].SongName</a></p>
-            <p><a class="artist" href="#">@Model[k].Artist</a></p>
+            <p><a class="artist" href="#">@Model[k].SongName</a></p>
         </div>
-        @await Html.PartialAsync("_SongButtonModal")
+        @await Html.PartialAsync("_SongButtonModal", Model[k].LikeCount)
+        
     </div>
 }
 
-<div class="ranking-item">
-    <img src="~/image/idol.jpg" class="cover-block" alt="song cover">
-    <div class="info">
-        <p><a href="#">打不通的電話</a></p>
-        <p><a class="artist" href="#">Sean Ko 高翔</a></p>
-    </div>
-    @await Html.PartialAsync("_SongButtonModal")
-</div>

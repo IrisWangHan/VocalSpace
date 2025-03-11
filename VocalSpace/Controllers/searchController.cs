@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using VocalSpace.Models;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol;
+using VocalSpace.Models.SongInfo;
 
 
 namespace VocalSpace.Controllers
@@ -12,7 +14,10 @@ public class searchController : Controller
         private string? q;
         private string? type;
         //  靜態全域變數result
-        private static List<Song>? result;
+        private static List<Song> result;
+        //  
+        Song Song1 = new Song();
+        User user1 = new User();
         public searchController(VocalSpaceDbContext context)
         {
             _context = context;
@@ -21,8 +26,17 @@ public class searchController : Controller
         public async Task<IActionResult> searchAll()
         {
             string? q = Request.Query["q"];
-            
-            
+
+
+            //List<SongInfoDTO> result = await _context.Songs.Join(
+            //        _context.Users,
+            //        song => song.Artist,
+            //        user => user.UserId,
+            //        (song, user) => new SongInfoDTO
+            //        //   Model 轉成 DTO 傳到前端
+            //        {
+
+            //        }).Where(data => data.SongName.Contains(q!) || data.UserName!.Contains(q!)).ToListAsync();
             result = await _context.Songs.Where(data => data.SongName.Contains(q!)).ToListAsync();
 
             //   找不到搜尋結果 或 透過URL直接進入searchAll頁面，導向searchError頁面
@@ -32,9 +46,8 @@ public class searchController : Controller
 
         public IActionResult searchSongs()
         {
-           // var resultView = (result!.Count == 0 || q == null) ? View("searchError") : View("searchSongs", result);
-            
-            return View(result);
+           // var resultView = (result!.Count == 0 || q == null) ? View("searchError") : View("searchSongs", result);         
+            return View();
         }
 
         public IActionResult searchSonglists()
