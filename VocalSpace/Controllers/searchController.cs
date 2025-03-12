@@ -2,7 +2,7 @@
 using VocalSpace.Models;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol;
-using VocalSpace.Models.SongInfo;
+using VocalSpace.Models.SearchViewModel;
 
 
 namespace VocalSpace.Controllers
@@ -13,10 +13,12 @@ public class searchController : Controller
         private readonly VocalSpaceDbContext _context;
         private string? q;
         private string? type;
-        //  靜態全域變數result
-        private static List<SearchInfoDTO>? result;
+        //  靜態全域變數result，3種LINQ查詢結果的DTO物件
         
         
+        private static SearchViewModel? AllResult = new SearchViewModel ();
+
+
         public searchController(VocalSpaceDbContext context)
         {
             _context = context;
@@ -25,15 +27,13 @@ public class searchController : Controller
         public async Task<IActionResult> searchAll()
         {
             string? q = Request.Query["q"];
-
-
-            //  搜尋關鍵字符合的歌曲和歌手
+            //  搜尋關鍵字符合的歌曲
             //  SongsTable Join UsersTable，將資料透過DTO物件傳遞到前端
-            result = await _context.Songs.Join(
+            AllResult!.Songs = await _context.Songs.Join(
                     _context.Users,
                     song => song.Artist,
                     user => user.UserId,
-                    (song, user) => new SearchInfoDTO{ SongName = song.SongName, UserName = user.UserName, CoverPhotoPath = song.CoverPhotoPath, LikeCount = song.LikeCount })
+                    (song, user) => new SongInfoDTO { SongName = song.SongName, UserName = user.UserName, CoverPhotoPath = song.CoverPhotoPath, LikeCount = song.LikeCount })
                 .Where( data => data.SongName!.Contains(q!) || data.UserName!.Contains(q!))
                 .OrderByDescending(data => data.SongName == q)                 //  1.先搜尋歌曲名稱完全符合關鍵字
                 .ThenByDescending(data => data.UserName == q)                   //  2.歌手名稱完全符合關鍵字的歌曲
@@ -41,20 +41,29 @@ public class searchController : Controller
                 .ThenByDescending(data => data.UserName!.Contains(q!))     //   4.有包含關鍵字的歌手名稱的歌曲
                 .ToListAsync();
 
-            
-            //   找不到搜尋結果 或 透過URL直接進入searchAll頁面，導向searchError頁面
-            var resultView = ( result.Count == 0 || q == null ) ? View("searchError") : View("searchAll", result);
-            return resultView;
-        }
+            var ArtistResult = from users in _context.Users
+                               join infos in _context.UsersInfos on users.UserId equals infos.UserId
+                               where users.UserName!.Contains(q!)
+                               select new ArtistDTO { AvatarPath = infos.AvatarPath, UserName = users.UserName };
 
+               AllResult.Artists = await ArtistResult.OrderByDescending(data => data.UserName == q)
+                .ThenByDescending(data => data.UserName!.Contains(q!))
+                .ToListAsync();
+
+            //   找不到搜尋結果 或 透過URL直接進入searchAll頁面，導向searchError頁面
+            //var resultView = ( result.Count == 0 || q == null ) ? View("searchError") : View("searchAll", result);
+            return View(AllResult);
+        }
+        [HttpGet]
         public IActionResult searchSongs()
         {
-           // var resultView = (result!.Count == 0 || q == null) ? View("searchError") : View("searchSongs", result);         
-            return View();
+
+            return View();       
         }
 
         public IActionResult searchSonglists()
         {
+
             return View();
         }
 
