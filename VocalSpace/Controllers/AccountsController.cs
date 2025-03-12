@@ -2,6 +2,7 @@
 using VocalSpace.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
+using VocalSpace.Filters;
 
 
 namespace VocalSpace.Controllers
@@ -17,6 +18,7 @@ namespace VocalSpace.Controllers
 
         // 確保頁面刷新時拿到最新狀態
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+        [RedirectIfAuthenticated]
         public IActionResult Login()
         {
             return View();
@@ -25,16 +27,19 @@ namespace VocalSpace.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string account, string password)
         {
-            var user = await _context.Users.Where(u => u.Account == account).FirstOrDefaultAsync();
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Account == account || u.UsersInfo.Email == account);
 
-            if( user != null && user.Password == password)
+            if( user != null  && user.Password == password)
             {
                 HttpContext.Session.SetString("UserAccount", account);
                 HttpContext.Session.SetString("IsLoggedIn", "true");
+                Console.WriteLine("登入成功!!");
                 return RedirectToAction("Index", "Home");
             }
-            TempData["Error"] = "帳號或密碼錯誤";
-            Console.WriteLine(TempData["Error"]);
+            
+            TempData["loginFailMsg"] = "帳號或密碼錯誤";
+            Console.WriteLine(TempData["loginFailMsg"]);
             return View();
         }
         [HttpPost]
@@ -45,18 +50,23 @@ namespace VocalSpace.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [RedirectIfAuthenticated]
         public IActionResult ForgetPassword()
         {
             return View();
-         }
+        }
+        [RedirectIfAuthenticated]
         public IActionResult ForgetPasswordDone()
         {
             return View();
         }
+
         public IActionResult ResetPassword()
         {
             return View();
         }
+
+        [RedirectIfAuthenticated]
         public IActionResult Signup()
         {
             return View();

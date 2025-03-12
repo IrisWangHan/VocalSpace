@@ -429,7 +429,7 @@
 				$(".header__btn-logout").click(function () {
 					$.post("/Accounts/Logout", function () {
 						console.log("Logout API called successfully!");
-						window.location.href = "/Home/Index"; // ✅ 登出後導向登入頁面
+						window.location.href = "/Home/Index";
 							}).fail(function () {
 						console.error("Failed to call Logout API.");
 					});

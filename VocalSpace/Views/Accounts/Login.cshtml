@@ -1,8 +1,7 @@
 ﻿@{
 	Layout = "_AccountLayout";
-	var errorMessage = "";
-	errorMessage = ViewBag.Error;
-	Console.WriteLine(errorMessage);
+	var loginFail = TempData.ContainsKey("loginFailMsg");
+
 }
 
 
@@ -19,8 +18,13 @@
 			</span>
 		</div>
 	</div>
+	@if (loginFail)
+	{
+		<div class="form-group mt-2">
+			<div class="login-fail-msg">登入失敗，請輸入正確的帳號與密碼</div>
+		</div>
+	}
 	<div class="form-group form-check d-flex justify-content-between align-items-center">
-	<div class="invalid-feedback">登入失敗，請輸入正確的帳號與密碼</div>
 		<div class="d-flex justify-content-between">
 			<input type="checkbox" class="form-check-input" name="remember_me" id="remember_me" checked="">
 			<label class="form-check-label">保持登入狀態</label>
