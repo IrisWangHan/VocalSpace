@@ -141,7 +141,7 @@ namespace VocalSpace.Services
                 //        取得總分頁數            PaginationSongs.PaginationCount
                 //        第 [起始頁數]           PaginationSongs.StartPageNumber
                 //        第 [結束頁數]           PaginationSongs.EndPageNumber
-                var PaginationSongs = _pagination.GetPaginationToLinq(songsList, currentPage, pageSize);
+                var PaginationSongs = _pagination.GetPaginationToList(songsList, currentPage, pageSize);
 
                 var SelectionList = new SelectionListViewModel
                 {

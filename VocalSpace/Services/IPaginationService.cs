@@ -3,7 +3,7 @@
     //未來如果要換成其他分頁套件，只需要修改這個Service
     public interface IPaginationService
     {
-        PaginationResult<T> GetPaginationToLinq<T>(List<T> dataList, int currentPage, int pageSize);
+        PaginationResult<T> GetPaginationToList<T>(List<T> dataList, int currentPage, int pageSize);
     }
 
     /// <summary>
@@ -11,7 +11,7 @@
     /// </summary>
     public class PaginationService : IPaginationService
     {
-        public PaginationResult<T> GetPaginationToLinq<T>(List<T> dataList, int currentPage, int pageSize)
+        public PaginationResult<T> GetPaginationToList<T>(List<T> dataList, int currentPage, int pageSize)
         {
 
             var DataList = dataList
