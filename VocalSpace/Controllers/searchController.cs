@@ -14,7 +14,7 @@ public class searchController : Controller
         private string? q;
         private string? type;
         //  靜態全域變數result
-        private static List<SongInfoDTO>? result;
+        private static List<SearchInfoDTO>? result;
         
         
         public searchController(VocalSpaceDbContext context)
@@ -33,12 +33,12 @@ public class searchController : Controller
                     _context.Users,
                     song => song.Artist,
                     user => user.UserId,
-                    (song, user) => new SongInfoDTO { SongName = song.SongName, UserName = user.UserName, CoverPhotoPath = song.CoverPhotoPath, LikeCount = song.LikeCount })
+                    (song, user) => new SearchInfoDTO{ SongName = song.SongName, UserName = user.UserName, CoverPhotoPath = song.CoverPhotoPath, LikeCount = song.LikeCount })
                 .Where( data => data.SongName!.Contains(q!) || data.UserName!.Contains(q!))
-                .OrderByDescending(data => data.SongName == q)
-                .ThenByDescending(data => data.UserName == q)
-                .ThenByDescending(data => data.SongName!.Contains(q!))
-                .ThenByDescending(data => data.UserName!.Contains(q!))
+                .OrderByDescending(data => data.SongName == q)                 //  1.先搜尋歌曲名稱完全符合關鍵字
+                .ThenByDescending(data => data.UserName == q)                   //  2.歌手名稱完全符合關鍵字的歌曲
+                .ThenByDescending(data => data.SongName!.Contains(q!))     //  3.有包含關鍵字的歌曲名稱
+                .ThenByDescending(data => data.UserName!.Contains(q!))     //   4.有包含關鍵字的歌手名稱的歌曲
                 .ToListAsync();
 
             
