@@ -13,11 +13,12 @@ namespace VocalSpace.Controllers
         /// 第一步:建立DTO  第二步:建立業務邏輯Services   第三步: 建立Controller 處理請求
         /// </summary>
         /// <param name="selectionService"></param>
+        private readonly SelectionService _selectionService;
         public SelectionController(SelectionService selectionService)
         {
              _selectionService = selectionService;
         }
-        private readonly SelectionService _selectionService;
+
 
 
         /// <summary>
