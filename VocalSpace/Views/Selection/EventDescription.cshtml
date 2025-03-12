@@ -78,17 +78,17 @@
 				</div>
 				<div aria-label="Page navigation example">
 					<ul class="pagination">
-						<li class="page-item">
-							<a class="page-link" href="#" aria-label="Previous">
+						<li class="page-item page-pre_navigation" data-selectionid="@(Model.SelectionId)" >
+							<a class="page-link" aria-label="Previous">
 								<span aria-hidden="true">&laquo;</span>
 							</a>
 						</li>
-						@for (var i = 1; i <= Model.PaginationCount;i++)
+						@for (var i = 1; i <= Model.PaginationCount; i++)
 						{
-							<li class="page-item page-item_navigation" data-selectionid="@(Model.SelectionId)" data-currentpage="@(i)"><a class="page-link" >@(i)</a></li>
+							<li class="page-item page-item_navigation" data-selectionid="@(Model.SelectionId)" data-currentpage="@(i)"><a class="page-link">@(i)</a></li>
 						}
-						<li class="page-item">
-							<a class="page-link" href="#" aria-label="Next">
+						<li class="page-item page-next_navigation" data-selectionid="@(Model.SelectionId)" data-paginationCount="@(Model.PaginationCount)">
+							<a class="page-link" aria-label="Next">
 								<span aria-hidden="true">&raquo;</span>
 							</a>
 						</li>
@@ -96,17 +96,62 @@
 				</div>
 			</div>
 		}
-
 	</div>
 </section>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 @section Scripts {
 	<script>
 		$(document).ready(function() {
-			$(".page-item_navigation").on("click", function() {
+			let currentPage = 1;
+			let selectionId;
+			let paginationCount;
+			//上一頁
+			$(".page-pre_navigation").on("click",function(){
+				selectionId = $(this).attr("data-selectionid");
+			    currentPage = currentPage <=1 ? currentPage=1 : currentPage-1;
 
-				var selectionId = $(this).data("selectionid"); 
-				var currentPage = $(this).data("currentpage"); 
+				 // 發送 AJAX 請求
+				$.ajax({
+					url: `/Selection/GetWorks/${selectionId}/${currentPage}`,
+					type: 'GET',  // Razor Page 通常使用 GET 來獲取數據
+					success: function(response) {
+						 $("#worksContent").html(response);  // 更新內容
+					},
+					error: function(xhr, status, error) {
+						alert("請求失敗，請稍後再試。"+error);
+					}
+				});
+			});
+			//下一頁
+			$(".page-next_navigation").on("click",function(){
+				   selectionId = $(this).attr("data-selectionid");
+		           paginationCount = $(this).attr("data-paginationCount");
+
+
+				console.log(currentPage);
+				console.log(paginationCount);
+				currentPage = currentPage >= paginationCount ? currentPage : currentPage + 1;
+				console.log(currentPage);
+				// 發送 AJAX 請求
+				$.ajax({
+					url: `/Selection/GetWorks/${selectionId}/${currentPage}`,
+					type: 'GET',  // Razor Page 通常使用 GET 來獲取數據
+					success: function(response) {
+						console.log("A");
+						 $("#worksContent").html(response);  // 更新內容
+						// console.log(response);
+					},
+					error: function(xhr, status, error) {
+						alert("請求失敗，請稍後再試。"+error);
+					}
+				});
+
+					});
+
+			//點選頁數
+			$(".page-item_navigation").on("click", function() {
+				 selectionId = $(this).attr("data-selectionid");
+				 paginationCount = $(this).attr("data-currentpage");
 
 				// 發送 AJAX 請求
 				$.ajax({
@@ -123,6 +168,7 @@
 				});
 			});
 		});
+		
 	</script>
 }
 
