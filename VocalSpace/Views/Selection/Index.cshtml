@@ -1,12 +1,4 @@
-﻿@* @{
-	var length = 5;
-	var joinState = "開放中";
-	var voteState = "開放中";
-} *@
-<!-- 指定模型類型為 Selection 的集合 -->
-@* @model IEnumerable<Selection> *@
-<!-- 指定模型類型為 SelectionDTO 的集合 -->
-@model IEnumerable<VocalSpace.Models.Test.Selection.SelectionListDTO>
+﻿@model IEnumerable<VocalSpace.Models.ViewModel.Selection.SelectionListViewModel>
 <section class="banner">
 	<div class="banner__left">
 		<img class="banner__left-img" src="@Url.Content("~/image/selection/bannerLightning.png")" />

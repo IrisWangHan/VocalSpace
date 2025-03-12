@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VocalSpace.Models;
-using VocalSpace.Models.Test.Selection;
-using VocalSpace.Services.Selection;
+using VocalSpace.Models.ViewModel.Selection;
+using VocalSpace.Services;
 
 namespace VocalSpace.Controllers
 {
@@ -47,11 +47,26 @@ namespace VocalSpace.Controllers
         /// [program.cs的設定]id:活動ID 由url取得
         /// </summary>
         /// <returns></returns>
+        [Route("Selection/GetWorks/{id}")]
         public async Task<IActionResult> GetWorks(int id)
         {
             var selections = await _selectionService.GetWorks(id);
             ViewBag.section = "Works";
             return View("EventDescription", selections); // 回傳部分視圖
+             
+        }
+
+        /// <summary>
+        /// 徵選現有作品 切換頁面
+        /// [program.cs的設定]id:活動ID 由url取得
+        /// </summary>
+        /// <returns></returns>
+        [Route("Selection/GetWorks/{id}/{currentPage?}")]
+        public async Task<IActionResult> GetWorks(int id, int currentPage = 1)
+        {
+            var selections = await _selectionService.GetWorks(id, currentPage);
+            ViewBag.section = "Works";
+            return PartialView("_CardPartial", selections?.Songs);
         }
 
         /// <summary>
@@ -67,11 +82,9 @@ namespace VocalSpace.Controllers
 
 
         [HttpPost]
-        public IActionResult SubmitApplication([FromForm] SelectionFormDTO model)
+        public IActionResult SubmitApplication([FromForm] SelectionFormViewModel model)
         {
             // 處理表單資料
-            var a= model;
-            var X = 1;
             return Json(new { success = true, message = "表單提交成功" });
         }
 

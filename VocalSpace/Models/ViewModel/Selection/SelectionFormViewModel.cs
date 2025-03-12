@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 
-namespace VocalSpace.Models.Test.Selection
+namespace VocalSpace.Models.ViewModel.Selection
 {
-    public class SelectionFormDTO
+    public class SelectionFormViewModel
     {
         [JsonProperty("userName")]
         public string? UserName { get; set; }
@@ -15,6 +15,4 @@ namespace VocalSpace.Models.Test.Selection
         public IFormFile? File { get; set; }
 
     }
-
 }
-

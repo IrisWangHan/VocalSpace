@@ -132,7 +132,10 @@
             /*margin-top: auto;*/
             width: auto;
         }
-
+.content__menu-item a {
+    display: inline-block;
+    width: 100%;
+}
 .content__menu--click {
     background-color: cornflowerblue;
 }
@@ -235,7 +238,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-wrap: wrap;
+    flex-direction: column;
 }
 
 @media (max-width: 576px) {

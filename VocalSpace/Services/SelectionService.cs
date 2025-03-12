@@ -1,27 +1,29 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using VocalSpace.Models;
-using VocalSpace.Models.Test.Selection;
+using VocalSpace.Models.ViewModel.Selection;
 
 
-namespace VocalSpace.Services.Selection
+namespace VocalSpace.Services
 {
     public class SelectionService
     {
         //第二步: 建立Service 處理業務邏輯
         private readonly VocalSpaceDbContext _context;
+        private readonly IPaginationService _pagination;
 
-        public SelectionService(VocalSpaceDbContext context)
+        public SelectionService(VocalSpaceDbContext context, IPaginationService pagination )
         {
             _context = context;
+            _pagination = pagination;
         }
 
-        public async Task<List<SelectionListDTO>?> GetSelectionsAsync()
+        public async Task<List<SelectionListViewModel>?> GetSelectionsAsync()
         {
             try
             {
                 return await _context.Selections
-                .Select(s => new SelectionListDTO
+                .Select(s => new SelectionListViewModel
                 {
                     Title = s.Title,
                     SelectionCoverPath = s.SelectionCoverPath,
@@ -38,13 +40,13 @@ namespace VocalSpace.Services.Selection
                 return null;
             }
         }
-        public async Task<SelectionListDTO?> GetEventDescriptionAsync(int? id)
+        public async Task<SelectionListViewModel?> GetEventDescriptionAsync(int? id)
         {
             try
             {
                 return await _context.Selections
                     .Where(s => s.SelectionId == id)
-                    .Select(s => new SelectionListDTO
+                    .Select(s => new SelectionListViewModel
                     {
                         Title = s.Title,
                         SelectionCoverPath = s.SelectionCoverPath,
@@ -85,32 +87,42 @@ namespace VocalSpace.Services.Selection
         }
 
 
-        public async Task<SelectionListDTO?> GetWorks(int? id)
+        public async Task<SelectionListViewModel?> GetWorks(int? id, int currentPage=1)
         {
             try
             {
+                //每頁顯示筆數
+                int pageSize = 10;
                 var query = from A in _context.SelectionDetails
                             join B in _context.Songs on A.SongId equals B.SongId
                             join C in _context.Selections on A.SelectionId equals C.SelectionId
-                            select new { 
-                                SelectionDetailID =A.SelectionDetailId, 
-                                VoteCount=A.VoteCount, 
-                                CoverPhotoPath=B.CoverPhotoPath,
-                                SongDescription= B.SongDescription,
-                                SongName = B.SongName,
-                                LikeCount = B.LikeCount,
-                                SongPath = B.SongPath,
-                                StartDate=C.StartDate,
-                                EndDate=C.EndDate,
-                                VotingStartDate=C.VotingStartDate,
-                                VotingEndDate=C.VotingEndDate,
-                                Title=C.Title
+                            select new
+                            {
+                                SelectionDetailID = A.SelectionDetailId,
+                                A.VoteCount,
+                                B.CoverPhotoPath,
+                                B.SongDescription,
+                                B.SongName,
+                                B.LikeCount,
+                                B.SongPath,
+                                C.StartDate,
+                                C.EndDate,
+                                C.VotingStartDate,
+                                C.VotingEndDate,
+                                C.Title
                             };
-                var queryList = await query.ToListAsync(); // 將查詢結果轉換為列表
-                List<SongDTO> songsList = new List<SongDTO>();
+                // 排序
+                var sortedQuery = query.OrderBy(q => q.SelectionDetailID)  // 主要排序 升冪
+                                       .ThenBy(q => q.SongName);           // 次要排序 升冪
+
+                //非同步查詢並轉成清單 (查詢所有活動徵選作品)
+                var queryList = await sortedQuery.ToListAsync();           
+
+                // 建立歌曲清單 
+                List<SelectionSongs> songsList = new List<SelectionSongs>();
                 foreach (var item in queryList)
                 {
-                    songsList.Add(new SongDTO
+                    songsList.Add(new SelectionSongs
                     {
                         SelectionDetailId = item.SelectionDetailID,
                         VoteCount = item.VoteCount,
@@ -121,16 +133,26 @@ namespace VocalSpace.Services.Selection
                         SongPath = item.SongPath
                     });
                 }
+                // 配合前端分頁功能 傳入參數(List物件,當前的頁數,每頁顯示幾筆)
+                // =>會回傳整包的物件 使用方式如下:
+                //        取得該頁面的歌曲列表     PaginationSongs.DataList
+                //        取得資料歌曲總筆數       PaginationSongs.TotalPage
+                //        取得目前頁              PaginationSongs.CurrentPage
+                //        取得總分頁數            PaginationSongs.PaginationCount
+                //        第 [起始頁數]           PaginationSongs.StartPageNumber
+                //        第 [結束頁數]           PaginationSongs.EndPageNumber
+                var PaginationSongs = _pagination.GetPaginationToLinq(songsList, currentPage, pageSize);
 
-                var SelectionList = new SelectionListDTO
+                var SelectionList = new SelectionListViewModel
                 {
-                    Title  = queryList.FirstOrDefault()?.Title,
+                    Title = queryList.FirstOrDefault()?.Title,
                     StartDate = queryList.FirstOrDefault()?.StartDate,
                     EndDate = queryList.FirstOrDefault()?.EndDate,
                     JoinState = GetState(queryList.FirstOrDefault()?.StartDate, queryList.FirstOrDefault()?.EndDate),
                     VoteState = GetState(queryList.FirstOrDefault()?.VotingStartDate, queryList.FirstOrDefault()?.VotingEndDate),
-                    SelectionId = id.Value, 
-                    Songs = songsList 
+                    SelectionId = id.Value,
+                    Songs = PaginationSongs.DataList,
+                    PaginationCount= PaginationSongs.PaginationCount
                 };
 
                 return SelectionList;
@@ -140,13 +162,13 @@ namespace VocalSpace.Services.Selection
                 return null;
             }
         }
-        public async Task<SelectionListDTO?> GetFormData(int? id)
+        public async Task<SelectionListViewModel?> GetFormData(int? id)
         {
             try
             {
                 return await _context.Selections
                     .Where(s => s.SelectionId == id)
-                    .Select(s => new SelectionListDTO
+                    .Select(s => new SelectionListViewModel
                     {
                         Title = s.Title,
                         SelectionCoverPath = s.SelectionCoverPath,

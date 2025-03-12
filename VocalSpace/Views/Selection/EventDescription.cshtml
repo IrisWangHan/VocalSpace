@@ -1,4 +1,4 @@
-﻿@model VocalSpace.Models.Test.Selection.SelectionListDTO
+﻿@model VocalSpace.Models.ViewModel.Selection.SelectionListViewModel
 
 <section class="banner">
 	<div class="banner__left">
@@ -7,12 +7,12 @@
 	</div>
 	<div class="banner__right">
 		<img class="banner__right-img" src="@Url.Content("~/image/selection/bannerContent.png")" />
-		
+
 	</div>
 </section>
 
 <section class="content ">
-	
+
 	<div class="content__header">
 		<div class="content__header-title">
 			<h1>@(Model.Title) </h1>
@@ -70,9 +70,6 @@
 		{
 			<div class="content-section works" id="worksSection">
 				<h3 class="fw-bold">所有參加作品數:</h3>
-				@* 			@{
-				await Html.RenderPartialAsync("_CardPartial",Model.Songs);
-			} *@
 				<div id="worksContent">
 					<!-- 這裡顯示作品區塊的內容 -->
 					@{
@@ -86,9 +83,10 @@
 								<span aria-hidden="true">&laquo;</span>
 							</a>
 						</li>
-						<li class="page-item"><a class="page-link" href="#">1</a></li>
-						<li class="page-item"><a class="page-link" href="#">2</a></li>
-						<li class="page-item"><a class="page-link" href="#">3</a></li>
+						@for (var i = 1; i <= Model.PaginationCount;i++)
+						{
+							<li class="page-item page-item_navigation" data-selectionid="@(Model.SelectionId)" data-currentpage="@(i)"><a class="page-link" >@(i)</a></li>
+						}
 						<li class="page-item">
 							<a class="page-link" href="#" aria-label="Next">
 								<span aria-hidden="true">&raquo;</span>
@@ -101,74 +99,30 @@
 
 	</div>
 </section>
-<style>
-	.content__menu-item a{
-		display:inline-block;
-		width:100%;
-	}
-</style>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
+@section Scripts {
+	<script>
+		$(document).ready(function() {
+			$(".page-item_navigation").on("click", function() {
 
-<script>
-	// $(document).ready(function() {
-	// 		$(".content__menu-item").on("click", function () {
-	// 	// 先重置所有選單的背景色
-	// 	$(".content__menu-item").css({
-	// 		"background-color": "gray",
-	// 		"color": "aliceblue"
-	// 	});
+				var selectionId = $(this).data("selectionid"); 
+				var currentPage = $(this).data("currentpage"); 
 
-	// 	// 改變當前選單的背景色
-	// 	$(this).css({
-	// 		"background-color": "cornflowerblue",
-	// 		"color": "white"
-	// 	});
-
-	// 	let target = $(this).data("target");
-	// 	$(".content-section").hide();
-	// 	$(target).fadeIn();
-	// });
-	//  // 預設點擊第一個選單
-	// $(".content__menu-item:first").trigger("click");
-	// });
-
-
-	@*  $(document).ready(function() {
-		// 當點選「作品選單」時發送 AJAX 請求
-		$('#showWorks').click(function() {
-			$.ajax({
-				url: '@Url.Action("GetWorks", "YourController")', // 改成你的控制器名稱
-				type: 'GET',
-				data: { id: @Model.SelectionId }, // 傳遞選擇活動 ID
-				success: function(response) {
-					// 更新作品區塊內容
-					$('#worksContent').html(response);
-					$('#descriptionSection').hide(); // 隱藏說明區塊
-					$('#worksSection').show(); // 顯示作品區塊
-				}
+				// 發送 AJAX 請求
+				$.ajax({
+					url: `/Selection/GetWorks/${selectionId}/${currentPage}`,
+					type: 'GET',  // Razor Page 通常使用 GET 來獲取數據
+					success: function(response) {
+						console.log("A");
+						 $("#worksContent").html(response);  // 更新內容
+						// console.log(response);
+					},
+					error: function(xhr, status, error) {
+						alert("請求失敗，請稍後再試。"+error);
+					}
+				});
 			});
 		});
+	</script>
+}
 
-		// 當點選「說明選單」時顯示活動說明，並隱藏作品區塊
-		$('#showDescription').click(function() {
-			$('#descriptionSection').show(); // 顯示說明區塊
-			$('#worksSection').hide(); // 隱藏作品區塊
-		});
-
-			$(".content__menu-item").on("click", function () {
-		// 先重置所有選單的背景色
-		$(".content__menu-item").css({
-			"background-color": "gray",
-			"color": "aliceblue"
-		});
-
-		// 改變當前選單的背景色
-		$(this).css({
-			"background-color": "cornflowerblue",
-			"color": "white"
-		});
-
-		let target = $(this).data("target");
-		$(".content-section").hide(); *@
-	});
-</script>
