@@ -1,16 +1,5 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-	var deadline = "2024-01-01";
-	var joinState = "已截止";
-	var voteState = "徵選中";
-	var descriptionContent = @"For more information on enabling MVC for empty projects For more
-				information on enabling MVC for empty projects For more information on enabling MVC for empty projects
-				information on enabling MVC for empty projects For more information on enabling MVC for empty projects
-				information on enabling MVC for empty projects For more information on enabling MVC for empty projects
-				information on enabling MVC for empty projects For more information on enabling MVC for empty projects";
-}
+﻿@model VocalSpace.Models.ViewModel.Selection.SelectionListViewModel
+
 <section class="banner">
 	<div class="banner__left">
 		<img class="banner__left-img" src="@Url.Content("~/image/selection/bannerLightning.png")" />
@@ -18,95 +7,168 @@
 	</div>
 	<div class="banner__right">
 		<img class="banner__right-img" src="@Url.Content("~/image/selection/bannerContent.png")" />
+
 	</div>
 </section>
 
 <section class="content ">
+
 	<div class="content__header">
 		<div class="content__header-title">
-			<h1>活動標題 </h1>
+			<h1>@(Model.Title) </h1>
 			<br />
-			<p>徵選截止日:@deadline</p>
+			<p>徵選截止日:@(Model.EndDate) </p>
 			<p>
-				徵選狀態: <span style="color:@(joinState == "徵選中" ? "red" : "gray")">@joinState</span>
+				徵選狀態: <span style="color:@(Model.JoinState == "徵選中" ? "red" : "gray")">@(Model.JoinState)</span>
 			</p>
 			<p>
-				投票狀態: <span style="color:@(voteState == "徵選中" ? "red" : "gray")">@voteState</span>
+				投票狀態: <span style="color:@(Model.VoteState == "徵選中" ? "red" : "gray")">@(Model.VoteState)</span>
 			</p>
-			<a href="/" class="btn btn-submit--theme">我要參加徵選</a>
+			<a href="/selection/Apply/@(Model.SelectionId)" class="btn btn-submit--theme">我要報名</a>
 		</div>
 		<div class="content__header-aside">
-			<div class="content-section works">
-				<img src="/image//selection//voteAD.png" />
-			</div>
-			<div class="content-section descrition">
-				<h5>徵選活動日程</h5>
-				<p>@deadline 開始</p>
-				<p>@deadline 結束</p>
-				<button class="btn btn-submit--theme">加入google行事曆</button>
-			</div>
+			@if (ViewBag.section != null && ViewBag.section.ToString() == "EventDescription")
+			{
+				<div class="content-section works">
+					<img src="/image//selection//voteAD.png" />
+				</div>
+			}
+			@if (ViewBag.section != null && ViewBag.section.ToString() == "Works")
+			{
+				<div class="content-section descrition">
+					<h5>徵選活動日程</h5>
+					<p>@(Model.StartDate) 開始</p>
+					<p>@(Model.EndDate) 結束</p>
+					<button class="btn btn-submit--theme googleAdd">加入google行事曆</button>
+				</div>
+			}
 		</div>
 	</div>
 	<div class="content__menu  border-bottom">
 		<ul>
-			<li class="content__menu-item" data-target=".descrition">活動說明</li>
-			<li class="content__menu-item" data-target=".works">參加作品</li>
+			<li class="content__menu-item" data-target=".descrition" id="showDescription">
+				<a href="/selection/EventDescription/@(Model.SelectionId)">
+					活動說明
+				</a>
+			</li>
+			<li class="content__menu-item" data-target=".works" id="showWorks">
+				<a href="/selection/GetWorks/@(Model.SelectionId)">
+					參加作品
+				</a>
+			</li>
 		</ul>
 	</div>
 	<div class="content__card-area">
-		<div class="content-section descrition">
-			<p>活動說明</p><br /><br />
-			<span>@descriptionContent</span>
-		</div>
-		<div class="content-section works">
-			<h3 class ="fw-bold">所有參加作品數:</h3>
-			@{
-				await Html.RenderPartialAsync("_CardPartial");
-			}
-			<div aria-label="Page navigation example">
-				<ul class="pagination">
-					<li class="page-item">
-						<a class="page-link" href="#" aria-label="Previous">
-							<span aria-hidden="true">&laquo;</span>
-						</a>
-					</li>
-					<li class="page-item"><a class="page-link" href="#">1</a></li>
-					<li class="page-item"><a class="page-link" href="#">2</a></li>
-					<li class="page-item"><a class="page-link" href="#">3</a></li>
-					<li class="page-item">
-						<a class="page-link" href="#" aria-label="Next">
-							<span aria-hidden="true">&raquo;</span>
-						</a>
-					</li>
-				</ul>
+		@if (ViewBag.section != null && ViewBag.section.ToString() == "EventDescription")
+		{
+			<div class="content-section descrition" id="descriptionSection">
+				<p>活動說明</p><br /><br />
+				<span>@(Model.Description)</span>
 			</div>
-		</div>
-
+		}
+		@if (ViewBag.section != null && ViewBag.section.ToString() == "Works")
+		{
+			<div class="content-section works" id="worksSection">
+				<h3 class="fw-bold">所有參加作品數:</h3>
+				<div id="worksContent">
+					<!-- 這裡顯示作品區塊的內容 -->
+					@{
+						await Html.RenderPartialAsync("_CardPartial", Model.Songs);
+					}
+				</div>
+				<div aria-label="Page navigation example">
+					<ul class="pagination">
+						<li class="page-item page-pre_navigation" data-selectionid="@(Model.SelectionId)" >
+							<a class="page-link" aria-label="Previous">
+								<span aria-hidden="true">&laquo;</span>
+							</a>
+						</li>
+						@for (var i = 1; i <= Model.PaginationCount; i++)
+						{
+							<li class="page-item page-item_navigation" data-selectionid="@(Model.SelectionId)" data-currentpage="@(i)"><a class="page-link">@(i)</a></li>
+						}
+						<li class="page-item page-next_navigation" data-selectionid="@(Model.SelectionId)" data-paginationCount="@(Model.PaginationCount)">
+							<a class="page-link" aria-label="Next">
+								<span aria-hidden="true">&raquo;</span>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		}
 	</div>
 </section>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
+@section Scripts {
+	<script>
+		$(document).ready(function() {
+			let currentPage = 1;
+			let selectionId;
+			let paginationCount;
+			//上一頁
+			$(".page-pre_navigation").on("click",function(){
+				selectionId = $(this).attr("data-selectionid");
+			    currentPage = currentPage <=1 ? currentPage=1 : currentPage-1;
 
-<script>
-	$(document).ready(function() {
-			$(".content__menu-item").on("click", function () {
-		// 先重置所有選單的背景色
-		$(".content__menu-item").css({
-			"background-color": "gray",
-			"color": "aliceblue"
+				 // 發送 AJAX 請求
+				$.ajax({
+					url: `/Selection/GetWorks/${selectionId}/${currentPage}`,
+					type: 'GET',  // Razor Page 通常使用 GET 來獲取數據
+					success: function(response) {
+						 $("#worksContent").html(response);  // 更新內容
+					},
+					error: function(xhr, status, error) {
+						alert("請求失敗，請稍後再試。"+error);
+					}
+				});
+			});
+			//下一頁
+			$(".page-next_navigation").on("click",function(){
+				   selectionId = $(this).attr("data-selectionid");
+		           paginationCount = $(this).attr("data-paginationCount");
+
+
+				console.log(currentPage);
+				console.log(paginationCount);
+				currentPage = currentPage >= paginationCount ? currentPage : currentPage + 1;
+				console.log(currentPage);
+				// 發送 AJAX 請求
+				$.ajax({
+					url: `/Selection/GetWorks/${selectionId}/${currentPage}`,
+					type: 'GET',  // Razor Page 通常使用 GET 來獲取數據
+					success: function(response) {
+						console.log("A");
+						 $("#worksContent").html(response);  // 更新內容
+						// console.log(response);
+					},
+					error: function(xhr, status, error) {
+						alert("請求失敗，請稍後再試。"+error);
+					}
+				});
+
+					});
+
+			//點選頁數
+			$(".page-item_navigation").on("click", function() {
+				 selectionId = $(this).attr("data-selectionid");
+				 paginationCount = $(this).attr("data-currentpage");
+
+				// 發送 AJAX 請求
+				$.ajax({
+					url: `/Selection/GetWorks/${selectionId}/${currentPage}`,
+					type: 'GET',  // Razor Page 通常使用 GET 來獲取數據
+					success: function(response) {
+						console.log("A");
+						 $("#worksContent").html(response);  // 更新內容
+						// console.log(response);
+					},
+					error: function(xhr, status, error) {
+						alert("請求失敗，請稍後再試。"+error);
+					}
+				});
+			});
 		});
+		
+	</script>
+}
 
-		// 改變當前選單的背景色
-		$(this).css({
-			"background-color": "cornflowerblue",
-			"color": "white"
-		});
-
-		let target = $(this).data("target");
-		$(".content-section").hide();
-		$(target).fadeIn();
-	});
-	 // 預設點擊第一個選單
-	$(".content__menu-item:first").trigger("click");
-
-	});
-</script>

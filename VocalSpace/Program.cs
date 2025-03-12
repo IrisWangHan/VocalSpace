@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using VocalSpace.Models;
+using VocalSpace.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,11 @@ builder.Services.AddSession(options =>
 });
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+// 註冊 SelectionService  //註冊介面要 順便註冊實作類別
+builder.Services.AddScoped<SelectionService>();
+builder.Services.AddScoped<IPaginationService, PaginationService>();
+
 
 builder.Services.AddDbContext<VocalSpaceDbContext>(
         options => options.UseSqlServer(connectionString));
