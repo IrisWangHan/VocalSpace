@@ -2,7 +2,7 @@
 @{
     
 }
-@model List<VocalSpace.Models.SongInfo.SearchInfoDTO>
+@model VocalSpace.Models.SearchViewModel.SearchViewModel
 <link rel="stylesheet" href="~/css/search.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/song.css" asp-append-version="true" />
 
@@ -30,10 +30,10 @@
                 </li>
             </ul>
             <div class="tab-content" id="tab-content">                
-                @await Html.PartialAsync("_partialViewSong", Model)
-                @await Html.PartialAsync("_partialViewSong", Model)
-                @await Html.PartialAsync("_partialViewArtist", Model)
-                @await Html.PartialAsync("_partialViewSonglist", Model)
+                @await Html.PartialAsync("_partialViewSong", Model.Songs)
+                
+                @await Html.PartialAsync("_partialViewArtist", Model.Artists)
+                @*@await Html.PartialAsync("_partialViewSonglist", Model)*@
                 @* 按下"點我看更多"button後，插入執行@await Html.PartialAsync("partialViewSong") *@
             </div>
             <div class="mt-5 mb-5 text-center">

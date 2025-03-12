@@ -3,68 +3,23 @@
 *@
 @{
 }
-
+@model List<VocalSpace.Models.SearchViewModel.ArtistDTO>
 <!-- 音樂人區塊 -->
-<div class="ranking-item">
-    <!-- 圖片改為歌手大頭貼 -->
-    <img src="./img/artistPhoto.jpg" class="artist-cover-block" alt="artist photo">
+@for (int k = 0; k < Model.Count; k++){
+    <div class="ranking-item">
+        <!-- 圖片改為歌手大頭貼 -->
+        <img src=@Model[k].AvatarPath class="artist-cover-block" alt="artist photo">
 
-    <!-- info 區塊：只放「歌手名字」，用原本 .song 樣式即可 -->
-    <div class="info">
-        <p class="artist-name">歌手名字</p>
+        <!-- info 區塊：只放「歌手名字」，用原本 .song 樣式即可 -->
+        <div class="info">
+            <p class="artist-name">@Model[k].UserName</p>
+        </div>
+
+        <!-- 只保留最右邊的一個按鈕，初始文字為「追蹤」，背景為紅色 -->
+        <button class="btn-follow" onclick="toggleFollow(this)">追蹤</button>
     </div>
+}
 
-    <!-- 只保留最右邊的一個按鈕，初始文字為「追蹤」，背景為紅色 -->
-    <button class="btn-follow" onclick="toggleFollow(this)">追蹤</button>
-</div>
-<div class="ranking-item">
-    <!-- 圖片改為歌手大頭貼 -->
-    <img src="./img/artistPhoto.jpg" class="artist-cover-block" alt="artist photo">
-
-    <!-- info 區塊：只放「歌手名字」，用原本 .song 樣式即可 -->
-    <div class="info">
-        <p class="artist-name">歌手名字</p>
-    </div>
-
-    <!-- 只保留最右邊的一個按鈕，初始文字為「追蹤」，背景為紅色 -->
-    <button class="btn-follow" onclick="toggleFollow(this)">追蹤</button>
-</div>
-<div class="ranking-item">
-    <!-- 圖片改為歌手大頭貼 -->
-    <img src="./img/artistPhoto.jpg" class="artist-cover-block" alt="artist photo">
-
-    <!-- info 區塊：只放「歌手名字」，用原本 .song 樣式即可 -->
-    <div class="info">
-        <p class="artist-name">歌手名字</p>
-    </div>
-
-    <!-- 只保留最右邊的一個按鈕，初始文字為「追蹤」，背景為紅色 -->
-    <button class="btn-follow" onclick="toggleFollow(this)">追蹤</button>
-</div>
-<div class="ranking-item">
-    <!-- 圖片改為歌手大頭貼 -->
-    <img src="./img/artistPhoto.jpg" class="artist-cover-block" alt="artist photo">
-
-    <!-- info 區塊：只放「歌手名字」，用原本 .song 樣式即可 -->
-    <div class="info">
-        <p class="artist-name">歌手名字</p>
-    </div>
-
-    <!-- 只保留最右邊的一個按鈕，初始文字為「追蹤」，背景為紅色 -->
-    <button class="btn-follow" onclick="toggleFollow(this)">追蹤</button>
-</div>
-<div class="ranking-item">
-    <!-- 圖片改為歌手大頭貼 -->
-    <img src="./img/artistPhoto.jpg" class="artist-cover-block" alt="artist photo">
-
-    <!-- info 區塊：只放「歌手名字」，用原本 .song 樣式即可 -->
-    <div class="info">
-        <p class="artist-name">歌手名字</p>
-    </div>
-
-    <!-- 只保留最右邊的一個按鈕，初始文字為「追蹤」，背景為紅色 -->
-    <button class="btn-follow" onclick="toggleFollow(this)">追蹤</button>
-</div>
 
 
 
