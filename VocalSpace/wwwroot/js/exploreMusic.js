@@ -45,8 +45,6 @@ function playAll() {
 
 // 分享歌曲按鈕之彈跳視窗
 
-
-
 function loadmore(type) {
 
     fetch("/exploreMusic/loadmore?type=" + type).

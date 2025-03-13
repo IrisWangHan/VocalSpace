@@ -1,13 +1,26 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using VocalSpace.Models;
+using VocalSpace.Models.ViewModel.Search;
 
 namespace VocalSpace.Controllers
 {
     public class exploreMusicController : Controller
     {
-       
+        private readonly VocalSpaceDbContext _context;
+        public static List<SongInfoDTO> Allsongs;
+
+        public exploreMusicController(VocalSpaceDbContext context)
+        {
+            _context = context;
+        }
         public IActionResult ExploreMusicAll()
         {
-            return View();
+            var a = from song in _context.Songs
+                    join user in _context.Users
+                    on song.Artist equals user.UserId
+                    select new SongInfoDTO { CoverPhotoPath = song.CoverPhotoPath, SongName = song.SongName, UserName = user.UserName, LikeCount = song.LikeCount };
+            Allsongs = a.ToList();
+            return View(Allsongs);
         }
         public IActionResult ExploreMusicRock()
         {
@@ -32,6 +45,19 @@ namespace VocalSpace.Controllers
         public IActionResult ExploreMusicExplore()
         {
             return View();
+        }
+        [HttpGet]
+        public IActionResult RankType()
+        {
+            switch (Request.Query["rt"])
+            {
+                case "mostlike":
+
+                    return PartialView();             
+                default:
+                    return PartialView("_partialViewSong");
+            }
+
         }
         [HttpGet]
         public IActionResult loadmore()
