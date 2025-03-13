@@ -1,199 +1,116 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model IEnumerable<VocalSpace.Models.Dto.HotRankDto>
 
-    <title>聲維宇宙排行榜</title>
-    <div class="container">
-        <h1>聲維宇宙排行榜</h1>
-        <hr />
-        <div class="content">
-            <aside class="sidebar">
-                <ul id="myList">
-                    <li class="selected">總榜</li>
-                    <li>搖滾</li>
-                    <li>民謠</li>
-                    <li>嘻哈</li>
-                    <li>都會</li>
-                    <li>電子</li>
-                    <li>探索</li>
-                </ul>
-            </aside>           
+<link rel="stylesheet" href="~/css/song.css" asp-append-version="true" />
 
-            <main class="ranking">
+<title>聲維宇宙排行榜</title>
+<div class="container">
+    <h1>聲維宇宙排行榜</h1>
+    <hr />
+    <div class="content">
+        <aside class="sidebar">
+            <ul id="myList">
+                <a asp-action="HotRank" asp-route-id="0">
+                <li data-id="0">總榜</li></a>
+                <a asp-action="HotRank" asp-route-id="1">
+                <li data-id="1">搖滾</li></a>
+                <a asp-action="HotRank" asp-route-id="2">
+                <li data-id="2">民謠</li></a>
+                <a asp-action="HotRank" asp-route-id="3">
+                <li data-id="3">嘻哈</li></a>
+                <a asp-action="HotRank" asp-route-id="4">
+                <li data-id="4">都會</li></a>
+                <a asp-action="HotRank" asp-route-id="5">
+                <li data-id="5">電子</li></a>
+                <a asp-action="HotRank" asp-route-id="6">
+                <li data-id="6">探索</li></a>
+            </ul>
+        </aside>           
 
-                <div class="playAll"><button class="btn btn-danger" onclick="playAll()"><i class="bi bi-play"></i>全部播放</button></div>
-<br />
-                <div id="realtime" class="ranking-list">
-                    <div class="ranking-item">
-                        <span class="rank">1</span>
-                        <span class="rank">▲</span>
-                        <a href="#">
-                        <img src="/image/p1.jpg" alt="song cover">
-                        </a>
-                        <div class="info">
-						<a href="#"><p class="song">打不通的電話</p></a>                        
-                        <a href="/Personal/mymusic"> <p class="artist">Sean Ko 高翔</p></a>
+        <main class="ranking">
+
+            <div class="playAll"><button class="btn btn-danger" onclick="playAll()"><i class="bi bi-play"></i>全部播放</button></div>
+            <br />
+            <div id="realtime" class="ranking-list">
+                @{@foreach(var item in Model){
+                        <div class="ranking-item">
+                            <span class="rank">@item.CurrentRank</span>
+
+                            @{
+                                if (item.CurrentRank > item.PreRank)
+                                {
+                                    <span class="rank">▲</span>
+                                }
+                                else if (item.CurrentRank < item.PreRank)
+                                {
+                                    <span class="rank">▼</span>
+                                }
+                                else
+                                {
+                                    <span class="rank">━</span>
+                                }
+                            }
+
+                            <a href="#">
+                                <img src="@item.SongCoverPhotoPath" alt="song cover">
+                            </a>
+                            <div class="info">
+                                <a href="#"><p class="song">@item.SongName</p></a>                        
+                                <a href="/Personal/mymusic"> <p class="artist">@item.SongArtist</p></a>
+                            </div>
+                            @await Html.PartialAsync("_SongButtonModal")
                         </div>
-                        <button class="btn btn-outline-secondary add" onclick="addopenPopup()"><i class="bi bi-plus-lg"></i></button>
-                        <button class="btn btn-outline-secondary share" onclick="shareshowPopup()"><i class="bi bi-share"></i></button>
-                        <button class="btn btn-outline-secondary heart"><i class="bi bi-heart-fill"></i>684</button>
-                        <button class="btn btn-outline-secondary play" onclick="playSong(1)"><i class="bi bi-play"></i></button>
+                    }
+                }
+                <div class="ranking-item"> 
+                    <span class="rank">2</span> 
+                    <span class="rank">▲</span> 
+                <a href="#"> 
+                    <img src="/image/p1.jpg" alt="song cover">
+                </a>                       
+                <div class="info"> 
+                    <a href="#"><p class="song">打不通的電話</p></a> 
+                    <a href="/Personal/mymusic"> <p class="artist">Sean Ko 高翔</p></a> 
                     </div>
-                    <div class="ranking-item">
-                        <span class="rank">2</span>
-                        <span class="rank">▲</span>
-                    <a href="#">
-                        <img src="/image/p1.jpg" alt="song cover">
-                    </a>                        
-                    <div class="info">
-                        <a href="#"><p class="song">打不通的電話</p></a>
-                        <a href="/Personal/mymusic"> <p class="artist">Sean Ko 高翔</p></a>
-                        </div>
-                    <button class="btn btn-outline-secondary add" onclick="addopenPopup()"><i class="bi bi-plus-lg"></i></button>
-                        <button class="btn btn-outline-secondary share" onclick="shareshowPopup()"><i class="bi bi-share"></i></button>
-                        <button class="btn btn-outline-secondary heart"><i class="bi bi-heart-fill"></i>684</button>
-                        <button class="btn btn-outline-secondary play" onclick="playSong(1)"><i class="bi bi-play"></i></button>
-                    </div>
-                </div>
+                    @await Html.PartialAsync("_SongButtonModal")
+                </div> 
+            </div>
 
 
-            </main>
-        </div>
+        </main>
     </div>
+</div>
 
-        <!-- 加入歌單彈跳視窗 -->
-    <div class="addoverlay" id="addoverlay" onclick="addclosePopup()"></div>
-
-    <!-- 彈跳視窗 -->
-    <div class="addpopup" id="addpopup">
-        <h2>加入歌單</h2>
-        <input type="text" class="addsearch-box" placeholder="搜尋歌單">
-
-        <!-- 歌單列表 -->
-        <div class="addplaylist-item">
-            <div class="addplaylist-info">
-                <img src="/image/p2.jpeg" alt="封面">
-                <div>
-                    <div class="addplaylist-name">tt</div>
-                    <div class="addplaylist-song">1 首歌曲: ilyynlvl</div>
-                </div>
-            </div>
-            <button class="addbtn-add" onclick="addtoggleSelection(this)">+ 加入歌單</button>
-        </div>
-
-        <!-- 底部按鈕 -->
-        <div class="addpopup-footer">
-            <button class="addbtn-newPlaylist">+ 新增歌單</button>
-            <button class="btn addbtn-cancel" onclick="addclosePopup()">取消</button>
-            <button class="btn addbtn-confirm" onclick="addclosePopup()">確定</button>
-        </div>
-    </div>
-
-    <!-- 分享按鈕彈跳視窗 -->
-    <div class="shareoverlay" id="shareoverlay">
-        <div class="sharepopup">
-            <div class="sharepopup-header">
-                <span>分享歌曲</span>
-                <span class="shareclose-btn" onclick="shareclosePopup()">&times;</span>
-            </div>
-            <div class="sharepopup-content">
-                <img src="/image/p1.jpg" alt="封面">
-                <div>
-                    <strong>打不通的電話 <b>Demo</b></strong>
-                    <div>Sean Ko 高翔</div>
-                </div>
-            </div>
-            <div class="sharepopup-footer">
-                <button class="btn fb btn-lg" ><i class="bi bi-facebook"></i></button>
-                <button class="btn ig btn-lg" ><i class="bi bi-instagram"></i></button>
-                <input type="text" value="https://streetvoice.com/seanko/songs/800" readonly>
-                <button class ="copy" onclick="sharecopyLink()">複製</button>
-            </div>
-        </div>
-    </div>
-
+<script src="~/js/partialViewSong.js" asp-append-version="true"></script>
     <script>
-function playSong(songId) {
-    alert('播放歌曲 ID: ' + songId);
-}
+    function playSong(songId) {
+        alert('播放歌曲 ID: ' + songId);
+    }
 
-function playAll() {
-    alert('播放全部歌曲');
-}
+    function playAll() {
+        alert('播放全部歌曲');
+    }
 
-const list = document.getElementById('myList');
-const items = list.getElementsByTagName('li');
 
-// 為每個 list 項目加上 click 事件監聽器
-for (let i = 0; i < items.length; i++) {
-    items[i].addEventListener('click', function () {
-        // 清除所有項目的選取效果
-        for (let j = 0; j < items.length; j++) {
-            items[j].classList.remove('selected');
-        }
-        // 為被點擊的項目加上選取效果
-        this.classList.add('selected');
-    });
-}
-// 取得所有按鈕
-const buttons = document.querySelectorAll('.btn-outline-secondary.heart');
+     document.addEventListener("DOMContentLoaded", function () {
+            // 取得當前網址的路徑，例如 `/3` 或 `/HotRank/3`
+            const pathSegments = window.location.pathname.split("/").filter(segment => segment);
 
-// 為每個按鈕加上點擊事件
-buttons.forEach(button => {
-    button.addEventListener('click', function () {
-        // 切換選取效果：如果已選取就取消選取，反之則加入選取效果
-        this.classList.toggle('selected');
-    });
-});
+            // 取得最後一個段落作為 ID，若不存在則預設為 "0"
+            let currentId = pathSegments.length > 0 ? pathSegments[pathSegments.length - 1] : "0";
 
-// 分享歌曲按鈕之彈跳視窗
-function shareshowPopup() {
-  document.getElementById('shareoverlay').style.display = 'flex';
-}
-function shareclosePopup() {
-  document.getElementById('shareoverlay').style.display = 'none';
-}
-function sharecopyLink() {
-  const input = document.querySelector('.sharepopup-footer input');
-  input.select();
-  document.execCommand('copy');
-  alert('連結已複製');
-}
+            // 確保 currentId 是數字，否則預設為 "0"
+            if (isNaN(currentId)) {
+                currentId = "0";
+            }
 
-// 加入歌單按鈕之彈跳視窗
-function addopenPopup() {
-  document.getElementById("addoverlay").style.display = "block";
-  document.getElementById("addpopup").style.display = "block";
-    // 加入淡入效果
-    setTimeout(() => {
-      document.getElementById("addoverlay").style.opacity = "1";
-      document.getElementById("addpopup").style.opacity = "1";
-      document.getElementById("addpopup").style.top = "30%";
-  }, 10);
-}
+            // 清除所有 .selected
+            document.querySelectorAll("#myList li").forEach(li => li.classList.remove("selected"));
 
-function addclosePopup() {
- // 淡出效果
- document.getElementById("addoverlay").style.opacity = "0";
- document.getElementById("addpopup").style.opacity = "0";
- document.getElementById("addpopup").style.top = "20%";
+            // 找到對應的 <li>，加上 .selected
+            const activeLi = document.querySelector(`#myList li[data-id="${currentId}"]`);
+            if (activeLi) {
+                activeLi.classList.add("selected");
+            }
+        });
 
- // 延遲隱藏（等待動畫完成）
- setTimeout(() => {
-     document.getElementById("addoverlay").style.display = "none";
-     document.getElementById("addpopup").style.display = "none";
- }, 300);
-}
-
-function addtoggleSelection(button) {
-  if (button.classList.contains("selected")) {
-      button.classList.remove("selected");
-      button.textContent = "+ 加入歌單";
-  } else {
-      button.classList.add("selected");
-      button.textContent = "✔ 已選擇";
-  }
-}
 </script>
