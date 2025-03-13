@@ -2,11 +2,10 @@
 @{
 	Layout = "_ExploreMusicLayout";
 }
+@model List<VocalSpace.Models.ViewModel.Search.SongInfoDTO>
 
+@await Html.PartialAsync("_partialViewSong", Model)
 
-@await Html.PartialAsync("_partialViewSong")
-@await Html.PartialAsync("_partialViewSong")
-@await Html.PartialAsync("_partialViewSong")
             
             
 

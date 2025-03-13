@@ -26,8 +26,9 @@ namespace VocalSpace.Controllers
         public async Task<IActionResult> searchAll()
         {
             string? q = Request.Query["q"];
-            // 
-            AllResult!.keyword = q!;
+            //  搜尋關鍵字q 傳到  _searchLayout ，
+             TempData["q"] = q;
+            
 
             //  搜尋歌曲
             //  將資料透過DTO物件傳遞到前端
