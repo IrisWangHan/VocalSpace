@@ -75,7 +75,7 @@ app.UseSession();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller}/{action}/{id?}",
-    defaults: new { controller = "Home", action = "TestDB" }
+    defaults: new { controller = "Selection", action = "Index" }
     );
     
 

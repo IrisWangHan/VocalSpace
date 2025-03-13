@@ -2,7 +2,7 @@
 
 namespace VocalSpace.Models.ViewModel.Selection
 {
-    public class SelectionFormViewModel
+    public class SelectionFormViewModel : SelectionListViewModel
     {
         [JsonProperty("userName")]
         public string? UserName { get; set; }
@@ -14,5 +14,8 @@ namespace VocalSpace.Models.ViewModel.Selection
         [JsonProperty("file")]
         public IFormFile? File { get; set; }
 
+
+        [JsonProperty("applyStatus")]
+        public int? ApplyStatus { get; set; }
     }
 }

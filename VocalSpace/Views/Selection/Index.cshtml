@@ -2,7 +2,7 @@
 <section class="banner">
 	<div class="banner__left">
 		<img class="banner__left-img" src="@Url.Content("~/image/selection/bannerLightning.png")" />
-		<button class="btn btn-submit--theme banner__left-btn"> 前往徵選</button>
+		<button class="btn btn-submit--theme banner__left-btn" onclick="window.location.href='/selection/Index'">前往徵選</button>
 	</div>
 	<div class="banner__right">
 		<img class="banner__right-img" src="@Url.Content("~/image/selection/bannerContent.png")" />
@@ -11,7 +11,7 @@
 
 <section class="content ">
 	<div class="content__card-area">
-		@foreach(var item in Model)
+		@foreach (var item in Model)
 		{
 			<div class="card__item">
 				<div class="card__img-box">
@@ -32,7 +32,10 @@
 				</label>
 				<div class="card__btn-box">
 					<button onclick="window.location.href='/selection/EventDescription/@(item.SelectionId)'" class="btn btn-submit--theme card__btn-vote">了解更多</button>
-					<button onclick="window.location.href='/selection/Apply/@(item.SelectionId)'" class="btn btn-submit--theme card__btn-join">我要報名</button>
+					@if (item.JoinState == "開放中")
+					{
+						<button onclick="window.location.href='/selection/Apply/@(item.SelectionId)'" class="btn btn-submit--theme card__btn-join">我要報名</button>
+					}
 				</div>
 			</div>
 		}

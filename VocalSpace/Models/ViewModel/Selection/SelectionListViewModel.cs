@@ -42,6 +42,7 @@ namespace VocalSpace.Models.ViewModel.Selection
     public class SelectionSongs
     {
         public long SelectionDetailId { get; set; }
+        public long SongId { get; set; }
         public int? VoteCount { get; set; }
         public string? CoverPhotoPath { get; set; }
         public string? SongDescription { get; set; }
