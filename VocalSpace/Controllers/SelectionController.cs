@@ -85,6 +85,7 @@ namespace VocalSpace.Controllers
         [HttpPost]
         public IActionResult SubmitApplication([FromForm] SelectionFormViewModel model)
         {
+            //請判斷是否在報名期限內 以及上船功能
             // 處理表單資料
             return Json(new { success = true, message = "表單提交成功" });
         }

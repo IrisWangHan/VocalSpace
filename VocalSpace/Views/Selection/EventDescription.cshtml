@@ -3,7 +3,7 @@
 <section class="banner">
 	<div class="banner__left">
 		<img class="banner__left-img" src="@Url.Content("~/image/selection/bannerLightning.png")" />
-		<button class="btn btn-submit--theme banner__left-btn">前往徵選</button>
+		<button class="btn btn-submit--theme banner__left-btn" onclick="window.location.href='/selection/Index'">前往徵選</button>
 	</div>
 	<div class="banner__right">
 		<img class="banner__right-img" src="@Url.Content("~/image/selection/bannerContent.png")" />
@@ -19,12 +19,15 @@
 			<br />
 			<p>徵選截止日:@(Model.EndDate) </p>
 			<p>
-				徵選狀態: <span style="color:@(Model.JoinState == "徵選中" ? "red" : "gray")">@(Model.JoinState)</span>
+				徵選狀態: <span style="color:@(Model.JoinState == "開放中" ? "red" : "gray")">@(Model.JoinState)</span>
 			</p>
 			<p>
-				投票狀態: <span style="color:@(Model.VoteState == "徵選中" ? "red" : "gray")">@(Model.VoteState)</span>
+				投票狀態: <span style="color:@(Model.VoteState == "開放中" ? "red" : "gray")">@(Model.VoteState)</span>
 			</p>
-			<a href="/selection/Apply/@(Model.SelectionId)" class="btn btn-submit--theme">我要報名</a>
+			@if (Model.JoinState == "開放中")
+			{
+				<a href="/selection/Apply/@(Model.SelectionId)" class="btn btn-submit--theme">我要報名</a>
+			}
 		</div>
 		<div class="content__header-aside">
 			@if (ViewBag.section != null && ViewBag.section.ToString() == "EventDescription")
@@ -69,31 +72,34 @@
 		@if (ViewBag.section != null && ViewBag.section.ToString() == "Works")
 		{
 			<div class="content-section works" id="worksSection">
-				<h3 class="fw-bold">所有參加作品數:</h3>
+				<h3 class="fw-bold">所有參加作品數: @(Model.Songs.Count) 筆</h3>
 				<div id="worksContent">
 					<!-- 這裡顯示作品區塊的內容 -->
 					@{
 						await Html.RenderPartialAsync("_CardPartial", Model.Songs);
 					}
 				</div>
-				<div aria-label="Page navigation example">
-					<ul class="pagination">
-						<li class="page-item page-pre_navigation" data-selectionid="@(Model.SelectionId)" >
-							<a class="page-link" aria-label="Previous">
-								<span aria-hidden="true">&laquo;</span>
-							</a>
-						</li>
-						@for (var i = 1; i <= Model.PaginationCount; i++)
-						{
-							<li class="page-item page-item_navigation" data-selectionid="@(Model.SelectionId)" data-currentpage="@(i)"><a class="page-link">@(i)</a></li>
-						}
-						<li class="page-item page-next_navigation" data-selectionid="@(Model.SelectionId)" data-paginationCount="@(Model.PaginationCount)">
-							<a class="page-link" aria-label="Next">
-								<span aria-hidden="true">&raquo;</span>
-							</a>
-						</li>
-					</ul>
-				</div>
+				@if (Model.Songs.Count >= 1)
+				{
+					<div aria-label="Page navigation example">
+						<ul class="pagination">
+							<li class="page-item page-pre_navigation" data-selectionid="@(Model.SelectionId)">
+								<a class="page-link" aria-label="Previous">
+									<span aria-hidden="true">&laquo;</span>
+								</a>
+							</li>
+							@for (var i = 1; i <= Model.PaginationCount; i++)
+							{
+								<li class="page-item page-item_navigation" data-selectionid="@(Model.SelectionId)" data-currentpage="@(i)"><a class="page-link">@(i)</a></li>
+							}
+							<li class="page-item page-next_navigation" data-selectionid="@(Model.SelectionId)" data-paginationCount="@(Model.PaginationCount)">
+								<a class="page-link" aria-label="Next">
+									<span aria-hidden="true">&raquo;</span>
+								</a>
+							</li>
+						</ul>
+					</div>
+				}
 			</div>
 		}
 	</div>
@@ -108,7 +114,7 @@
 			//上一頁
 			$(".page-pre_navigation").on("click",function(){
 				selectionId = $(this).attr("data-selectionid");
-			    currentPage = currentPage <=1 ? currentPage=1 : currentPage-1;
+				currentPage = currentPage <=1 ? currentPage=1 : currentPage-1;
 
 				 // 發送 AJAX 請求
 				$.ajax({
@@ -125,7 +131,7 @@
 			//下一頁
 			$(".page-next_navigation").on("click",function(){
 				   selectionId = $(this).attr("data-selectionid");
-		           paginationCount = $(this).attr("data-paginationCount");
+				   paginationCount = $(this).attr("data-paginationCount");
 
 
 				console.log(currentPage);
@@ -168,7 +174,7 @@
 				});
 			});
 		});
-		
+
 	</script>
 }
 
