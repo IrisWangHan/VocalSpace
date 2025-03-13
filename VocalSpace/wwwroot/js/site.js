@@ -258,13 +258,17 @@ function search() {
             if (!response.ok) {
                 throw new Error("Network response was not ok");
             }
-            console.log(response.url);
+            
             //  得到View的URL
             return response.url;
         }).
         then(responseUrl => {
             //  導向到搜尋結果url
+         
             window.location.assign(responseUrl);
+            conlo
+            document.getElementById('alllink').setAttribute('href', '/search/searchAll/?q=' + searchText.value);
+                      
         }).
         catch(error => {
             console.error("載入歌曲失敗");
