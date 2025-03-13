@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.EntityFrameworkCore;
 using VocalSpace.Models;
 using VocalSpace.Services;
@@ -25,6 +28,25 @@ builder.Services.AddScoped<IPaginationService, PaginationService>();
 
 builder.Services.AddDbContext<VocalSpaceDbContext>(
         options => options.UseSqlServer(connectionString));
+
+// 從 User Secrets 或 appsettings.json 中讀取 Google 的 Client ID 和 Client Secret
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+})
+.AddCookie() // Cookie 驗證
+.AddGoogle(options =>
+{
+    // 使用 Google 註冊的 Client ID 和 Client Secret
+    options.ClientId = builder.Configuration["Authentication:Google:ClientId"]!;
+    options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
+    options.Scope.Add("email");
+    options.SaveTokens = true; // 保存 tokens，以便後續使用
+
+
+});
+
 
 var app = builder.Build();
 
