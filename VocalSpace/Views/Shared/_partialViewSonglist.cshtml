@@ -1,47 +1,21 @@
 ﻿
 @{
 }
+@model List<VocalSpace.Models.ViewModel.Search.PlaylistDTO>
 
-<div class="ranking-item">
-        <img src="./image/idol.jpg" class="cover-block" alt="song cover">
+@for (int k = 0; k < Model.Count; k++)
+{
+    <div class="ranking-item">
+        <img src="@Model[k].CoverImagePath" class="cover-block" alt="song cover">
         <div class="info">
-            <p class="song">打不通的電話</p>
-            <p class="artist">1 首歌曲．Sean Ko 高翔</p>
+            <p class="song">@Model[k].Name</p>
+            <p class="artist">1 首歌曲．@Model[k].UserName</p>
         </div>
-    @await Html.PartialAsync("_SongListButtonModal")
- </div>
-<div class="ranking-item">
-    <img src="./image/idol.jpg" class="cover-block" alt="song cover">
-    <div class="info">
-        <p class="song">打不通的電話</p>
-        <p class="artist">1 首歌曲．Sean Ko 高翔</p>
+        @await Html.PartialAsync("_SongListButtonModal")
     </div>
-    @await Html.PartialAsync("_SongListButtonModal")
-</div>
-<div class="ranking-item">
-    <img src="./image/idol.jpg" class="cover-block" alt="song cover">
-    <div class="info">
-        <p class="song">打不通的電話</p>
-        <p class="artist">1 首歌曲．Sean Ko 高翔</p>
-    </div>
-    @await Html.PartialAsync("_SongListButtonModal")
-    </div>
-<div class="ranking-item">
-    <img src="./image/idol.jpg" class="cover-block" alt="song cover">
-    <div class="info">
-        <p class="song">打不通的電話</p>
-        <p class="artist">1 首歌曲．Sean Ko 高翔</p>
-    </div>
-    @await Html.PartialAsync("_SongListButtonModal")
-</div>
-<div class="ranking-item">
-    <img src="./image/idol.jpg" class="cover-block" alt="song cover">
-    <div class="info">
-        <p class="song">打不通的電話</p>
-        <p class="artist">1 首歌曲．Sean Ko 高翔</p>
-    </div>
-    @await Html.PartialAsync("_SongListButtonModal")
-    </div>
+}
+
+
     
 
 

@@ -1,45 +1,8 @@
 ﻿
 @{
+    Layout = "_SearchLayout";
 }
+@model List<VocalSpace.Models.ViewModel.Search.ArtistDTO>
 
-<link rel="stylesheet" href="~/css/search.css" asp-append-version="true" />
-<link rel="stylesheet" href="~/css/song.css" asp-append-version="true" />
-
-
-<div class="container pb-10 pt-5">
-    <h1 class="mb-4 position-relative search-title">
-        <i class="bi bi-search mr-2"></i>
-        搜尋結果
-    </h1>
-    <hr class="mb-5">
-    <div class="row">
-        <div class="col-md-9">
-            <ul class="nav nav-pills mb-3">
-                <li class="nav-item">
-                    <a class="nav-link nav-name" href="./searchAll">全部</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link nav-name" href="./searchSongs">歌曲</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link nav-name" href="./searchSonglists">歌單</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link nav-name" href="./searchArtists">音樂人</a>
-                </li>
-            </ul>
-            <div class="tab-content" id="tab-content">
-                @await Html.PartialAsync("_partialViewArtist")
-                @* 按下"點我看更多"button後，插入執行@await Html.PartialAsync("partialViewSong") *@
-            </div>
-            <div class="mt-5 mb-5 text-center">
-                <button class="btn btn-loadmore" id="btn-loadmore" onclick="loadmore('artist')">點我看更多</button>
-            </div>
-        </div>
-        <div class="col-md-3 d-none d-md-block">
-            <img src="~/image/ad.test.jpg" alt="Alternate Text">
-        </div>
-    </div>
-</div>
-<script src="~/js/search.js" asp-append-version="true"></script>
-<script src="~/js/partialViewSong.js" asp-append-version="true"></script>
+                @await Html.PartialAsync("_partialViewArtist", Model)
+                

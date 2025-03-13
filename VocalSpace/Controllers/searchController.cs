@@ -2,20 +2,19 @@
 using VocalSpace.Models;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol;
-using VocalSpace.Models.SearchViewModel;
+using VocalSpace.Models.ViewModel.Search;
 
 
 namespace VocalSpace.Controllers
 {
 
-public class searchController : Controller
+    public class searchController : Controller
     {
         private readonly VocalSpaceDbContext _context;
         private string? q;
         private string? type;
+
         //  靜態全域變數result，3種LINQ查詢結果的DTO物件
-        
-        
         private static SearchViewModel? AllResult = new SearchViewModel ();
 
 
@@ -27,8 +26,11 @@ public class searchController : Controller
         public async Task<IActionResult> searchAll()
         {
             string? q = Request.Query["q"];
-            //  搜尋關鍵字符合的歌曲
-            //  SongsTable Join UsersTable，將資料透過DTO物件傳遞到前端
+            // 
+            AllResult!.keyword = q!;
+
+            //  搜尋歌曲
+            //  將資料透過DTO物件傳遞到前端
             AllResult!.Songs = await _context.Songs.Join(
                     _context.Users,
                     song => song.Artist,
@@ -41,35 +43,54 @@ public class searchController : Controller
                 .ThenByDescending(data => data.UserName!.Contains(q!))     //   4.有包含關鍵字的歌手名稱的歌曲
                 .ToListAsync();
 
+            //  搜尋歌手
             var ArtistResult = from users in _context.Users
                                join infos in _context.UsersInfos on users.UserId equals infos.UserId
                                where users.UserName!.Contains(q!)
                                select new ArtistDTO { AvatarPath = infos.AvatarPath, UserName = users.UserName };
-
-               AllResult.Artists = await ArtistResult.OrderByDescending(data => data.UserName == q)
+            //  1.先搜尋歌手名稱完全符合關鍵字
+            //  2.有包含關鍵字的歌手
+            AllResult.Artists = await ArtistResult.OrderByDescending(data => data.UserName == q)
                 .ThenByDescending(data => data.UserName!.Contains(q!))
                 .ToListAsync();
 
+            //  搜尋歌單
+            var Playlists = from user in _context.Users
+                                  join playlist in _context.PlayLists on user.UserId equals playlist.UserId
+                                  join playlistsong in _context.PlayListSongs on playlist.PlayListId equals playlistsong.PlayListId
+                                  where playlist.Name.Contains(q!) || user.UserName!.Contains(q!)
+                                  group new { user, playlist, playlistsong } by new
+                                  {
+                                      user.UserName,
+                                      playlist.Name,
+                                      playlist.CoverImagePath
+                                  } into g
+                                  select new PlaylistDTO { Name = g.Key.Name, UserName = g.Key.UserName, CoverImagePath = g.Key.CoverImagePath };
+            AllResult.Playlists = await Playlists.OrderByDescending( data => data.Name == q)
+                 .ThenByDescending(data => data.UserName == q)
+                 .ThenByDescending(data => data.Name!.Contains(q!))
+                 .ToListAsync();
+
             //   找不到搜尋結果 或 透過URL直接進入searchAll頁面，導向searchError頁面
-            //var resultView = ( result.Count == 0 || q == null ) ? View("searchError") : View("searchAll", result);
-            return View(AllResult);
+            //  IsEmpty = true，代表沒資料
+            AllResult.IsEmpty = ( AllResult.Songs.Count == 0 & AllResult.Artists.Count == 0 & AllResult.Playlists.Count == 0 );
+            var resultView = (  AllResult.IsEmpty || q == null ) ? View("searchError") : View("searchAll", AllResult);
+            return resultView;
         }
-        [HttpGet]
+        
         public IActionResult searchSongs()
         {
-
-            return View();       
+            return View(AllResult?.Songs);       
         }
 
         public IActionResult searchSonglists()
         {
-
-            return View();
+            return View(AllResult?.Playlists);
         }
 
         public IActionResult searchArtists()
         {
-            return View();
+            return View(AllResult?.Artists);
         }
 
         public IActionResult searchError()

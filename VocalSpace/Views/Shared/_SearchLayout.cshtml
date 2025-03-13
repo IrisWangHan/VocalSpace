@@ -1,7 +1,7 @@
 ﻿@{
 	 Layout = "_Layout";  
 }
-
+@model VocalSpace.Models.ViewModel.Search.SearchViewModel
 <link rel="stylesheet" href="~/css/search.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/song.css" asp-append-version="true" />
 
@@ -15,16 +15,16 @@
         <div class="col-md-9">
             <ul class="nav nav-pills mb-3">
                 <li class="nav-item">
-                    <a class="nav-link nav-name" href="./searchAll">全部</a>
+                    <a class="nav-link nav-name" id="alllink" href='/search/searchAll/?id=@Model.keyword'>全部</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link nav-name" href="./searchSongs">歌曲</a>
+                    <a class="nav-link nav-name" href="/search/searchSongs">歌曲</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link nav-name" href="./searchSonglists">歌單</a>
+                    <a class="nav-link nav-name" href="/search/searchSonglists">歌單</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link nav-name" href="./searchArtists">音樂人</a>
+                    <a class="nav-link nav-name" href="/search/searchArtists">音樂人</a>
                 </li>
             </ul>
             <div class="tab-content" id="tab-content">

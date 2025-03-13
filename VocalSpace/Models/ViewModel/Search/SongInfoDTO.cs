@@ -1,4 +1,4 @@
-﻿namespace VocalSpace.Models.SearchViewModel
+﻿namespace VocalSpace.Models.ViewModel.Search
 {
     public class SongInfoDTO
     {
