@@ -1,8 +1,10 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Serialization;
 using VocalSpace.Controllers;
 using VocalSpace.Models;
+using VocalSpace.Models.Dto;
 
 namespace VocalSpace.Controllers
 {
@@ -25,9 +27,40 @@ namespace VocalSpace.Controllers
         }
 
         // 排行榜
-        public IActionResult HotRank()
+        public async Task<IActionResult> HotRank(byte id)
         {
-            return View();
+            IQueryable<HotRankDto> result = from a in _context.Songs
+                                            join b in _context.SongRanks on a.SongId equals b.SongId
+                                            join c in _context.LikeSongs on a.SongId equals c.SongId into likes
+                                            from c in likes.DefaultIfEmpty()
+                                            join d in _context.PlayListSongs on a.SongId equals d.SongId into playlists
+                                            from d in playlists.DefaultIfEmpty()
+                                            join e in _context.PlayLists on d.PlayListId equals e.PlayListId into playlistDetails
+                                            from e in playlistDetails.DefaultIfEmpty()
+                                            select new HotRankDto
+                                            {
+                                                SongPath = a.SongPath,
+                                                SongId = a.SongId,
+                                                SongArtist = a.Artist,
+                                                SongCoverPhotoPath = a.CoverPhotoPath,
+                                                LikeCount = a.LikeCount,
+                                                SongStatus = a.SongStatus,
+                                                IsRemove = a.IsRemove,
+                                                SongCategoryId = a.SongCategoryId,
+                                                SongName = a.SongName,
+                                                PreRank = b.PreRank,
+                                                CurrentRank = b.CurrentRank,
+                                                LikeId = c != null ? c.LikeId : 0,
+                                                UserId = c != null ? c.UserId : 0,
+                                                PlayListId = d != null ? d.PlayListId : 0,                                                
+                                                PlayListName = e != null ? e.Name :string.Empty,
+                                                PlayListCoverImagePath = e != null ? e.CoverImagePath : null                                                 
+                                            }; 
+            if (id != 0)
+            {
+                result = result.Where(a => a.SongCategoryId == id);
+            }            
+            return View(await result.ToListAsync());            
         }
 
         // 關於我們
