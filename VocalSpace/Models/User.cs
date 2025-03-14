@@ -17,9 +17,12 @@ public partial class User
 
     public string? TempPassword { get; set; }
 
-    public DateTime? CreateTime { get; set; }
+    public DateTime CreateTime { get; set; }
 
-    public bool? Status { get; set; }
+    /// <summary>
+    /// 0刪除 1啟用 2停用
+    /// </summary>
+    public byte? Status { get; set; }
 
     public virtual ICollection<Activity> Activities { get; set; } = new List<Activity>();
 
@@ -36,6 +39,8 @@ public partial class User
     public virtual ICollection<Interested> Interesteds { get; set; } = new List<Interested>();
 
     public virtual ICollection<LikeSong> LikeSongs { get; set; } = new List<LikeSong>();
+
+    public virtual ICollection<PlayHistory> PlayHistories { get; set; } = new List<PlayHistory>();
 
     public virtual ICollection<PlayList> PlayLists { get; set; } = new List<PlayList>();
 

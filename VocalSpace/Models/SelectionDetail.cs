@@ -11,9 +11,11 @@ public partial class SelectionDetail
 
     public long SongId { get; set; }
 
-    public int? VoteCount { get; set; }
+    public int VoteCount { get; set; }
 
-    public DateTime? CreateTime { get; set; }
+    public DateTime CreateTime { get; set; }
+
+    public byte ReviewStatus { get; set; }
 
     public virtual Selection Selection { get; set; } = null!;
 

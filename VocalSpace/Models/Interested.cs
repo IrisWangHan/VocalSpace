@@ -11,7 +11,7 @@ public partial class Interested
 
     public long ActivityId { get; set; }
 
-    public DateTime? InterestedDate { get; set; }
+    public DateTime InterestedDate { get; set; }
 
     public virtual Activity Activity { get; set; } = null!;
 

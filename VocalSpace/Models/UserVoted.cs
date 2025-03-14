@@ -9,7 +9,7 @@ public partial class UserVoted
 
     public long UserId { get; set; }
 
-    public DateTime? VoteTime { get; set; }
+    public DateTime VoteTime { get; set; }
 
     public virtual SelectionDetail SelectionDetail { get; set; } = null!;
 

@@ -7,9 +7,11 @@ public partial class SongRank
 {
     public long SongId { get; set; }
 
-    public byte PreRank { get; set; }
+    public byte? PreRank { get; set; }
 
     public byte CurrentRank { get; set; }
+
+    public DateTime RankPeriod { get; set; }
 
     public virtual Song Song { get; set; } = null!;
 }

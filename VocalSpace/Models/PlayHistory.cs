@@ -3,15 +3,15 @@ using System.Collections.Generic;
 
 namespace VocalSpace.Models;
 
-public partial class LikeSong
+public partial class PlayHistory
 {
-    public long LikeId { get; set; }
+    public long HistoryId { get; set; }
 
     public long UserId { get; set; }
 
     public long SongId { get; set; }
 
-    public DateTime CreateTime { get; set; }
+    public DateTime PlayTime { get; set; }
 
     public virtual Song Song { get; set; } = null!;
 

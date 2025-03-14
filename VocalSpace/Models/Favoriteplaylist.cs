@@ -9,7 +9,7 @@ public partial class Favoriteplaylist
 
     public long UserId { get; set; }
 
-    public DateTime? CreateTime { get; set; }
+    public DateTime CreateTime { get; set; }
 
     public virtual PlayList PlayList { get; set; } = null!;
 
