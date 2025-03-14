@@ -40,7 +40,7 @@
                 <h2 class="mb-4">排序</h2>
                 <ul class="list-inline">
                     <li class="list-inline-item">
-                        <a href="#" class="btn btn-sm btn-tag btn-sort">最新</a>
+                        <a href="#" class="btn btn-sm btn-tag btn-sort active">最新</a>
                     </li>
                     <li class="list-inline-item">
                         <a href="#" class="btn btn-sm btn-tag btn-sort">最多撥放</a>
@@ -70,13 +70,14 @@
 <script src="~/js/partialViewSong.js" asp-append-version="true"></script>
 @section Scripts {
     <script>
+        //  依歌曲喜歡數排序(由大到小)
         $('#mostlike').click(function(){
             $.ajax({
                 type:'GET',
                 url: '/exploreMusic/RankType?rt='+'mostlike',
                 dataType: 'html',
                 success: function (response) {
-                    console.log(response);
+                    $('#tab-content').html(response);
                 }
             })
         } );
