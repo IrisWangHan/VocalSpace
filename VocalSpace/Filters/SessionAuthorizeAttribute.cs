@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace VocalSpace.Filters
 {
-    public class RedirectIfAuthenticatedAttribute : ActionFilterAttribute
+    public class SessionAuthorizeAttribute : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {

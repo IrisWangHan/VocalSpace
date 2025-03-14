@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.EntityFrameworkCore;
 using VocalSpace.Models;
@@ -33,7 +34,6 @@ builder.Services.AddDbContext<VocalSpaceDbContext>(
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
 })
 .AddCookie() // Cookie 驗證
 .AddGoogle(options =>
@@ -43,14 +43,18 @@ builder.Services.AddAuthentication(options =>
     options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
     options.Scope.Add("email");
     options.SaveTokens = true; // 保存 tokens，以便後續使用
-
-
+})
+.AddFacebook(options =>
+{
+    options.AppId = builder.Configuration["Authentication:Facebook:AppId"];
+    options.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"];
+    options.AccessDeniedPath = "/AccessDeniedPathInfo";
+    options.Scope.Add("email");  // 取得使用者 Email
+    options.Fields.Add("email"); // 確保可以獲取 Email 資訊
+    options.SaveTokens = true;
 });
 
-
 var app = builder.Build();
-
-
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -64,7 +68,6 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
 app.UseAuthorization();
 
 app.UseSession();

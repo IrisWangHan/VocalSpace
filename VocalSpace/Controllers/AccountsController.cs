@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using VocalSpace.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Http;
 using VocalSpace.Filters;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Facebook;
 
 
 namespace VocalSpace.Controllers
@@ -22,7 +22,7 @@ namespace VocalSpace.Controllers
 
         // 確保頁面刷新時拿到最新狀態
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
-        [RedirectIfAuthenticated]
+        [SessionAuthorize]
         public IActionResult Login()
         {
             return View();
@@ -36,7 +36,7 @@ namespace VocalSpace.Controllers
 
             if( user != null  && user.Password == password)
             {
-                HttpContext.Session.SetString("UserAccount", account);
+                HttpContext.Session.SetString("UserAccount", user.Account);
                 HttpContext.Session.SetString("IsLoggedIn", "true");
                 Console.WriteLine("登入成功!!");
                 return RedirectToAction("Index", "Home");
@@ -63,22 +63,43 @@ namespace VocalSpace.Controllers
         // Google 登入回應
         public async Task<IActionResult> GoogleResponse()
         {
+            return await ProcessExternalLoginResponse("Gmail");
+        }
+
+        public IActionResult FacebookLogin()
+        {
+            var properties = new AuthenticationProperties { RedirectUri = Url.Action("FacebookResponse") };
+            return Challenge(properties, FacebookDefaults.AuthenticationScheme);
+        }
+
+        // Facebook 登入回應
+        public async Task<IActionResult> FacebookResponse()
+        {
+            return await ProcessExternalLoginResponse("Facebook");
+        }
+
+        // 共用方法處理第三方登入回應
+        private async Task<IActionResult> ProcessExternalLoginResponse(string provider)
+        {
             var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            
+
             if (result.Principal == null)
-                return RedirectToAction("Login");   //檢查是否為有效身份
+                return RedirectToAction("Login");
 
-            var claims = result.Principal.Identities.FirstOrDefault()?.Claims;                      // 回傳google身份資訊
-            var gmail = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;             // 抓身份資訊>email
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.UsersInfo!.Email == gmail);  // 去DB搜尋是否有此email
+            var email = result.Principal.FindFirstValue(ClaimTypes.Email);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UsersInfo!.Email == email);
 
-            if (gmail != null && user !=null)
+            Console.WriteLine($"這是{provider} email: {email}");
+
+            if (email != null && user != null)
             {
-                HttpContext.Session.SetString("UserAccount", gmail);
+                HttpContext.Session.SetString("UserAccount", user.Account);
                 HttpContext.Session.SetString("IsLoggedIn", "true");
+                Console.WriteLine("登入成功");
                 return RedirectToAction("Index", "Home");
             }
-            TempData["SSOFailMsg"] = "此Gmail尚未註冊，請重新選擇登入Gmail";
+
+            TempData["SSOFailMsg"] = $"此{provider}尚未註冊，請重新選擇帳號";
             return RedirectToAction("Login", "Accounts");
         }
 
@@ -91,12 +112,12 @@ namespace VocalSpace.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [RedirectIfAuthenticated]
+        [SessionAuthorize]
         public IActionResult ForgetPassword()
         {
             return View();
         }
-        [RedirectIfAuthenticated]
+        [SessionAuthorize]
         public IActionResult ForgetPasswordDone()
         {
             return View();
@@ -107,7 +128,7 @@ namespace VocalSpace.Controllers
             return View();
         }
 
-        [RedirectIfAuthenticated]
+        [SessionAuthorize]
         public IActionResult Signup()
         {
             return View();
