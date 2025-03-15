@@ -52,10 +52,10 @@ namespace VocalSpace.Services
                         SelectionCoverPath = s.SelectionCoverPath,
                         JoinState = GetState(s.StartDate, s.EndDate),
                         VoteState = GetState(s.VotingStartDate, s.VotingEndDate),
-                        StartDate = s.StartDate ?? DateTime.MinValue,
-                        EndDate = s.EndDate ?? DateTime.MinValue,
-                        VotingStartDate = s.VotingStartDate ?? DateTime.MinValue,
-                        VotingEndDate = s.VotingEndDate ?? DateTime.MinValue,
+                        StartDate = s.StartDate,
+                        EndDate = s.EndDate,
+                        VotingStartDate = s.VotingStartDate,
+                        VotingEndDate = s.VotingEndDate,
                         SelectionId = s.SelectionId,
                         Description = s.Description
 
@@ -175,10 +175,10 @@ namespace VocalSpace.Services
                         SelectionCoverPath = s.SelectionCoverPath,
                         JoinState = GetState(s.StartDate, s.EndDate),
                         VoteState = GetState(s.VotingStartDate, s.VotingEndDate),
-                        StartDate = s.StartDate ?? DateTime.MinValue,
-                        EndDate = s.EndDate ?? DateTime.MinValue,
-                        VotingStartDate = s.VotingStartDate ?? DateTime.MinValue,
-                        VotingEndDate = s.VotingEndDate ?? DateTime.MinValue,
+                        StartDate = s.StartDate,
+                        EndDate = s.EndDate,
+                        VotingStartDate = s.VotingStartDate,
+                        VotingEndDate = s.VotingEndDate,
                         SelectionId = s.SelectionId,
                         Description = s.Description
 
