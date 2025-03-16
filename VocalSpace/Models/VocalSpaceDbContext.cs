@@ -101,7 +101,7 @@ public partial class VocalSpaceDbContext : DbContext
 
         modelBuilder.Entity<Authority>(entity =>
         {
-            entity.HasKey(e => e.AuthorityId).HasName("PK__Authorit__433B1E6D1749C6FD");
+            entity.HasKey(e => e.AuthorityId).HasName("PK__Authorit__433B1E6D6D4C7045");
 
             entity.ToTable("Authority");
 
@@ -142,37 +142,48 @@ public partial class VocalSpaceDbContext : DbContext
         {
             entity.ToTable("Ecpay", tb => tb.HasComment("紀錄贊助詳細資訊"));
 
+            entity.HasIndex(e => e.MerchantTradeNo, "IX_Ecpay").IsUnique();
+
             entity.Property(e => e.EcpayId).HasColumnName("EcpayID");
-            entity.Property(e => e.DonationId)
-                .HasComment("對應綠界MerchantMemberID")
-                .HasColumnName("DonationID");
-            entity.Property(e => e.MerchantId)
+            entity.Property(e => e.EcpayTradeNo)
+                .HasMaxLength(20)
+                .HasColumnName("ECPayTradeNo");
+            entity.Property(e => e.ItemName)
                 .HasMaxLength(50)
-                .HasDefaultValue("")
-                .HasComment("回傳的收款用戶註冊綠界時的ID(綠界辨識用)")
-                .HasColumnName("MerchantID");
+                .HasComment("回傳的交易編號,收款者可查詢交易狀態");
             entity.Property(e => e.MerchantTradeDate)
                 .HasMaxLength(50)
                 .HasComment("交易成立的時間");
+            entity.Property(e => e.MerchantTradeNo)
+                .HasMaxLength(20)
+                .HasDefaultValue("")
+                .HasComment("回傳的收款用戶註冊綠界時的ID(綠界辨識用)");
+            entity.Property(e => e.PaymentDate).HasColumnType("datetime");
             entity.Property(e => e.PaymentType)
-                .HasMaxLength(50)
+                .HasMaxLength(20)
                 .HasComment("支付方式的類型");
             entity.Property(e => e.PaymentTypeChargeFee)
                 .HasMaxLength(50)
                 .HasComment("支付手續費。 0表示沒有手續費");
+            entity.Property(e => e.ReceiverId).HasColumnName("ReceiverID");
             entity.Property(e => e.RtnCode).HasComment("回傳的交易狀態碼。0 未付款,1成功");
             entity.Property(e => e.RtnMsg)
                 .HasMaxLength(50)
                 .HasComment("回傳的交易狀態訊息");
+            entity.Property(e => e.SponsorId)
+                .HasComment("對應綠界MerchantMemberID")
+                .HasColumnName("SponsorID");
             entity.Property(e => e.TradeAmt).HasComment("回傳的交易金額");
-            entity.Property(e => e.TradeNo)
-                .HasMaxLength(50)
-                .HasComment("回傳的交易編號,收款者可查詢交易狀態");
 
-            entity.HasOne(d => d.Donation).WithMany(p => p.Ecpays)
-                .HasForeignKey(d => d.DonationId)
+            entity.HasOne(d => d.Receiver).WithMany(p => p.EcpayReceivers)
+                .HasForeignKey(d => d.ReceiverId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Ecpay_Donations");
+                .HasConstraintName("FK_Ecpay_Users1");
+
+            entity.HasOne(d => d.Sponsor).WithMany(p => p.EcpaySponsors)
+                .HasForeignKey(d => d.SponsorId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Ecpay_Users");
         });
 
         modelBuilder.Entity<Favoriteplaylist>(entity =>
@@ -376,7 +387,7 @@ public partial class VocalSpaceDbContext : DbContext
 
         modelBuilder.Entity<SongCategory>(entity =>
         {
-            entity.HasKey(e => e.SongCategoryId).HasName("PK__SongCate__BD6CF5D94034E595");
+            entity.HasKey(e => e.SongCategoryId).HasName("PK__SongCate__BD6CF5D9EC4D6DFF");
 
             entity.ToTable("SongCategory");
 
@@ -475,7 +486,7 @@ public partial class VocalSpaceDbContext : DbContext
         {
             entity.HasKey(e => new { e.UserId, e.SelectionDetailId });
 
-            entity.ToTable("UserVoted", tb => tb.HasTrigger("UpdateVoteCount"));
+            entity.ToTable("UserVoted");
 
             entity.Property(e => e.UserId).HasColumnName("UserID");
             entity.Property(e => e.SelectionDetailId).HasColumnName("SelectionDetailID");

@@ -1,0 +1,47 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model System.Collections.Generic.Dictionary<string, string>
+
+    <form id="form" name="form" method="POST" action="https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5">
+        <!--step2 : 收到後端的值印出來-->
+        @foreach (var key in @Model.Keys.ToList())
+        {
+            @(key) <input type="text" name="@key" value="@Model[key]" /><br />
+        }
+        <button type="submit" id="checkoutBtn">送出</button>
+    </form>
+    <!-- js套件 -->
+    
+    
+    
+    <!-- 自己的 -->
+@section Scripts {
+    <script>
+                $("#checkoutBtn").on('click', (e) => {
+            
+            //e.preventDefault(); // 取消預設DOM功能，因為送出就跳轉到綠界，這個可以停住確認自己的console.log的內容
+            //  serializeArray : 序列化轉Array, ex: 
+            let formData = $("#form").serializeArray();
+            var json = {};
+            $.each(formData, function () {
+                json[this.name] = this.value || "";
+            });
+            console.log(json);
+                //step3 : 新增訂單到資料庫
+            $.ajax({
+                type: 'POST',
+                 url: 'https://localhost:7145/Ecpay/AddOrders',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(json),
+                success: function (res) {
+                    console.log(res);
+                },
+                error: function (err) { console.log(err); },
+            });
+       });
+
+    </script>
+}

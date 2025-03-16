@@ -34,6 +34,10 @@ public partial class User
 
     public virtual ICollection<Donation> DonationReceivers { get; set; } = new List<Donation>();
 
+    public virtual ICollection<Ecpay> EcpayReceivers { get; set; } = new List<Ecpay>();
+
+    public virtual ICollection<Ecpay> EcpaySponsors { get; set; } = new List<Ecpay>();
+
     public virtual ICollection<Favoriteplaylist> Favoriteplaylists { get; set; } = new List<Favoriteplaylist>();
 
     public virtual ICollection<Interested> Interesteds { get; set; } = new List<Interested>();

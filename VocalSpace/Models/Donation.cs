@@ -23,7 +23,5 @@ public partial class Donation
 
     public virtual User DonationNavigation { get; set; } = null!;
 
-    public virtual ICollection<Ecpay> Ecpays { get; set; } = new List<Ecpay>();
-
     public virtual User Receiver { get; set; } = null!;
 }
