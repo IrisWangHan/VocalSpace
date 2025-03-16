@@ -1,23 +1,34 @@
 ﻿
 //  左邊歌曲類別，點選按鈕後變紅色
 window.addEventListener("DOMContentLoaded", (event) => {
-    const btnWhites = document.getElementsByClassName("btn-white");
+    //const btnWhites = document.getElementsByClassName("btn-white");
+
+    let params = new URL(document.location).searchParams;
+    let type = params.get("id");
+    console.log(type);
     const btnSorts = document.getElementsByClassName("btn-sort");
-    const btnArray = Array.from(btnWhites);
+    //const btnArray = Array.from(btnWhites);
     const btnSortArray = Array.from(btnSorts);
 
-    btnArray.forEach(btn => {
-        btn.addEventListener("click", function () {
-            if (this.classList.contains('active')) {
-                this.classList.remove('active');
-            } else {
-                btnArray.forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                this.classList.add('active');
-            }
-        })
-    })
+    switch (type) {
+        case type == '1'
+            document.getElementById('RockLink').classList.toggle('active');
+            break;
+
+    }
+
+    //btnArray.forEach(btn => {
+    //    btn.addEventListener("click", function () {
+    //        if (this.classList.contains('active')) {
+    //            this.classList.remove('active');
+    //        } else {
+    //            btnArray.forEach(btn => {
+    //                btn.classList.remove('active');
+    //            });
+    //            this.classList.add('active');
+    //        }
+    //    })
+    //})
 
     btnSortArray.forEach(btn => {
         btn.addEventListener("click", function () {
