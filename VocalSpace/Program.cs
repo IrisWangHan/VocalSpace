@@ -64,6 +64,16 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.Use(async (context, next) =>
+{
+    await next();
+
+    if (context.Response.StatusCode == 404)
+    {
+        context.Response.Redirect("/Home/PageNotFound");
+    }
+});
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
@@ -75,8 +85,14 @@ app.UseSession();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller}/{action}/{id?}",
-    defaults: new { controller = "Home", action = "TestDB" }
+    defaults: new { controller = "Home", action = "Index" }
     );
-    
+
+app.MapControllerRoute(
+    name: "SongDetail",
+    pattern: "Song/{id}",
+    defaults: new { controller = "Song", action = "Index" }
+);
+
 
 app.Run();

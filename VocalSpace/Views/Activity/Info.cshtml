@@ -1,4 +1,8 @@
-﻿@{
+﻿@model VocalSpace.Models.Test.ShareModalViewModel
+@{
+	var userBar = ViewData["UserBar"] as VocalSpace.Models.ViewModel.Global.UserBarViewModel;
+}
+@{
 	<!-- 帶入登入狀態 -->
 	var tmp = TempData.Peek("isLogin");
 
@@ -39,7 +43,7 @@
 			</div>
 			<hr class="mt-5 mb-2">
 			<div class="poster-section">
-				@await Html.PartialAsync("_Songdetail_artist_partial")
+				@await Html.PartialAsync("_Songdetail_artist_partial",userBar)
 			</div>
 			<hr class="mt-2 mb-5">
 			<h2>介紹</h2>
@@ -71,7 +75,7 @@
 	</div>
 </div>
 @* 直接加载 Modal，并设为隐藏 *@
-@await Html.PartialAsync("_ShareModal")
+@await Html.PartialAsync("_Modal_ShereActivity")
 
 @section Scripts {
 	<script>

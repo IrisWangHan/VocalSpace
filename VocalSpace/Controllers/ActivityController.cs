@@ -56,6 +56,15 @@ namespace VocalSpace.Controllers
                 Link = "/Activity/Info"
             };
 
+            var userBar = new VocalSpace.Models.ViewModel.Global.UserBarViewModel
+            {
+                pfp = "/image/Wchi.png",
+                Name = "Wchi",
+                Account = "Wchiii"
+            };
+
+            ViewData["UserBar"] = userBar;
+
             return View(model);
         }
 

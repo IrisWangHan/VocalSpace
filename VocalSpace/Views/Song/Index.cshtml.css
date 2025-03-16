@@ -4,14 +4,14 @@ a {
     cursor: pointer;
 }
 
-span{
+span {
     color: #f9595f;
     cursor: pointer;
 }
 
-span:hover {
-    color: #d94a4f; /* 更深的紅色 */
-  }
+    span:hover {
+        color: #d94a4f; /* 更深的紅色 */
+    }
 
 .Avater-link {
     display: block;
@@ -75,7 +75,7 @@ main {
 .songpfp img {
     width: 100%;
     max-width: 380px;
-    border:5px solid ;
+    border: 5px solid;
     border-radius: 2px;
 }
 
@@ -83,7 +83,6 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
-    
 }
 
 .songinfo {
@@ -107,6 +106,23 @@ main {
     display: flex;
     align-items: center;
 }
+
+/*按鈕樣式*/
+.btn-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+
+    .btn-circle.btn-lg {
+        width: 70px;
+        height: 70px;
+        font-size: 30px;
+    }
 /*左邊區塊*/
 /*上傳者區塊*/
 .userinfo {
@@ -154,16 +170,16 @@ main {
     justify-content: center;
 }
 
-.ad_container img {
-    width: 100%;
-    max-width: 300px;
-    border-radius: 2px;
-}
+    .ad_container img {
+        width: 100%;
+        max-width: 300px;
+        border-radius: 2px;
+    }
 /*右邊區塊*/
 /*介紹 歌詞區*/
 
 .introduce {
-    max-height: 50px;
+    max-height: 72px;
     position: relative;
     overflow: hidden;
     transition: max-height 0.5s ease-in-out; /* 添加動畫效果 */

@@ -1,19 +1,46 @@
-﻿@{
-
+﻿@model VocalSpace.Models.ViewModel.Song.SongInfoViewModel
+@{
+	var userBar = ViewData["UserBar"] as VocalSpace.Models.ViewModel.Global.UserBarViewModel;
 }
-<title>聲維宇宙排行榜</title>
+@{
+	var category = "";
+	switch (Model.SongCategory.SongCategoryId)
+	{
+		case 1:
+			category = "/exploreMusic/ExploreMusicRock";
+			break;
+		case 2:
+			category = "/exploreMusic/ExploreMusicFolk";
+			break;
+		case 3:
+			category = "/exploreMusic/ExploreMusicHiphop";
+			break;
+		case 4:
+			category = "/exploreMusic/ExploreMusicCitypop";
+			break;
+		case 5:
+			category = "/exploreMusic/ExploreMusicEDM";
+			break;
+		case 6:
+			category = "/exploreMusic/ExploreMusicExplore";
+			break;
+		default:
+			category = "#";
+			break;
+	}
+}
 <div class="page-container mb-5">
 	<div class="top-container container">
 		<!-- 左側圖片區域 -->
 		<div class="col-md-4 songpfp">
-			<img src="/image/p1.jpg">
+			<img src="@Model.Song.CoverPhotoPath" alt="歌曲封面">
 		</div>
 		<!-- 右側音樂介紹區域 -->
 		<div class="row col-md-8 songinfo">
-			<h1>打不通的電話</h1>
+			<h1>@Model.Song.SongName</h1>
 			<div class="opacity-50">
 				<div>
-					<a href="#">搖滾</a>
+					<a href="@category">@Model.SongCategory.CategoryName</a>
 				</div>
 			</div>
 			<div class="cols-2">
@@ -21,29 +48,46 @@
 					<ul class="list-inline opacity-75">
 						<li class="list-inline-item">
 							<h4 class="fs-6">播放次數</h4>
-							<h4>0</h4>
+							<h4>@Model.Song.PlayCount</h4>
 						</li>
 						<li class="list-inline-item">
 							<h4 class="fs-6">喜歡</h4>
-							<h4>0</h4>
+							<h4>@Model.Song.LikeCount</h4>
 						</li>
 					</ul>
 					<div class="ui-button">
-						@await Html.PartialAsync("_Songdetail_ButtonUI")
+						<div class="d-flex align-items-center gap-2">
+							<button class="btn btn-outline-secondary btn-circle" data-bs-toggle="modal" data-bs-target="#Modal2" title="分享">
+								<i class="bi bi-share"></i>
+							</button>
+							<button class="btn btn-outline-secondary btn-circle" data-bs-toggle="modal" data-bs-target="#Modal1" title="新增">
+								<i class="bi bi-plus-lg"></i>
+							</button>
+							<button class="btn btn-outline-secondary btn-circle" title="喜歡">
+								<i class="bi bi-heart-fill"></i>
+							</button>
+							<button class="btn btn-outline-secondary btn-circle btn-lg" data-bs-toggle="modal" data-bs-target="#donateModal" title="贊助">
+								<i class="bi bi-gem"></i>
+							</button>
+							<button class="btn btn-danger btn-circle btn-lg playbtn" title="播放">
+								<i class="bi bi-play-fill"></i>
+							</button>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	@await Html.PartialAsync("_DonateModal")
-
+	@await Html.PartialAsync("_Modal_Donate")
+	@await Html.PartialAsync("_Modal_AddtoPlaylist")
+	@await Html.PartialAsync("_Modal_ShareSong")
 	<!-- 放在圖片下方的歌手資訊 -->
 	<div class="bottom-container container">
 		<div class="left-container  col-4">
-				@await Html.PartialAsync("_Songdetail_artist_partial")
+			@await Html.PartialAsync("_Songdetail_artist_partial", userBar)
 			<div class="container">
 				<hr class="mt-5 mb-2">
-				<p class="text-gray-light mb-2 opacity-50">發布日期:2025/02/28</p>
+				<p class="text-gray-light mb-2 opacity-50">發布日期:@(Model.Song.CreateTime.ToString("yyyy/MM/dd") ?? "未知時間")</p>
 				<hr class="mt-2 mb-5">
 			</div>
 			@* 廣告圖 *@
@@ -56,25 +100,18 @@
 			<div class="introduce-area">
 				<div class="introduce">
 					<p>
-						介紹內文<br />
-						介紹內文<br />
-						介紹內文<br />
-						介紹內文<br />
-						介紹內文
+						@(string.IsNullOrWhiteSpace(Model.Song.SongDescription) ? "此歌曲沒有任何介紹!" : Html.Raw(Model.Song.SongDescription.Replace("\\n", "<br>")))
 					</p>
 				</div>
-				<span class="toggle-btn">查看更多</span>
+				<span class="toggle-btn" style="display: none;">查看更多</span>
 			</div>
 			<hr class="mt-5 mb-5">
 			<h2>歌詞</h2>
 			<div class="introduce-area">
 				<div class="introduce">
-					<p>歌詞內文</p>
-					<p>1</p>
-					<p>2</p>
-					<p>3</p>
+					@(string.IsNullOrWhiteSpace(Model.Song.Lyrics) ? "此歌曲未提供任何歌詞!" : Html.Raw(Model.Song.Lyrics.Replace("\\n", "<br>")))
 				</div>
-				<span class="toggle-btn">查看更多</span>
+				<span class="toggle-btn" style="display: none;">查看更多</span>
 			</div>
 			<hr class="mt-5 mb-5">
 			<div>
@@ -88,34 +125,30 @@
 
 @section Scripts {
 	<script>
-		@* document.addEventListener("DOMContentLoaded", function () {
-			var toggleBtn = document.querySelector(".toggle-btn");
-			var introduce = document.querySelector(".introduce");
+		$(document).ready(function () {
+			$('.introduce').each(function () {
+					const introduce = $(this);
+					const toggleBtn = introduce.next('.toggle-btn');
 
-			toggleBtn.addEventListener("click", function () {
-				if (introduce.classList.contains("expanded")) {
-					// 目前展開，點擊後收合
-					introduce.classList.remove("expanded");
-					toggleBtn.textContent = "查看更多";
-				} else {
-					// 目前收合，點擊後展開
-					introduce.classList.add("expanded");
-					toggleBtn.textContent = "收合";
-				}
-			});
-		}); *@
+					// 檢查內容是否超過三行高度
+					if (introduce.prop('scrollHeight') > introduce.outerHeight()) {
+						toggleBtn.show(); // 顯示按鈕
+					} else {
+						toggleBtn.hide(); // 隱藏按鈕
+					}
+				});
 
-			$(document).ready(function () {
+				// 點擊展開或收合
 				$('.toggle-btn').click(function () {
 					const introduce = $(this).prev('.introduce');
-					if (introduce.css('max-height') === '50px') {
+					if (introduce.css('max-height') === '72px') {
 						introduce.css('max-height', introduce.prop('scrollHeight') + 'px');
 						$(this).text('收起內容');
 					} else {
-						introduce.css('max-height', '50px');
+						introduce.css('max-height', '72px');
 						$(this).text('查看更多');
 					}
-				});
 			});
+		});
 	</script>
 }

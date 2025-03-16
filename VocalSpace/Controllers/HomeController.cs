@@ -37,6 +37,12 @@ namespace VocalSpace.Controllers
         }
 
         // 錯誤頁面
+        public IActionResult PageNotFound()
+        {
+            return View();
+        }
+
+        // 錯誤頁面
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

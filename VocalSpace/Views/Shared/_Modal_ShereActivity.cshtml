@@ -1,0 +1,52 @@
+﻿@model VocalSpace.Models.Test.ShareModalViewModel
+
+<div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="shareModalLabel">@Model.Title</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				@if (!string.IsNullOrEmpty(Model.CustomContent))
+				{
+					@Html.Raw(Model.CustomContent)
+				}
+				else
+				{
+					<div class="share-content">
+						<div class="blur-cover-block">
+							<img src="@Model.ImageUrl" class="blur-cover">
+						</div>
+						<div class="share-image">
+							<a href="@Model.Link">
+								<img src="@Model.ImageUrl" alt="活動封面">
+							</a>
+						</div>
+						<div class="share-info">
+							<strong>@Model.EventName</strong>
+							<div>@Model.Date</div>
+							<div>@Model.Location</div>
+						</div>
+					</div>
+				<div class="share-actions">
+					<button class="btn fb"><i class="bi bi-facebook"></i></button>
+					<button class="btn ig"><i class="bi bi-instagram"></i></button>
+					<input type="text" class="share" value="@Model.Link" readonly>
+					<button class="copy" onclick="copyLink('@Model.Link')">複製</button>
+				</div>
+				}
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	function copyLink(link) {
+		navigator.clipboard.writeText(link);
+		alert("連結已複製！");
+	}
+</script>

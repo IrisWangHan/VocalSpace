@@ -1,0 +1,84 @@
+﻿<style>
+	.container {
+		text-align: center;
+		margin-top: 80px;
+	}
+
+	.image-container {
+		position: relative;
+	}
+
+	.switch-img {
+		max-width: 40%;
+		width: 40%;
+	}
+
+	h2 {
+		margin-top: 20px;
+		font-size: 24px;
+		font-weight: bold;
+	}
+
+	p {
+		color: gray;
+		margin-bottom: 30px;
+	}
+
+	.btn-group {
+		display: flex;
+		justify-content: center;
+		gap: 20px;
+	}
+
+	.btn {
+		padding: 10px 40px;
+		background-color: #ff5f5f;
+		color: white;
+		border: none;
+		border-radius: 8px;
+		cursor: pointer;
+		font-size: 16px;
+	}
+
+		.btn:hover {
+			background-color: #ff3d3d;
+		}
+
+	
+	[data-theme="dark"] .switch-img {
+		content: url('/image/Sorrynopage_dark.png');
+	}
+
+
+	[data-theme="light"] .switch-img {
+		content: url('/image/Sorrynopage.png');
+	}
+
+	@@media (max-width: 768px) {
+		.container {
+			width: 100%;
+			height: 100vh;
+			margin: 0 auto;
+			padding: 20px;
+			box-sizing: border-box;
+			display: flex;
+			flex-direction: column;
+			justify-content: center; 
+		}
+		.switch-img {
+			max-width: 60vw;
+			width: auto;
+		}
+	}
+</style>
+<title>找不到頁面</title>
+<div class="container">
+	<div class="image-container">
+		<img src="/image/Sorrynopage_dark.png" alt="404" class="switch-img">
+	</div>
+	<h2>很抱歉！這裡什麼都沒有...</h2>
+	<p>請按下方的按鈕返回首頁</p>
+	<div class="btn-group">
+		<button class="btn" onclick="window.location.href='/Home/Index'">返回首頁</button>
+	</div>
+</div>

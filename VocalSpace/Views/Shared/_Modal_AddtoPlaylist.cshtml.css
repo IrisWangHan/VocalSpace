@@ -1,0 +1,138 @@
+﻿@media (max-width: 576px) {
+    .artist {
+        font-size: 10px;
+    }
+
+    .btn {
+        padding: .35rem .5rem;
+    }
+}
+
+/* 搜尋框 */
+.addsearch-box {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+/* 歌單區域 */
+.addplaylist-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    margin-bottom: 12px;
+}
+
+    .addplaylist-item img {
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
+        margin-right: 12px;
+    }
+
+.addplaylist-info {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.addplaylist-name {
+    font-size: 16px;
+    font-weight: bold;
+    color: black;
+}
+
+.addplaylist-song {
+    font-size: 14px;
+    color: #666;
+}
+
+/* 按鈕 */
+.addbtn-add {
+    background: #ff4d4f;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease-in-out;
+}
+
+    .addbtn-add.selected {
+        background: white;
+        color: #ff4d4f;
+        border: 1px solid #ff4d4f;
+    }
+
+    .addbtn-add:hover {
+        background: #e63946;
+    }
+
+/* 加入歌單，分享歌曲按鈕之彈跳視窗 */
+
+.modal-title {
+    margin-bottom: 0;
+    line-height: 1.5;
+    color: black;
+}
+
+.modal-content {
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+    padding: 30px;
+}
+
+.modal-footer {
+    justify-content: flex-start;
+    padding: 20px 0 0 0;
+}
+
+    .modal-footer .copy {
+        background: #ff4d4f;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 8px;
+        margin-left: 15px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+.modal-footer input {
+    flex-grow: 1;
+    padding: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.addbtn-cancel {
+    margin-left: 150px;
+    background: #f0f0f0;
+    margin-right: 12px;
+    justify-content: right;
+}
+
+.addbtn-confirm {
+    margin-left: 15px;
+    background: #ff4d4f;
+    color: white;
+    justify-content: right;
+}
+
+.addbtn-newPlaylist {
+    background: #ff4d4f;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+}

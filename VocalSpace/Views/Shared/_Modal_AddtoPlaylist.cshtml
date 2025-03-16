@@ -1,0 +1,42 @@
+﻿<!-- 加入歌單彈跳視窗 -->
+<div class="modal fade" id="Modal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">加入歌單</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="addsearch-box" placeholder="搜尋歌單">
+                <!-- 歌單列表 -->
+                <div class="addplaylist-item">
+                    <div class="addplaylist-info">
+                        <img src="/image/p2.jpeg" alt="封面">
+                        <div>
+                            <div class="addplaylist-name">tt</div>
+                            <div class="addplaylist-song">1 首歌曲: ilyynlvl</div>
+                        </div>
+                    </div>
+                    <button class="addbtn-add" onclick="addtoggleSelection(this)">+ 加入歌單</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="addbtn-newPlaylist">+ 新增歌單</button>
+                <button class="btn addbtn-cancel" data-bs-dismiss="modal">取消</button>
+                <button class="btn addbtn-confirm" data-bs-dismiss="modal">確定</button>
+            </div>
+        </div>
+    </div>
+</div>
+	<script>
+    function addtoggleSelection(button) {
+      if (button.classList.contains("selected")) {
+          button.classList.remove("selected");
+          button.textContent = "+ 加入歌單";
+      } else {
+          button.classList.add("selected");
+          button.textContent = "✔ 已選擇";
+      }
+    }
+	</script>
+}
