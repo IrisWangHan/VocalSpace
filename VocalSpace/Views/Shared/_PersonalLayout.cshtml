@@ -1,16 +1,13 @@
-﻿@{
+﻿@model VocalSpace.Models.ViewModel.Personal.PersonalViewModel
+
+@{
     Layout = "_Layout";  // 引用全域的 _Layout.cshtml
+    int id = 1;
 }
 
-     <div class="profile-header">
-
-        @* <div class="cover">   *@
-        @*      <div class="coverbutton">  *@
-        @*       <button type="button" class="btn btn-danger"><i class="bi bi-plus-lg"></i>追蹤對方</button> *@ 
-        @*     </div> *@
-        @* </div> *@
-
-             <!-- 預覽封面圖片 -->
+<div class="profile-header">
+    @{
+        if (Model.UserId == id) { <!-- 預覽封面圖片 -->
 
             <div class="cover-container">
                 <div class="covercover">
@@ -21,6 +18,19 @@
                     <input type="file" id="coverfileInput" accept="image/*">
                 </label>
             </div>
+            
+        } else 
+        {
+            <div class="cover"> 
+                <div class="coverbutton"> 
+                    <button type="button" class="btn btn-danger"><i class="bi bi-plus-lg"></i>追蹤對方</button>
+                </div> 
+            </div> 
+        }
+    }
+    
+
+            
 
            
         <div class="pro">

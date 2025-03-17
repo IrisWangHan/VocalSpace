@@ -1,5 +1,4 @@
 ﻿@model IEnumerable<VocalSpace.Models.Dto.HotRankDto>
-@* @model IEnumerable<VocalSpace.Models.Dto.HotRankDto> *@
 @{
     int count = 1;
 }
@@ -57,12 +56,14 @@
                                         <span class="rank">━</span>
                                     }
                                 }
-
-                                <a href="#">
+                                @{
+                                    Console.WriteLine(item.SongId);
+                                }
+                                <a href="/Song/@item.SongId">
                                     <img src="@item.SongCoverPhotoPath" alt="song cover">
                                 </a>
                                 <div class="info">
-                                    <a asp-controller="Song" asp-action="Song" asp-route-id=@item.SongId><p class="song">@item.SongName</p></a>
+                                    <a asp-controller="Song" asp-action="Index" asp-route-id=@item.SongId><p class="song">@item.SongName</p></a>
                                     <a href="/Personal/mymusic"> <p class="artist">@item.UserName</p></a>
                                 </div>
                                 @await Html.PartialAsync("_SongButtonModal")

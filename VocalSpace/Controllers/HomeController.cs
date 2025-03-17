@@ -34,20 +34,21 @@ namespace VocalSpace.Controllers
                                             join rank in _context.SongRanks on song.SongId equals rank.SongId
                                             join user in _context.Users on song.Artist equals user.UserId
                                             join category in _context.SongCategories on song.SongCategoryId equals category.SongCategoryId
-                                            where rank.RankPeriod ==(DateTime.Parse("2025-02-01"))
+                                            where rank.RankPeriod == (DateTime.Parse("2025-02-01"))
                                             group new { song, rank, user, category } by song.SongId into grouped
                                             orderby grouped.Min(g => g.rank.CurrentRank)
                                             select new HotRankDto
                                             {
+                                                SongId = grouped.First().song.SongId,
                                                 SongCoverPhotoPath = grouped.First().song.CoverPhotoPath,
                                                 SongName = grouped.First().song.SongName,
                                                 UserName = grouped.First().user.UserName!,
                                                 LikeCount = grouped.First().song.LikeCount,
                                                 SongCategoryId = grouped.First().category.SongCategoryId,
-                                                SongStatus = grouped.First().song.SongStatus,                                               
+                                                SongStatus = grouped.First().song.SongStatus,
                                                 IsRemove = grouped.First().song.IsRemove,
                                                 PreRank = (byte)(grouped.First().rank.PreRank ?? 0),
-                                                CurrentRank = grouped.First().rank.CurrentRank,                                     
+                                                CurrentRank = grouped.First().rank.CurrentRank,
                                             };
             if (id != 0)
             {
