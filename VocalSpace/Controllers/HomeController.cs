@@ -48,7 +48,7 @@ namespace VocalSpace.Controllers
                                                 IsRemove = a.IsRemove,
                                                 SongCategoryId = a.SongCategoryId,
                                                 SongName = a.SongName,
-                                                PreRank = b.PreRank,
+                                                PreRank = (byte)b.PreRank!,
                                                 CurrentRank = b.CurrentRank,
                                                 LikeId = c != null ? c.LikeId : 0,
                                                 UserId = c != null ? c.UserId : 0,
