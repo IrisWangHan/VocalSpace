@@ -2,6 +2,7 @@
 {
     public class HotRankDto
     {
+        public string UserName { get; set; } = null!;
         //from model.Song
         public string SongPath { get; set; } = null!;
 
