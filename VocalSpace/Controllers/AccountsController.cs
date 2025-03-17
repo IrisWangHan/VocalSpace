@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Facebook;
+using VocalSpace.Models.ViewModel;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using System.Security.Cryptography;
+
 
 
 namespace VocalSpace.Controllers
@@ -15,9 +19,11 @@ namespace VocalSpace.Controllers
     {
 
         private readonly VocalSpaceDbContext _context;
-        public AccountsController(VocalSpaceDbContext context)
+        private readonly EmailService _emailService;
+        public AccountsController(VocalSpaceDbContext context, EmailService emailService)
         {
             _context = context;
+            _emailService = emailService;
         }
 
         // 確保頁面刷新時拿到最新狀態
@@ -134,6 +140,84 @@ namespace VocalSpace.Controllers
         {
             return View();
         }
+        // Step 1: 檢查帳號是否已存在
+        [HttpPost]
+        public IActionResult CheckUserAccount(string UserAccount)
+        {
+            bool exists = _context.Users.Any(u => u.Account == UserAccount);
+            return Json(new { exists });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SendVerificationCode(string email)
+        {
+            var verificationCode = new Random().Next(100000, 999999).ToString();
+            HttpContext.Session.SetString("VerificationCode", verificationCode);
+
+            bool success = await _emailService.SendVerificationCodeAsync(email, verificationCode);
+            return Json(new { success });
+        }
+
+        [HttpPost]
+
+        public async Task<IActionResult> VerifyCode(string code)
+        {
+            var correctCode = HttpContext.Session.GetString("VerificationCode");
+            if (correctCode == code)
+            {
+                return Json(new { success = true });
+            }
+            return Json(new{success = false, message = "驗證碼錯誤"});
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Signup(SignupViewModel model)
+        {
+            if(_context.Users.Any(u => u.Account == model.SignupAccount))
+            {
+                return Json(new { success = false, message = "帳號已被使用" });
+            }
+            string hashedPassword = HashPassword(model.SignupPassword);
+
+            var user = new User
+            {
+                UserName = model.SignupUserName,
+                Account = model.SignupAccount,
+                Password = hashedPassword,
+                CreateTime = DateTime.Now
+            };
+
+            var userInfo = new UsersInfo
+            {
+                UserId = user.UserId,
+                Birthday = model.SignupUserBirthdate,
+                PersonalIntroduction = model.SignupUserBio,
+                Email = model.SignupEmail
+            };
+            _context.UsersInfos.Add(userInfo);
+            _context.SaveChanges();
+            return Json(new { success = true });
+        }
+        // 密碼 Hash
+        private string HashPassword(string password)
+        {
+            byte[] salt = new byte[16];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(salt);
+            }
+
+            byte[] hashed = KeyDerivation.Pbkdf2(
+                password: password,
+                salt: salt,
+                prf: KeyDerivationPrf.HMACSHA256,
+                iterationCount: 10000,
+                numBytesRequested: 32
+            );
+
+            return Convert.ToBase64String(salt) + ":" + Convert.ToBase64String(hashed);
+        }
+
 
         //  整合  AccountSettings
         public IActionResult memberInformation()

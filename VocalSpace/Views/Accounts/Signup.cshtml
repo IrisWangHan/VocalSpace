@@ -1,7 +1,7 @@
 ﻿@{
 	Layout = "_SignupLayout";  
 }
-<form action="~/Home/Index" method="post">
+<form id="SignupForm">
     <!-- Step 1: 帳號密碼設定 -->
     <div class="step" id="step1">
         <h3>帳號密碼設定</h3>
@@ -122,23 +122,69 @@
             });
         });
 
+        // 確認帳號有無重複
+        $("#username").on("blur", function () {
+            var username = $(this).val();
+            $.post("/Accounts/CheckUserAccount", { UserAccount: username }, function (data) {
+                if (data.exists) {
+                    alert("此帳號已被使用！");
+                }
+            });
+        });
+
+        // send 驗證碼
+        $("#email").on("blur", function () {
+            var email = $(this).val();
+            $.post("/Accounts/SendVerificationCode", { email: email }, function (data) {
+                if (data.success) {
+                    alert("驗證碼已發送！");
+                } else {
+                    alert("驗證碼發送失敗！");
+                }
+            });
+        });
+
+        $("#verification_code").on("blur", function () {
+            var code = $(this).val();
+            $.post("/Accounts/VerifyCode", { code: code }, function (data) {
+                if (!data.success) {
+                    alert("驗證碼錯誤！");
+                }
+            });
+        });
+
+        $("#SignupForm").on("submit", function (e) {
+            e.preventDefault();
+
+            var formData = $(this).serialize();
+            $.post("/Accounts/Signup", formData, function (data) {
+                if (data.success) {
+                    alert("註冊成功！");
+                    // window.location.href = "/Home/Index";
+                } else {
+                    alert(data.message);
+                }
+            });
+        });
 
 
-        document.getElementById("togglePassword").addEventListener("click", function () {
-            let newPasswordField = document.getElementById("newPassword");
-            if (newPasswordField.type === "password") {
-                newPasswordField.type = "text";
-                this.classList.replace("bi-eye-fill", "bi-eye-slash-fill"); // 切換圖標
+        // 隱藏or顯示密碼
+        $("#togglePassword").on("click", function () {
+            let newPasswordField = $("#newPassword");
+            if (newPasswordField.attr("type") === "password") {
+                newPasswordField.attr("type", "text");
+                $(this).removeClass("bi-eye-fill").addClass("bi-eye-slash-fill"); // 切換圖標
             } else {
-                newPasswordField.type = "password";
-                this.classList.replace("bi-eye-slash-fill", "bi-eye-fill"); // 切換回來
+                newPasswordField.attr("type", "password");
+                $(this).removeClass("bi-eye-slash-fill").addClass("bi-eye-fill"); // 切換回來
             }
         });
+
 
         // 倒數計時函數
         function startCountdown() {
             clearInterval(timer); // 確保不會有重複的計時器
-            countdown = 10;
+            countdown = 180;
             $("#resendCode").prop("disabled", true).text(`重新發送 (${countdown})`);
 
             timer = setInterval(() => {
