@@ -25,25 +25,39 @@ namespace VocalSpace.Controllers
         public async Task<IActionResult> Index(int? id)
         {
             // 指定 SongId，Join User UserInfo SongCategory 
-            var songdata = await (
-            from s in _context.Songs
-            join u in _context.Users on s.Artist equals u.UserId
-            join ui in _context.UsersInfos on u.UserId equals ui.UserId
-            join sc in _context.SongCategories on s.SongCategoryId equals sc.SongCategoryId
-            where s.SongId == id
-            // 把資料丟進 ViewModel
-            select new SongInfoViewModel
+            var songdata = await _context.Songs
+        .Include(s => s.ArtistNavigation) // 自動User 關聯
+        .Include(s => s.SongCategory)
+        .Include(s => s.ArtistNavigation.UsersInfo) // 自動UserInfo 關聯
+        .AsNoTracking()
+        .Where(s => s.SongId == id)
+        .Select(s => new SongInfoViewModel
+        {
+            Song = s,
+            User = s.ArtistNavigation,
+            UsersInfo = s.ArtistNavigation.UsersInfo!,
+            SongCategory = s.SongCategory,
+            PlayLists = _context.PlayLists
+                            .Where(p => p.UserId == s.ArtistNavigation.UserId)
+                            .ToList(),
+            CommentSection = new CommentSectionViewModel
             {
-                Song = s,
-                User = u,
-                UsersInfo = ui,
-                SongCategory = sc,
-                PlayLists = _context.PlayLists
-                                .Where(p => p.UserId == u.UserId) 
-                                .ToList()
+                IsLogin = HttpContext.Session.GetString("IsLoggedIn") != null, // 判斷使用者是否登入 (透過 Session)
+                Comments = _context.SongComments
+                    .Where(c => c.SongId == id) // 篩選當前歌曲的留言
+                    .OrderByDescending(c => c.CommentTime) // 按留言時間排序
+                    .Select(c => new CommentViewModel
+                    {
+                        TypeId = c.SongCommentId, // 留言 ID
+                        Account = c.User.Account, // 使用者帳號
+                        UserName = c.User.UserName!, // 使用者名稱
+                        Avatar = c.User.UsersInfo!.AvatarPath, // 使用者頭像
+                        Comment = c.Comment, // 留言內容
+                        CommentTime = c.CommentTime // 留言時間
+                    }).ToList()
             }
-
-            ).FirstOrDefaultAsync();
+        })
+        .FirstOrDefaultAsync();
             // 如果查詢結果為空，則返回首頁
             if (songdata == null)
             {
