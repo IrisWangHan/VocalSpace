@@ -22,7 +22,7 @@
     <script>
                 $("#checkoutBtn").on('click', (e) => {
             
-            //e.preventDefault(); // 取消預設DOM功能，因為送出就跳轉到綠界，這個可以停住確認自己的console.log的內容
+          //  e.preventDefault(); // 取消預設DOM功能，因為送出就跳轉到綠界，這個可以停住確認自己的console.log的內容
             //  serializeArray : 序列化轉Array, ex: 
             let formData = $("#form").serializeArray();
             var json = {};
@@ -33,7 +33,7 @@
                 //step3 : 新增訂單到資料庫
             $.ajax({
                 type: 'POST',
-                 url: 'https://localhost:7145/Ecpay/AddOrders',
+                 url: 'https://localhost/Ecpay/AddOrders',
                 contentType: 'application/json; charset=utf-8',
                 data: JSON.stringify(json),
                 success: function (res) {
