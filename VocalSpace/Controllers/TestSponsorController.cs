@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
@@ -13,19 +14,20 @@ namespace VocalSpace.Controllers
         {
             _config = config;
         }
+        
         public IActionResult Index()
         {
             //  Guid.NewGuid() : 產生全球唯一識別碼 (UUID)
             //  orderId : 產生隨機20碼訂單編號
             var orderId = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 20);
             //需填入你的網址
-            var website = $"https://localhost/";
+            var website = $"https://qlxw3lk1-7145.asse.devtunnels.ms/";
             var order = new Dictionary<string, string>
             {
                 //綠界需要的參數
                 { "MerchantTradeNo",  orderId},
                 { "MerchantTradeDate",  DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")},
-                { "TotalAmount",  "8700"},
+                { "TotalAmount",  "387"},
                 { "TradeDesc",  "無"},
                 { "ItemName",  "測試商品"},
                 { "CustomField1",  ""},
