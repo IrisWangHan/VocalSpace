@@ -29,10 +29,10 @@ namespace VocalSpace.Models.ViewModel.Selection
         public DateTime? EndDate { get; set; }
 
         [JsonProperty("votingStartDate")]
-        public DateTime VotingStartDate { get; set; }
+        public DateTime? VotingStartDate { get; set; }
 
         [JsonProperty("votingEndDate")]
-        public DateTime VotingEndDate { get; set; }
+        public DateTime? VotingEndDate { get; set; }
 
         [JsonProperty("paginationCount")]
         public int PaginationCount { get; set; }
@@ -41,7 +41,7 @@ namespace VocalSpace.Models.ViewModel.Selection
     }
     public class SelectionSongs
     {
-        public long SelectionDetailId { get; set; }
+        public long? SelectionDetailId { get; set; }
         public long SongId { get; set; }
         public int? VoteCount { get; set; }
         public string? CoverPhotoPath { get; set; }

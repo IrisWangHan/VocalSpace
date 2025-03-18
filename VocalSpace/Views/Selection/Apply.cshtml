@@ -1,5 +1,16 @@
 ﻿@model VocalSpace.Models.ViewModel.Selection.SelectionFormViewModel
+@{
+	var errorMessage = TempData["ErrorMessage"] as string;
+}
 
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+	<script>
+		alert(@Html.Raw(Json.Serialize(errorMessage)); // 顯示錯誤訊息
+		window.location.href = '@Url.Action("Index", "Selection")'; // 跳轉回首頁
+
+	</script>
+}
 <section class="content ">
 	<div class="content__area">
 		<h1>徵選報名表</h1>
@@ -34,7 +45,7 @@
 				<ol class="content-form-list">
 					<li class="border-bottom">
 						<p> 姓名</p>
-						@if (Model.JoinState == "開放中")
+						@if (Model.JoinState == "開放中" && Model.Songs.Count < 1)
 						{
 							<input type="text" class="content-form-input" name="userName" value="@(Model.UserName)" />
 						}
@@ -45,7 +56,7 @@
 					</li>
 					<li class="border-bottom">
 						<p> 電子信箱</p>
-						@if (Model.JoinState == "開放中")
+						@if (Model.JoinState == "開放中" && Model.Songs.Count < 1)
 						{
 							<input type="text" class="content-form-input" name="email" value="@(Model.Email)" />
 						}
@@ -57,7 +68,7 @@
 					</li>
 					<li class="border-bottom content-form-item">
 						<div class="upload__title">
-							@if (Model.JoinState == "開放中")
+							@if (Model.JoinState == "開放中" && Model.Songs.Count < 1)
 							{
 								<p> 上傳作品</p>
 								<label class="upload__item-file">
@@ -129,15 +140,8 @@
 								</ol>
 							</div>
 							<div class="popup__select-works-button">
-								@if (Model.JoinState == "開放中")
-								{
-									@if (Model.Songs.Count<0) {
-										<button class="btn btn-submit--theme" data-selectionId="@(Model.SelectionId)">送出</button>
-									}else{
-										<button class="btn btn-submit--theme" data-selectionId="@(Model.SelectionId)">修改</button>
-									}
-									<button class="btn btn-cancel--theme">取消</button>
-								}
+								<button class="btn btn-submit--theme" data-selectionId="@(Model.SelectionId)">送出</button>
+								<button class="btn btn-cancel--theme">取消 @Model.Songs.Count</button>								
 							</div>
 						</div>
 					</li>
@@ -150,8 +154,12 @@
 			</div>
 		</div>
 		<div class="form-button">
-			<button class="btn btn-cancel--theme">清除</button>
-			<button class="btn btn-submit--theme">送出</button>
+			@if (Model.JoinState == "開放中" && Model.Songs.Count < 1)
+			{
+				<button class="btn btn-submit--theme">送出</button>
+				<button class="btn btn-cancel--theme">清除</button>
+			}
+
 		</div>
 	</div>
 </section>
@@ -160,7 +168,7 @@
 
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
-// 假設從 Model 取得 Songs 資料並進行迴圈
+
 
 <script>
 	$(document).ready(function() {
