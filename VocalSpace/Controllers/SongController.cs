@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using VocalSpace.Models;
-using VocalSpace.Models.Test;
 using VocalSpace.Models.ViewModel.Global;
 using VocalSpace.Models.ViewModel.Song;
 
@@ -24,6 +23,18 @@ namespace VocalSpace.Controllers
         [HttpGet("Song/{id}")]
         public async Task<IActionResult> Index(int? id)
         {
+            // 從 Session 取得 Account
+            string? account = HttpContext.Session.GetString("UserAccount");
+            string? isLogin = HttpContext.Session.GetString("IsLoggedIn");
+            // 查詢當前登入使用者的頭像
+            string? userAvatar = null;
+            if (!string.IsNullOrEmpty(account))
+            {
+                userAvatar = await _context.Users
+                    .Where(u => u.Account == account)
+                    .Select(u => u.UsersInfo!.AvatarPath)
+                    .FirstOrDefaultAsync();
+            }
             // 指定 SongId，Join User UserInfo SongCategory 
             var songdata = await _context.Songs
         .Include(s => s.ArtistNavigation) // 自動User 關聯
@@ -42,7 +53,9 @@ namespace VocalSpace.Controllers
                             .ToList(),
             CommentSection = new CommentSectionViewModel
             {
-                IsLogin = HttpContext.Session.GetString("IsLoggedIn") != null, // 判斷使用者是否登入 (透過 Session)
+                IsLogin = isLogin != null, // 判斷使用者是否登入 (透過 Session)
+                CurrentAvatar = userAvatar ?? "", // 使用者頭像
+
                 Comments = _context.SongComments
                     .Where(c => c.SongId == id) // 篩選當前歌曲的留言
                     .OrderByDescending(c => c.CommentTime) // 按留言時間排序
@@ -75,5 +88,8 @@ namespace VocalSpace.Controllers
 
             return View(songdata);
         }
+        
     }
+
+
 }

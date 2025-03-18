@@ -117,14 +117,15 @@
 			<hr class="mt-5 mb-5">
 			<div>
 				<!-- 留言串partialview放這裡 -->
-				@await Html.PartialAsync("_CommentInput")
-				@await Html.PartialAsync("_CommentList")
+				@await Html.PartialAsync("_CommentInput", Model.CommentSection)
+				@await Html.PartialAsync("_CommentList", Model.CommentSection.Comments)
 			</div>
 		</div>
 	</div>
 </div>
 
 @section Scripts {
+	<script src="/js/Comment.js"></script>
 	<script>
 		$(document).ready(function () {
 			$('.introduce').each(function () {

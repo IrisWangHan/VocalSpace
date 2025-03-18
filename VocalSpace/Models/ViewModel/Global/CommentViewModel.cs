@@ -16,6 +16,11 @@
     public class CommentSectionViewModel
     {
         public bool IsLogin { get; set; }
+        public string CurrentAvatar { get; set; } = null!;
+
         public List<CommentViewModel> Comments { get; set; } = null!;
+
+        public int SongId { get; set; }
+        public string Comment { get; set; } = null!;
     }
 }
