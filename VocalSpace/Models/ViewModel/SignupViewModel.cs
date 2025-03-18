@@ -7,16 +7,14 @@ namespace VocalSpace.Models.ViewModel
         // Step 1: 帳號 & 密碼
         [Required]
         [StringLength(30, MinimumLength = 3)]
-        public string? SignupAccount { get; set; }  
+        public string? SignupAccount { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "密碼為必填欄位")]
         [StringLength(28, MinimumLength = 6)]
-        [DataType(DataType.Password)]
         public string? SignupPassword { get; set; }  
 
         // Step 2: 電子信箱
         [Required]
-        [EmailAddress]
         public string? SignupEmail { get; set; }  
 
         // Step 3: 驗證碼
@@ -28,7 +26,7 @@ namespace VocalSpace.Models.ViewModel
         public string? SignupUserName { get; set; }  
 
         [Required]
-        public DateOnly SignupUserBirthdate { get; set; }  
+        public DateOnly SignupUserBirthdate { get; set; }
 
         public string? SignupUserBio { get; set; }  
     }

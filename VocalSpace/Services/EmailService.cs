@@ -42,13 +42,13 @@ public class EmailService
         }
     }
 
-    // 待測試
+    // 待fix測試
     public async Task<bool> SendPasswordResetEmailAsync(string recipientEmail, string resetLink)
     {
         try
         {
             var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("你的網站", senderEmail));
+            message.From.Add(new MailboxAddress("聲維宇宙", senderEmail));
             message.To.Add(new MailboxAddress("", recipientEmail));
             message.Subject = "密碼重設通知";
 

@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Authentication.Facebook;
 using VocalSpace.Models.ViewModel;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System.Security.Cryptography;
+using Org.BouncyCastle.Crypto.Generators;
+using BCrypt.Net;
 
 
 
@@ -40,7 +42,11 @@ namespace VocalSpace.Controllers
             var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.Account == account || u.UsersInfo!.Email == account);
 
-            if( user != null  && user.Password == password)
+            Console.WriteLine("開始驗證");
+            var isCorrectPwd = VerifyPassword(password, user.Password);
+            Console.WriteLine("驗證密碼結果>>> "+ isCorrectPwd);
+
+            if ( user != null  && isCorrectPwd)
             {
                 HttpContext.Session.SetString("UserAccount", user.Account);
                 HttpContext.Session.SetInt32("UserId", (int)user.UserId);
@@ -101,6 +107,7 @@ namespace VocalSpace.Controllers
             if (email != null && user != null)
             {
                 HttpContext.Session.SetString("UserAccount", user.Account);
+                HttpContext.Session.SetInt32("UserId", (int)user.UserId);
                 HttpContext.Session.SetString("IsLoggedIn", "true");
                 Console.WriteLine("登入成功");
                 return RedirectToAction("Index", "Home");
@@ -149,12 +156,21 @@ namespace VocalSpace.Controllers
         }
 
         [HttpPost]
+        public IActionResult CheckUserEmail(string UserEmail)
+        {
+            bool exists = _context.UsersInfos.Any(u => u.Email == UserEmail);
+            return Json(new { exists });
+        }
+
+        [HttpPost]
         public async Task<IActionResult> SendVerificationCode(string email)
         {
             var verificationCode = new Random().Next(100000, 999999).ToString();
             HttpContext.Session.SetString("VerificationCode", verificationCode);
+            Console.WriteLine("註冊驗證碼>>>>> "+ verificationCode);
 
             bool success = await _emailService.SendVerificationCodeAsync(email, verificationCode);
+            Console.WriteLine("檢查帳號OK");
             return Json(new { success });
         }
 
@@ -165,6 +181,7 @@ namespace VocalSpace.Controllers
             var correctCode = HttpContext.Session.GetString("VerificationCode");
             if (correctCode == code)
             {
+                Console.WriteLine("輸入驗證碼OK");
                 return Json(new { success = true });
             }
             return Json(new{success = false, message = "驗證碼錯誤"});
@@ -173,19 +190,26 @@ namespace VocalSpace.Controllers
         [HttpPost]
         public async Task<IActionResult> Signup(SignupViewModel model)
         {
+            Console.WriteLine("進到controller signup!!");
             if(_context.Users.Any(u => u.Account == model.SignupAccount))
             {
                 return Json(new { success = false, message = "帳號已被使用" });
             }
-            string hashedPassword = HashPassword(model.SignupPassword);
+            string hashedPassword = HashPasswordWithBcrypt(model.SignupPassword);
+            Console.WriteLine("hashedPassword: "+ hashedPassword);
 
             var user = new User
             {
                 UserName = model.SignupUserName,
+                AuthorityId = 2,
                 Account = model.SignupAccount,
                 Password = hashedPassword,
                 CreateTime = DateTime.Now
             };
+            Console.WriteLine("寫入user start");
+            _context.Users.Add(user);
+            _context.SaveChanges();
+            Console.WriteLine("寫入user end");
 
             var userInfo = new UsersInfo
             {
@@ -194,29 +218,27 @@ namespace VocalSpace.Controllers
                 PersonalIntroduction = model.SignupUserBio,
                 Email = model.SignupEmail
             };
+            Console.WriteLine("寫入userinfo start");
             _context.UsersInfos.Add(userInfo);
             _context.SaveChanges();
+            Console.WriteLine("寫入userinfo end");
             return Json(new { success = true });
         }
-        // 密碼 Hash
-        private string HashPassword(string password)
+        // 密碼加密
+        private string HashPasswordWithBcrypt(string password)
         {
-            byte[] salt = new byte[16];
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(salt);
-            }
-
-            byte[] hashed = KeyDerivation.Pbkdf2(
-                password: password,
-                salt: salt,
-                prf: KeyDerivationPrf.HMACSHA256,
-                iterationCount: 10000,
-                numBytesRequested: 32
-            );
-
-            return Convert.ToBase64String(salt) + ":" + Convert.ToBase64String(hashed);
+            Console.WriteLine("加密OK");
+            return BCrypt.Net.BCrypt.HashPassword(password);
         }
+        
+        // 登入時驗證密碼
+        private bool VerifyPassword(string password, string hashedPassword)
+        {
+            // 驗證密碼是否正確
+            bool verifyResult = BCrypt.Net.BCrypt.Verify(password, hashedPassword);
+            return verifyResult;
+        }
+
 
 
         //  整合  AccountSettings
@@ -239,7 +261,6 @@ namespace VocalSpace.Controllers
         {
             return View();
         }
-
 
         public IActionResult changePassword()
         {
