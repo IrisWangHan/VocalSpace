@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VocalSpace.Models;
+using VocalSpace.Models.ViewModel.Personal;
 
 namespace VocalSpace.Controllers
 {
@@ -15,64 +16,91 @@ namespace VocalSpace.Controllers
             
         }
 
-        public IActionResult mymusic()
+        private IQueryable<PersonalViewModel> personal(long? id) 
         {
+            IQueryable<PersonalViewModel> personals = from user in _context.Users
+                                                      join UserFollow in _context.UserFollows on user.UserId equals UserFollow.UserId
+                                                      join UsersInfo in _context.UsersInfos on user.UserId equals UsersInfo.UserId
+                                                      where user.UserId == id
+                                                      select new PersonalViewModel                                                      
+                                                      {
+                                                          UserId = user.UserId,
+                                                          UserName = user.UserName,
+                                                          Account = user.Account,
+                                                          CreateTime = user.CreateTime,
+                                                          FollowedUserId = UserFollow.FollowedUserId,
+                                                          BannerImagePath = UsersInfo.BannerImagePath,
+                                                          AvatarPath = UsersInfo.AvatarPath                                                          
+                                                      };
+            return personals;
+        }
+
+        public IActionResult mymusic(long? id)
+        {
+            ViewData["personal"] = personal(id).ToList();
             return View();
         }
-        public IActionResult myabout()
+        public IActionResult myabout(long? id)
         {
-            return View();
+            return View(personal(id).ToList());
         }
-        public IActionResult mylist()
+        public IActionResult mylist(long? id)
         {
-            return View();
+            return View(personal(id).ToList());
         }
-        public IActionResult mylike()
+        public IActionResult mylike(long? id)
         {
-            return View();
+            return View(personal(id).ToList());
         }
-        public IActionResult listdetail()
+        public IActionResult listdetail(long? id)
         {
-            return View();
+            return View(personal(id).ToList());
         }
-        [HttpPost]
-        public async Task<IActionResult> UpdateAvatar(int userId, IFormFile avatar)
+
+        [HttpPost("Uploadcover")]
+        public async Task<IActionResult> Uploadcover(IFormFile file, long userId)
         {
-            if (avatar != null && avatar.Length > 0)
+            if (file == null || file.Length == 0)
             {
-                try
-                {
-                    // 設定儲存檔案的路徑
-                    var fileName = Path.GetFileName(avatar.FileName);
-                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "image", "Avatar", fileName);
-
-                    // 儲存圖檔
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await avatar.CopyToAsync(stream);
-                    }
-
-                    // 取得用戶並更新其 AvatarPath
-                    var user = await _context.UsersInfos.FindAsync(userId);
-                    if (user != null)
-                    {
-                        user.AvatarPath = "/uploads/" + fileName; // 更新為相對路徑
-                        _context.Update(user); // 更新資料庫中的用戶
-                        await _context.SaveChangesAsync(); // 儲存變更
-                    }
-
-                    TempData["SuccessMessage"] = "頭像更新成功!";
-                    return RedirectToAction("Profile", new { userId = userId }); // 返回用戶的資料頁面
-                }
-                catch (Exception ex)
-                {
-                    TempData["ErrorMessage"] = "上傳失敗，請稍後再試!";
-                    return RedirectToAction("Profile", new { userId = userId });
-                }
+                return Json(new { success = false, message = "無效的文件" });
             }
 
-            TempData["ErrorMessage"] = "未選擇檔案!";
-            return RedirectToAction("Profile", new { userId = userId });
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/image/Avatar");
+            if (!Directory.Exists(uploadsFolder))
+            {
+                Directory.CreateDirectory(uploadsFolder);
+            }
+
+            var fileName = Path.GetFileName(file.FileName);
+            string extension = Path.GetExtension(file.FileName);
+            string finalFileName = fileName + extension;
+            string filePath = Path.Combine(uploadsFolder, finalFileName);
+            int count = 1;
+
+            while (System.IO.File.Exists(filePath))
+            {
+                finalFileName = $"{fileName}{count}{extension}";
+                filePath = Path.Combine(uploadsFolder, finalFileName);
+                count++;
+            }
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            var dbFilePath = $"wwwroot/image/Avatar/{fileName}";
+
+            
+                var userInfo = _context.UsersInfos.FirstOrDefault(u => u.UserId == userId);
+                if (userInfo != null)
+                {
+                    userInfo.BannerImagePath = dbFilePath;
+                await _context.SaveChangesAsync();
+                }
+            
+
+            return Json(new { success = true, filePath = dbFilePath });
         }
     }
 }

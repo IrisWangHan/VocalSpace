@@ -10,6 +10,7 @@
         public string Account { get; set; } = null!;
 
         public DateTime CreateTime { get; set; }
+
         // from UserFollow
         public long FollowedUserId { get; set; }
         // from UsersInfo

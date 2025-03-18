@@ -1,9 +1,8 @@
-﻿@model VocalSpace.Models.ViewModel.Personal.PersonalViewModel
+﻿@model List<VocalSpace.Models.ViewModel.Personal.PersonalViewModel>
 
 @{
     Layout = "_Layout";  // 引用全域的 _Layout.cshtml
-    // int id = 1;
-    
+    // int id = 1;    
 }
 
 <div class="profile-header">
@@ -18,8 +17,8 @@
                選擇圖片 
                <input type="file" id="coverfileInput" accept="image/*"> 
            </label>
-       </div> 
-    
+       </div>
+
   @*  } else   *@
   @*  { *@
   @*           <div class="cover-container"> *@
@@ -47,10 +46,8 @@
                         <img style="display: block;" src="/image/p3.jpeg" id="headpreview" alt="頭貼圖片">
                     </div> 
                        <label class="headupload-btn"> 
-                           選擇圖片<form asp-action="UpdateAvatar" method="post" enctype="multipart/form-data">
-                    <input type="hidden" name="userId" value="1" />
-							<input type="file" id="headfileInput" accept="image/*" onchange="previewImage(event)">
-						</form>
+                           選擇圖片
+							<input type="file" id="headfileInput" accept="image/*">
                     </label> 
                    </div>
                 <!-- 提交表單來更新頭像 -->
@@ -68,7 +65,7 @@
                 @*     } *@
                 @* } *@
                 <div class="osinfo">
-                        <h2>ilyynlvl</h2>
+                        <h2>@Model.First().Account</h2>
                         <p>@@4osxm9 ・ 會員</p>
                         <p>於 2025 年 2 月 加入</p>
                     </div>
@@ -88,70 +85,8 @@
     
     @RenderBody()
 
-
+    @section Scripts{
 <script>
-
-    const list = document.getElementById('myList');
-    const items = list.getElementsByTagName('a');
-
-    // 為每個 list 項目加上 click 事件監聽器
-    for (let i = 0; i < items.length; i++) {
-        items[i].addEventListener('click', function () {
-            // 清除所有項目的選取效果
-            for (let j = 0; j < items.length; j++) {
-                items[j].classList.remove('active');
-            }
-            // 為被點擊的項目加上選取效果
-            this.classList.add('active');
-        });
-    }
-
-    // 取得所有按鈕
-    const buttons = document.querySelectorAll('.btn-outline-secondary.book');
-
-    // 為每個按鈕加上點擊事件
-    buttons.forEach(button => {
-        button.addEventListener('click', function () {
-            // 切換選取效果：如果已選取就取消選取，反之則加入選取效果
-            this.classList.toggle('selected');
-            // 訂閱按鈕效果
-        });
-    });
-
-
-    // 分享歌曲按鈕之彈跳視窗
-    function deletelist() {
-        document.getElementById('shareoverlay').style.display = 'flex';
-    }
-    function shareclosePopup() {
-        document.getElementById('shareoverlay').style.display = 'none';
-    }
-
-    // 加入歌單按鈕之彈跳視窗
-    function addopenPopup() {
-        document.getElementById("addoverlay").style.display = "block";
-        document.getElementById("addpopup").style.display = "block";
-        // 加入淡入效果
-        setTimeout(() => {
-            document.getElementById("addoverlay").style.opacity = "1";
-            document.getElementById("addpopup").style.opacity = "1";
-            document.getElementById("addpopup").style.top = "30%";
-        }, 10);
-    }
-
-    function addclosePopup() {
-        // 淡出效果
-        document.getElementById("addoverlay").style.opacity = "0";
-        document.getElementById("addpopup").style.opacity = "0";
-        document.getElementById("addpopup").style.top = "20%";
-
-        // 延遲隱藏（等待動畫完成）
-        setTimeout(() => {
-            document.getElementById("addoverlay").style.display = "none";
-            document.getElementById("addpopup").style.display = "none";
-        }, 300);
-    }
-
     // 頭貼預覽
         document.getElementById("headfileInput").addEventListener("change", function(event) {
             const file = event.target.files[0];
@@ -166,17 +101,11 @@
                 };
                 reader.readAsDataURL(file);
 
-                // 更新檔名顯示
-                fileNameDisplay.textContent = file.name;
-            } else {
-                fileNameDisplay.textContent = "未選擇圖片";
-            }
-        });
+        }});
 
         // 封面預覽
         document.getElementById("coverfileInput").addEventListener("change", function(event) {
             const file = event.target.files[0];
-            const fileNameDisplay = document.getElementById("coverfileName");
 
             if (file) {
                 const reader = new FileReader();
@@ -187,15 +116,10 @@
                 };
                 reader.readAsDataURL(file);
                 
-                // 更新檔名顯示
-                fileNameDisplay.textContent = file.name;
-            } else {
-                fileNameDisplay.textContent = "未選擇圖片";
-            }
         
-    });
-
+    }});
 </script>
+}
 
 
 
