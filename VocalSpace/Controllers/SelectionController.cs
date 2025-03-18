@@ -70,14 +70,34 @@ namespace VocalSpace.Controllers
             return PartialView("_CardPartial", selections?.Songs);
         }
 
+
+
         /// <summary>
-        /// 申請參加活動 取得user資料並帶入使用者資料( 尚未有user物件 無法做)
+        /// 報名頁面 取得user資料並帶入使用者資料( 尚未有user物件 無法做)
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         public async Task<IActionResult> Apply(int id)
         {
-            var selections = await _selectionService.GetFormData(id);
+            //取得user資料
+            SelectionFormViewModel userData = await _selectionService.CheckUser();
+            if (userData == null)
+            {
+                TempData["ErrorMessage"] = "尚未登入,即將幫您跳轉！";
+                return RedirectToAction("Login", "Accounts"); // 重導讓 View 收到 TempData
+
+            }
+
+            //取得活動資料
+            SelectionFormViewModel selectionData = await _selectionService.CheckSelectionOnTime(id);           
+            if (selectionData == null)
+            {
+                TempData["ErrorMessage"] = "目前非報名期間！";
+                return RedirectToAction("Index", "Selection"); // 重導讓 View 收到 TempData
+            }
+            
+            //取得該使用者所有內容及歌曲
+            var selections = await _selectionService.GetFormData(id, userData, selectionData);
             return View(selections);
         }
 

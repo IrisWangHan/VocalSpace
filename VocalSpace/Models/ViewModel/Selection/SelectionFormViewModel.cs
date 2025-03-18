@@ -17,5 +17,6 @@ namespace VocalSpace.Models.ViewModel.Selection
 
         [JsonProperty("applyStatus")]
         public int? ApplyStatus { get; set; }
+
     }
 }

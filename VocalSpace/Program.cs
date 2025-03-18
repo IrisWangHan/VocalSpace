@@ -27,8 +27,12 @@ builder.Services.AddScoped<SelectionService>();
 builder.Services.AddScoped<IPaginationService, PaginationService>();
 
 
-builder.Services.AddDbContext<VocalSpaceDbContext>(
-        options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<VocalSpaceDbContext>(options =>
+{
+    options.UseSqlServer(connectionString);
+    options.EnableSensitiveDataLogging();
+});
+
 
 // 從 User Secrets 或 appsettings.json 中讀取 Google 的 Client ID 和 Client Secret
 builder.Services.AddAuthentication(options =>
