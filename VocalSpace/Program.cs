@@ -67,9 +67,6 @@ builder.Services.AddAuthentication(options =>
     options.SaveTokens = true;
 });
 
-//  從 User Secrets 讀取綠界的HashKey / HashIV
-var HashKey = builder.Configuration["ECPay:HashKey"];
-var HashIV = builder.Configuration["ECPay:HashIV"];
 
 var app = builder.Build();
 

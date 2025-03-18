@@ -21,7 +21,7 @@ namespace VocalSpace.Controllers
             //  orderId : 產生隨機20碼訂單編號
             var orderId = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 20);
             //需填入你的網址
-            var website = $"https://qlxw3lk1-7145.asse.devtunnels.ms/";
+            var website = $"https://rk8nf59r-7145.asse.devtunnels.ms/";
             var order = new Dictionary<string, string>
             {
                 //綠界需要的參數

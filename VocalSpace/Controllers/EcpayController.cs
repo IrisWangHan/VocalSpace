@@ -134,19 +134,6 @@ namespace VocalSpace.Controllers
             }
             return result.ToString();
         }
-        //private HttpResponseMessage ResponseError()
-        //{
-        //    var response = new HttpResponseMessage();
-        //    response.Content = new StringContent("0|Error");
-        //    response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/html");
-        //    return response;
-        //}
-        //private HttpResponseMessage ResponseOK()
-        //{
-        //    var response = new HttpResponseMessage();
-        //    response.Content = new StringContent("1|OK");
-        //    response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/html");
-        //    return response;
-        //}
+        
     }
 }
