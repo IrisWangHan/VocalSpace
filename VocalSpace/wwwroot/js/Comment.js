@@ -1,7 +1,22 @@
 ﻿//此JS提供留言partial view的功能
 
-//提交留言
-$(document).on("click", "#submit-comment", function () {
+//載入留言
+$(function () {
+    loadComments();
+});
+
+function loadComments() {
+    let targetId = $("#comment-section").data("target-id");
+
+    $.get(`/Song/${targetId}/Comments`, function (partialView) {
+        $("#comment-list-container").html(partialView);
+    }).fail(function () {
+        $("#comment-list-container").html("<p class='error-message'>留言載入失敗，請稍後再試。</p>");
+    });
+}
+
+// 送出留言
+function submitComment() {
     var comment = $("#comment-input").val().trim();
     if (comment === "") {
         alert("請輸入留言內容！");
@@ -9,38 +24,23 @@ $(document).on("click", "#submit-comment", function () {
     }
 
     $.ajax({
-        url: "/Global/Comment",
+        url: "/Global/Comment", // Controller 端點
         type: "POST",
         data: JSON.stringify({
-            "Comment": comment
+            TargetId: $("#comment-section").data("target-id"),
+            TargetType: $("#comment-section").data("target-type"), // "Song" or "Activity"
+            Comment: comment
         }),
         contentType: "application/json",
         success: function (response) {
-            if (response === "success") {
+            if (response.success) {
                 $("#comment-input").val("");  // 清空輸入框
                 loadComments();  // 重新載入留言列表
             } else {
-                alert("留言失敗！");
+                alert("留言失敗：" + response.message);
             }
-        }
-    });
-});
-//載入留言 
-function loadComments(songId) {
-    $.ajax({
-        url: "/Song/GetComments?songId=" + songId,  // API URL
-        type: "GET",
-        success: function (data) {
-            $("#comment-list").html(data);  // 將返回的 HTML 插入到 comment-list 中
-        },
-        error: function (error) {
-            console.log("Error loading comments:", error);  // 輸出錯誤信息
         }
     });
 }
 
-// 當頁面載入時，自動載入留言
-$(function () {
-    var songId = $("#song-id").val();
-    loadComments(songId);
-});
+//提交留言
