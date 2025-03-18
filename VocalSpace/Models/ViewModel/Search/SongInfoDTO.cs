@@ -11,5 +11,8 @@
         public int? LikeCount { get; set; }
         public byte SongCategoryId { get; set; }
 
+        public DateTime CreateTime { get; set; }
+
+        public int PlayCount { get; set; }
     }
 }

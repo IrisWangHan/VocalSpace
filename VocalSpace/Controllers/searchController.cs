@@ -15,7 +15,7 @@ namespace VocalSpace.Controllers
         private string? type;
 
         //  靜態全域變數result，3種LINQ查詢結果的DTO物件
-        private static SearchViewModel? AllResult = new SearchViewModel ();
+        private static SearchViewModel? AllResult = new SearchViewModel();
 
 
         public searchController(VocalSpaceDbContext context)
