@@ -2,32 +2,36 @@
 
 @{
     Layout = "_Layout";  // 引用全域的 _Layout.cshtml
-    int id = 1;
+    // int id = 1;
+    
 }
 
 <div class="profile-header">
-    @{
-        if (Model.UserId == id) { <!-- 預覽封面圖片 -->
-
-            <div class="cover-container">
-                <div class="covercover">
-                    <img id="coverpreview" alt="封面圖片">
-                </div>
-                <label class="coverupload-btn">
-                    選擇圖片
-                    <input type="file" id="coverfileInput" accept="image/*">
-                </label>
-            </div>
-            
-        } else 
-        {
-            <div class="cover"> 
-                <div class="coverbutton"> 
-                    <button type="button" class="btn btn-danger"><i class="bi bi-plus-lg"></i>追蹤對方</button>
-                </div> 
-            </div> 
-        }
-    }
+   
+   @* @{if (Model.UserId == id) { *@
+		<!-- 預覽封面圖片 -->
+       <div class="cover-container"> 
+           <div class="covercover">
+            <img id="coverpreview" style="display: block;" src="/image/p2.jpeg" alt="封面圖片">
+        </div> 
+           <label class="coverupload-btn"> 
+               選擇圖片 
+               <input type="file" id="coverfileInput" accept="image/*"> 
+           </label>
+       </div> 
+    
+  @*  } else   *@
+  @*  { *@
+  @*           <div class="cover-container"> *@
+  @*             <div class="covercover"> *@
+  @*           <img style="display: block;" src="/image/p2.jpeg" alt="封面圖片"> *@
+  @*       </div>  *@
+  @*               <div class="coverbutton">  *@
+  @*                   <button type="button" class="btn btn-danger"><i class="bi bi-plus-lg"></i>追蹤對方</button> *@
+  @*               </div>  *@
+  @*           </div>  *@
+  @*        }  *@
+  @* }  *@
     
 
             
@@ -37,18 +41,33 @@
             <div class="profile-info">
                 <div class="personal-data">
                     <!-- 預覽頭貼圖片 -->
-                     
-                    <div class="head-container">
-                        <div class="headcover">
-                            <img id="headpreview" alt="封面圖片">
-                        </div>
-                        <label class="headupload-btn">
-                            選擇圖片
-                            <input type="file" id="headfileInput" accept="image/*">
-                        </label>
-                    </div>
-                    
-                    <div class="osinfo">
+                 @* @{if (Model.UserId == id) {      *@
+                   <div class="head-container"> 
+                       <div class="headcover">
+                        <img style="display: block;" src="/image/p3.jpeg" id="headpreview" alt="頭貼圖片">
+                    </div> 
+                       <label class="headupload-btn"> 
+                           選擇圖片<form asp-action="UpdateAvatar" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="userId" value="1" />
+							<input type="file" id="headfileInput" accept="image/*" onchange="previewImage(event)">
+						</form>
+                    </label> 
+                   </div>
+                <!-- 提交表單來更新頭像 -->
+                
+                    @* <input type="file" id="headfileInput" name="avatar" accept="image/*" style="display: none" onchange="previewImage(event)"> *@
+                    @* <button type="submit" class="btn btn-primary">上傳頭像</button> *@
+                
+                @*     } else   *@
+                @*        { *@
+                @* <div class="head-container"> *@
+                @*     <div class="headcover"> *@
+                @*         <img style="display: block;"src="/image/p3.jpeg" alt="頭貼圖片"> *@
+                @*     </div> *@
+                @* </div> *@
+                @*     } *@
+                @* } *@
+                <div class="osinfo">
                         <h2>ilyynlvl</h2>
                         <p>@@4osxm9 ・ 會員</p>
                         <p>於 2025 年 2 月 加入</p>
@@ -167,13 +186,15 @@
                     img.style.display = "block";
                 };
                 reader.readAsDataURL(file);
-
+                
                 // 更新檔名顯示
                 fileNameDisplay.textContent = file.name;
             } else {
                 fileNameDisplay.textContent = "未選擇圖片";
             }
-        });
+        
+    });
+
 </script>
 
 

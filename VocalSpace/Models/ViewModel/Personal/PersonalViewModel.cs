@@ -3,7 +3,7 @@
     public class PersonalViewModel
     {
         // from user
-        public long UserId { get; set; }
+        public long UserId { get; set; }                           
 
         public string? UserName { get; set; }
 
