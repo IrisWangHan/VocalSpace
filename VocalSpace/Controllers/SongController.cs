@@ -66,16 +66,6 @@ namespace VocalSpace.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            //上傳者資訊
-            var userBar = new UserBarViewModel
-            {
-                pfp = songdata.UsersInfo.AvatarPath,
-                Name = songdata.User.UserName ?? "",
-                Account = songdata.User.Account
-            };
-
-            ViewData["UserBar"] = userBar;
-
             return View(songdata);
         }
 

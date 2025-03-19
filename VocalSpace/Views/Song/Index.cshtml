@@ -1,6 +1,5 @@
 ﻿@model VocalSpace.Models.ViewModel.Song.SongInfoViewModel
 @{
-	var userBar = ViewData["UserBar"] as VocalSpace.Models.ViewModel.Global.UserBarViewModel;
 	ViewData["Title"] = Model.Song.SongName+" by "+ Model.User.Account;
 }
 @{
@@ -85,7 +84,9 @@
 	<!-- 放在圖片下方的歌手資訊 -->
 	<div class="bottom-container container">
 		<div class="left-container  col-4">
-			@await Html.PartialAsync("_Songdetail_artist_partial", userBar)
+			<!-- AJAX動態載入-UserBar -->
+			<!--用個假趴秀先封裝AJAX用的div-->
+			@await Html.PartialAsync("_UserbarContainer_partial",Model.User.UserId)
 			<div class="container">
 				<hr class="mt-5 mb-2">
 				<p class="text-gray-light mb-2 opacity-50">發布日期:@(Model.Song.CreateTime.ToString("yyyy/MM/dd"))</p>

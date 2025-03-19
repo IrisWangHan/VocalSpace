@@ -9,16 +9,17 @@ using VocalSpace.Services;
 
 namespace VocalSpace.Controllers
 {
+    //設定路由
     public class PersonalController : Controller
     {
         // 建構函式，初始化資料庫context和service
         private readonly VocalSpaceDbContext _context;
-        private readonly UserFollowService _followService;
+        private readonly UserService _UserService;
 
-        public PersonalController(VocalSpaceDbContext context, UserFollowService followService)
+        public PersonalController(VocalSpaceDbContext context, UserService UserService)
         {
             _context = context;
-            _followService = followService;
+            _UserService = UserService;
         }
 
         private IQueryable<PersonalViewModel> personal(long? id) 
@@ -115,59 +116,54 @@ namespace VocalSpace.Controllers
         /// <summary>
         /// 追蹤功能API方法邏輯
         /// </summary>
-        [HttpPost]
-        public async Task<IActionResult> ToggleFollow(long followedUserId)
+        [HttpPost("Personal/ToggleFollow/{targetUserId}")]
+        public async Task<IActionResult> ToggleFollow(long targetUserId)
         {
-            // 從 Session 取得當前登入的 UserID
-            long? userId = HttpContext.Session.GetInt32("UserId");
-            if (userId == null)
-            {
-                return Json(new { success = false, message = "請先登入" });
-            }
-            //設定兩個變數，經過service處理邏輯後回傳，一個是是否成功取得userId，一個是是否追蹤
-            var (isSuccess, isFollowing) = await _followService.ToggleFollowAsync(userId.Value, followedUserId);
+            long? currentUserId = HttpContext.Session.GetInt32("UserId");
 
-
-            //如果沒有成功取得userId，回傳錯誤訊息
-            if (!isSuccess)
-            {
-                return Json(new { success = false, message = "無法追蹤該使用者" });
-            }
-
-            //回傳是否追蹤
-            return Json(new { success = true, isFollowing });
-        }
-
-        /// <summary>
-        /// 取得 UserBar 的 Partial View
-        /// </summary>
-        [HttpGet]
-        public async Task<IActionResult> UserBar(long targetUserId)
-        {
-           var currentUserId = HttpContext.Session.GetInt32("UserId");
             if (currentUserId == null)
             {
-                return Unauthorized(); // 未登入則回傳 401
+                return Unauthorized(new { message = "請先登入" });
             }
 
-            // 取得使用者資訊
-            var user = await _context.Users
-                .Include(u => u.UsersInfo)
-                .Where(u => u.UserId == targetUserId)
-                .Select(u => new UserBarViewModel
-                {
-                    target_userId = u.UserId,
-                    Name = u.UserName,
-                    Account = u.Account,
-                    pfp = u.UsersInfo!.AvatarPath
-                }).FirstOrDefaultAsync();
+            var (isSuccess, isFollowing) = await _UserService.ToggleFollowAsync(currentUserId.Value, targetUserId);
 
-            if (user == null)
+            if(currentUserId == targetUserId)
             {
-                return NotFound();
+                return BadRequest(new { message = "操作失敗，無法追蹤自己。" });
             }
 
-            return PartialView("_UserBar", user); // **回傳 PartialView**
+            if (!isSuccess)
+            {
+                return StatusCode(500, new { message = "操作失敗，請稍後再試。" });
+            }
+
+            // 重新取得 UserBarData，讓前端能夠更新按鈕狀態
+            var userBarData = await _UserService.GetUserBarData(currentUserId, targetUserId);
+
+            if (userBarData == null)
+            {
+                return NotFound(new { message = "使用者不存在" });
+            }
+
+            return Ok(new {userBarData});
+        }
+
+
+        /// <summary>
+        ///UserBar 的 Partial View
+        /// </summary>
+        [HttpGet("Personal/GetUserBar/{targetUserId}")]
+        public async Task<IActionResult> GetUserBar(long targetUserId)
+        {
+           long? currentUserId = HttpContext.Session.GetInt32("UserId");
+            // 取得 UserBarViewModel
+            var userBarData = await _UserService.GetUserBarData(currentUserId ?? 0 , targetUserId);
+            if(userBarData==null)
+            {
+                return NotFound(); // 找不到使用者
+            }
+            return PartialView("_Userbar_partial", userBarData);
         }
     }
 }

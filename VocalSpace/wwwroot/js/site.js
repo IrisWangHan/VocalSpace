@@ -1,20 +1,38 @@
-﻿//追蹤用戶AJAX POST
+﻿//AJAX 取得UserBar
 $(function () {
-    let $btn = $(this);
-    let userId = $btn.data("userid");
+    let userId = $("#userBarContainer").data("userid");
+    $.ajax({
+        url: `/Personal/GetUserBar/${userId}`, // Controller 端點，
+        type: "GET",
+        success: function (partialView) {
+            $("#userBarContainer").html(partialView);
+        },
+        error: function (xhr) {
+            $("#userBarContainer").html(`<p class='error-message'>上傳者載入失敗，錯誤訊息${xhr.responseText}</p>`);
+        }
+    });
+});
 
-    //$.post("/Personal/ToggleFollow", { followedUserId: userId }, function (response) {
-    //    if (response.success) {
-    //        if (response.isFollowing) {
-    //            $btn.text("已追蹤").removeClass("btn-danger").addClass("btn-secondary");
-    //        } else {
-    //            $btn.text("追蹤").removeClass("btn-secondary").addClass("btn-danger");
-    //        }
-    //    } else {
-    //        alert(response.message);
-    //    }
-    //}).fail(function () {
-    //    alert("操作失敗，請稍後再試！");
-    //});
 
+//用戶追蹤功能，btn-follow是按鈕的class，需先在View中設定data-userid
+$(document).on("click", ".btn-follow", function () {
+    let button = $(this);
+    let targetUserId = $(this).data("userid");
+    $.ajax({
+        url: `/Personal/ToggleFollow/${targetUserId}`,
+        type: "POST",
+        success: function (res) {
+            if (res.userBarData.isFollowing) {
+                button.addClass("selected").text("已追蹤");
+            } else {
+                button.removeClass("selected").text("追蹤");
+            }
+        },
+        error: function (xhr) {
+            if (xhr.status === 400)
+                alert(xhr.responseJSON?.message || "無法追蹤自己");
+            else
+                alert(xhr.responseJSON?.message || "發生錯誤，請稍後再試！");
+        }
+    });
 });
