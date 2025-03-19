@@ -90,7 +90,7 @@ app.UseSession();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller}/{action}/{id?}",
-    defaults: new { controller = "Home", action = "Index" }
+    defaults: new { controller = "Selection", action = "Index" }
     );
 
 app.MapControllerRoute(

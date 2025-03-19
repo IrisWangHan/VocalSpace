@@ -103,8 +103,14 @@ namespace VocalSpace.Controllers
 
 
         [HttpPost]
-        public IActionResult SubmitApplication([FromForm] SelectionFormViewModel model)
+        public IActionResult SubmitApplication([FromBody] object request)
         {
+
+            //檢查輸入內容
+
+            //取得歌曲資料並上傳
+            //let songId = $(this).data('songid');
+            //let songName = $(this).text().trim();
             //請判斷是否在報名期限內 以及上船功能
             // 處理表單資料
             return Json(new { success = true, message = "表單提交成功" });
