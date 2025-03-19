@@ -51,7 +51,7 @@ namespace VocalSpace.Controllers
         public IActionResult ExploreMusicAll(string id)
         {
             type = Convert.ToByte(id);
-                    
+            ViewData["type"] = type;
             SongData("new");
             return View(ExploreResult);
         }
