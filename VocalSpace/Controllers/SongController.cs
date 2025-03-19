@@ -193,6 +193,12 @@ namespace VocalSpace.Controllers
 
             return Ok(new { success = true });
         }
+        [HttpPost("Song/AddOrder")]
+        public string AddOrder([FromBody]string arguments)
+        {
+            string a = arguments;
+            return a + "OK";
+        }
 
         ///<summary>
         /// AJAX方式取得加入歌單Modal需要的資料
