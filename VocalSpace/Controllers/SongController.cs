@@ -56,7 +56,7 @@ namespace VocalSpace.Controllers
             {
                 IsLogin = isLogin != null, // 判斷使用者是否登入 (透過 Session)
                 CurrentAvatar = userAvatar ?? "", // 使用者頭像
-
+                CurrentUserAccount = account ?? "", // 使用者帳號
                 Comments = new List<CommentViewModel>() //不在這裡查詢留言，改用 AJAX 讀取
             }
         })
@@ -85,6 +85,9 @@ namespace VocalSpace.Controllers
         [HttpGet("Song/{id}/Comments")]
         public async Task<IActionResult> GetCommentList(int id)
         {
+            // 取得目前登入帳號
+            string? account = HttpContext.Session.GetString("UserAccount");
+
             var comments = await _context.SongComments
                 .Where(c => c.SongId == id)//抓取指定SongId的留言
                 .OrderByDescending(c => c.CommentTime)//依照留言時間排序
@@ -94,47 +97,47 @@ namespace VocalSpace.Controllers
                     CommentId = c.SongCommentId, // 留言 ID
                     TargetId = c.SongId, // 歌曲 ID
                     Account = c.User.Account, // 使用者帳號
+                    CurrentUserAccount = account ?? "", // 目前登入使用者帳號
                     UserName = c.User.UserName!, // 使用者名稱
                     Avatar = c.User.UsersInfo!.AvatarPath, // 使用者頭像
                     Comment = c.Comment, // 留言內容
                     CommentTime = c.CommentTime // 留言時間
                 }).ToListAsync();
-
             return PartialView("_CommentList", comments);
         }
 
         /// <summary>
         /// AJAX 上傳留言邏輯
         /// </summary>
-        [HttpPost("Comment")]
+        [HttpPost("/Song/PostComment")]
         public async Task<IActionResult> PostComment([FromBody] CommentRequestViewModel model)
         {
             if (string.IsNullOrWhiteSpace(model.Comment))
             {
-                return BadRequest("留言內容不能為空！");
+                return BadRequest(new { success = false, message = "留言內容不能為空！" });
             }
 
             // 確保 TargetType 是 "Song"
             if (model.TargetType != "Song")
             {
-                return BadRequest("不支援的留言類型！");
+                return BadRequest(new { success = false, message = "不支援的留言類型！" });
             }
 
-            // 從 Session 取得當前登入帳號
-            string? account = HttpContext.Session.GetString("Account");
+            // 取得目前登入帳號
+            string? account = HttpContext.Session.GetString("UserAccount");
             if (string.IsNullOrEmpty(account))
             {
-                return Unauthorized("請先登入！");
+                return Unauthorized(new { success = false, message = "請先登入！" });
             }
 
-            // 取得 User 資訊
+            // 取得使用者資訊
             var user = await _context.Users
                 .Include(u => u.UsersInfo)
                 .FirstOrDefaultAsync(u => u.Account == account);
 
             if (user == null)
             {
-                return NotFound("使用者不存在！");
+                return NotFound(new { success = false, message = "使用者不存在！" });
             }
 
             // 建立留言物件
@@ -143,13 +146,48 @@ namespace VocalSpace.Controllers
                 SongId = model.TargetId,
                 UserId = user.UserId,
                 Comment = model.Comment,
-                CommentTime = DateTime.UtcNow
+                CommentTime = DateTime.Now
             };
 
             _context.SongComments.Add(comment);
             await _context.SaveChangesAsync();
 
-            return Ok("success");
+            return Ok(new { success = true, message = "留言成功！" });
+        }
+
+        /// <summary>
+        /// AJAX 刪除留言邏輯
+        /// </summary>
+        [HttpDelete("/Song/DeleteComment/{id}")]
+        public async Task<IActionResult> DeleteComment(int id)
+        {
+            // 確保使用者已登入
+            string? account = HttpContext.Session.GetString("UserAccount");
+            if (string.IsNullOrEmpty(account))
+            {
+                return Unauthorized("請先登入！");
+            }
+
+            // 查找留言
+            var comment = await _context.SongComments
+                .Include(c => c.User)
+                .FirstOrDefaultAsync(c => c.SongCommentId == id);
+
+            if (comment == null)
+            {
+                return NotFound("留言不存在！");
+            }
+
+            // 確保只能刪除自己的留言
+            if (comment.User.Account != account)
+            {
+                return Forbid("您無權刪除此留言！");
+            }
+
+            _context.SongComments.Remove(comment);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { success = true });
         }
 
     }

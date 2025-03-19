@@ -28,6 +28,12 @@
 		font-size: 14px;
 		outline: none;
 	}
+
+	.list-container {
+		display: flex; 
+		justify-content: space-between; 
+		align-items: center;
+	}
 </style>
 
 
@@ -35,7 +41,7 @@
 	<div class="comment-list">
 		@foreach (var comment in Model)
 		{
-			<div class="comment-container mb-3">
+			<div class="comment-container list-container mb-3">
 				<div class="d-flex">
 					<div class="comment-avatar">
 						<img src="@comment.Avatar" alt="User1">
@@ -46,6 +52,13 @@
 						<p class="opacity-50">@comment.CommentTime.ToString("yyyy-MM-dd")</p>
 					</div>
 				</div>
+				@if (comment.Account == comment.CurrentUserAccount)
+				{
+					<button class="btn btn-outline-secondary delete-comment"
+							data-comment-id="@comment.CommentId">
+						<i class="bi bi-trash"></i>
+					</button>
+				}
 			</div>
 		}
 	</div>

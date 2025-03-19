@@ -8,6 +8,7 @@
         public long TargetId { get; set; }                           //可能為SongID,ActivityID
 
         public string Account { get; set; } = null!;
+        public string CurrentUserAccount { get; set; } = null!;
         public string UserName { get; set; } = null!;
 
         public string Avatar { get; set; } = null!;
@@ -21,6 +22,8 @@
     {
         public bool IsLogin { get; set; }
         public string CurrentAvatar { get; set; } = null!;
+
+        public string CurrentUserAccount { get; set; } = null!;
 
         public List<CommentViewModel> Comments { get; set; } = null!;
     }
