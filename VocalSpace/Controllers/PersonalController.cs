@@ -1,20 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VocalSpace.Filters;
 using VocalSpace.Models;
+using VocalSpace.Models.ViewModel.Global;
 using VocalSpace.Models.ViewModel.Personal;
+using VocalSpace.Services;
 
 namespace VocalSpace.Controllers
 {
     public class PersonalController : Controller
     {
-        // 建構函式，初始化資料庫context和log記錄
+        // 建構函式，初始化資料庫context和service
         private readonly VocalSpaceDbContext _context;
+        private readonly UserFollowService _followService;
 
-        public PersonalController(VocalSpaceDbContext context)
+        public PersonalController(VocalSpaceDbContext context, UserFollowService followService)
         {
             _context = context;
-            
+            _followService = followService;
         }
 
         private IQueryable<PersonalViewModel> personal(long? id) 
@@ -106,6 +110,64 @@ namespace VocalSpace.Controllers
             
 
             return Json(new { success = true, filePath = dbFilePath });
+        }
+
+        /// <summary>
+        /// 追蹤功能API方法邏輯
+        /// </summary>
+        [HttpPost]
+        public async Task<IActionResult> ToggleFollow(long followedUserId)
+        {
+            // 從 Session 取得當前登入的 UserID
+            long? userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+            {
+                return Json(new { success = false, message = "請先登入" });
+            }
+            //設定兩個變數，經過service處理邏輯後回傳，一個是是否成功取得userId，一個是是否追蹤
+            var (isSuccess, isFollowing) = await _followService.ToggleFollowAsync(userId.Value, followedUserId);
+
+
+            //如果沒有成功取得userId，回傳錯誤訊息
+            if (!isSuccess)
+            {
+                return Json(new { success = false, message = "無法追蹤該使用者" });
+            }
+
+            //回傳是否追蹤
+            return Json(new { success = true, isFollowing });
+        }
+
+        /// <summary>
+        /// 取得 UserBar 的 Partial View
+        /// </summary>
+        [HttpGet]
+        public async Task<IActionResult> UserBar(long targetUserId)
+        {
+           var currentUserId = HttpContext.Session.GetInt32("UserId");
+            if (currentUserId == null)
+            {
+                return Unauthorized(); // 未登入則回傳 401
+            }
+
+            // 取得使用者資訊
+            var user = await _context.Users
+                .Include(u => u.UsersInfo)
+                .Where(u => u.UserId == targetUserId)
+                .Select(u => new UserBarViewModel
+                {
+                    target_userId = u.UserId,
+                    Name = u.UserName,
+                    Account = u.Account,
+                    pfp = u.UsersInfo!.AvatarPath
+                }).FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return PartialView("_UserBar", user); // **回傳 PartialView**
         }
     }
 }

@@ -37,6 +37,7 @@ namespace VocalSpace.Controllers
             if( user != null  && user.Password == password)
             {
                 HttpContext.Session.SetString("UserAccount", user.Account);
+                HttpContext.Session.SetInt32("UserId", (int)user.UserId);
                 HttpContext.Session.SetString("IsLoggedIn", "true");
                 Console.WriteLine("登入成功!!");
                 return RedirectToAction("Index", "Home");
