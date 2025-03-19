@@ -42,12 +42,6 @@
 		<div class="content__header-aside">
 			@if (ViewBag.section != null && ViewBag.section.ToString() == "EventDescription")
 			{
-				<div class="content-section works">
-					<img src="/image//selection//voteAD.png" />
-				</div>
-			}
-			@if (ViewBag.section != null && ViewBag.section.ToString() == "Works")
-			{
 				<div class="content-section descrition">
 					<h5>徵選活動日程</h5>
 					<p>@(Model.StartDate) 開始</p>
@@ -55,17 +49,23 @@
 					<button class="btn btn-submit--theme googleAdd">加入google行事曆</button>
 				</div>
 			}
+			@if (ViewBag.section != null && ViewBag.section.ToString() == "Works")
+			{
+				<div class="content-section works">
+					<img src="/image//selection//voteAD.png" />
+				</div>
+			}
 		</div>
 	</div>
 	<div class="content__menu  border-bottom">
 		<ul>
 			<li class="content__menu-item" data-target=".descrition" id="showDescription">
-				<a href="/selection/EventDescription/@(Model.SelectionId)">
+				<a href="/selection/EventDescription/@(Model.SelectionId)" onclick="toggleColor(this)">
 					活動說明
 				</a>
 			</li>
 			<li class="content__menu-item" data-target=".works" id="showWorks">
-				<a href="/selection/GetWorks/@(Model.SelectionId)">
+				<a href="/selection/GetWorks/@(Model.SelectionId)" onclick="toggleColor(this)">
 					參加作品
 				</a>
 			</li>
@@ -121,6 +121,8 @@
 			let currentPage = 1;
 			let selectionId;
 			let paginationCount;
+
+
 			//上一頁
 			$(".page-pre_navigation").on("click",function(){
 				selectionId = $(this).attr("data-selectionid");
@@ -183,7 +185,24 @@
 					}
 				});
 			});
+
+
+			// 進入頁面時，根據 sessionStorage 設定選中的項目
+
+			var currentLabel = sessionStorage.getItem("selection-switch-label");
+			if (currentLabel) {
+				$("#" + currentLabel).addClass("showMenu_bgc"); // 為該 id 加上樣式
+			} else {
+				$("#showDescription").addClass("showMenu_bgc"); // 預設活動說明變色
+			}
 		});
+			function toggleColor(element) {
+				var itemId = $(element).parent().attr("id"); // 取得 <li> 的 id
+				sessionStorage.setItem("selection-switch-label", itemId); // 存入 sessionStorage
+
+				$(".content__menu-item").removeClass("showMenu_bgc"); // 移除所有的
+				$("#" + itemId).addClass("showMenu_bgc"); // 為被點擊的 <li> 加上 class
+			}
 
 	</script>
 }

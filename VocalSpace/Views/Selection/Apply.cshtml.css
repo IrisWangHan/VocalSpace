@@ -43,9 +43,15 @@
         border-radius: 0px;
     }
 }
-.content__area h1{
-    font-size:70px;
-    font-weight:bold;
+.content__area h1 {
+    font-size: 5vw;
+    font-weight: bold;
+}
+@media (max-width: 576px) {
+
+    .content__area h1 {
+        font-size: 20px;
+    }
 }
 /* 上傳作品-ol */
 .upload__list {
@@ -64,8 +70,11 @@
     height: 30px;
     border-bottom: 1px solid gray;
     padding-bottom: 5px;
+   
 }
-
+.content-form-list {
+    color: var(--text-color);
+}
 /* 上傳作品-li-歌曲名稱 */
 .upload__item-tilte {
     display: inline-block;
@@ -75,9 +84,9 @@
     background-color: transparent;
     border-bottom: 1px solid transparent;
     border-image: linear-gradient(to right, #336699, #66ccff) 1;
+    color: var(--text-color);
 }
 .content-form-list p {
-    font-size: var(--fsize-menu);
     color:gray;
     font-weight:bold;
 }
@@ -87,12 +96,7 @@
 }
 
 
-.content-form-list-sm-img {
-    transition: transform 0.3s ease-in-out; /* 平滑動畫效果 */
-}
-    .content-form-list-sm-img:hover{
-        transform:scale(5);
-    }
+
 /* 上傳作品-li-上傳檔案 */
 .upload__item-file {
     width: 80px;
@@ -112,6 +116,7 @@
 
 /* 上傳作品-li-上傳專輯封面 */
 .upload__item-cover {
+    margin-left: 20px;
 }
 
 /* 上傳作品-li-專輯封面縮圖 */
@@ -119,9 +124,13 @@
     width: 25px;
     height: 25px;
     border-radius: 2px;
-    margin-right: 20px;
+    margin-left: 20px;
+    transition: transform 0.2s ease-in-out; /* 平滑動畫效果 */
+    margin-left:auto;
 }
-
+    .content-form-list-sm-img:hover {
+        transform: scale(5);
+    }
 
 
 
@@ -144,26 +153,77 @@
     border-radius: 5px;
 }
 
+
+/******************************************************/
 /* 上方狀態顯示圖 */
 .content__area-state {
     width: 80%;
-    position: relative;
+    height:300px;
+    /*position: relative;*/
     text-align: center;
-    padding-top: 10px;
+    /*padding: 10px 150px 0px 40px;*/
+    padding: 10px 10% 0px 10%;
     background-color: white;
     margin-bottom: 30px;
+    display:flex;
+    align-items:center;
+    justify-content:space-around;
+    margin:45px 0px;
+    border:1px solid ;
 }
-    .content__area-state h2{
-        color:orangered;
-        font-weight:bold;
+@media (max-width: 1400px) {
+
+    .content__area-state {
+        padding: 10px 50px 0px 40px;
+    }
+}
+@media (max-width: 992px) {
+
+    .content__area-state {
+        flex-direction: column;
+        padding: 10px 10px;
+        height: 250px;
+    }
+}
+@media (max-width: 576px) {
+
+    .content__area-state {
+        margin: 15px 0px 30px 0px;
+    }
+}
+.content__area-state h2 {
+    color: #218838;
+    font-weight: bold;
+    font-size: 4vw;
+    
+}
+@media (max-width: 576px) {
+
+    .content__area-state h2 {
+        font-size: 20px;
+    }
+}
+    .content__area-state img{
+        height:100%;
+        width:auto;
     }
 
-/* form表單 */
+@media (max-width: 992px) {
+    .content__area-state img {
+        height: 80%;
+    }
+}
+/******************************************************/
+
+
+    /* form表單 */
 .content__area-form {
     width: 80%;
     height: auto;
     padding: 10px;
     color: black;
+    border-radius: 5px;
+    border: 1px solid lightgray;
 }
 
 /* form表單區 活動標題狀態等文字 */
@@ -173,20 +233,48 @@
     height: auto;
     color: black;
     margin-bottom: 30px;
-    border-radius: 5px;
-    padding: 10px;
-    border: 1px solid lightgray;
+    display: flex;
+    padding: 30px;
+    /*    border-radius: 5px;
+    border: 1px solid lightgray;*/
 }
-
+@media (max-width: 1200px) {
+    .content__area-form-title {
+        padding:25px 5px;
+    }
+}
 
     /* form表單區 活動狀態 */
     .content__area-form-title p {
         font-size: var(--fsize-menu-lg);
         color: gray;
         font-weight: bold;
-        padding: 10px;
+        padding: 0px 40px 20px 40px;
     }
+@media (max-width: 576px) {
 
+    .content__area-form-title p {
+        padding: 0px 5px 20px 5px;
+    }
+}
+/* form表單活動圖片區 */
+.content-form-img-cover {
+    width: 30%;
+    height:100%;
+    aspect-ratio: 1/1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0px 10px 10px 10px;
+    border: 1px solid gray;
+    border-radius: 10px;
+}
+@media (max-width: 992px) {
+    .content-form-img-cover {
+        display:none;
+    }
+    
+}
 
 /* form表單輸入區與大頭照 */
 .content-form {
@@ -202,13 +290,50 @@
         flex-direction: column-reverse;
     }
 }
+
+/*顯示徵選歌曲的文字*/
+.content-form-item span {
+    font-size: 1.2vw;
+}
+@media (max-width: 1200px) {
+    .content-form-item span {
+        font-size:20px;
+    }
+}
+/*顯示徵選標題的文字*/
+.content-form-text p, .content-form-text span {
+    font-size: 1.5vw;
+}
+@media (max-width: 1200px) {
+    .content-form-text p {
+        font-size: 25px;
+    }
+
+    .content-form-text span {
+        font-size: 22px;
+    }
+}
+@media (max-width: 992px) {
+    .content-form-text p {
+        font-size: 20px;
+    }
+    .content-form-text span {
+        font-size: 18px;
+    }
+}
+@media (max-width: 576px) {
+    .content-form-text p {
+        padding: 0px 5px 20px 5px;
+    }
+}
 /* form表單輸入區  -ol */
 .content-form-list {
     min-width: 200px;
     width: 80%;
     padding-right: 20px;
-    list-style:none;
-    margin-top:30px;
+    list-style: none;
+    font-size: var(--fsize-menu);
+    /*margin-top:30px;*/
 }
 
 @media (max-width: 1200px) {
@@ -216,43 +341,74 @@
         width: 100%;
     }
 }
+
+
+
+
+
 /* form表單輸入區  -ol -li */
 .content-form-list li {
     margin-bottom: 30px;
+    font-size: 1.1vw;
+}
+@media (max-width: 576px) {
+    .content-form-list li {
+        font-size: 16px;
+    }
 }
 
-    /* form表單輸入區  -input*/
+/*表單標題*/
+.content-form-list p {
+    font-size: 1.5vw;
+}
+@media (max-width: 1200px) {
+    .content-form-list p {
+        font-size: 20px;
+    }
+}
+
+
+
+
+
+
+/* form表單輸入區  -input*/
 .content-form-input {
     width: 100%;
     border: 0px;
 }
-
+@media (max-width: 1200px) {
+    .content-form-input {
+        font-size: 20px;
+    }
+}
 /* form表單大頭照區 */
 .content-form-img {
-    width: 200px;
-    height: 200px;
+    width: 100px;
+    height: 100px;
     aspect-ratio: 1/1;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0px 0px 10px 10px;
+    margin: 0px 10px 10px 10px;
     border:1px solid gray;
-    border-radius:10px;
-   
+    border-radius:50%;
 }
-
-.popup__select-works {
-    width: 50%;
-    border: 1px solid lightgray;
-    background-color: white;
-    border-radius: 10px;
-    position: fixed;
-    top: 70%;
-    left: 50%;
-    transform: translate(-50%,-100%);
-    z-index: 1000; /* 確保 overlay 在其他元素之上 */
-    display:none;
-}
+    .content-form-img img {
+        border-radius: 50%;
+    }
+    .popup__select-works {
+        width: 50%;
+        border: 1px solid lightgray;
+        background-color: white;
+        border-radius: 10px;
+        position: fixed;
+        top: 70%;
+        left: 50%;
+        transform: translate(-50%,-100%);
+        z-index: 1000; /* 確保 overlay 在其他元素之上 */
+        display: none;
+    }
 
 .popup__select-works-title {
     background-color: #128EE1;
