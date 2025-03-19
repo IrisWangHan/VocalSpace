@@ -14,26 +14,15 @@
 <section class="content ">
 	<div class="content__area">
 		<h1>徵選報名表</h1>
+		@* 顯示表單報名狀態 *@
 		<div class="content__area-state">
-			@if (Model.ApplyStatus == 0)
-			{
-				<img src="/image/selection/nothing.png" />
-				<h2>您尚未報名</h2>
-			}
-			else if (Model.ApplyStatus == 1)
-			{
-				<img src="/image/selection/success.png" />
-				<h2>報名完成</h2>
-			}
-			else
-			{
-				<img src="/image/selection/errorRobot.png" />
-				<h2>報名失敗,請聯繫主辦單位</h2>
-			}
-
+			<img src="@(Model.ApplyStatusPath)" />
+			<h2>@(Model.ApplyStatusText)</h2>
 		</div>
+
 		<div class="content__area-form">
 
+			@* 顯示活動資訊 *@
 			<div class="content__area-form-title">
 				<div class="content-form-img-cover">
 					<img src="@(Model.SelectionCoverPath)" />
@@ -50,12 +39,13 @@
 				</div>
 			</div>
 
+			@* 顯示表單 *@
 			<div class="content-form">
 				<ol class="content-form-list">
-
-					@* 表單填寫內容區 *@
+					@* li 表單填寫內容區 *@
 					<li class="border-bottom">
 						<p> 姓名</p>
+						@* 報名開放中+從未報名過 可以編輯,該活動為送出後不可異動 *@
 						@if (Model.JoinState == "開放中" && Model.ApplySongs.Count < 1)
 						{
 							<input type="text" class="content-form-input" name="userName" value="@(Model.UserName)" />
@@ -77,10 +67,13 @@
 						}
 
 					</li>
+					@* li 上傳作品區 *@
 					<li class=" content-form-item">
+						@* 上傳按鈕 A1 *@
 						<div class="upload__title">
 							<p> 上傳作品</p>
-							@if (Model.SelectionId != 0 && Model.JoinState == "開放中")
+							@* 活動開放中+從未報名過 可以上傳作品 *@
+							@if (Model.JoinState == "開放中" && Model.ApplySongs.Count < 1)
 							{
 								<label class="upload__item-file">
 									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-arrow-up-fill" viewBox="0 0 16 16">
@@ -90,25 +83,27 @@
 							}
 						</div>
 
-						@* 顯示先前已上傳作品 *@
-						@if (Model.ApplySongs == null || Model.ApplySongs.Count <= 0)
-						{
-							<span>目前沒有任何歌曲</span>
-						}
-						else
-						{
-							<ol class="upload__list">
+						@* 顯示已報名的作品 *@
+						<ol class="upload__list">
+							@if (Model.ApplySongs.Count <= 0)
+							{
+								<li>目前沒有任何歌曲</li>
+							}
+							else
+							{
 								@foreach (var item in Model.ApplySongs)
 								{
 									<li class="upload__item" data-songid="@(item.SongId)">
 										<span class="upload__item-title">@(item.SongName)</span>
+										@* 歌曲封面縮圖 *@
 										<img src="@(item.CoverPhotoPath)" class="content-form-list-sm-img" />
 									</li>
 								}
-							</ol>
-						}
+							}
+						</ol>
 
-						@* 上傳作品的彈窗 *@
+
+						@* 上傳作品的彈窗 A1*@
 						<div class="popup__select-works">
 							<div class="popup__select-works-title">
 								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-up-fill" viewBox="0 0 16 16">
@@ -120,7 +115,7 @@
 								</svg>
 							</div>
 
-							@* 顯示上傳(勾選)到活動的歌曲 *@
+							@* 彈窗上方顯示區:勾選的歌曲 *@
 							<div class="popup__select-works-chosen">
 								<ol class="popup__select-works-chosen-ol">
 									@foreach (var item in Model.ApplySongs)
@@ -138,26 +133,26 @@
 								</ol>
 							</div>
 
-							@* 顯示所有歌曲 *@
+							@* 彈窗下方顯示區: 顯示所有歌曲 *@
 							<div class="popup__select-works-list">
-								@if (Model.Songs == null || Model.Songs.Count <= 0)
-								{
-									<span class="text-secondary">&nbsp;目前沒有任何歌曲</span>
-								}
-								else
-								{
-									<ol>
+								<ol>
+									@if ( Model.Songs.Count <= 0)
+									{
+										<li class="text-secondary">&nbsp;目前沒有任何歌曲</li>
+									}
+									else
+									{
 										@foreach (var item in Model.Songs)
 										{
 											<li class="border-bottom ">
 												<label>
-													<input type="checkbox" class="popup__select-works-input" data-songid="@(item.SongId)"  />&nbsp;
+													<input type="checkbox" class="popup__select-works-input" data-songid="@(item.SongId)" />&nbsp;
 													<span>@(item.SongName)</span>
 												</label>
 											</li>
 										}
-									</ol>
-								}
+									}
+								</ol>								
 							</div>
 							<div class="popup__select-works-button">
 								<button class="btn btn-submit--theme" data-selectionId="@(Model.SelectionId)">送出</button>
@@ -167,6 +162,7 @@
 					</li>
 
 				</ol>
+				@* 大頭照 *@
 				<div class="content-form-img">
 					<img src="@(Model.AvatarPath)" />
 				</div>
@@ -306,7 +302,7 @@
 
 		});
 
-	
+
 
 		/*****作品確認上傳 =>將勾選清單加入畫面上的清單******/
 		$(".popup__select-works-button > .btn-submit--theme").on("click",function(){
@@ -317,14 +313,14 @@
 				//重新加入到畫面上
 				for (let i = 0; i < chosenUploadList.length; i++) {
 
-					const songid =chosenUploadList[i]["songid"];  
-					const songName =chosenUploadList[i]["songName"]; 
+					const songid =chosenUploadList[i]["songid"];
+					const songName =chosenUploadList[i]["songName"];
 
 				// 將清單顯示到畫面上
 				$(".upload__list").append(`
 					<li class="upload__item"  data-songid="${songid}">
-						<span class="upload__item-title">${songName}</span>						
-						<img src="/image/selection//voteAD.png" class="content-form-list-sm-img" />
+						<span class="upload__item-title">${songName}</span>
+						<img src="/image/selection/voteAD.png" class="content-form-list-sm-img" />
 						<span class="content-form-list-sm-img-filename"></span>
 					</li>
 				`);
@@ -333,7 +329,7 @@
 						"display": "flex",
 						"align-items": "center",
 						"margin-bottom": "5px",
-						"font-size": "var(--fsize-menu)",
+						"font-size": "20px",
 						"height": "30px",
 						"border-bottom": "1px solid gray",
 						"padding-bottom": "5px",
@@ -357,12 +353,12 @@
 						"width": "25px",
 						"height": "25px",
 						"border-radius":" 2px",
-						"margin-right": "20px",
+						"margin-left": "auto",
 						"cursor":"pointer"
 					});
 					$(".content-form-list-sm-img ").last().hover(
 						function () {
-							$(this).css("transform", "scale(5)");
+							$(this).css("transform", "scale(3)");
 						},
 						function () {
 							$(this).css("transform", "scale(1)");
@@ -430,6 +426,6 @@
 			$("input[name='userName']").val('');   // 清空 userName 欄位
 			$("input[name='email']").val('');      // 清空 email 欄位
 	}
-	
+
 </script>
 

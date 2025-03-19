@@ -43,19 +43,18 @@
         border-radius: 0px;
     }
 }
+/*大標題-徵選報名表*/
 .content__area h1 {
-    font-size: 5vw;
     font-weight: bold;
 }
-@media (max-width: 576px) {
 
-    .content__area h1 {
-        font-size: 20px;
-    }
-}
 /* 上傳作品-ol */
 .upload__list {
     padding: 0px;
+}
+.upload__list li{
+    list-style: none;
+    font-size:20px;
 }
 /* 上傳作品-標題 */
 .upload__title {
@@ -90,7 +89,7 @@
     color:gray;
     font-weight:bold;
 }
-.upload__item-file:hover, .upload__item-cover:hover, .icon__close:hover, .content-form-list-sm-img:hover {
+.upload__item-file:hover, .upload__item-cover:hover, .icon__close:hover{
     cursor: pointer;
     transform: scale(1.1);
 }
@@ -108,7 +107,12 @@
     font-weight: bold;
     text-align: center;
 }
+@media (max-width: 576px) {
 
+    .upload__item-file {
+        width: 50px;
+    }
+}
 .icon__close, .icon__close-data {
     cursor: pointer;
 }
@@ -119,18 +123,6 @@
     margin-left: 20px;
 }
 
-/* 上傳作品-li-專輯封面縮圖 */
-.content-form-list-sm-img {
-    width: 25px;
-    height: 25px;
-    border-radius: 2px;
-    margin-left: 20px;
-    transition: transform 0.2s ease-in-out; /* 平滑動畫效果 */
-    margin-left:auto;
-}
-    .content-form-list-sm-img:hover {
-        transform: scale(5);
-    }
 
 
 
@@ -302,28 +294,32 @@
 }
 /*顯示徵選標題的文字*/
 .content-form-text p, .content-form-text span {
-    font-size: 1.5vw;
+    font-size: 22px;
 }
-@media (max-width: 1200px) {
+/*@media (max-width: 1200px) {
     .content-form-text p {
         font-size: 25px;
     }
 
     .content-form-text span {
-        font-size: 22px;
+        
     }
-}
+}*/
 @media (max-width: 992px) {
     .content-form-text p {
         font-size: 20px;
     }
     .content-form-text span {
-        font-size: 18px;
+        font-size: 20px;
     }
 }
 @media (max-width: 576px) {
     .content-form-text p {
         padding: 0px 5px 20px 5px;
+    }
+    .content-form-text span {
+        font-size: 16px;
+        display: block;
     }
 }
 /* form表單輸入區  -ol */
@@ -341,6 +337,11 @@
         width: 100%;
     }
 }
+@media (max-width: 576px) {
+    .content-form-list {
+       padding:0px;
+    }
+}
 
 
 
@@ -349,7 +350,7 @@
 /* form表單輸入區  -ol -li */
 .content-form-list li {
     margin-bottom: 30px;
-    font-size: 1.1vw;
+    /*font-size: 1.1vw;*/
 }
 @media (max-width: 576px) {
     .content-form-list li {
@@ -376,10 +377,11 @@
 .content-form-input {
     width: 100%;
     border: 0px;
+    font-size: 20px;
 }
-@media (max-width: 1200px) {
+@media (max-width: 576px) {
     .content-form-input {
-        font-size: 20px;
+        font-size: 14px;
     }
 }
 /* form表單大頭照區 */
@@ -409,7 +411,11 @@
         z-index: 1000; /* 確保 overlay 在其他元素之上 */
         display: none;
     }
-
+@media (max-width: 576px) {
+    .popup__select-works {
+        width: 90%;
+    }
+}
 .popup__select-works-title {
     background-color: #128EE1;
     display: flex;
@@ -446,14 +452,29 @@
     align-items: center;
     margin-bottom: 20px;
 }
+@media (max-width: 576px) {
+    .popup__select-works-button {
+        margin-bottom: 0px;
+    }
+}
+
     .popup__select-works-button button{
         width:80px;
+        height:auto;
     }
     .icon__close-pop {
         margin-left: auto;
     }
-
-.popup__select-works-chosen ol, .popup__select-works-list ol{
+.form-button button {
+    min-width: 60px;
+    
+}
+@media (max-width: 576px) {
+    .form-button button {
+        font-size: 12px;
+    }
+}
+.popup__select-works-chosen ol, .popup__select-works-list ol {
     list-style: none;
     padding: 0;
 }

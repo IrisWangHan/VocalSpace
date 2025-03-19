@@ -338,7 +338,23 @@ namespace VocalSpace.Services
                 data.SelectionId = selectionData.SelectionId;
                 data.Songs = songs ?? new List<SelectionSongs>();
                 data.ApplySongs = applySongs ?? new List<SelectionSongs>();
-
+                switch (data.ApplyStatus)
+                {
+                    case (int?)SelectionApplyStatus.NotApplied:
+                        data.ApplyStatusPath = "/image/selection/nothing.png";
+                        data.ApplyStatusText = "尚未報名";
+                        break;
+                    case (int?)SelectionApplyStatus.Applied:
+                        data.ApplyStatusPath = "/image/selection/success.png";
+                        data.ApplyStatusText = "報名完成";
+                        break;
+                    case (int?)SelectionApplyStatus.Failed:
+                        data.ApplyStatusPath = "/image/selection/errorRobot.png";
+                        data.ApplyStatusText = "報名失敗";
+                        break;
+                }
+               
+                
                 return data;
             }
             catch (Exception ex)
