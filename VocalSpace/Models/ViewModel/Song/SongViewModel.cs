@@ -1,6 +1,6 @@
-﻿namespace VocalSpace.Models.Dto
+﻿namespace VocalSpace.Models.ViewModel.Song
 {
-    public class HotRankDto
+    public class SongViewModel
     {
         public string UserName { get; set; } = null!;
         //from model.Song
