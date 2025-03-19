@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using VocalSpace.Filters;
 using VocalSpace.Models;
 using VocalSpace.Models.ViewModel.Personal;
 
@@ -34,24 +35,28 @@ namespace VocalSpace.Controllers
                                                       };
             return personals;
         }
-
+        [SessionToLogin]
         public IActionResult mymusic(long? id)
         {
             ViewData["personal"] = personal(id).ToList();
             return View();
         }
+        [SessionToLogin]
         public IActionResult myabout(long? id)
         {
             return View(personal(id).ToList());
         }
+        [SessionToLogin]
         public IActionResult mylist(long? id)
         {
             return View(personal(id).ToList());
         }
+        [SessionToLogin]
         public IActionResult mylike(long? id)
         {
             return View(personal(id).ToList());
         }
+        [SessionToLogin]
         public IActionResult listdetail(long? id)
         {
             return View(personal(id).ToList());

@@ -11,23 +11,27 @@ namespace VocalSpace.Controllers
         {
             _context = context;
         }
+        [SessionToLogin]
         public IActionResult like()
         {
             return View();
         }
+        [SessionToLogin]
         public IActionResult mylist()
         {
             return View();
         }
+        [SessionToLogin]
         public IActionResult playrecord()
         {
             return View();
         }
+        [SessionToLogin]
         public IActionResult booking()
         {
             return View();
         }
-
+        [SessionToLogin]
         public IActionResult uploadMusic()
         {
             if (HttpContext.Session.GetString("IsLoggedIn") == "true")
@@ -36,6 +40,7 @@ namespace VocalSpace.Controllers
             }
             return RedirectToAction("Login", "Accounts");
         }
+        [SessionToLogin]
         public IActionResult createlist()
         {
             return View();
