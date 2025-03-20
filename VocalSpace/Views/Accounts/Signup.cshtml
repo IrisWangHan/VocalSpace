@@ -101,9 +101,19 @@
             // 下一步按鈕邏輯 (註冊1-4步驟)
             $(".btn-next").click(function () {
                 let currentStep = $(this).data("step");
-
+                let accountCount = $("#userAccount").val().length;
+                let pwdCount = $("#newPassword").val().length;
                 if (currentStep === 1) 
                 {
+                    if (accountCount < 3 || accountCount > 30) {
+                        alert("帳號長度須介於 3 ~ 30 個字元！");
+                        return;
+                    }
+
+                    if (pwdCount < 6 || pwdCount > 28) {
+                        alert("密碼長度須介於 6 ~ 28 個字元！");
+                        return;
+                    }
                     checkUserAccount().then(isValid => {
                             if (isValid) {
                                 goToNextStep(currentStep);
@@ -268,9 +278,9 @@
 
         // 重新發送驗證碼
         $("#resendCode").click(function () {
-            console.log("驗證碼已重新發送！");
             startCountdown();
             sendVerificationCode();
+            console.log("驗證碼已重新發送！");
         });
 
     </script>

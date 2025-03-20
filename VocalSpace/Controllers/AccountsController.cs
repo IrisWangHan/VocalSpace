@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Facebook;
-using VocalSpace.Models.ViewModel;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System.Security.Cryptography;
 using Org.BouncyCastle.Crypto.Generators;
 using BCrypt.Net;
+using VocalSpace.Models.ViewModel.Account;
 
 
 
