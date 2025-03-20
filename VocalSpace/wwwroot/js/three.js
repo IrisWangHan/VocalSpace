@@ -17,8 +17,8 @@ function initEarthRenderer() {
 // 初始化地球相機
 function initEarthCamera() {
     earthCamera = new THREE.PerspectiveCamera(75, earthWidth / earthHeight, 0.1, 1000);
-    earthCamera.position.set(0, 0, 100); //x,y,z(數值越小越近)
-    earthCamera.lookAt(new THREE.Vector3(0, 0, 0)); // 相機針對場景中心
+    earthCamera.position.set(50, 50, 50); //x,y,z(數值越小越近)
+    earthCamera.lookAt(new THREE.Vector3(50, 50, 50)); // 相機針對場景中心
     earthScene = new THREE.Scene(); // 初始化場景
 }
 
@@ -52,7 +52,7 @@ function renderEarth() {
 
     if (earthObject) { // 確保地球物件存在
         earthObject.rotation.x-= 0.001;
-        earthObject.rotation.y +=0.004; // 讓地球向右旋轉 90 度
+        earthObject.rotation.y +=0.002; // 讓地球向右旋轉 90 度
 
     }
 

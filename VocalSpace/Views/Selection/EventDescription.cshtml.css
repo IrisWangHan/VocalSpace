@@ -46,23 +46,26 @@
     flex-wrap: wrap;
     padding: 10px;
 }
+
 @media (max-width: 768px) {
     .content__header {
         flex-direction: column;
         padding: 5%;
     }
 }
+
 @media (max-width: 576px) {
     .content__header {
-        align-items:center;
-        width:90%;
+        align-items: center;
+        width: 90%;
     }
 }
+
 .content__header-title {
     /*width: 300px;*/
     height: 100%;
     color: black;
-    flex:1;
+    flex: 1;
 }
 
     .content__header-title h1 {
@@ -77,7 +80,7 @@
         width: 150px;
         height: 40px;
         font-size: var(--fsize-menu-lg);
-        margin-bottom:20px;
+        margin-bottom: 20px;
     }
 
         .content__header-title a:hover {
@@ -108,34 +111,36 @@
     }
 }
 
-    .content__header-aside div {
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1; /* 讓 div 撐開，推動按鈕到底部 */
+.content__header-aside div {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* 讓 div 撐開，推動按鈕到底部 */
+    width: 100%;
+}
+
+    .content__header-aside div h5 {
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .content__header-aside div p {
+        /*padding: 10px 0px 0px 10px;*/
+        font-weight: bold;
+        color: red;
         width: 100%;
     }
 
-        .content__header-aside div h5 {
-            font-weight: bold;
-            text-align:center;
-        }
+    .content__header-aside div .btn {
+        height: 45px;
+        /*margin-top: auto;*/
+        width: auto;
+    }
 
-        .content__header-aside div p {
-            /*padding: 10px 0px 0px 10px;*/
-            font-weight: bold;
-            color: red;
-            width:100%;
-        }
-
-        .content__header-aside div .btn {
-            height: 45px;
-            /*margin-top: auto;*/
-            width: auto;
-        }
 .content__menu-item a {
     display: inline-block;
     width: 100%;
 }
+
 .content__menu--click {
     background-color: cornflowerblue;
 }
@@ -172,8 +177,12 @@
             background-color: cornflowerblue;
         }
 
-@media (max-width: 576px) {
+ul .content__menu-item.showMenu_bgc {
+    background-color: cornflowerblue;
+}
 
+
+@media (max-width: 576px) {
     /*內部卡片大區塊邊框*/
     .content__menu li {
         font-size: var(--fsize-menu);
@@ -192,7 +201,7 @@
 @media (max-width: 768px) {
     .content {
         padding: 20px 40px;
-        align-content:center;
+        align-content: center;
     }
 }
 
@@ -255,10 +264,11 @@
         font-size: var(--fsize-menu);
     }
 
- /*   .content__header-title h1 {
+    /*   .content__header-title h1 {
         font-size: 18px;
     }*/
 }
-.googleAdd{
-    background-color:#00bf63;
+
+.googleAdd {
+    background-color: #00bf63;
 }
