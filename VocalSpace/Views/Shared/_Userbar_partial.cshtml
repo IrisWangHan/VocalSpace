@@ -1,12 +1,12 @@
 ﻿@model VocalSpace.Models.ViewModel.Global.UserBarViewModel
 <div class="userinfo container">
 	<div class="userpic">
-		<a class="Avater-link" href="Personal/@Model.Account">
+		<a class="Avater-link" href="/Personal/mymusic/@Model.target_userId">
 			<img class="pfp" src="@Model.pfp">
 		</a>
 	</div>
 	<div class="userid">
-		<a class="pf" href="Personal/@Model.Account">@(Model.Name ?? Model.Account)</a>
+		<a class="pf" href="/Personal/mymusic/@Model.target_userId">@(Model.Name ?? Model.Account)</a>
 		<p class="pftext">@@@Model.Account</p>
 	</div>
 	<div class="userfollow">
