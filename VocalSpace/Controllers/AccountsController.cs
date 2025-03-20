@@ -191,12 +191,11 @@ namespace VocalSpace.Controllers
         public async Task<IActionResult> Signup(SignupViewModel model)
         {
             Console.WriteLine("進到controller signup!!");
-            if(_context.Users.Any(u => u.Account == model.SignupAccount))
+            if (_context.Users.Any(u => u.Account == model.SignupAccount))
             {
                 return Json(new { success = false, message = "帳號已被使用" });
             }
             string hashedPassword = HashPasswordWithBcrypt(model.SignupPassword);
-            Console.WriteLine("hashedPassword: "+ hashedPassword);
 
             var user = new User
             {
@@ -238,8 +237,6 @@ namespace VocalSpace.Controllers
             bool verifyResult = BCrypt.Net.BCrypt.Verify(password, hashedPassword);
             return verifyResult;
         }
-
-
 
         //  整合  AccountSettings
         public IActionResult memberInformation()

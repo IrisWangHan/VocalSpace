@@ -22,7 +22,8 @@ builder.Services.AddSession(options =>
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-// 註冊 SelectionService  //註冊介面要 順便註冊實作類別 
+
+// 註冊 SelectionService  //註冊介面要 順便註冊實作類別
 builder.Services.AddScoped<SelectionService>();
 builder.Services.AddSingleton<EmailService>();
 builder.Services.AddScoped<IPaginationService, PaginationService>();

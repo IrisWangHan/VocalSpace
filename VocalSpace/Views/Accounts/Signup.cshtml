@@ -97,28 +97,6 @@
                 nextButton.prop("disabled", !allFilled);
             });
 
-             // 定義檢查條件的函數
-            function validateInputs() {
-                const accountLength = $('#userAccount').val().length;
-                const passwordLength = $('#newPassword').val().length;
-
-                // 檢查帳號與密碼的長度是否符合規定
-                const isAccountValid = accountLength >= 3 && accountLength <= 30;
-                const isPasswordValid = passwordLength >= 6 && passwordLength <= 28;
-
-                // 根據條件啟用或禁用按鈕
-                if (isAccountValid && isPasswordValid) {
-                    $('.btn-next').prop('disabled', false);
-                } else {
-                    $('.btn-next').prop('disabled', true);
-                }
-            }
-
-            // 綁定輸入事件，動態檢查
-            // $('#userAccount, #newPassword').on('input', function () {
-            //     validateInputs();
-            // });
-
 
             // 下一步按鈕邏輯 (註冊1-4步驟)
             $(".btn-next").click(function () {
@@ -269,6 +247,8 @@
             }
         });
 
+        let countdown = 180; // 初始倒數秒數
+        let timer; // 用來存 setInterval()
         // 倒數計時函數
         function startCountdown() {
             clearInterval(timer); // 確保不會有重複的計時器
