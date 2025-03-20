@@ -2,7 +2,7 @@
 
 @{
     Layout = "_Layout";  // 引用全域的 _Layout.cshtml
-       
+
 }
 
 <div class="profile-header">
@@ -11,22 +11,27 @@
         if (Model.FirstOrDefault()!.UserId == Model.FirstOrDefault()!.CurrentUserId)
         {
             <!-- 預覽封面圖片 -->
-       <div class="cover-container"> 
-           <div class="covercover">
-            <img id="coverpreview" style="display: block;" src="@Model.FirstOrDefault()!.BannerImagePath" alt="封面圖片">
-        </div> 
-           <label class="coverupload-btn"> 
-               選擇圖片 
-               <input type="file" id="coverfileInput" accept="image/*"> 
-           </label>
-       </div>
-
-   } else   
-   { 
             <div class="cover-container"> 
-              <div class="covercover"> 
-                    <img style="display: block;" src="@Model.FirstOrDefault()!.BannerImagePath" alt="封面圖片">
-        </div>  
+                <div class="covercover">
+                    @if (Model.FirstOrDefault()!.BannerImagePath != string.Empty)
+                    {
+                    <img id="coverpreview" style="display: block;" src="@Model.FirstOrDefault()!.BannerImagePath" alt="封面圖片">
+                    }
+                </div> 
+                <label class="coverupload-btn"> 
+                    選擇圖片 
+                    <input type="file" id="coverfileInput" accept="image/*"> 
+                </label>
+            </div>
+
+        } else   
+        {
+            <div class="cover-container"> 
+                <div class="covercover"> 
+                    @if (Model.FirstOrDefault()!.BannerImagePath !=string.Empty) {
+						<img style="display: block;" src="@Model.FirstOrDefault()!.BannerImagePath" alt="封面圖片">
+					}
+                 </div>  
                 <div class="coverbutton">
                     @if (Model.FirstOrDefault()!.FollowedUserId != Model.FirstOrDefault()!.CurrentUserId)
                     {
@@ -70,7 +75,7 @@
                 <div class="stats">
                     <ul b-lmw9bnkxzw="" class="list-inline opacity-75">
                         <li b-lmw9bnkxzw="" class="list-inline-item">
-                            <h4 b-lmw9bnkxzw="" class="fs-6"> 追蹤中</h4>
+                            <h4 b-lmw9bnkxzw="" class="fs-6"> 粉絲數</h4>
                             <h4 b-lmw9bnkxzw="">0</h4>
                         </li>
                     </ul>
