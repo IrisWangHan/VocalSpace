@@ -32,7 +32,7 @@ namespace VocalSpace.Controllers
                                                       where user.UserId == id
                                                       select new PersonalViewModel
                                                       {
-                                                          CurrentUserId = (int)currentUserId!,
+                                                          CurrentUserId = currentUserId ?? 0,
                                                           UserId = user.UserId,
                                                           UserName = user.UserName,
                                                           Account = user.Account,
@@ -42,10 +42,10 @@ namespace VocalSpace.Controllers
                                                           isFollowing = currentUserId.HasValue && currentUserId != 0  //如果使用者未登入，預設為false
                                                             ? _context.UserFollows.Any(f => f.UserId == currentUserId && f.FollowedUserId == id) : false
                                                       };
+            ViewBag.LoginID = currentUserId;
             return personals;
         }
-        [HttpGet("Personal/mymusic/{id}")]
-        [SessionToLogin]
+        [HttpGet("Personal/mymusic/{id}")]        
         public IActionResult mymusic(long id)
         {
             return View(personal(id).ToList());

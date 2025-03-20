@@ -33,11 +33,9 @@
 					}
                  </div>  
                 <div class="coverbutton">
-                    @if (Model.FirstOrDefault()!.FollowedUserId != Model.FirstOrDefault()!.CurrentUserId)
-                    {
-                    }
-                        <button class="btn btn-danger btn-follow @(Model.FirstOrDefault()!.isFollowing ? "selected" : "")" data-userid=@Model.First().UserId>@(Model.FirstOrDefault()!.isFollowing ? "已追蹤" : "追蹤")</button>
-                </div>  
+                       <button class="btn btn-danger btn-follow @(Model.FirstOrDefault()!.isFollowing ? "selected" : "")" data-userid=@Model.First().UserId>@(Model.FirstOrDefault()!.isFollowing ? "已追蹤" : "追蹤")</button>
+                
+                </div>
             </div> 
          } 
   }    
