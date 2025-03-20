@@ -13,12 +13,18 @@ namespace VocalSpace.Controllers
     {
         // EF 的 DbContext
         private readonly VocalSpaceDbContext _context;
+        // 贊助功能 DonateService 
+        private readonly DonateService _donateService;
+        //  紀錄歌曲ID
+        private static string? SongId;
         private readonly ModalDataService _ModalDataService;
 
         // 建構函數 DbContext
+        public SongController(VocalSpaceDbContext context, DonateService donateService)
         public SongController(VocalSpaceDbContext context, ModalDataService modalDataService)
         {
             _context = context;
+           _donateService = donateService;
             _ModalDataService = modalDataService;
         }
         /// <summary>
@@ -27,6 +33,7 @@ namespace VocalSpace.Controllers
         [HttpGet("Song/{id}")]
         public async Task<IActionResult> Index(int id)
         {
+            SongId = id.ToString();
             // 從 Session 取得 Account
             string? account = HttpContext.Session.GetString("UserAccount");
             long? userId = HttpContext.Session.GetInt32("UserId");
@@ -193,11 +200,46 @@ namespace VocalSpace.Controllers
 
             return Ok(new { success = true });
         }
-        [HttpPost("Song/AddOrder")]
-        public string AddOrder([FromBody]string arguments)
+
+        //  1.建立訂單
+        [HttpPost]
+        public IActionResult AddOrder([FromBody] Dictionary<string, string> data)
         {
-            string a = arguments;
-            return a + "OK";
+
+            //  Guid.NewGuid() : 產生全球唯一識別碼 (UUID)
+            //  orderId : 產生隨機20碼訂單編號
+            var orderId = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 20);
+            //需填入你的網址
+            var website = $"https://rk8nf59r-7145.asse.devtunnels.ms/";
+            //  SponsorId : 透過 Session 取得 UserId
+            string? SponsorId = HttpContext.Session.GetInt32("UserId").ToString();
+            
+
+            var order = new Dictionary<string, string>
+            {
+                //綠界需要的參數
+                { "MerchantTradeNo",  orderId},
+                { "MerchantTradeDate",  DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")},
+                { "TotalAmount",  data["TotalAmount"]},
+                { "TradeDesc",  "無"},
+                { "ItemName",  "測試商品"},
+                { "SponsorId",  SponsorId!},
+                { "SongId",  SongId!},
+                { "CustomField3",  ""},
+                { "CustomField4",  ""},
+                { "ReturnURL",  $"{website}Ecpay/AddPayInfo"},
+                { "MerchantID",  "3002607"},
+                { "PaymentType",  "aio"},
+                { "ChoosePayment",  "Credit"},
+                { "EncryptType",  "1"},
+            };
+
+            // 2 : 新增訂單到資料庫
+            string a = _donateService.AddOrderToDb(order);
+            //檢查碼
+           order["CheckMacValue"] = _donateService.GetCheckMacValue(order);
+            return View(order);
+
         }
 
         ///<summary>

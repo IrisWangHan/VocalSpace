@@ -28,6 +28,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddScoped<SelectionService>();
 builder.Services.AddSingleton<EmailService>();
 builder.Services.AddScoped<IPaginationService, PaginationService>();
+<<<<<<< HEAD
 builder.Services.AddScoped<UserService>();      //µù¥UService¡A¥Î©ó³B²zUserªº¸ê®Æ(Follow¡ALikesong¡Afav_playlist)
 builder.Services.AddScoped<ModalDataService>(); //µù¥UService¡A¥Î©ó³B²zModalªº¸ê®Æ(¥[¤Jºq³æ¡A¤À¨Éºq¦±¡AÃÙ§U¡A¤À¨É¬¡°Ê)
 builder.Services.AddControllersWithViews(options =>
@@ -35,6 +36,10 @@ builder.Services.AddControllersWithViews(options =>
     options.Filters.Add<GetSessionData>();     //Filter¥Î³~: ¦b°õ¦æAction¤§«e©Î¤§«á°õ¦æ¬Y¨Çµ{¦¡½X¡A³oÃä§Ú¥Î¨Ó±aViewDataªº¸ê®Æ
 });
 
+=======
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<DonateService>();
+>>>>>>> 3/20 ?´æ–°DonateService
 
 builder.Services.AddDbContext<VocalSpaceDbContext>(options =>
 {
