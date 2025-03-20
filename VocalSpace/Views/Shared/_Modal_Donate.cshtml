@@ -50,51 +50,51 @@
 </div>
 
 <!-- 贊助彈窗 -->
-<div id="redirectModal" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" aria-hidden="true" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content bg-dark text-white text-center p-4"  style="width:350px;">
-            <p class="mb-0">導向綠界科技 ECPay 中...</p>
-        </div>
-    </div>
-</div>
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
+@* <div id="redirectModal" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" aria-hidden="true" tabindex="-1"> *@
+@*     <div class="modal-dialog modal-dialog-centered"> *@
+@*         <div class="modal-content bg-dark text-white text-center p-4"  style="width:350px;"> *@
+@*             <p class="mb-0">導向綠界科技 ECPay 中...</p> *@
+@*         </div> *@
+@*     </div> *@
+@* </div> *@
+@* <script src="~/lib/jquery/dist/jquery.min.js"></script> *@
 <script>
-        $(document).ready(function () {
-            let selectedAmount = null; // 儲存選中的金額
+        // $(document).ready(function () {
+        //     let selectedAmount = null; 儲存選中的金額
 
-            $(".donation-btn").click(function () {
-                $(".donation-btn").removeClass("btn-outline-warning").addClass("btn-outline-light");
-                $(this).removeClass("btn-outline-light").addClass("btn-outline-warning");
-                // 記錄選擇的金額
-                selectedAmount = $(this).val();
-            });
+        //     $(".donation-btn").click(function () {
+        //         $(".donation-btn").removeClass("btn-outline-warning").addClass("btn-outline-light");
+        //         $(this).removeClass("btn-outline-light").addClass("btn-outline-warning");
+        //         記錄選擇的金額
+        //         selectedAmount = $(this).val();
+        //     });
 
-            $("#confirmDonate").click(function () {
-                if (!selectedAmount) {
-                    alert("請先選擇贊助金額！");
-                    return;
-                }
+        //     $("#confirmDonate").click(function () {
+        //         if (!selectedAmount) {
+        //             alert("請先選擇贊助金額！");
+        //             return;
+        //         }
 
-                $("#redirectModal").modal("show");
-                $("#donateModal").modal("hide");
+        //         $("#redirectModal").modal("show");
+        //         $("#donateModal").modal("hide");
 
                 // 偽 API 導向
-                setTimeout(function () {
-                // window.location.href = "https:www.ecpay.com.tw/" + selectedAmount;
-                $.ajax({
-                        type:'POST',
-                        url :'AddOrder',
-				        data: {arguments:selectedAmount},
+            //     setTimeout(function () {
+            //     window.location.href = "https:www.ecpay.com.tw/" + selectedAmount;
+            //     $.ajax({
+            //             type:'POST',
+            //             url :'AddOrder',
+				        // data: {arguments:selectedAmount},
 					    
-				        success: function (res) {
-					        console.log(res);
-				        },
-				        error: function (err) {
-					        console.log(err);
-				        }
-                    })
-                }, 3000);
-            });
-        });
+				        // success: function (res) {
+					       //  console.log(res);
+				        // },
+				        // error: function (err) {
+					       //  console.log(err);
+				        // }
+            //         })
+            //     }, 3000);
+        //     });
+        // });
 
 </script>

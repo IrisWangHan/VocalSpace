@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -205,7 +206,13 @@ namespace VocalSpace.Controllers
         [HttpPost]
         public IActionResult AddOrder([FromBody] Dictionary<string, string> data)
         {
-
+            //  未登入則導向登入頁面
+            string Login = HttpContext.Session.GetString("IsLoggedIn")!;
+            if (Login != "true")
+            {
+                return View("/Views/Accounts/Login.cshtml");
+            }
+        
             //  Guid.NewGuid() : 產生全球唯一識別碼 (UUID)
             //  orderId : 產生隨機20碼訂單編號
             var orderId = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 20);
@@ -214,7 +221,6 @@ namespace VocalSpace.Controllers
             //  SponsorId : 透過 Session 取得 UserId
             string? SponsorId = HttpContext.Session.GetInt32("UserId").ToString();
             
-
             var order = new Dictionary<string, string>
             {
                 //綠界需要的參數
@@ -223,8 +229,8 @@ namespace VocalSpace.Controllers
                 { "TotalAmount",  data["TotalAmount"]},
                 { "TradeDesc",  "無"},
                 { "ItemName",  "測試商品"},
-                { "SponsorId",  SponsorId!},
-                { "SongId",  SongId!},
+                { "CustomField1",  SponsorId!},
+                { "CustomField2",  SongId!},
                 { "CustomField3",  ""},
                 { "CustomField4",  ""},
                 { "ReturnURL",  $"{website}Ecpay/AddPayInfo"},
@@ -238,7 +244,45 @@ namespace VocalSpace.Controllers
             string a = _donateService.AddOrderToDb(order);
             //檢查碼
            order["CheckMacValue"] = _donateService.GetCheckMacValue(order);
-            return View(order);
+            //  產生綠界表單(自動送出)
+            string Form = _donateService.PrepareECPayForm(order);
+            //  字串裝進物件裡然後整個塞到網頁 
+            return Content(Form, "text/html");
+
+        }
+
+        // step5 : ReturnURL 接收綠界付款結果
+        [HttpPost]
+        [AllowAnonymous]
+        public IActionResult AddPayInfo(IFormCollection form)
+        {
+            Console.WriteLine(form.ToString());
+            // 將綠界傳來的 Form 資料轉成 Dictionary 
+            var collection = form.ToDictionary(x => x.Key, x => x.Value.ToString());
+            if (!collection.TryGetValue("CheckMacValue", out string? receivedCheckMac))
+            {
+                return Content("0|缺少檢查碼");
+            }
+
+            // 計算我們這邊的檢查碼（注意需排除綠界傳來的 CheckMacValue 本身）
+            var CollectionForMac = new Dictionary<string, string>();
+            foreach (var data in collection)
+            {
+                if (data.Key == "CheckMacValue")
+                {
+                    continue;
+                }
+                CollectionForMac.Add(data.Key, data.Value);
+            }
+
+            string computedMac = _donateService.GetCheckMacValue(CollectionForMac);
+            //  檢查碼比對，StringComparison.OrdinalIgnoreCase : 不區分大小寫
+            if (!computedMac.Equals(receivedCheckMac, StringComparison.OrdinalIgnoreCase))
+            {
+                return Content("0|CheckMacValueError");
+            }
+            _donateService.UpdatePayInfo(collection);
+            return Content("1|OK");
 
         }
 

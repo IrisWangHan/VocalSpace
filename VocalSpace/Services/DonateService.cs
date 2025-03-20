@@ -13,8 +13,7 @@ namespace VocalSpace.Services
         public DonateService (VocalSpaceDbContext context, IConfiguration? config)
         {
             _context = context;
-            _config = config;
-            
+            _config = config;          
         }
         // 產生檢查碼
         public string GetCheckMacValue(Dictionary<string, string> order)
@@ -50,8 +49,8 @@ namespace VocalSpace.Services
         public string AddOrderToDb(Dictionary<string, string> order)   
         {
             string num = "0";
-            int SponsorId = int.Parse(order["SponsorId"]);
-            int SongId = int.Parse(order["SongId"]);
+            int SponsorId = int.Parse(order["CustomField1"]);
+            int SongId = int.Parse(order["CustomField2"]);
             //  查詢歌手id
             long ReceiverId = _context.Songs.FirstOrDefault(id => id.SongId == SongId).Artist;
 
@@ -80,6 +79,37 @@ namespace VocalSpace.Services
                 num = ex.ToString();
             }
             return num;
+        }
+        //  產生綠界表單(自動送出)
+        public string PrepareECPayForm(Dictionary<string, string> order)
+        {
+            var form = new StringBuilder();
+            form.AppendLine("<form id='form' name='form' method='POST' action='https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5'>");
+            foreach (var item in order)
+            {
+                form.AppendLine($"<input type='hidden' name='{item.Key}' value='{item.Value}' />");
+            }
+            form.AppendLine("</form>");
+            form.AppendLine("<script>document.getElementById('form').submit();</script>");
+            return form.ToString();
+        }
+        //  付款結果更新資料庫
+        public void UpdatePayInfo(Dictionary<string, string> collection)
+        {
+            string temp = collection["MerchantTradeNo"];
+            var result = _context.Ecpays.FirstOrDefault(data => data.MerchantTradeNo == temp);
+            if (result != null)
+            {
+                result.RtnCode = int.Parse(collection["RtnCode"]);
+                result.RtnMsg = collection["RtnMsg"];
+                result.EcpayTradeNo = collection["TradeNo"];
+                //result.TradeAmt = int.Parse(collection["TradeAmt"]);
+                result.PaymentDate = Convert.ToDateTime(collection["PaymentDate"]);
+                result.PaymentType = collection["PaymentType"];
+                result.PaymentTypeChargeFee = collection["PaymentTypeChargeFee"];
+                _context.SaveChanges();
+            }
+
         }
     }
 }

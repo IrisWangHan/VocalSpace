@@ -27,7 +27,8 @@
             contentType: 'application/json',        //  送到Server的資料型態
             //dataType: 'json',
             success: function (res) {
-                console.log(res);
+                //console.log(res); 
+                $('.page-container').html(res);
             },
             error: function (err) {
                 console.log(err);
