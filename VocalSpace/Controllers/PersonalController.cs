@@ -5,6 +5,7 @@ using VocalSpace.Filters;
 using VocalSpace.Models;
 using VocalSpace.Models.ViewModel.Global;
 using VocalSpace.Models.ViewModel.Personal;
+using VocalSpace.Models.ViewModel.Song;
 using VocalSpace.Services;
 
 namespace VocalSpace.Controllers
@@ -42,7 +43,6 @@ namespace VocalSpace.Controllers
                                                           isFollowing = currentUserId.HasValue && currentUserId != 0  //如果使用者未登入，預設為false
                                                             ? _context.UserFollows.Any(f => f.UserId == currentUserId && f.FollowedUserId == id) : false
                                                       };
-            ViewBag.LoginID = currentUserId;
             return personals;
         }
         [HttpGet("Personal/mymusic/{id}")]        
@@ -50,19 +50,34 @@ namespace VocalSpace.Controllers
         {
             return View(personal(id).ToList());
         }
-        [SessionToLogin]
+        [HttpGet("Personal/myabout/{id}")]
         public IActionResult myabout(long id)
         {
             return View(personal(id).ToList());
         }
-        [SessionToLogin]
+        [HttpGet("Personal/mylist/{id}")]
         public IActionResult mylist(long id)
         {
             return View(personal(id).ToList());
         }
-        [SessionToLogin]
-        public IActionResult mylike(long id)
+        [HttpGet("Personal/mylike/{id}")]
+        public async Task<IActionResult> mylike(long id)
         {
+            var songdata = await _context.Songs
+                   .Include(s => s.ArtistNavigation)
+                   .Include(s => s.LikeSongs)
+                   .Where(s => s.LikeSongs.Any(like => like.UserId == id))
+                   .Select(s => new SongViewModel
+                   {
+                       SongId = s.SongId,
+                       SongCoverPhotoPath = s.CoverPhotoPath,
+                       SongName = s.SongName,
+                       UserId = id,
+                       UserName = s.ArtistNavigation.UserName!,
+                       LikeId = s.LikeSongs.FirstOrDefault()!.LikeId
+                   }).ToListAsync();
+            ViewData["likesong"]= songdata.Any()?songdata:null;
+
             return View(personal(id).ToList());
         }
         [SessionToLogin]

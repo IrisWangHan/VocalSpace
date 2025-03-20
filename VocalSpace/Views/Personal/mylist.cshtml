@@ -1,12 +1,16 @@
-﻿
+﻿@model IEnumerable<VocalSpace.Models.ViewModel.Personal.PersonalViewModel>
+
 @{
 	Layout = "_PersonalLayout";  
 }
  <nav class="menu" id="myList">
-        <a href="/Personal/mymusic">音樂</a>
-        <a href="/Personal/mylist" class="active">歌單</a>
-        <a href="/Personal/mylike">喜歡</a>
-        <a href="/Personal/myabout">關於</a>
+        <a href="/Personal/mymusic/@Model.FirstOrDefault()!.UserId">音樂</a>
+        	@if (Model.FirstOrDefault()!.CurrentUserId == Model.FirstOrDefault()!.UserId) { 
+
+         <a href="/Personal/mylist/@Model.FirstOrDefault()!.UserId" class="active">歌單</a>
+         <a href="/Personal/mylike/@Model.FirstOrDefault()!.UserId">喜歡</a>
+            }
+        <a href="/Personal/myabout/@Model.FirstOrDefault()!.UserId">關於</a>
     </nav>
 <div class="playlist">
         <div class="playlist-card">

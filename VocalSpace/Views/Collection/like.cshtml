@@ -51,7 +51,7 @@
 									<a href="/Song/@item.SongId">
 										<p class="song">@item.SongName</p>
 									</a>
-									<a asp-action ="/Personal/mymusic/" asp-action-id=""> <p class="artist">@item.UserName</p></a>
+									<a href="/Personal/mymusic/@item.UserId"> <p class="artist">@item.UserName</p></a>
 									@Html.PartialAsync("_SongButtonModal")
 								</div>
 							</div>

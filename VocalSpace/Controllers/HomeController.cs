@@ -42,6 +42,7 @@ namespace VocalSpace.Controllers
                                                 SongId = grouped.First().song.SongId,
                                                 SongCoverPhotoPath = grouped.First().song.CoverPhotoPath,
                                                 SongName = grouped.First().song.SongName,
+                                                UserId= grouped.First().user.UserId,
                                                 UserName = grouped.First().user.UserName!,
                                                 LikeCount = grouped.First().song.LikeCount,
                                                 SongCategoryId = grouped.First().category.SongCategoryId,

@@ -1,51 +1,59 @@
-﻿
+﻿@model IEnumerable<VocalSpace.Models.ViewModel.Personal.PersonalViewModel>
+
 @{
-	Layout = "_PersonalLayout";  
+	Layout = "_PersonalLayout";
+	var likesong = ViewData["likesong"] as List<VocalSpace.Models.ViewModel.Song.SongViewModel>;
 }
 <link rel="stylesheet" href="~/css/PersonalSongButton.css" asp-append-version="true" />
- <nav class="menu" id="myList">
-        <a href="/Personal/mymusic">音樂</a>
-        <a href="/Personal/mylist">歌單</a>
-        <a href="/Personal/mylike" class="active">喜歡</a>
-        <a href="/Personal/myabout">關於</a>
+<nav class="menu" id="myList">
+	<a href="/Personal/mymusic/@Model.FirstOrDefault()!.UserId">音樂</a>
+	@if (Model.FirstOrDefault()!.CurrentUserId == Model.FirstOrDefault()!.UserId) { 
+		<a href="/Personal/mylist/@Model.FirstOrDefault()!.UserId">歌單</a>
+		<a href="/Personal/mylike/@Model.FirstOrDefault()!.UserId" class="active">喜歡</a>
+	}
+	<a href="/Personal/myabout/@Model.FirstOrDefault()!.UserId">關於</a>
 </nav>
-
-<div class="w80"><hr></div>
-<div class="title mb-4">
-	<div class="littletitle">
-		<h2>歌曲(8)</h2>
-		<div class="playAll"><button class="btn btn-danger playall"><i class="bi bi-play"></i>全部播放</button></div>
+@if(likesong != null){
+	<div class="w80"><hr></div>
+	<div class="title mb-4">
+		<div class="littletitle">
+			<h2>歌曲(8)</h2>
+			<div class="playAll"><button class="btn btn-danger playall"><i class="bi bi-play"></i>全部播放</button></div>
+		</div>
 	</div>
-</div>
-@{
-	<div class="playlist">
-		<div class="playlist-card">
-			<div class="songs">
+	
+		<div class="playlist">
+			<div class="playlist-card">
+				<div class="songs">
 
-				<div class="row">
-					@for (var i = 1; i <= 8; i++)
-					{
-						<div class="col-lg-2 col-md-4 col-sm-5 p-1">
+					<div class="row">
+						@foreach (var item in likesong)
+						{
+							<div class="col-lg-2 col-md-4 col-sm-5 p-1">
 
-							<div class="song">
-								<a href="#"><img src="/image/p1.jpg" class="img-fluid" style="object-fit: cover;" alt="俘留"></a>
-								<div class="songbutton">
-									<div class="songdetail">
-										<a href="#"><h5>俘留 (影集《化外之聲》插曲)</h5></a>
-										<a href="/Personal/mymusic"><p>LaDY</p></a>
-									</div>
-									<div class="button">
-										@await Html.PartialAsync("_SongButtonModal")
+								<div class="song">
+								<a href="/Song/@item.SongId"><img src="@item.SongCoverPhotoPath" class="img-fluid" style="object-fit: cover;"></a>
+									<div class="songbutton">
+										<div class="songdetail">
+										<a href="/Song/@item.SongId"><h5>@item.SongName</h5></a>
+										<a href="/Personal/mymusic/@item.UserId"> <p class="artist">@item.UserName</p></a>
+										</div>
+										<div class="button">
+											@await Html.PartialAsync("_SongButtonModal")
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
-					}
-				</div>
+						}
+					</div>
 
+				</div>
 			</div>
-		</div>
-	</div>
+		</div>	
+}
+else
+{
+	<h2 class="no-data">暫無喜歡的歌曲 快去聽歌吧~🎶</h2>
 }
 <script src="~/js/partialViewSong.js" asp-append-version="true"></script>
 
