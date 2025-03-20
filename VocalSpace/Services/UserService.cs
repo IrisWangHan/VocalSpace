@@ -81,6 +81,7 @@ namespace VocalSpace.Services
                 .Where(u => u.UserId == targetUserId)
                 .Select(u => new UserBarViewModel
                 {
+                    pfc=u.UsersInfo!.BannerImagePath,
                     target_userId = u.UserId,
                     Name = u.UserName,
                     Account = u.Account,

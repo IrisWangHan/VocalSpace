@@ -15,30 +15,55 @@ namespace VocalSpace.Controllers
             _context = context;
         }
         [SessionToLogin]
-        public async Task<IActionResult> like()
+        public async Task<IActionResult> like(long? id)
         {
-            string? account = HttpContext.Session.GetString("UserAccount");
-            var songdata = await _context.Songs
-                .Include(s => s.ArtistNavigation)
-                .Include(s => s.LikeSongs)
-                .Where(s => s.ArtistNavigation.Account == account 
-                        & s.ArtistNavigation.UserId == s.LikeSongs.FirstOrDefault()!.UserId 
-                        & s.SongId == s.LikeSongs.FirstOrDefault()!.SongId)
-                .Select(s => new SongViewModel
-                {
-                    SongId = s.SongId,
-                    SongCoverPhotoPath = s.CoverPhotoPath,
-                    SongName = s.SongName,
-                    UserName = s.ArtistNavigation.UserName!,
-                    LikeId = s.LikeSongs.FirstOrDefault()!.LikeId
-                }).FirstOrDefaultAsync();
+            long? currentUserId = HttpContext.Session.GetInt32("UserId");
+            if (id == currentUserId)
+            {
+                var songdata = await _context.Songs
+                    .Include(s => s.ArtistNavigation)
+                    .Include(s => s.LikeSongs)
+                    .Where(s => s.LikeSongs.Any(like => like.UserId == id))
+                    .Select(s => new SongViewModel
+                    {
+                        SongId = s.SongId,
+                        SongCoverPhotoPath = s.CoverPhotoPath,
+                        SongName = s.SongName,
+                        UserName = s.ArtistNavigation.UserName!,
+                        LikeId = s.LikeSongs.FirstOrDefault()!.LikeId
+                    }).ToListAsync();
+                return View(songdata);
 
-            return View(songdata);
+            }
+            else 
+            {
+             return NotFound("滾");
+            }           
+           
         }
         [SessionToLogin]
-        public IActionResult mylist()
+        public async Task<IActionResult> mylist(long? id)
         {
-            return View();
+            long? currentUserId = HttpContext.Session.GetInt32("UserId");
+            if (currentUserId == id)
+            {
+                var songdata = await _context.Songs
+                    .Include(s => s.ArtistNavigation)                    
+                    .Include(s => s.PlayListSongs.Any())
+                    .Where(s => s.LikeSongs.Any(like => like.UserId == id))
+                    .Select(s => new SongViewModel
+                    {
+                        SongId = s.SongId,
+                        SongCoverPhotoPath = s.CoverPhotoPath,
+                        SongName = s.SongName,
+                        UserName = s.ArtistNavigation.UserName!,
+                        LikeId = s.LikeSongs.FirstOrDefault()!.LikeId
+                    }).ToListAsync();
+
+                return View(songdata);
+            }
+            return RedirectToAction("PageNotFound", "Home");
+
         }
         [SessionToLogin]
         public IActionResult playrecord()

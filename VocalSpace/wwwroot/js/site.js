@@ -22,7 +22,7 @@ $(document).on("click", ".btn-follow", function () {
         url: `/Personal/ToggleFollow/${targetUserId}`,
         type: "POST",
         success: function (res) {
-            if (res.userBarData.isFollowing) {
+            if (res.isFollowing) {
                 button.addClass("selected").text("已追蹤");
             } else {
                 button.removeClass("selected").text("追蹤");

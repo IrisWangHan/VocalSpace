@@ -2,6 +2,7 @@
 {
     public class PersonalViewModel
     {
+        public long CurrentUserId { get; set; }
         // from user
         public long UserId { get; set; }                           
 
@@ -13,10 +14,12 @@
 
         // from UserFollow
         public long FollowedUserId { get; set; }
+        public bool isFollowing { get; set; } 
         // from UsersInfo
         public string? BannerImagePath { get; set; }
 
         public string AvatarPath { get; set; } = null!;
+
 
     }
 }

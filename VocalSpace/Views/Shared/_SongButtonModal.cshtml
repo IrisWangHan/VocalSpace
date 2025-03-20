@@ -3,73 +3,7 @@
 }
 <div>
     <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#Modal1"><i class="bi bi-plus-lg"></i></button>
-    <!-- 加入歌單彈跳視窗 -->
-    <div class="modal fade" id="Modal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="Modal1">加入歌單</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-
-                    <div class="">
-                        <input type="text" class="addsearch-box" placeholder="搜尋歌單">
-                        <!-- 歌單列表 -->
-                        <div class="addplaylist-item">
-                            <div class="addplaylist-info">
-                                <img src="/image/p2.jpeg" alt="封面">
-                                <div>
-                                    <div class="addplaylist-name">tt</div>
-                                    <div class="addplaylist-song">1 首歌曲</div>
-                                </div>
-                            </div>
-                            <button class="addbtn-add" onclick="addtoggleSelection(this)">+ 加入歌單</button>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="modal-footer">
-
-                    <button class="addbtn-newPlaylist">+ 新增歌單</button>
-                    <button class="btn addbtn-cancel" data-bs-dismiss="modal">取消</button>
-                    <button class="btn addbtn-confirm" data-bs-dismiss="modal">確定</button>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
     <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#Modal2"><i class="bi bi-share"></i></button>
-    <!-- 分享按鈕彈跳視窗 -->
-    <div class="modal fade" id="Modal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="Modal2">分享歌曲</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="sharepopup-content">
-                        <img src="/image/p1.jpg" alt="封面">
-                        <div>
-                            <strong>打不通的電話 <b>Demo</b></strong>
-                            <div>Sean Ko 高翔</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn fb btn-lg"><i class="bi bi-facebook"></i></button>
-                    <button class="btn ig btn-lg"><i class="bi bi-instagram"></i></button>
-                    <input type="text" class="share" value="https://streetvoice.com/seanko/songs/800" readonly>
-                    <button class="copy" onclick="sharecopyLink()">複製</button>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
     <button class="btn btn-outline-secondary heart" onclick="ButtonHeart(this)"><i class="bi bi-heart-fill"></i>684</button>
-
     <button class="btn btn-outline-secondary" onclick="playSong(1)"><i class="bi bi-play"></i></button>
 </div>

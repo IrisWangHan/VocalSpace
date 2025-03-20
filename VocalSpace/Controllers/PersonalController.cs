@@ -16,53 +16,57 @@ namespace VocalSpace.Controllers
         private readonly VocalSpaceDbContext _context;
         private readonly UserService _UserService;
 
+
         public PersonalController(VocalSpaceDbContext context, UserService UserService)
         {
             _context = context;
             _UserService = UserService;
         }
 
-        private IQueryable<PersonalViewModel> personal(long? id) 
+        private IQueryable<PersonalViewModel> personal(long id) 
         {
+            var currentUserId = HttpContext.Session.GetInt32("UserId");
+
             IQueryable<PersonalViewModel> personals = from user in _context.Users
-                                                      join UserFollow in _context.UserFollows on user.UserId equals UserFollow.UserId
                                                       join UsersInfo in _context.UsersInfos on user.UserId equals UsersInfo.UserId
                                                       where user.UserId == id
-                                                      select new PersonalViewModel                                                      
+                                                      select new PersonalViewModel
                                                       {
+                                                          CurrentUserId = (int)currentUserId!,
                                                           UserId = user.UserId,
                                                           UserName = user.UserName,
                                                           Account = user.Account,
                                                           CreateTime = user.CreateTime,
-                                                          FollowedUserId = UserFollow.FollowedUserId,
                                                           BannerImagePath = UsersInfo.BannerImagePath,
-                                                          AvatarPath = UsersInfo.AvatarPath                                                          
+                                                          AvatarPath = UsersInfo.AvatarPath,
+                                                          isFollowing = currentUserId.HasValue && currentUserId != 0  //如果使用者未登入，預設為false
+                                                            ? _context.UserFollows.Any(f => f.UserId == currentUserId && f.FollowedUserId == id) : false
                                                       };
             return personals;
         }
+        [HttpGet("Personal/mymusic/{id}")]
         [SessionToLogin]
-        public IActionResult mymusic(long? id)
-        {
-            ViewData["personal"] = personal(id).ToList();
-            return View();
-        }
-        [SessionToLogin]
-        public IActionResult myabout(long? id)
+        public IActionResult mymusic(long id)
         {
             return View(personal(id).ToList());
         }
         [SessionToLogin]
-        public IActionResult mylist(long? id)
+        public IActionResult myabout(long id)
         {
             return View(personal(id).ToList());
         }
         [SessionToLogin]
-        public IActionResult mylike(long? id)
+        public IActionResult mylist(long id)
         {
             return View(personal(id).ToList());
         }
         [SessionToLogin]
-        public IActionResult listdetail(long? id)
+        public IActionResult mylike(long id)
+        {
+            return View(personal(id).ToList());
+        }
+        [SessionToLogin]
+        public IActionResult listdetail(long id)
         {
             return View(personal(id).ToList());
         }
@@ -146,7 +150,7 @@ namespace VocalSpace.Controllers
                 return NotFound(new { message = "使用者不存在" });
             }
 
-            return Ok(new {userBarData});
+            return Ok(new {isFollowing});
         }
 
 

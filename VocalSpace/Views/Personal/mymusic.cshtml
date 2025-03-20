@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
 	Layout = "_PersonalLayout";
 }
 
@@ -23,17 +22,16 @@
 			<div class="songs">
 
 				<div class="row">
-						@for (var i=1;i<=8;i++)
-						{
+						
 							<div class="col-lg-2 col-md-4 col-sm-5 p-1">
 
 								<div class="song">
-								<a href="#">
+								<a href=#>
 									<img src="/image/p1.jpg" class="img-fluid" style="object-fit: cover;" alt="俘留"></a>
 									<div class="songbutton">
 										<div class="songdetail">
 										<a href="#"><h5>俘留 (影集《化外之聲》插曲)</h5></a>
-										<a href="/Personal/mymusic"><p>LaDY</p></a>
+										<a asp-controller="Song" asp-action="Index"><p>LaDY</p></a>
 										</div>
 										<div class="button">
 											<button class="btn btn-outline-secondary editlist"><i class="bi bi-pencil-square"></i></button>
@@ -42,7 +40,7 @@
 									</div>
 								</div>
 							</div>
-						}
+						
 					</div>
 
 			</div>

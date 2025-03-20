@@ -48,7 +48,7 @@ hr {
 }
 
 /*全部播放按鈕樣式*/
-.btn-danger playall{
+.playall{
     color: white;
     padding: 10px;
     border: none;
