@@ -12,7 +12,6 @@ namespace VocalSpace.Services
 {
     public class SelectionService
     {
-        //第二步: 建立Service 處理業務邏輯
         private readonly VocalSpaceDbContext _context;
         private readonly IPaginationService _pagination;
 
@@ -22,6 +21,11 @@ namespace VocalSpace.Services
             _pagination = pagination;
         }
 
+
+
+        /// <summary>
+        /// 取得活動資料 不需驗身分
+        /// </summary>
         public async Task<List<SelectionListViewModel>?> GetSelectionsAsync()
         {
             try
@@ -45,6 +49,12 @@ namespace VocalSpace.Services
                 return null;
             }
         }
+
+        /// <summary>
+        /// 取得徵選活動的內容
+        /// </summary>
+        /// <param name="id">徵選活動ID</param>
+        /// <returns></returns>
         public async Task<SelectionListViewModel?> GetEventDescriptionAsync(int? id)
         {
             try
@@ -91,7 +101,12 @@ namespace VocalSpace.Services
             }
         }
 
-
+        /// <summary>
+        /// 取得徵選活動的作品
+        /// </summary>
+        /// <param name="id">徵選活動ID</param>
+        /// <param name="currentPage">點選的頁面</param>
+        /// <returns></returns>
         public async Task<SelectionListViewModel?> GetWorks(int? id, int currentPage = 1)
         {
             try
@@ -181,20 +196,17 @@ namespace VocalSpace.Services
 
         #region 活動報名表單頁
         /// <summary>
-        /// 取得user資料
+        /// 活動報名 需取得user資料
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">徵選活動ID</param>
         /// <returns></returns>
-        public async Task<SelectionFormViewModel> CheckUser()
+        public async Task<SelectionFormViewModel> CheckUser(long? UserID)
         {
             try
             {
-                //判斷user登入
-                long UserID = 11;
                 SelectionFormViewModel data = new();
-
                 //判斷已經登入帶入使用者資料
-                if (true)
+                if (UserID != null && UserID != 0)
                 {
                     // 使用 await 查詢使用者資料
                     var userData = await _context.Users
