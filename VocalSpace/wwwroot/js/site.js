@@ -135,4 +135,9 @@ $(document).on("click", ".btn-add-to-Likesong", function () {
     });
 });
 
+//歌曲播放功能(尚未開發，僅顯示提示訊息)
+$(document).on("click", ".btn-play", function () {
+    let songName = $(this).data("songname");  // 取得歌曲名稱
+    alert(`現正播放：${songName}`);
+});
 
