@@ -173,31 +173,29 @@
 		@await Html.PartialAsync("_Modal_for_AJAXLoading") @*用來AJAX載入彈窗*@
 		<section class="music-player">
 			<div class="music-player__for-md"></div>
+			@* 大螢幕 音樂撥放器會顯示在右下角 長條 *@
 			<div class="music-player__for-lg">
 				<img src="/image/logo.png" class="music-player__img-cover" />
-				<div>
-					<p>XXXx</p>
-					<p>XXXX</p>
+				<div class="playlist__info">
+					<p>@(musicList[0].name)</p>
+					<span>@(musicList[0].artist)</span>
 				</div>
-				<svg class="icon__play-circle bi bi-play-circle-fill " xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" viewBox="0 0 16 16">
-					<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814z" />
-				</svg>
-				<svg class="icon__stop-circle bi bi-stop-circle-fill" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white" viewBox="0 0 16 16">
-					<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-					<path d="M5 6.5A1.5 1.5 0 0 1 6.5 5h3A1.5 1.5 0 0 1 11 6.5v3A1.5 1.5 0 0 1 9.5 11h-3A1.5 1.5 0 0 1 5 9.5z" />
-				</svg>
-
-				<img src="/image/nextSong.png" class="music-player__img-play" />
-
-				<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-three-dots music-player__for-lg-dots" viewBox="0 0 16 16">
-					<path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3" />
-				</svg>
+				@* 撥放按鈕 *@
+				<i class="bi bi-play-fill  icon__play-circle"></i>
+				@* 暫停按鈕 *@
+				<i class="bi bi-pause  icon__stop-circle"></i>
+				@* 下一首按鈕 *@
+				<i class="bi bi-skip-end-fill  music-player__img-play"></i>
+				@* 展開視窗 *@
+				<i class="bi bi-three-dots-vertical music-player__for-lg-dots"></i>	
 			</div>
+			@* 開啟音樂撥放視窗 *@
 			<div class="music-player__window">
 				<header class="window__header">
 					<div class="window__header-zoom-out"></div>
 				</header>
-				@* 當前撥放歌曲 *@
+
+				@* 當前撥放歌曲顯示區 *@
 				<section class="window__playlist-current">
 					<div class="playlist__item" data-musicID="@(musicList[0].id)">
 						<img src="/image/logo.png" class="playlist__img-cover playlist__img-cover-current" alt="Album cover" />
@@ -206,42 +204,43 @@
 							<span>@(musicList[0].artist)</span>
 						</div>
 						<span id="songTimeText">00:00</span>
+						@* 循環撥放單首按鈕 *@
+						<i class="bi bi-arrow-repeat  music-player__circle-one"></i>
 					</div>
 				</section>
 
-				@* 音樂撥放器 *@
-				<div class="window__controls">
-					@* 循環撥放 *@
-					<img src="/image/circlePlaylist.png" class="music-player__img-play music-player__circle-list" />
-					@* 上一首按鈕 *@
-					<img src="/image/preSong.png" class="music-player__img-play  music-player__pre" />
+				@* 音樂撥放器icon 控制區 *@
+				<section class="window__controls">
+
+  				   @* 上一首按鈕 *@
+					<i class="bi bi-skip-start-fill music-player__pre"></i>
 					@* 撥放按鈕 *@
-					<svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="currentColor" class="icon__play-circle bi bi-play-circle-fill " viewBox="0 0 16 16">
-						<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814z" />
-					</svg>
+					<i class="bi bi-play-fill  icon__play-circle"></i>
 					@* 暫停按鈕 *@
-					<svg class="icon__stop-circle bi bi-stop-circle-fill" xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="white" viewBox="0 0 16 16">
-						<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-						<path d="M5 6.5A1.5 1.5 0 0 1 6.5 5h3A1.5 1.5 0 0 1 11 6.5v3A1.5 1.5 0 0 1 9.5 11h-3A1.5 1.5 0 0 1 5 9.5z" />
-					</svg>
+					<i class="bi bi-pause  icon__stop-circle"></i>
 					@* 下一首按鈕 *@
-					<img src="/image/nextSong.png" class="music-player__img-play  music-player__next" />
-					@* 循環撥放單首按鈕 *@
-					<img src="/image/circlePlayone.png" class="music-player__img-play music-player__circle-one" />
+					<i class="bi bi-skip-end-fill  music-player__next"></i>
+					
 
 					<audio id="audioPlayer" autoplay>
 						<source src="/audio/sample.mp3" type="audio/mpeg" id="musicSource">
 						您的瀏覽器不支援音樂播放。
 					</audio>
 					@* 進度條 *@
-					<input type="range" class="window__controls-range" />
+					<input type="range" class="window__controls-range"  />
+				</section>
+				@* 音樂撥放器下方顯示撥放清單區 *@
+				<div class="window__playlist-descrition">
+					<span id="songListText">AAA撥放清單</span>
+					@* 循環撥放清單按鈕 *@
+					<i class="bi bi-arrow-repeat  music-player__circle-list"></i>
 				</div>
 				@* 下方撥放清單 *@
 				<section class="window__playlist">
 
 					@foreach (var song in musicList)
 					{
-						<div class="playlist__item" data-musicID="@(song.id)">
+						<div class="playlist__item playlist__song-list" data-musicID="@(song.id)">
 							<img src="/image/logo.png" class="playlist__img-cover" alt="Album cover" />
 							<div class="playlist__info">
 								<p>@(song.name)</p>
@@ -316,7 +315,9 @@
 
 		// 等待 DOM 完全加載後執行
 		document.addEventListener("DOMContentLoaded", function () {
-			console.log("loading");
+			$(".window__controls-range").prop("value", 0);
+
+
 
 			// 請求當前音樂的資料
 			fetch('/Player/GetCurrentTrack')
@@ -469,7 +470,7 @@
 
 
 					/*****清單中的音樂被點選後要更新到[當前撥放]的文字*****/
-					$(".playlist__item").click(function () {
+					$(".playlist__song-list").click(function () {
 						// 取得被點擊的歌曲資訊
 						var songName = $(this).find("p").text();  // 取得歌名
 						var artist = $(this).find("span").text(); // 取得歌手名稱
