@@ -1,0 +1,9 @@
+﻿@model VocalSpace.Models.ViewModel.Global.SongButtonViewModel
+@{
+}
+<div>
+    <button class="btn btn-outline-secondary btn-add-to-playlist" data-songid="@Model.SongId"><i class="bi bi-plus-lg"></i></button>
+    <button class="btn btn-outline-secondary btn-share-song" data-songid="@Model.SongId"><i class="bi bi-share"></i></button>
+    <button class="btn btn-outline-secondary btn-add-to-Likesong @(Model.isliked? "selected":"")" data-songid="@Model.SongId"><i class="bi bi-heart-fill"></i><span class="likeCount" data-songid="@Model.SongId">@Model.LikeCount</span></button>
+    <button class="btn btn-outline-secondary btn-play" data-songname="@Model.SongName"><i class="bi bi-play"></i></button>
+</div>

@@ -27,6 +27,16 @@ namespace VocalSpace.Services
         }
 
         /// <summary>
+        /// 檢查當前使用者是否對歌曲按讚
+        /// </summary>
+        public async Task<bool> IsLikedAsync(long userId, long songId)
+        {
+            //此程式將會回傳是否有對歌曲按讚，若有則回傳true，若無則回傳false
+            return await _context.LikeSongs.AnyAsync(ls => ls.UserId == userId && ls.SongId == songId);
+        }
+
+
+        /// <summary>
         /// 追蹤 and 取消追蹤，回傳兩個bool值，是否，是否有追蹤目標使用者
         /// </summary>
         public async Task<(bool isSuccess, bool isFollowing)> ToggleFollowAsync(long userId, long followedUserId)
@@ -69,30 +79,34 @@ namespace VocalSpace.Services
                 return (false, false);
             }
         }
-
+        
         /// <summary>
         /// 取得 UserBarViewModel，long? currentUserId 確保訪客也能看到追蹤按鈕
         /// </summary>
         public async Task<UserBarViewModel?> GetUserBarData(long? currentUserId, long targetUserId)
         {
-            try { 
-            var user = await _context.Users
-                .Include(u => u.UsersInfo)
-                .Where(u => u.UserId == targetUserId)
-                .Select(u => new UserBarViewModel
-                {
-                    pfc=u.UsersInfo!.BannerImagePath,
-                    target_userId = u.UserId,
-                    Name = u.UserName,
-                    Account = u.Account,
-                    pfp = u.UsersInfo!.AvatarPath,
-                    isFollowing = currentUserId.HasValue && currentUserId!= 0  //如果使用者未登入，預設為false
-                        ? _context.UserFollows.Any(f => f.UserId == currentUserId && f.FollowedUserId == targetUserId)
-                        : false
-                })
-                .FirstOrDefaultAsync();
+            try
+            {   
+                var user = await _context.Users
+                    .Include(u => u.UsersInfo)
+                    .Where(u => u.UserId == targetUserId)
+                    .Select(u => new UserBarViewModel
+                    {
+                        pfc = u.UsersInfo!.BannerImagePath,
+                        target_userId = u.UserId,
+                        Name = u.UserName,
+                        Account = u.Account,
+                        pfp = u.UsersInfo!.AvatarPath
+                    })
+                    .FirstOrDefaultAsync();
 
-            return user;
+                //如果使用者為登入狀態，則檢查是否有追蹤目標使用者
+                if (user != null && currentUserId.HasValue && currentUserId != 0)
+                {
+                    user.isFollowing = await IsFollowingAsync(currentUserId.Value, targetUserId);
+                }
+
+                return user;
             }
             catch (Exception ex)
             {

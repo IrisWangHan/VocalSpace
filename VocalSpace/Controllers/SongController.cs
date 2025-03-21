@@ -62,8 +62,10 @@ namespace VocalSpace.Controllers
             },
             LikeInfo = new SongLikeViewModel
         {
-            LikeCount = _context.LikeSongs.Count(ls => ls.SongId == s.SongId) + 30 // 加上基礎讚數
-        }
+            LikeCount = s.LikeCount + _context.LikeSongs
+                .Where(ls => ls.SongId == s.SongId)
+                .Count(),
+            }
         })
         .FirstOrDefaultAsync();
 

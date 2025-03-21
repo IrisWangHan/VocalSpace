@@ -15,6 +15,33 @@ namespace VocalSpace.Services
         }
 
         /// <summary>
+        /// 取得 SongButtonViewModel的資料，以便Controller使用
+        /// </summary>
+        public async Task<SongButtonViewModel> GetSongButtonViewModel(long songId, long? currentUserId)
+        {
+            var song = await _context.Songs
+                .Where(s => s.SongId == songId)
+                .Select(s => new
+                {
+                    s.SongName,
+                    s.LikeCount
+                })
+                .FirstOrDefaultAsync();
+
+            //isliked 引用service中的IsLikedAsync方法，確認是否有對歌曲按讚
+            return new SongButtonViewModel
+            {
+                SongName = song!.SongName,
+                LikeCount = song.LikeCount+_context.LikeSongs.Count(ls => ls.SongId == songId),
+                SongId = songId,
+                isliked = currentUserId.HasValue
+        ? await IsLikedAsync(currentUserId.Value, songId)
+        : false
+            };
+        }
+
+
+        /// <summary>
         /// 取得"加入歌單Modal"需要的歌單列表，以及歌曲ID，回傳AddToPlaylistViewModel，若無歌單則回傳 null
         /// </summary>
         public async Task<AddToPlaylistViewModel?> GetPlaylistModalData(long userId, long songId)
@@ -103,6 +130,13 @@ namespace VocalSpace.Services
         {
             try
             {
+                var song = await _context.Songs
+               .Where(s => s.SongId == songId)
+               .Select(s => new { s.LikeCount })
+               .FirstOrDefaultAsync();
+
+                int defaultLikeCount = song?.LikeCount ?? 0;
+
                 var songLike = await _context.LikeSongs
                     .FirstOrDefaultAsync(ls => ls.UserId == userid && ls.SongId == songId);
 
@@ -124,7 +158,8 @@ namespace VocalSpace.Services
                 await _context.SaveChangesAsync();
 
                 // 重新計算讚數
-                int likeCount = 30+ await _context.LikeSongs.CountAsync(ls => ls.SongId == songId);
+                int addLikeCount = await _context.LikeSongs.CountAsync(ls => ls.SongId == songId);
+                int likeCount = defaultLikeCount + addLikeCount;
                 return (true, songLike == null, likeCount);
             }
             catch (Exception ex)
