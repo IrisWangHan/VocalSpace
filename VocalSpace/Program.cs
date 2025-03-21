@@ -12,6 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+// 註冊分佈式內存快取
+builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
 
 builder.Services.AddSession(options =>

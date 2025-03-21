@@ -716,14 +716,65 @@ button.accept-policy {
     position:relative;
     margin-bottom:20px;
 }
-.window__controls-range{
+/*.window__controls-range{
     width:90%;
     height:2px;
     position:absolute;
     bottom:-15px;
     left:50%;
     transform:translateX(-50%);
+}*/
+.window__controls-range {
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(1%);
+    -webkit-appearance: none;
+    width: 100%;
+    height: 5px;
+    background: #ddd;
+    border-radius: 5px;
+    outline: none;
+    transition: width 0.2s ease; /* 動畫過渡效果 */
 }
+
+    /* 為 Webkit 引擎（例如 Chrome 和 Safari）定義進度條的背景 */
+    .window__controls-range::-webkit-slider-runnable-track {
+        width: 100%; /* 使進度條背景的寬度填滿父容器 */
+        height: 5px; /* 設定進度條背景的高度 */
+        background: #4caf50; /* 設定進度條的背景顏色，這裡是綠色 */
+    }
+
+    /* 為 Webkit 引擎的滑塊（thumb）定義樣式 */
+    .window__controls-range::-webkit-slider-thumb {
+        -webkit-appearance: none; /* 禁用 Webkit 默認的滑塊樣式 */
+        appearance: none; /* 禁用所有瀏覽器的默認滑塊樣式 */
+        width: 10px; /* 設定滑塊的寬度 */
+        height: 10px; /* 設定滑塊的高度 */
+        background: #fff; /* 設定滑塊的背景顏色，這裡是白色 */
+        border: 2px solid #4caf50; /* 設定滑塊的邊框顏色和大小，這裡是綠色邊框 */
+        border-radius: 50%; /* 使滑塊的邊角變為圓形 */
+        cursor: pointer; /* 設定滑塊的游標樣式為指針，表示可點擊 */
+    }
+
+    /* 為 Firefox 等瀏覽器（使用 Gecko 引擎）定義進度條的背景 */
+    .window__controls-range::-moz-range-track {
+        width: 100%; /* 使進度條背景的寬度填滿父容器 */
+        height: 5px; /* 設定進度條背景的高度 */
+        background: #4caf50; /* 設定進度條的背景顏色，這裡是綠色 */
+    }
+
+    /* 為 Firefox 等瀏覽器（使用 Gecko 引擎）的滑塊（thumb）定義樣式 */
+    .window__controls-range::-moz-range-thumb {
+        width: 10px; /* 設定滑塊的寬度 */
+        height: 10px; /* 設定滑塊的高度 */
+        background: #fff; /* 設定滑塊的背景顏色，這裡是白色 */
+        border: 2px solid #4caf50; /* 設定滑塊的邊框顏色和大小，這裡是綠色邊框 */
+        border-radius: 50%; /* 使滑塊的邊角變為圓形 */
+        cursor: pointer; /* 設定滑塊的游標樣式為指針，表示可點擊 */
+    }
+
+
 .music-player__pre, .music-player__next {
     width: 35px;
     height: 35px;
@@ -780,6 +831,9 @@ button.accept-policy {
 .window__playlist svg {
     margin-left: auto;
 }
+#songTimeText{
+    margin-left:auto;
+}
 /******音樂清單的每一項*******/
 .playlist__item {
     width: 100%;
@@ -788,7 +842,7 @@ button.accept-policy {
     margin-bottom: 5px;
     padding: 5px 5px 0px 5px;
     font-size: 14px;
-    cursor:pointer;
+    cursor: pointer;
 }
     .playlist__item:active {
         border-radius: 5px;
