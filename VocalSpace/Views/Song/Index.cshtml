@@ -52,7 +52,7 @@
 						</li>
 						<li class="list-inline-item">
 							<h4 class="fs-6">喜歡</h4>
-							<h4>@Model.Song.LikeCount</h4>
+							<h4 class="likeCount" data-songid="@Model.Song.SongId">@Model.LikeInfo.LikeCount</h4>
 						</li>
 					</ul>
 					<div class="ui-button">
@@ -63,7 +63,7 @@
 							<button class="btn btn-outline-secondary btn-circle btn-add-to-playlist" data-songid=@Model.Song.SongId title="新增">
 								<i class="bi bi-plus-lg"></i>
 							</button>
-							<button class="btn btn-outline-secondary btn-circle" title="喜歡">
+							<button class="btn btn-outline-secondary btn-circle btn-add-to-Likesong @(Model.LikeInfo.IsLiked? "selected":"")" data-songid=@Model.Song.SongId title ="喜歡">
 								<i class="bi bi-heart-fill"></i>
 							</button>
 							<button class="btn btn-outline-secondary btn-circle btn-lg" data-bs-toggle="modal" data-bs-target="#donateModal" title="贊助">

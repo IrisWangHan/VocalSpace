@@ -18,10 +18,10 @@ namespace VocalSpace.Models.ViewModel.Song
         public required VocalSpace.Models.UsersInfo UsersInfo { get; set; }
         public required VocalSpace.Models.SongCategory SongCategory { get; set; }
 
-        public List<PlayList> PlayLists { get; set; } = new List<PlayList>();
-
         //把留言區的 ViewModel 直接包進來
         public CommentSectionViewModel CommentSection { get; set; } = new CommentSectionViewModel();
+        //喜歡數量和是否已經按讚
+        public SongLikeViewModel LikeInfo { get; set; } = new();
     }
 
     public class SongLikeViewModel

@@ -80,7 +80,7 @@ namespace VocalSpace.Services
         public async Task<ShareSongViewModel?> GetShareSongModalData(long songId)
         {
             var song = await _context.Songs
-                .Include(s => s.ArtistNavigation) 
+                .Include(s => s.ArtistNavigation)
                 .FirstOrDefaultAsync(s => s.SongId == songId);
             if (song == null)
             {
@@ -95,6 +95,53 @@ namespace VocalSpace.Services
                 ShareUrl = $"https://vocalspace.com/song/{song.SongId}"
             };
 
+        }
+        /// <summary>
+        /// 判斷歌曲有沒有按讚，並執行新增或刪除
+        /// </summary>
+        public async Task<(bool isSuccess, bool isliked, int likeCount)> AddToLikesong(long userid, long songId)
+        {
+            try
+            {
+                var songLike = await _context.LikeSongs
+                    .FirstOrDefaultAsync(ls => ls.UserId == userid && ls.SongId == songId);
+
+                if (songLike != null)
+                {
+                    // 已經按讚 → 取消讚
+                    _context.LikeSongs.Remove(songLike);
+                }
+                else
+                {
+                    // 沒有按讚 → 新增讚
+                    _context.LikeSongs.Add(new LikeSong
+                    {
+                        UserId = userid,
+                        SongId = songId,
+                    });
+                }
+
+                await _context.SaveChangesAsync();
+
+                // 重新計算讚數
+                int likeCount = 30+ await _context.LikeSongs.CountAsync(ls => ls.SongId == songId);
+                return (true, songLike == null, likeCount);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"處理歌單時發生錯誤: {ex.Message}");
+                return (false, false, 0);
+            }
+        }
+
+
+        /// <summary>
+        /// 判斷歌曲是否已按讚
+        /// </summary>
+        public async Task<bool> IsLikedAsync(long userId, long songId)
+        {
+            return await _context.LikeSongs
+                .AnyAsync(ls => ls.UserId == userId && ls.SongId == songId);
         }
     }
 }

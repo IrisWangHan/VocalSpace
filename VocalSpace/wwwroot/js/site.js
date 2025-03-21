@@ -106,3 +106,33 @@ function shareOnInstagram() {
     window.open(fbUrl, "_blank");
 }
 
+//歌曲按讚功能
+$(document).on("click", ".btn-add-to-Likesong", function () {
+    let button = $(this);
+    let songId = button.data("songid");
+    // 根據 songId 找到對應的 likeCount
+    let count = $(`.likeCount[data-songid="${songId}"]`);
+    $.ajax({
+        url: `/Song/AddLikeSong`,
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({ SongID: songId }),
+        success: function (res) {
+            if (res.isliked) {
+                button.addClass("selected");
+            }
+            else {
+                button.removeClass("selected");
+            }
+            // **只有當 count 存在時才更新讚數**
+            if (count.length > 0) {
+                count.text(res.likeCount);
+            }
+        },
+        error: function (xhr) {
+            alert(xhr.responseJSON?.message || "發生錯誤，請稍後再試！");
+        }
+    });
+});
+
+

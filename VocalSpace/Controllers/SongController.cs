@@ -29,6 +29,7 @@ namespace VocalSpace.Controllers
         {
             // 從 Session 取得 Account
             string? account = HttpContext.Session.GetString("UserAccount");
+            long? userId = HttpContext.Session.GetInt32("UserId");
             string? isLogin = HttpContext.Session.GetString("IsLoggedIn");
             // 查詢當前登入使用者的頭像
             string? userAvatar = null;
@@ -52,18 +53,26 @@ namespace VocalSpace.Controllers
             User = s.ArtistNavigation,
             UsersInfo = s.ArtistNavigation.UsersInfo!,
             SongCategory = s.SongCategory,
-            PlayLists = _context.PlayLists
-                            .Where(p => p.UserId == s.ArtistNavigation.UserId)
-                            .ToList(),
             CommentSection = new CommentSectionViewModel
             {
                 IsLogin = isLogin != null, // 判斷使用者是否登入 (透過 Session)
                 CurrentAvatar = userAvatar ?? "", // 使用者頭像
                 CurrentUserAccount = account ?? "", // 使用者帳號
                 Comments = new List<CommentViewModel>() //不在這裡查詢留言，改用 AJAX 讀取
-            }
+            },
+            LikeInfo = new SongLikeViewModel
+        {
+            LikeCount = _context.LikeSongs.Count(ls => ls.SongId == s.SongId) + 30 // 加上基礎讚數
+        }
         })
         .FirstOrDefaultAsync();
+
+            // 查詢歌曲是否已經按讚
+            if (songdata != null && userId.HasValue && userId != 0) // 確保使用者已登入
+            {
+                songdata.LikeInfo.IsLiked = await _ModalDataService.IsLikedAsync(userId.Value, songdata.Song.SongId);
+            }
+
             // 如果查詢結果為空，則返回首頁
             if (songdata == null)
             {
@@ -240,7 +249,36 @@ namespace VocalSpace.Controllers
             return PartialView("_Modal_ShareSong", song);
         }
 
+        /// <summary>
+        /// AJAX 歌曲按讚邏輯
+        /// </summary>
+        [HttpPost("/Song/AddLikeSong")]
+        public async Task<IActionResult> AddSongToLikesong([FromBody] LikeSong model)
+        {
+            // 取得使用者ID
+            long? userId = HttpContext.Session.GetInt32("UserId");
 
+            // 確保使用者已登入
+            if (userId == null || userId == 0)
+            {
+                return Unauthorized(new { success = false, message = "請先登入！" });
+            }
+
+
+            var (isSuccess, isliked,likeCount) = await _ModalDataService.AddToLikesong(userId.Value, model.SongId);
+
+            if (!isSuccess)
+            {
+                return StatusCode(500, new { message = "操作失敗，請稍後再試。" });
+            }
+
+            return Ok(new
+            {
+                isliked,
+                likeCount, 
+                message = isliked ? "歌曲已加入收藏" : "歌曲已移除收藏"
+            });
+        }
 
     }
 

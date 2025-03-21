@@ -161,13 +161,20 @@ img {
 }
 
     .btn-follow.selected {
-        background: white !important;
-        color: #ff4d4f !important;
-        border: 1px solid #ff4d4f !important;
+        background: white;
+        color: #ff4d4f;
+        border: 1px solid #ff4d4f;
     }
 
     .btn-follow:hover {
         background: #e63946;
+    }
+
+/* 我的最愛按鈕預設格式 */
+    .btn-add-to-Likesong.selected {
+        background-color: var(--bg-color);
+        border: 1px solid rgb(255, 87, 87);
+        color: rgb(255, 87, 87);
     }
 
 
