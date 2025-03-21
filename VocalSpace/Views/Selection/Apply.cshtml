@@ -1,16 +1,5 @@
 ﻿@model VocalSpace.Models.ViewModel.Selection.SelectionFormViewModel
-@{
-	var errorMessage = TempData["ErrorMessage"] as string;
-}
 
-@if (!string.IsNullOrEmpty(errorMessage))
-{
-	<script>
-		alert(@Html.Raw(Json.Serialize(errorMessage)); // 顯示錯誤訊息
-		window.location.href = '@Url.Action("Index", "Selection")'; // 跳轉回首頁
-
-	</script>
-}
 <section class="content ">
 	<div class="content__area">
 		<h1>徵選報名表</h1>
@@ -45,27 +34,11 @@
 					@* li 表單填寫內容區 *@
 					<li class="border-bottom">
 						<p> 姓名</p>
-						@* 報名開放中+從未報名過 可以編輯,該活動為送出後不可異動 *@
-						@if (Model.JoinState == "開放中" && Model.ApplySongs.Count < 1)
-						{
-							<input type="text" class="content-form-input" name="userName" value="@(Model.UserName)" />
-						}
-						else
-						{
-							<span class="content-form-input">@(Model.UserName)</span>
-						}
+						<span class="content-form-input input-name">@(Model.UserName)</span>
 					</li>
 					<li class="border-bottom">
 						<p> 電子信箱</p>
-						@if (Model.JoinState == "開放中" && Model.ApplySongs.Count < 1)
-						{
-							<input type="text" class="content-form-input" name="email" value="@(Model.Email)" />
-						}
-						else
-						{
-							<span>@(Model.Email)</span>
-						}
-
+						<span class="content-form-input input-email">@(Model.Email)</span>
 					</li>
 					@* li 上傳作品區 *@
 					<li class=" content-form-item">
@@ -136,7 +109,7 @@
 							@* 彈窗下方顯示區: 顯示所有歌曲 *@
 							<div class="popup__select-works-list">
 								<ol>
-									@if ( Model.Songs.Count <= 0)
+									@if (Model.Songs.Count <= 0)
 									{
 										<li class="text-secondary">&nbsp;目前沒有任何歌曲</li>
 									}
@@ -152,11 +125,10 @@
 											</li>
 										}
 									}
-								</ol>								
+								</ol>
 							</div>
 							<div class="popup__select-works-button">
-								<button class="btn btn-submit--theme" data-selectionId="@(Model.SelectionId)">送出</button>
-								<button class="btn btn-cancel--theme">取消</button>
+								<button class="btn btn-submit--theme" data-selectionId="@(Model.SelectionId)">儲存</button>
 							</div>
 						</div>
 					</li>
@@ -173,7 +145,6 @@
 			@if (Model.JoinState == "開放中" && Model.ApplySongs.Count < 1)
 			{
 				<button class="btn btn-submit--theme" onclick="submitForm()">送出</button>
-				<button class="btn btn-cancel--theme" onclick="removeForm()">清除</button>
 			}
 
 		</div>
@@ -182,251 +153,210 @@
 <div class="overlay">
 </div>
 
-
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 
-
-
 <script>
-	$(document).ready(function() {
+	
+				//已選擇作品LIST
+			var chosenUploadList=[];
+		$(document).ready(function() {
 
-	   var SelectionId = '@(Model.SelectionId)';
-
-		//已選擇作品LIST
-		var chosenUploadList=[];
-
-		$('.popup__select-works-chosen-ol li').each(function() {
-			// 取得 data-songid 和歌曲名稱
-			let songId = $(this).data('songid');
-			let songName = $(this).text().trim();
-
-			// 將每個歌曲的資料加入到陣列中
-			chosenUploadList.push({ songid: songId, songName: songName });
-		});
-
-		/******
-		 * 點選上傳按鈕顯示彈窗 並 加入畫面上已上傳歌曲
-		 * 顯示/隱藏彈窗和 overlay*******/
-		$(".upload__item-file").on("click", function(){
-			$(".popup__select-works").fadeIn();
-			$(".overlay").fadeIn();
+		   var SelectionId = '@(Model.SelectionId)';
 
 
-		});
-		$(".icon__close-pop, .btn-cancel--theme,.btn-submit--theme").on("click", function(){
-			$(".popup__select-works").fadeOut();
-			$(".overlay").fadeOut();
-		});
+			console.log("chosenUploadList");
+			console.log(chosenUploadList);
+			$('.popup__select-works-chosen-ol li').each(function() {
+				// 取得 data-songid 和歌曲名稱
+				let songId = $(this).data('songid');
+				let songName = $(this).text().trim();
 
-		/****當音樂上傳 勾選狀態改變時****/
-		$(".popup__select-works-input").on("change", function() {
+				// 將每個歌曲的資料加入到陣列中
+				chosenUploadList.push({ songid: songId, songName: songName });
+			});
 
-			//取得音樂的ID
-			const songid = $(this).data("songid");
+			/******
+			 * 點選上傳按鈕顯示彈窗 並 加入畫面上已上傳歌曲
+			 * 顯示/隱藏彈窗和 overlay*******/
+			$(".upload__item-file").on("click", function(){
+				$(".popup__select-works").fadeIn();
+				$(".overlay").fadeIn();
 
-			//取得音樂的名稱(選取器 取得同層的 <span> 文字)
-			const songName = $(this).siblings("span").text();
 
-			//取得音樂的名稱(選取器 取得同層的 <span> 文字)
-			const songName = $(this).siblings("span").text();
+			});
+			$(".icon__close-pop, .btn-cancel--theme,.btn-submit--theme").on("click", function(){
+				$(".popup__select-works").fadeOut();
+				$(".overlay").fadeOut();
+			});
 
-			//當[勾選]時，加入陣列
-			if ($(this).prop("checked")) {
+			/****當音樂上傳 勾選狀態改變時****/
+			$(".popup__select-works-input").on("change", function() {
 
-					//將 音樂物件 加入 被選擇清單中
-					chosenUploadList.push({ songid: songid, songName: songName })
+				//取得音樂的ID
+				const songid = $(this).data("songid");
 
-					//動態加項目 到 [被選擇清單列表chosen]
-					$(".popup__select-works-chosen-ol").append(`
-						<li data-songid="${songid}">
-							${songName} &nbsp;
-							<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-x icon__close icon__close-data" viewBox="0 0 16 16">
-								<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
-							</svg>
-						</li>
-					`);
-						$(".popup__select-works-chosen-ol li").last().css({
-							"margin": "5px",
-							"background-color": "lightgray",
-							"border-radius":"5px",
-							"font-size":"12px",
-							"padding":"5px"
+				//取得音樂的名稱(選取器 取得同層的 <span> 文字)
+				const songName = $(this).siblings("span").text();
+
+				//當[勾選]時，加入陣列
+				if ($(this).prop("checked")) {
+
+						//將 音樂物件 加入 被選擇清單中
+						chosenUploadList.push({ songid: songid, songName: songName })
+
+						//動態加項目 到 [被選擇清單列表chosen]
+						$(".popup__select-works-chosen-ol").append(`
+							<li data-songid="${songid}">
+								${songName} &nbsp;
+								<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-x icon__close icon__close-data" viewBox="0 0 16 16">
+									<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+								</svg>
+							</li>
+						`);
+							$(".popup__select-works-chosen-ol li").last().css({
+								"margin": "5px",
+								"background-color": "darkgray",
+								"border-radius":"5px",
+								"font-size":"20px",
+								"padding":"5px"
+							});
+
+						$(".popup__select-works-chosen-ol li svg").last().css("cursor", "pointer");
+						$(".popup__select-works-chosen-ol li svg").last().hover(
+							function () {
+								$(this).css("transform", "scale(1.2)");
+							},
+							function () {
+								$(this).css("transform", "scale(1)");
+							}
+						);
+						console.log(chosenUploadList);
+				}
+				else {
+						// 當[取消勾選]時，從陣列中移除該項目
+						chosenUploadList = chosenUploadList.filter(function(item) {
+							return item.songid !== songid;
 						});
 
-					$(".popup__select-works-chosen-ol li svg").last().css("cursor", "pointer");
-					$(".popup__select-works-chosen-ol li svg").last().hover(
-						function () {
-							$(this).css("transform", "scale(1.2)");
-						},
-						function () {
-							$(this).css("transform", "scale(1)");
-						}
-					);
-					console.log(chosenUploadList);
-			}
-			else {
-					// 當[取消勾選]時，從陣列中移除該項目
-					chosenUploadList = chosenUploadList.filter(function(item) {
-						return item.songid !== songid;
-					});
+						console.log(chosenUploadList);
+						// 從畫面上動態移除
+						$(".popup__select-works-chosen-ol li[data-songid='" + songid + "']").remove();
 
-					console.log(chosenUploadList);
-					// 從畫面上動態移除
-					$(".popup__select-works-chosen-ol li[data-songid='" + songid + "']").remove();
-
-			}
-		});
-
-
-		/*****移除 [被選擇的音樂] 則從陣列中移除該項目*******/
-		$(".popup__select-works-chosen-ol").on("click", ".icon__close-data", function() {
-
-			const songid = $(this).closest("li").data("songid"); // 取得對應的項目
-
-			// 從陣列中移除該項目
-			chosenUploadList = chosenUploadList.filter(function(item) {
-				return item.songid !== songid;
-			});
-
-			// 從被選擇清單列表移除該項目
-			$(this).closest("li").remove();
-			console.log("被選擇的音樂");
-			console.log($(`.popup__select-works-list input[type="checkbox"][data-songid="${songid}"]`));
-			// 取消對應的 checkbox 選取狀態
-			$(`.popup__select-works-list input[type="checkbox"][data-songid="${songid}"]`).prop("checked", false);
-		});
-
-
-		//保存使用者輸入內容
-		$("input[type='text']").on("input", function() {
-				sessionStorage.setItem("userName", $("input[name='userName']").val());
-				sessionStorage.setItem("email", $("input[name='email']").val());
-
-		});
-
-
-
-		/*****作品確認上傳 =>將勾選清單加入畫面上的清單******/
-		$(".popup__select-works-button > .btn-submit--theme").on("click",function(){
-				console.log(chosenUploadList);
-				// 清掉畫面上顯示的清單
-				$(".upload__list").empty();
-
-				//重新加入到畫面上
-				for (let i = 0; i < chosenUploadList.length; i++) {
-
-					const songid =chosenUploadList[i]["songid"];
-					const songName =chosenUploadList[i]["songName"];
-
-				// 將清單顯示到畫面上
-				$(".upload__list").append(`
-					<li class="upload__item"  data-songid="${songid}">
-						<span class="upload__item-title">${songName}</span>
-						<img src="/image/selection/voteAD.png" class="content-form-list-sm-img" />
-						<span class="content-form-list-sm-img-filename"></span>
-					</li>
-				`);
-					$(".upload__list li").last().css({
-						"margin": "5px",
-						"display": "flex",
-						"align-items": "center",
-						"margin-bottom": "5px",
-						"font-size": "20px",
-						"height": "30px",
-						"border-bottom": "1px solid gray",
-						"padding-bottom": "5px",
-						"color":"darkgoldenrod"
-					});
-					$(".upload__list li label").css({
-						"width": "80px",
-						"background-color": "#4CAF50",
-						"width": "80px",
-						"height": "100%",
-						"margin":" 5px",
-						"border-radius": "5px",
-						"color": "aliceblue",
-						"font-weight": "bold",
-						"text-align": "center",
-						"cursor":"pointer",
-						"margin-left":"auto"
-					});
-					$(".content-form-list-sm-img").last().css({
-						"transition": "transform 0.3s ease-in-out",
-						"width": "25px",
-						"height": "25px",
-						"border-radius":" 2px",
-						"margin-left": "auto",
-						"cursor":"pointer"
-					});
-					$(".content-form-list-sm-img ").last().hover(
-						function () {
-							$(this).css("transform", "scale(3)");
-						},
-						function () {
-							$(this).css("transform", "scale(1)");
-						}
-
-					);
 				}
 			});
+
+
+			/*****移除 [被選擇的音樂] 則從陣列中移除該項目*******/
+			$(".popup__select-works-chosen-ol").on("click", ".icon__close-data", function() {
+
+				const songid = $(this).closest("li").data("songid"); // 取得對應的項目
+
+				// 從陣列中移除該項目
+				chosenUploadList = chosenUploadList.filter(function(item) {
+					return item.songid !== songid;
+				});
+
+				// 從被選擇清單列表移除該項目
+				$(this).closest("li").remove();
+				console.log("被選擇的音樂");
+				console.log($(`.popup__select-works-list input[type="checkbox"][data-songid="${songid}"]`));
+				// 取消對應的 checkbox 選取狀態
+				$(`.popup__select-works-list input[type="checkbox"][data-songid="${songid}"]`).prop("checked", false);
+			});
+
+
+			/*****作品確認上傳 =>將勾選清單加入畫面上的清單******/
+			$(".popup__select-works-button > .btn-submit--theme").on("click",function(){
+					console.log(chosenUploadList);
+					// 清掉畫面上顯示的清單
+					$(".upload__list").empty();
+
+					//重新加入到畫面上
+					for (let i = 0; i < chosenUploadList.length; i++) {
+
+						const songid =chosenUploadList[i]["songid"];
+						const songName =chosenUploadList[i]["songName"];
+
+					// 將清單顯示到畫面上
+					$(".upload__list").append(`
+						<li class="upload__item"  data-songid="${songid}">
+							<span class="upload__item-title">${songName}</span>
+							<img src="/image/selection/voteAD.png" class="content-form-list-sm-img" />
+							<span class="content-form-list-sm-img-filename"></span>
+						</li>
+					`);
+						$(".upload__list li").last().css({
+							"margin": "5px",
+							"display": "flex",
+							"align-items": "center",
+							"margin-bottom": "5px",
+							"font-size": "20px",
+							"height": "30px",
+							"border-bottom": "1px solid gray",
+							"padding-bottom": "5px",
+							"color":"darkgoldenrod"
+						});
+						$(".upload__list li label").css({
+							"width": "80px",
+							"background-color": "#4CAF50",
+							"width": "80px",
+							"height": "100%",
+							"margin":" 5px",
+							"border-radius": "5px",
+							"color": "aliceblue",
+							"font-weight": "bold",
+							"text-align": "center",
+							"cursor":"pointer",
+							"margin-left":"auto"
+						});
+						$(".content-form-list-sm-img").last().css({
+							"transition": "transform 0.3s ease-in-out",
+							"width": "25px",
+							"height": "25px",
+							"border-radius":" 2px",
+							"margin-left": "auto",
+							"cursor":"pointer"
+						});
+						$(".content-form-list-sm-img").last().hover(
+							function () {
+								$(this).css("transform", "scale(3)");
+							},
+							function () {
+								$(this).css("transform", "scale(1)");
+							}
+
+						);
+					}
+				});
+	
 	});
 
 	function submitForm(){
-			//取值
-				let userName = $("input[name='userName']");
-				let email = $("input[name='email']");
-
-				 console.log(userName, email);  // 在控制台顯示取得的值
-
-				//必填判斷
-				let list=[];
-				if(userName.val()==""){
-					userName.focus();
-					list.push("請填寫姓名\n");
-				}
-				if(email.val()==""){
-					email.focus();
-					list.push("請填寫電子信箱\n");
-				}
-				// if (files.length < 1) {
-				// 	list.push("請上傳檔案\n");
-				// }
-				if(list.length>0)
-				{
-					alert(list.join(''));
-					return;
-				}
-				// let formData = new FormData();
-				// // formData.append("file", $("input[type='file']")[0].files[0]); // 加入檔案
-				// formData.append("userName", );
-				// formData.append("email", $("input[name='email']").val());
-				// formData.append("songs", chosenUploadList);
+			console.log(chosenUploadList);
+			if(chosenUploadList==null||chosenUploadList.length<1){
+				alert("請選擇作品上傳");
+				return;
+			}
 				var data={
-					"userName":$("input[name='userName']").val(),
-					"email": $("input[name='email']").val(),
-					"songs":chosenUploadList
-				}
-				 console.log("data",data);
+					"userName":$(".input-name").text(),
+					"email": $(".input-email").text(),
+					"songs":chosenUploadList,
+					"selectionId":@(Model.SelectionId)
+				};
+				console.log(data);
 				$.ajax({
 					method: "post",
 					url: "/Selection/SubmitApplication",
 					data: JSON.stringify(data),
-					contentType: false,
-						processData: false,
+					contentType: "application/json",  // 設置 Content-Type 為 application/json
+					processData: false,
 					success: function(res) {
-						sessionStorage.removeItem("userName");
-						sessionStorage.removeItem("email");
+						alert(res.message);
 					},
 					error: function(err) {
-						console.log(err);
+						alert(res.message);
 					}
 				});
-	}
-	function removeForm(){
-		sessionStorage.removeItem("userName");
-		sessionStorage.removeItem("email");
-			$("input[name='userName']").val('');   // 清空 userName 欄位
-			$("input[name='email']").val('');      // 清空 email 欄位
 	}
 
 </script>

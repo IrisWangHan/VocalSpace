@@ -1,15 +1,5 @@
 ﻿@model VocalSpace.Models.ViewModel.Selection.SelectionListViewModel
-@{
-	var errorMessage = TempData["ErrorMessage"] as string;
-}
 
-@if (!string.IsNullOrEmpty(errorMessage))
-{
-	<script>
-		alert("@errorMessage"); // 顯示錯誤訊息
-		window.location.href = '@Url.Action("Index", "Selection")'; // 跳轉回首頁
-	</script>
-}
 <section class="banner">
 	<div class="banner__left">
 		<img class="banner__left-img" src="@Url.Content("~/image/selection/bannerLightning.png")" />

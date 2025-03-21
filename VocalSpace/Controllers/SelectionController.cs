@@ -84,7 +84,6 @@ namespace VocalSpace.Controllers
 
             if (UserID == null|| UserID==0)
             {
-                TempData["ErrorMessage"] = "尚未登入,即將幫您跳轉！";
                 return RedirectToAction("Login", "Accounts"); // 重導讓 View 收到 TempData
             }
             //取得user資料
@@ -94,7 +93,6 @@ namespace VocalSpace.Controllers
             SelectionFormViewModel selectionData = await _selectionService.CheckSelectionOnTime(id);           
             if (selectionData == null)
             {
-                TempData["ErrorMessage"] = "目前非報名期間！";
                 return RedirectToAction("Index", "Selection"); // 重導讓 View 收到 TempData
             }
             
@@ -105,17 +103,15 @@ namespace VocalSpace.Controllers
 
 
         [HttpPost]
-        public IActionResult SubmitApplication([FromBody] object request)
+        public async Task<IActionResult> SubmitApplication([FromBody] ApplicationRequest request)
         {
 
-            //檢查輸入內容
+            if (request == null || request.Songs == null || request.Songs.Count == 0)
+            {
+                return BadRequest(new { success = false, message = "未選擇任何歌曲" });
+            }
 
-            //取得歌曲資料並上傳
-            //let songId = $(this).data('songid');
-            //let songName = $(this).text().trim();
-            //請判斷是否在報名期限內 以及上船功能
-            // 處理表單資料
-            return Json(new { success = true, message = "表單提交成功" });
+            return Json(await _selectionService.SaveSelectionDetail(request));
         }
 
     }
