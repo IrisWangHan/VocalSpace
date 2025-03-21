@@ -202,21 +202,21 @@ namespace VocalSpace.Controllers
             return Ok(new { success = true });
         }
 
-        //  1.建立訂單
+        //  1.建立訂單透過<form>傳到綠界，並加入資料庫
         [HttpPost]
-        public IActionResult AddOrder([FromBody] Dictionary<string, string> data)
+        public async Task<IActionResult> AddOrder([FromBody] Dictionary<string, string> data)
         {
             //  未登入則導向登入頁面
             string Login = HttpContext.Session.GetString("IsLoggedIn")!;
             if (Login != "true")
             {
-                return View("/Views/Accounts/Login.cshtml");
+                return RedirectToAction("Login", "Accounts");
             }
         
             //  Guid.NewGuid() : 產生全球唯一識別碼 (UUID)
             //  orderId : 產生隨機20碼訂單編號
             var orderId = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 20);
-            //需填入你的網址
+            //  ReturnURL
             var website = $"https://rk8nf59r-7145.asse.devtunnels.ms/";
             //  SponsorId : 透過 Session 取得 UserId
             string? SponsorId = HttpContext.Session.GetInt32("UserId").ToString();
@@ -228,43 +228,45 @@ namespace VocalSpace.Controllers
                 { "MerchantTradeDate",  DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")},
                 { "TotalAmount",  data["TotalAmount"]},
                 { "TradeDesc",  "無"},
-                { "ItemName",  "測試商品"},
+                { "ItemName",  "贊助歌曲:"},
                 { "CustomField1",  SponsorId!},
                 { "CustomField2",  SongId!},
                 { "CustomField3",  ""},
                 { "CustomField4",  ""},
-                { "ReturnURL",  $"{website}Ecpay/AddPayInfo"},
+                { "ReturnURL",  $"{website}Song/AddPayInfo"},  
+                { "ClientBackURL",  $"{website}Song/{SongId}"},
                 { "MerchantID",  "3002607"},
                 { "PaymentType",  "aio"},
                 { "ChoosePayment",  "Credit"},
                 { "EncryptType",  "1"},
             };
 
-            // 2 : 新增訂單到資料庫
-            string a = _donateService.AddOrderToDb(order);
+            // 新增訂單到資料庫
+            await _donateService.AddOrderToDbAsync(order);
             //檢查碼
            order["CheckMacValue"] = _donateService.GetCheckMacValue(order);
             //  產生綠界表單(自動送出)
             string Form = _donateService.PrepareECPayForm(order);
-            //  字串裝進物件裡然後整個塞到網頁 
+            
             return Content(Form, "text/html");
 
         }
 
-        // step5 : ReturnURL 接收綠界付款結果
+        // 2 : ReturnURL 接收綠界付款結果
         [HttpPost]
         [AllowAnonymous]
-        public IActionResult AddPayInfo(IFormCollection form)
+        public async Task<IActionResult> AddPayInfo(IFormCollection form)
         {
-            Console.WriteLine(form.ToString());
+            
             // 將綠界傳來的 Form 資料轉成 Dictionary 
             var collection = form.ToDictionary(x => x.Key, x => x.Value.ToString());
+            //  沒收到 檢查碼 則回傳錯誤
             if (!collection.TryGetValue("CheckMacValue", out string? receivedCheckMac))
             {
                 return Content("0|缺少檢查碼");
             }
 
-            // 計算我們這邊的檢查碼（注意需排除綠界傳來的 CheckMacValue 本身）
+            // 計算收到的資料轉成檢查碼（注意需排除綠界傳來的 CheckMacValue 本身）
             var CollectionForMac = new Dictionary<string, string>();
             foreach (var data in collection)
             {
@@ -274,14 +276,14 @@ namespace VocalSpace.Controllers
                 }
                 CollectionForMac.Add(data.Key, data.Value);
             }
-
             string computedMac = _donateService.GetCheckMacValue(CollectionForMac);
             //  檢查碼比對，StringComparison.OrdinalIgnoreCase : 不區分大小寫
             if (!computedMac.Equals(receivedCheckMac, StringComparison.OrdinalIgnoreCase))
             {
                 return Content("0|CheckMacValueError");
             }
-            _donateService.UpdatePayInfo(collection);
+            //  付款資訊更新資料庫
+            await _donateService.UpdatePayInfoAsync(collection);
             return Content("1|OK");
 
         }
@@ -373,8 +375,5 @@ namespace VocalSpace.Controllers
                 message = isliked ? "歌曲已加入收藏" : "歌曲已移除收藏"
             });
         }
-
     }
-
-
 }

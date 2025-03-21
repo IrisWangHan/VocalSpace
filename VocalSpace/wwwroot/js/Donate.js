@@ -25,10 +25,10 @@
             url: 'AddOrder',
             data: JSON.stringify(data),
             contentType: 'application/json',        //  送到Server的資料型態
-            //dataType: 'json',
+            
             success: function (res) {
                 //console.log(res); 
-                $('.page-container').html(res);
+                $('body').html(res);
             },
             error: function (err) {
                 console.log(err);

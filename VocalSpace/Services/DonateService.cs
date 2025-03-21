@@ -1,7 +1,8 @@
 ﻿using System.Text;
 using System.Web;
 using VocalSpace.Models;
-using System.Security.Cryptography;  //  這裡是要使用 SHA256
+using System.Security.Cryptography;
+using Microsoft.EntityFrameworkCore;  //  這裡是要使用 SHA256
 
 namespace VocalSpace.Services
 {
@@ -14,6 +15,41 @@ namespace VocalSpace.Services
         {
             _context = context;
             _config = config;          
+        }
+
+        //  新增訂單到資料庫
+        public async Task AddOrderToDbAsync(Dictionary<string, string> order)
+        {
+            
+            int SponsorId = int.Parse(order["CustomField1"]);
+            int SongId = int.Parse(order["CustomField2"]);
+            //  查詢歌手id
+            var Song = await _context.Songs.FirstOrDefaultAsync(id => id.SongId == SongId);
+            long ReceiverId = Song!.Artist;
+            try
+            {
+                Ecpay Orders = new Ecpay();
+
+                Orders.MerchantTradeNo = order["MerchantTradeNo"];
+                Orders.SponsorId = SponsorId;
+                Orders.ReceiverId = ReceiverId;
+                Orders.ItemName = order["ItemName"];
+                Orders.RtnCode = 0;     //未付款
+                Orders.RtnMsg = "訂單成功尚未付款";
+                Orders.TradeAmt = int.Parse(order["TotalAmount"]);
+                Orders.PaymentType = order["PaymentType"];
+                Orders.PaymentTypeChargeFee = "0";
+                Orders.MerchantTradeDate = order["MerchantTradeDate"];
+
+                await _context.Ecpays.AddAsync(Orders);
+                await _context.SaveChangesAsync();
+                
+            }
+            catch (Exception ex)
+            {
+                string num = ex.ToString();
+            }
+            
         }
         // 產生檢查碼
         public string GetCheckMacValue(Dictionary<string, string> order)
@@ -44,42 +80,7 @@ namespace VocalSpace.Services
             return result.ToString();
         }
 
-        //step2 : 新增訂單到資料庫
-        //[HttpPost]
-        public string AddOrderToDb(Dictionary<string, string> order)   
-        {
-            string num = "0";
-            int SponsorId = int.Parse(order["CustomField1"]);
-            int SongId = int.Parse(order["CustomField2"]);
-            //  查詢歌手id
-            long ReceiverId = _context.Songs.FirstOrDefault(id => id.SongId == SongId).Artist;
-
-            try
-            {
-                Ecpay Orders = new Ecpay();
-
-                Orders.MerchantTradeNo = order["MerchantTradeNo"];
-                Orders.SponsorId = SponsorId;
-                Orders.ReceiverId = ReceiverId;
-                Orders.ItemName = order["ItemName"];
-                Orders.RtnCode = 0;     //未付款
-                Orders.RtnMsg = "訂單成功尚未付款";
-                //Orders.TradeNo = json.MerchantID.ToString();
-                Orders.TradeAmt = int.Parse(order["TotalAmount"]);
-                Orders.PaymentType = order["PaymentType"];
-                Orders.PaymentTypeChargeFee = "0";
-                Orders.MerchantTradeDate = order["MerchantTradeDate"];
-
-                _context.Ecpays.Add(Orders);
-                _context.SaveChanges();
-                num = "OK";
-            }
-            catch (Exception ex)
-            {
-                num = ex.ToString();
-            }
-            return num;
-        }
+        
         //  產生綠界表單(自動送出)
         public string PrepareECPayForm(Dictionary<string, string> order)
         {
@@ -94,20 +95,20 @@ namespace VocalSpace.Services
             return form.ToString();
         }
         //  付款結果更新資料庫
-        public void UpdatePayInfo(Dictionary<string, string> collection)
+        public async Task UpdatePayInfoAsync(Dictionary<string, string> collection)
         {
             string temp = collection["MerchantTradeNo"];
-            var result = _context.Ecpays.FirstOrDefault(data => data.MerchantTradeNo == temp);
+            var result = await _context.Ecpays.FirstOrDefaultAsync(data => data.MerchantTradeNo == temp);
             if (result != null)
             {
                 result.RtnCode = int.Parse(collection["RtnCode"]);
                 result.RtnMsg = collection["RtnMsg"];
                 result.EcpayTradeNo = collection["TradeNo"];
-                //result.TradeAmt = int.Parse(collection["TradeAmt"]);
+                result.TradeAmt = int.Parse(collection["TradeAmt"]);
                 result.PaymentDate = Convert.ToDateTime(collection["PaymentDate"]);
                 result.PaymentType = collection["PaymentType"];
                 result.PaymentTypeChargeFee = collection["PaymentTypeChargeFee"];
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
 
         }
