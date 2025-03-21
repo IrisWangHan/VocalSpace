@@ -78,38 +78,3 @@
         </main>
     </div>
 </div>
-
-<script src="~/js/partialViewSong.js" asp-append-version="true"></script>
-    <script>
-    function playSong(songId) {
-        alert('播放歌曲 ID: ' + songId);
-    }
-
-    function playAll() {
-        alert('播放全部歌曲');
-    }
-
-
-     document.addEventListener("DOMContentLoaded", function () {
-            // 取得當前網址的路徑，例如 `/3` 或 `/HotRank/3`
-            const pathSegments = window.location.pathname.split("/").filter(segment => segment);
-
-            // 取得最後一個段落作為 ID，若不存在則預設為 "0"
-            let currentId = pathSegments.length > 0 ? pathSegments[pathSegments.length - 1] : "0";
-
-            // 確保 currentId 是數字，否則預設為 "0"
-            if (isNaN(currentId)) {
-                currentId = "0";
-            }
-
-            // 清除所有 .selected
-            document.querySelectorAll("#myList li").forEach(li => li.classList.remove("selected"));
-
-            // 找到對應的 <li>，加上 .selected
-            const activeLi = document.querySelector(`#myList li[data-id="${currentId}"]`);
-            if (activeLi) {
-                activeLi.classList.add("selected");
-            }
-        });
-
-</script>
