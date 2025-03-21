@@ -167,6 +167,7 @@
 	</header>
 	<main role="main">
 		@RenderBody()
+		@await Html.PartialAsync("_Modal_for_AJAXLoading") @*用來AJAX載入彈窗*@
 		<section class="music-player">
 			<div class="music-player__for-md"></div>
 			<div class="music-player__for-lg">

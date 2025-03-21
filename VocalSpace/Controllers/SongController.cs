@@ -5,6 +5,7 @@ using System.Xml.Linq;
 using VocalSpace.Models;
 using VocalSpace.Models.ViewModel.Global;
 using VocalSpace.Models.ViewModel.Song;
+using VocalSpace.Services;
 
 namespace VocalSpace.Controllers
 {
@@ -12,17 +13,19 @@ namespace VocalSpace.Controllers
     {
         // EF 的 DbContext
         private readonly VocalSpaceDbContext _context;
+        private readonly ModalDataService _ModalDataService;
 
         // 建構函數 DbContext
-        public SongController(VocalSpaceDbContext context)
+        public SongController(VocalSpaceDbContext context, ModalDataService modalDataService)
         {
             _context = context;
+            _ModalDataService = modalDataService;
         }
         /// <summary>
         /// 取得指定歌曲詳細資料以及留言區架構的 Action
         /// </summary>
         [HttpGet("Song/{id}")]
-        public async Task<IActionResult> Index(int? id)
+        public async Task<IActionResult> Index(int id)
         {
             // 從 Session 取得 Account
             string? account = HttpContext.Session.GetString("UserAccount");
@@ -179,6 +182,65 @@ namespace VocalSpace.Controllers
 
             return Ok(new { success = true });
         }
+
+        ///<summary>
+        /// AJAX方式取得加入歌單Modal需要的資料
+        ///</summary>
+        [HttpGet("Song/GetAddToPlaylistModal/{songid}")]
+        public async Task<IActionResult> GetAddToPlaylistModal(int songId)
+        {
+            long? userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null || userId == 0)
+            {
+                return Unauthorized("請先登入");
+            }
+
+            var PlaylistModalData = await _ModalDataService.GetPlaylistModalData(userId.Value, songId);
+
+            return PartialView("_Modal_AddToPlaylist", PlaylistModalData);
+        }
+
+        /// <summary>
+        /// AJAX 加入歌單邏輯
+        /// </summary>
+        [HttpPost("/Song/playlist/add-song")]
+        public async Task<IActionResult> AddSongToPlaylist([FromBody] PlayListSong model)
+        {
+            // 取得使用者ID
+            long? userId = HttpContext.Session.GetInt32("UserId");
+
+            if (userId == null || userId == 0)
+            {
+                return Unauthorized(new { success = false, message = "請先登入！" });
+            }
+
+            var (isSuccess, isAdded) = await _ModalDataService.AddToPlaylist(model.PlayListId, model.SongId);
+
+            if (!isSuccess)
+            {
+                return StatusCode(500, new { message = "操作失敗，請稍後再試。" });
+            }
+
+            return Ok(new { isAdded, message = isAdded ? "歌曲已加入歌單" : "歌曲已移除歌單" });
+        }
+
+        /// <summary>
+        /// AJAX 方式取得分享歌曲Modal需要的資料
+        /// </summary>
+        [HttpGet("/Song/GetShareModalData/{songId}")]
+        public async Task<IActionResult> GetShareModalData(int songId)
+        {
+            var song = await _ModalDataService.GetShareSongModalData(songId);
+
+            if (song == null)
+            {
+                return NotFound("歌曲不存在！");
+            }
+
+            return PartialView("_Modal_ShareSong", song);
+        }
+
+
 
     }
 

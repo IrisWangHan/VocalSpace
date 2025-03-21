@@ -57,10 +57,10 @@
 					</ul>
 					<div class="ui-button">
 						<div class="d-flex align-items-center gap-2">
-							<button class="btn btn-outline-secondary btn-circle" data-bs-toggle="modal" data-bs-target="#Modal2" title="分享">
+							<button class="btn btn-outline-secondary btn-circle btn-share-song" data-songid=@Model.Song.SongId title="分享">
 								<i class="bi bi-share"></i>
 							</button>
-							<button class="btn btn-outline-secondary btn-circle" data-bs-toggle="modal" data-bs-target="#Modal1" title="新增">
+							<button class="btn btn-outline-secondary btn-circle btn-add-to-playlist" data-songid=@Model.Song.SongId title="新增">
 								<i class="bi bi-plus-lg"></i>
 							</button>
 							<button class="btn btn-outline-secondary btn-circle" title="喜歡">
@@ -78,9 +78,7 @@
 			</div>
 		</div>
 	</div>
-	@await Html.PartialAsync("_Modal_Donate")
-	@await Html.PartialAsync("_Modal_AddtoPlaylist")
-	@await Html.PartialAsync("_Modal_ShareSong")
+	@await Html.PartialAsync("_Modal_Donate") @*暫時不做成AJAX載入，等Kevin弄完金流*@
 	<!-- 放在圖片下方的歌手資訊 -->
 	<div class="bottom-container container">
 		<div class="left-container  col-4">
@@ -139,7 +137,22 @@
 @section Scripts {
 	<script src="~/js/Comment.js" asp-append-version="true"></script>
 	<script>
-		$(document).ready(function () {
+		//AJAX 取得UserBar
+		$(function () {
+			let userId = $("#userBarContainer").data("userid");
+			$.ajax({
+				url: `/Personal/GetUserBar/${userId}`, // Controller 端點，
+				type: "GET",
+				success: function (partialView) {
+					$("#userBarContainer").html(partialView);
+				},
+				error: function (xhr) {
+					$("#userBarContainer").html(`<p class='error-message'>上傳者載入失敗，錯誤訊息${xhr.responseText}</p>`);
+				}
+			});
+		});
+
+		$(function () {
 			$('.introduce').each(function () {
 					const introduce = $(this);
 					const toggleBtn = introduce.next('.toggle-btn');

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.EntityFrameworkCore;
 using VocalSpace.Models;
 using VocalSpace.Services;
+using VocalSpace.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,7 +28,12 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddScoped<SelectionService>();
 builder.Services.AddSingleton<EmailService>();
 builder.Services.AddScoped<IPaginationService, PaginationService>();
-builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<UserService>();      //註冊Service，用於處理User的資料(Follow，Likesong，fav_playlist)
+builder.Services.AddScoped<ModalDataService>(); //註冊Service，用於處理Modal的資料(加入歌單，分享歌曲，贊助，分享活動)
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add<GetSessionData>();     //Filter用途: 在執行Action之前或之後執行某些程式碼，這邊我用來帶ViewData的資料
+});
 
 
 builder.Services.AddDbContext<VocalSpaceDbContext>(options =>

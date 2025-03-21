@@ -2,7 +2,6 @@
 //確認按鈕id為submit-comment，留言輸入框id為comment-input
 
 $(function () {
-    console.log("✅ Comment.js 已載入！");
     $(document).on("click", "#submit-comment", submitComment);
     loadComments(); // 頁面加載時載入留言
 });
@@ -39,7 +38,7 @@ function submitComment() {
     });
 }
 
-//載入留言
+//載入留言(AJAX動態載入)
 function loadComments() {
     let targetId = $("#comment-section").data("target-id");
 
