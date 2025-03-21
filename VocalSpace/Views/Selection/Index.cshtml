@@ -1,14 +1,4 @@
 ﻿@model IEnumerable<VocalSpace.Models.ViewModel.Selection.SelectionListViewModel>
-@{
-	var errorMessage = TempData["ErrorMessage"] as string;
-}
-
-@if (!string.IsNullOrEmpty(errorMessage))
-{
-	<script>
-		alert("@errorMessage"); // 顯示錯誤訊息
-	</script>
-}
 
 <section class="banner">
 	<div class="banner__left">
