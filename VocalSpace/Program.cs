@@ -101,11 +101,4 @@ app.MapControllerRoute(
     defaults: new { controller = "Selection", action = "Index" }
     );
 
-app.MapControllerRoute(
-    name: "SongDetail",
-    pattern: "Song/{id}",
-    defaults: new { controller = "Song", action = "Index" }
-);
-
-
 app.Run();
