@@ -21,8 +21,8 @@ namespace VocalSpace.Controllers
         private readonly ModalDataService _ModalDataService;
 
         // 建構函數 DbContext
-        public SongController(VocalSpaceDbContext context, DonateService donateService)
-        public SongController(VocalSpaceDbContext context, ModalDataService modalDataService)
+       
+        public SongController(VocalSpaceDbContext context, DonateService donateService, ModalDataService modalDataService)
         {
             _context = context;
            _donateService = donateService;
