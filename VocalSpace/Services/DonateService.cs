@@ -16,6 +16,22 @@ namespace VocalSpace.Services
             _context = context;
             _config = config;          
         }
+        //  檢查是否贊助給自己，alert('不能贊助給自己')
+        public async Task<string> CheckUser(long? SponsorId, string ArtistName, string SongId)
+        {
+            string script = string.Empty;
+            var Sponsor = await _context.Users.FirstOrDefaultAsync(user => user.UserId == SponsorId);
+            string SponsorName = Sponsor?.UserName!; 
+            if (SponsorName.Equals(ArtistName, StringComparison.OrdinalIgnoreCase))
+            {
+                script = $@"
+                            <script>                               
+                                window.location.href='{_config?["ECPay:website"]}Song/{SongId}';
+                                alert('不能贊助給自己');
+                            </script>";            
+            }
+            return script;
+        }
 
         //  新增訂單到資料庫
         public async Task AddOrderToDbAsync(Dictionary<string, string> order)
@@ -47,7 +63,7 @@ namespace VocalSpace.Services
             }
             catch (Exception ex)
             {
-                string num = ex.ToString();
+                Console.WriteLine($"AddOrderToDbAsync錯誤:{ex}");
             }
             
         }

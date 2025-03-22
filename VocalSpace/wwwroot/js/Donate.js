@@ -18,30 +18,28 @@
         $("#donateModal").modal("hide");
 
         var data = {
-            TotalAmount : selectedAmount
+            TotalAmount: selectedAmount,
+            Artist: $('.pf').text() 
         };
-        $.ajax({
-            type: 'POST',
-            url: 'AddOrder',
-            data: JSON.stringify(data),
-            contentType: 'application/json',        //  送到Server的資料型態
+                
             
-            success: function (res) {
-                //console.log(res); 
-                $('body').html(res);
-            },
-            error: function (err) {
-                console.log(err);
-            }
-        })
+        $.ajax({
+                    type: 'POST',
+                    url: 'AddOrder',
+                    data: JSON.stringify(data),
+                    contentType: 'application/json',        //  送到Server的資料型態
 
-        //         偽 API 導向
-        //         setTimeout(function () {
+                    success: function (res) {
 
-        //         window.location.href = "https:www.ecpay.com.tw/" + selectedAmount;
-
-        //         }, 3000);
-        //     });
-        // });
+                        $('body').html(res);
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+         })
+                 
+         
+            
+         
     });
 })

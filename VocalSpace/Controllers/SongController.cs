@@ -19,14 +19,16 @@ namespace VocalSpace.Controllers
         //  紀錄歌曲ID
         private static string? SongId;
         private readonly ModalDataService _ModalDataService;
+        private readonly IConfiguration? _config;
 
         // 建構函數 DbContext
-       
-        public SongController(VocalSpaceDbContext context, DonateService donateService, ModalDataService modalDataService)
+
+        public SongController(VocalSpaceDbContext context, DonateService donateService, ModalDataService modalDataService, IConfiguration? config)
         {
             _context = context;
            _donateService = donateService;
             _ModalDataService = modalDataService;
+            _config = config;
         }
         /// <summary>
         /// 取得指定歌曲詳細資料以及留言區架構的 Action
@@ -206,21 +208,28 @@ namespace VocalSpace.Controllers
         [HttpPost]
         public async Task<IActionResult> AddOrder([FromBody] Dictionary<string, string> data)
         {
+            //  SponsorId : 透過 Session 取得 UserId
+            long? SponsorId = Convert.ToInt64(ViewData["uid"]);
+            string ArtistName = data["Artist"];
+
             //  未登入則導向登入頁面
             string Login = HttpContext.Session.GetString("IsLoggedIn")!;
             if (Login != "true")
             {
                 return RedirectToAction("Login", "Accounts");
             }
-        
+
+            //  檢查是否贊助給自己，alert('不能贊助給自己')
+            string script = await _donateService.CheckUser(SponsorId, ArtistName, SongId!);
+            if (script != string.Empty)
+            {
+                return Content(script, "text/html");
+            }
+
             //  Guid.NewGuid() : 產生全球唯一識別碼 (UUID)
             //  orderId : 產生隨機20碼訂單編號
             var orderId = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 20);
-            //  ReturnURL
-            var website = $"https://rk8nf59r-7145.asse.devtunnels.ms/";
-            //  SponsorId : 透過 Session 取得 UserId
-            string? SponsorId = HttpContext.Session.GetInt32("UserId").ToString();
-            
+                    
             var order = new Dictionary<string, string>
             {
                 //綠界需要的參數
@@ -228,13 +237,13 @@ namespace VocalSpace.Controllers
                 { "MerchantTradeDate",  DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")},
                 { "TotalAmount",  data["TotalAmount"]},
                 { "TradeDesc",  "無"},
-                { "ItemName",  "贊助歌曲:"},
-                { "CustomField1",  SponsorId!},
+                { "ItemName",  $"贊助歌手:{ArtistName}"},
+                { "CustomField1",  SponsorId.ToString()!},
                 { "CustomField2",  SongId!},
                 { "CustomField3",  ""},
                 { "CustomField4",  ""},
-                { "ReturnURL",  $"{website}Song/AddPayInfo"},  
-                { "ClientBackURL",  $"{website}Song/{SongId}"},
+                { "ReturnURL",  $"{_config?["ECPay:website"]}Song/AddPayInfo"},  
+                { "ClientBackURL",  $"{_config?["ECPay:website"]}Song/{SongId}"},
                 { "MerchantID",  "3002607"},
                 { "PaymentType",  "aio"},
                 { "ChoosePayment",  "Credit"},
