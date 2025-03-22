@@ -64,8 +64,15 @@ namespace VocalSpace.Controllers
         public async Task<IActionResult> mylike(long id)
         {
             var currentUserId = HttpContext.Session.GetInt32("UserId");
-            if (id == currentUserId) { 
-            var songdata = await _context.Songs
+
+
+            if (id == currentUserId) {
+
+                var likeSongCount = await _context.LikeSongs
+                .Where(like => like.UserId == id)
+                .CountAsync();
+
+                var songdata = await _context.Songs
                    .Include(s => s.ArtistNavigation)
                    .Include(s => s.LikeSongs)
                    .Where(s => s.LikeSongs.Any(like => like.UserId == id))
@@ -76,7 +83,8 @@ namespace VocalSpace.Controllers
                        SongName = s.SongName,
                        UserId = id,
                        UserName = s.ArtistNavigation.UserName!,
-                       LikeId = s.LikeSongs.FirstOrDefault()!.LikeId
+                       LikeId = s.LikeSongs.FirstOrDefault(like => like.UserId == id)!.LikeId,
+                       LikeSongCount = likeSongCount
                    }).ToListAsync();
             ViewData["likesong"]= songdata.Any()?songdata:null;
 
@@ -84,11 +92,6 @@ namespace VocalSpace.Controllers
             }
             return Content("<script>alert('無權查看'); window.history.back();</script>", "text/html; charset=utf-8");
 
-        }
-        [SessionToLogin]
-        public IActionResult listdetail(long id)
-        {
-            return View(personal(id).ToList());
         }
 
         [HttpPost("Uploadcover")]

@@ -29,9 +29,12 @@
         //from model.LikeSongs
         public long LikeId { get; set; }
         public long UserId { get; set; }
+        public int LikeSongCount { get; set; }
 
         //from model.PlayListSongs
         public long PlayListId { get; set; }
+
+        public int PlayListSongCount { get; set; }
 
         //from model.PlayList
         public string PlayListName { get; set; } = null!;
