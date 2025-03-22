@@ -15,9 +15,10 @@ namespace VocalSpace.Controllers
             _context = context;
         }
         [SessionToLogin]
-        public async Task<IActionResult> like(long? id)
+        public async Task<IActionResult> like(long id)
         {
             long? currentUserId = HttpContext.Session.GetInt32("UserId");
+            ViewBag.LoginID = currentUserId;
             if (id == currentUserId)
             {
                 var songdata = await _context.Songs
@@ -37,12 +38,13 @@ namespace VocalSpace.Controllers
             }
             else 
             {
-             return NotFound("滾");
-            }           
-           
+                return Content("<script>alert('無權查看'); window.history.back();</script>", "text/html; charset=utf-8");
+
+            }
+            
         }
         [SessionToLogin]
-        public async Task<IActionResult> mylist(long? id)
+        public async Task<IActionResult> mylist(long id)
         {
             long? currentUserId = HttpContext.Session.GetInt32("UserId");
             if (currentUserId == id)
@@ -57,12 +59,13 @@ namespace VocalSpace.Controllers
                         SongCoverPhotoPath = s.CoverPhotoPath,
                         SongName = s.SongName,
                         UserName = s.ArtistNavigation.UserName!,
+                        UserId= id,
                         LikeId = s.LikeSongs.FirstOrDefault()!.LikeId
                     }).ToListAsync();
 
                 return View(songdata);
             }
-            return RedirectToAction("PageNotFound", "Home");
+            return Content("<script>alert('無權查看'); window.history.back();</script>", "text/html; charset=utf-8");
 
         }
         [SessionToLogin]

@@ -63,6 +63,8 @@ namespace VocalSpace.Controllers
         [HttpGet("Personal/mylike/{id}")]
         public async Task<IActionResult> mylike(long id)
         {
+            var currentUserId = HttpContext.Session.GetInt32("UserId");
+            if (id == currentUserId) { 
             var songdata = await _context.Songs
                    .Include(s => s.ArtistNavigation)
                    .Include(s => s.LikeSongs)
@@ -79,6 +81,9 @@ namespace VocalSpace.Controllers
             ViewData["likesong"]= songdata.Any()?songdata:null;
 
             return View(personal(id).ToList());
+            }
+            return Content("<script>alert('無權查看'); window.history.back();</script>", "text/html; charset=utf-8");
+
         }
         [SessionToLogin]
         public IActionResult listdetail(long id)

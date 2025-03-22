@@ -10,13 +10,13 @@
 	<div class="content">
 		<aside class="sidebar">
 			<ul id="myList">
-				<a asp-action="like">
+				<a asp-action="like" asp-route-id="@ViewBag.LoginId">
 					<li class="selected">我的喜歡<i class="bi bi-bookmark-heart"></i></li></a>
-				<a asp-action="mylist">
+				<a asp-action="mylist" asp-route-id="@ViewBag.LoginId">
 					<li>我的歌單</li></a>
-				<a asp-action="playrecord">
+				<a asp-action="playrecord" asp-route-id="@ViewBag.LoginId">
 					<li>播放紀錄</li></a>
-				<a asp-action="booking">
+				<a asp-action="booking" asp-route-id="@ViewBag.LoginId">
 					<li>我訂閱的歌單</li></a>
 			</ul>
 		</aside>

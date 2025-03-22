@@ -318,14 +318,6 @@ input[type="file"] {
     }
 }
 
-.btn-danger {
-    color: white;
-    cursor: pointer;
-    display: block;
-    margin-left: auto;
-    position: relative;
-}
-
 .playAll {
     display: flex;
     justify-content: right;
