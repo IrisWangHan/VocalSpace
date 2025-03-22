@@ -42,7 +42,7 @@ public class EmailService
         }
     }
 
-    // 待fix測試
+    // 寄送重設密碼連結
     public async Task<bool> SendPasswordResetEmailAsync(string recipientEmail, string resetLink)
     {
         try
@@ -52,10 +52,21 @@ public class EmailService
             message.To.Add(new MailboxAddress("", recipientEmail));
             message.Subject = "密碼重設通知";
 
-            message.Body = new TextPart("plain")
+            message.Body = new TextPart("html")
             {
-                Text = $"請點擊以下連結重設密碼: {resetLink}"
+                Text = $@"
+                    <p>親愛的用戶，</p>
+                    <p>我們收到您重設密碼的請求。</p>
+                    <p>請點擊以下連結來重設您的密碼：</p>
+                    <p><a href='{resetLink}' style='color: blue;'>重設密碼</a></p>
+                    <p>如果您沒有請求重設密碼，請忽略此郵件。</p>
+                    <p>此連結將在 3 分鐘後失效。</p>
+                    <br>
+                    <p>VocalSpace 團隊敬上</p>
+                "            
             };
+            Console.WriteLine("收件人: "+recipientEmail);
+            Console.WriteLine("reset連結: "+resetLink);
 
             using (var client = new SmtpClient())
             {

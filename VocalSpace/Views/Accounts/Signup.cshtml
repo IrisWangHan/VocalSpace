@@ -80,8 +80,7 @@
 
 
 @section Scripts {
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="~/js/Accounts.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
             // 監聽所有步驟的 input 和 select
@@ -153,46 +152,6 @@
                 updateProgress(currentStep+1);
             });
         });
-
-        // 檢查 帳號 是否已存在
-        function checkUserAccount() {
-            return new Promise(resolve => {
-                let userAccount = $("#userAccount").val();
-                $.post("/Accounts/CheckUserAccount", { UserAccount: userAccount }, function (data) {
-                    if (data.exists) {
-                        alert("此帳號已被使用！");
-                        resolve(false);
-                    } else {
-                        resolve(true);
-                    }
-                });
-            });
-        }
-
-        // 檢查 Email 是否已存在
-        function checkUserEmail() {
-            return new Promise(resolve => {
-                let userEmail = $("#email").val();
-                $.post("/Accounts/CheckUserEmail", { UserEmail: userEmail }, function (data) {
-                    if (data.exists) {
-                        alert("此Email已被使用！");
-                        resolve(false);
-                    } else {
-                        resolve(true);
-                    }
-                });
-            });
-        }
-
-        // 檢查 reCAPTCHA
-        function validateRecaptcha() {
-            let recaptchaResponse = grecaptcha.getResponse();
-            if (!recaptchaResponse) {
-                alert("請完成 reCAPTCHA 驗證再繼續！");
-                return false;
-            }
-            return true;
-        }
 
         // 下一步 按鈕
         function goToNextStep(step) {
