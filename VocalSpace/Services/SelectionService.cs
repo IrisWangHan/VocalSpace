@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Data.Common;
 using VocalSpace.Models;
 using VocalSpace.Models.ViewModel.Selection;
+using static VocalSpace.Controllers.SelectionController;
 
 
 namespace VocalSpace.Services
@@ -377,6 +378,34 @@ namespace VocalSpace.Services
             }
         }
         #endregion
+
+        public async Task<bool> InsertSelectionDetail(SubmitApplicationDTO data)
+        {
+            var selectionDetails = new List<SelectionDetail>();
+
+            // 遍歷 ApplySongs，為每首歌創建一個 SelectionDetail
+            foreach (var songsId in data.SongsId)
+            {
+                var sd = new SelectionDetail
+                {
+                    SelectionId = data.SelectionId,
+                    SongId = songsId,  
+                    VoteCount = 0,
+                    CreateTime = DateTime.Now, 
+                    ReviewStatus = 0
+                };
+
+                selectionDetails.Add(sd);
+            }
+
+            // **將資料批量新增到資料庫**
+            await _context.SelectionDetails.AddRangeAsync(selectionDetails);
+
+            // **異步儲存變更**
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
     }
 
     public enum SelectionApplyStatus

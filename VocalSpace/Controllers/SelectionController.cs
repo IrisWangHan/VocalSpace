@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using VocalSpace.Models;
 using VocalSpace.Models.ViewModel.Selection;
 using VocalSpace.Services;
@@ -103,20 +104,82 @@ namespace VocalSpace.Controllers
             return View(selections);
         }
 
-
         [HttpPost]
-        public IActionResult SubmitApplication([FromBody] object request)
+        public async Task<IActionResult> SubmitApplication([FromBody] SubmitApplicationDTO request)
         {
+            #region 檢查
+            // 檢查輸入內容
+            if (request == null || string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.UserName) ||request.SongsId.Count<=0)
+            {
+                return Json(new { success = false, message = "資料不完整" });
+            }
 
-            //檢查輸入內容
+            // 取得使用者ID
+            long? UserID = HttpContext.Session.GetInt32("UserId");
 
-            //取得歌曲資料並上傳
-            //let songId = $(this).data('songid');
-            //let songName = $(this).text().trim();
-            //請判斷是否在報名期限內 以及上船功能
-            // 處理表單資料
-            return Json(new { success = true, message = "表單提交成功" });
+            if (UserID == null || UserID == 0)
+            {
+                TempData["ErrorMessage"] = "尚未登入,即將幫您跳轉！";
+                return RedirectToAction("Login", "Accounts"); // 重導讓 View 收到 TempData
+            }
+            //取得user資料
+            SelectionFormViewModel userData = await _selectionService.CheckUser(UserID);
+
+            //取得活動資料
+            SelectionFormViewModel selectionData = await _selectionService.CheckSelectionOnTime(request.SelectionId);
+
+            if (selectionData == null)
+            {
+                TempData["ErrorMessage"] = "目前非報名期間！";
+                return RedirectToAction("Index", "Selection"); // 重導讓 View 收到 TempData
+            }
+            #endregion
+
+
+            //寫入資料表
+            var InsertState = await _selectionService.InsertSelectionDetail(request);
+            if (!InsertState)
+            {
+                return Json(new { success = false, message = "寫入失敗" });
+            }
+
+            //取得該使用者所有內容及歌曲
+            var selections = await _selectionService.GetFormData(request.SelectionId, userData, selectionData);
+
+
+            // 確保 ApplySongs 不為 null，並格式化成逐行的歌曲列表
+            var songList = selections?.ApplySongs?.Any() == true
+                ? string.Join("\n", selections.ApplySongs.Select(song => $"- {song.SongName}"))
+                : "無報名作品";
+
+            // 準備通知郵件內容
+            var subject = "表單提交成功通知";
+            var body = $"{request.UserName}您好，\n\n 您已成功提交表單。資訊如下：\n\n" +
+                       $"活動名稱: {selections?.Title}\n" +
+                       $"報名期間: {selections?.StartDate} ~ {selections?.EndDate}\n\n" +
+                       $"投票期間: {selections?.StartDate} ~ {selections?.EndDate}\n\n" +
+                       $"報名狀態: 已報名\n\n" +
+                       $"報名作品:\n{songList}\n\n" +  // 這裡逐行顯示歌曲名稱
+                       "感謝您的提交！";
+
+            // 發送通知郵件
+            EmailService emailService = new();
+            var mailState = await emailService.SendNotificationAsync(request.Email, subject, body);
+            if(!mailState)
+            {
+                return Json(new { success = false, message = "寄送email失敗" });
+            }
+            return Json(new { success = true, message = "表單提交成功,已寄送信件至郵箱" });
         }
+
+        public class SubmitApplicationDTO
+        {
+            public string Email { get; set; }
+            public string UserName { get; set; }  
+            public List<long> SongsId { get; set; }  
+            public int SelectionId { get; set; }  
+        }
+
 
     }
 }

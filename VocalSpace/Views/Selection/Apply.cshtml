@@ -376,7 +376,6 @@
 				let userName = $("input[name='userName']");
 				let email = $("input[name='email']");
 
-				 console.log(userName, email);  // 在控制台顯示取得的值
 
 				//必填判斷
 				let list=[];
@@ -388,31 +387,25 @@
 					email.focus();
 					list.push("請填寫電子信箱\n");
 				}
-				// if (files.length < 1) {
-				// 	list.push("請上傳檔案\n");
-				// }
 				if(list.length>0)
 				{
 					alert(list.join(''));
 					return;
 				}
-				// let formData = new FormData();
-				// // formData.append("file", $("input[type='file']")[0].files[0]); // 加入檔案
-				// formData.append("userName", );
-				// formData.append("email", $("input[name='email']").val());
-				// formData.append("songs", chosenUploadList);
+
 				var data={
-					"userName":$("input[name='userName']").val(),
-					"email": $("input[name='email']").val(),
-					"songs":chosenUploadList
+					"UserName":userName.val(),
+					"Email": email.val(),
+					"SongsId":chosenUploadList.map(song => song.songid), // 取出 songId 陣列,
+					"SelectionId":SelectionId
 				}
 				 console.log("data",data);
 				$.ajax({
 					method: "post",
 					url: "/Selection/SubmitApplication",
 					data: JSON.stringify(data),
-					contentType: false,
-						processData: false,
+					contentType: "application/json", // 設定為 application/json
+					processData: false,
 					success: function(res) {
 						sessionStorage.removeItem("userName");
 						sessionStorage.removeItem("email");

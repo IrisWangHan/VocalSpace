@@ -84,4 +84,35 @@ public class EmailService
             return false;
         }
     }
+    public async Task<bool> SendNotificationAsync(string recipientEmail, string subject, string emailContent)
+    {
+        try
+        {
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress("聲維宇宙", senderEmail));
+            message.To.Add(new MailboxAddress("", recipientEmail));
+            message.Subject = "VocalSpace - "+subject;
+
+            message.Body = new TextPart("plain")
+            {
+                Text = $"{emailContent}"
+            };
+
+            using (var client = new SmtpClient())
+            {
+                await client.ConnectAsync(smtpServer, smtpPort, SecureSocketOptions.StartTls);
+                await client.AuthenticateAsync(senderEmail, senderPassword);
+                await client.SendAsync(message);
+                await client.DisconnectAsync(true);
+            }
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"寄信失敗: {ex.Message}");
+            return false;
+        }
+
+    }
 }
