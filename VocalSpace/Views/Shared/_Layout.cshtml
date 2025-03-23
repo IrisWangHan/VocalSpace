@@ -1,5 +1,5 @@
 ﻿@{
-	var isLogin = Context.Session.GetString("IsLoggedIn") == "true"; 
+	var isLogin = Context.Session.GetString("IsLoggedIn") == "true";
 	var loginuid = Context.Session.GetInt32("UserId");
 	var musicList = new[] {
 		new { id = "001", name = "Sweet Day", artist = "Artist 1" },
@@ -146,22 +146,15 @@
 				<div class=" d-lg-inline-flex header__icon-search-popup">
 					<ul class="header__menu-list-search">
 						<li><input type="text" placeholder="找音樂?" class="header__menu-item-search header__search-input" /></li>
-						<li>
-							<div class="header__search-data">
-								<p class="border-bottom">1</p>
-								<p class="border-bottom">1</p>
-								<p class="border-bottom">1</p>
-							</div>
-						</li>
-						<li><hr /></li>
-						<li>
+						<li class="border-bottom">
 							<span class="header__menu-item-search  header__search-title">
 								搜尋紀錄
 								<button type="button" class="btn btn-secondary header__search-btn">清空</button>
 							</span>
-
 						</li>
-						<li><p class="header__menu-item-search  header__search-record">你還沒有搜尋紀錄....</p></li>
+						<li class="search-record mt-2">
+							<p class="header__menu-item-search  header__search-record">你還沒有搜尋紀錄....</p>
+						</li>
 					</ul>
 
 				</div>
@@ -338,9 +331,26 @@
 
 
 		$(document).ready(function() {
-				  //【當用戶點下mode icon,交換icon及文字 位置的效果】
-				  let moveRight = true; // 記錄方向
-					$(".header__icon-mode").on("click", function() {
+			    // 取得當前搜尋紀錄，轉為陣列
+				let searchHistory = localStorage.getItem("searchList");
+				let searchArray = searchHistory ? JSON.parse(searchHistory) : [];
+
+				// 清空現有搜尋紀錄
+				$(".search-record").html("");
+
+				if(searchArray.length>0){
+					// 遍歷搜尋紀錄陣列，並將每個項目顯示出來
+					searchArray.forEach(function(item) {
+						$(".search-record").append(`<p class="header__menu-item-search header__search-record" style="line-height:5px;">
+							<a style="color:gray;font-size=14px;" href="/search/searchAll?q=${encodeURIComponent(item)}">${item}</a>
+						</p>`);
+					});
+				}else{
+				$(".search-record").append(`<p class="header__menu-item-search header__search-record"  style="color:gray">你還沒有搜尋紀錄....</p>`);
+				}
+			  //【當用戶點下mode icon,交換icon及文字 位置的效果】
+			  let moveRight = true; // 記錄方向
+				$(".header__icon-mode").on("click", function() {
 
 						// 1. 切換主題 (利用 data-theme 屬性)
 						var currentTheme = $("html").attr("data-theme");
@@ -418,23 +428,61 @@
 					});
 
 
-					//【當使用者點選input搜尋框 則秀出相關查詢字樣】
-				   $(".header__search-input").on("focus", function() {
-						  $(".header__search-data").show();
-						}).on("blur", function() {
-						  $(".header__search-data").hide();
+ 		let search = document.querySelector('.header__search-input');
+
+	   	    search.addEventListener('keydown', function (e) {
+			if (e.key === 'Enter') {
+				console.log('searchText.value:', search.value);
+				let searchValue = search.value.trim();
+				if (!searchValue) return; // 避免存入空值
+
+				// 取得當前搜尋紀錄，轉為陣列
+				let searchHistory = localStorage.getItem("searchList");
+				let searchArray = searchHistory ? JSON.parse(searchHistory) : [];
+
+				// 限制最多 5 筆紀錄，超過則刪除最舊的
+				if (searchArray.length >= 5) {
+					searchArray.shift();
+				}
+				searchArray.push(searchValue);
+				console.log("searchValue",searchValue);
+				console.log("searchArray",searchArray);
+				// 清空現有搜尋紀錄
+				$(".search-record").html("");
+
+				if(searchArray.length<=0){
+					$(".search-record").append(`<p class="header__menu-item-search header__search-record" style="color:gray">你還沒有搜尋紀錄....</p>`);
+				}else{
+					// 遍歷搜尋紀錄陣列，並將每個項目顯示出來
+					searchArray.forEach(function(item) {
+						$(".search-record").append(`<p class="header__menu-item-search header__search-record">
+							<a style="color:black;" href="/search/searchAll?q=${encodeURIComponent(item)}">${item}</a>
+						</p><hr/>`);
 					});
+				}
 
-					//【當用戶點下(search icon/profile icon/漢堡條) 顯示或隱藏選單】
-					$(".header__menu-btn").on("click",function(){
-						$(".header__menu").toggle().toggleClass("show--element");
-					})
+				// 存回 localStorage (轉成 JSON)
+				localStorage.setItem("searchList", JSON.stringify(searchArray));
 
-					//【當用戶點下 清除-搜尋紀錄按鈕】 只保留預設文字
-					$(".header__search-btn").on("click",function(){
-						console.log("222");
-								$(".header__search-record").text("你還沒有搜尋紀錄....");
-					})
+				// 重定向到搜尋結果頁面
+				window.location.href = `/search/searchAll?q=${encodeURIComponent(search.value)}`;
+			}
+		});
+
+
+	
+
+				//【當用戶點下(search icon/profile icon/漢堡條) 顯示或隱藏選單】
+				$(".header__menu-btn").on("click",function(){
+					$(".header__menu").toggle().toggleClass("show--element");
+				})
+
+				//【當用戶點下 清除-搜尋紀錄按鈕】 只保留預設文字
+				$(".header__search-btn").on("click",function(){
+					localStorage.removeItem("searchList"); // 刪除 `searchList`
+					$(".search-record").html("");
+					$(".search-record").append(`<p class="header__menu-item-search header__search-record" style="color:gray">你還沒有搜尋紀錄....</p>`);
+				})
 
 					//【音樂撥放器-點選縮小 展開】
 					$(".window__header-zoom-out").on("click",function(){

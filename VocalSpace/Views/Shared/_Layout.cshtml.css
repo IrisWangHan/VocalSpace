@@ -220,11 +220,15 @@
   【header__search-btn】查詢清單的清空button
 */
 .header__search-input, .header__search-btn {
-    border-radius: 5px;
+    border-radius:px;
 }
 
 .header__search-input {
     padding-left: 5px;
+    /*border:1px gray;*/
+    height:25px;
+    font-size:15px;
+    margin-bottom:5px;
 }
 
 .header__search-title {
@@ -235,8 +239,15 @@
 .header__search-btn {
     position: absolute;
     right: 0px;
+    height: 25px;
+    font-size: 10px;
+    line-height: 10px;
 }
-
+.search-record {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
 .header__search-record {
     color: var(--bs-gray-600);
     font-size: var(--fsize-menu);
