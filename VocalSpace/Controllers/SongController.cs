@@ -23,9 +23,8 @@ namespace VocalSpace.Controllers
         private readonly IConfiguration? _config;
 
         // 建構函數 DbContext
-        public SongController(VocalSpaceDbContext context, ModalDataService modalDataService, CommentDataService commentService)
 
-        public SongController(VocalSpaceDbContext context, DonateService donateService, ModalDataService modalDataService, IConfiguration? config)
+        public SongController(VocalSpaceDbContext context, DonateService donateService, ModalDataService modalDataService, IConfiguration? config, CommentDataService commentService)
         {
             _context = context;
            _donateService = donateService;
