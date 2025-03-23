@@ -1,4 +1,6 @@
-﻿$(function () {
+﻿const { get } = require("jquery");
+
+$(function () {
     console.log('Activity.js已載入');
     let userId = $('#userId').data("userid");
     console.log(userId);

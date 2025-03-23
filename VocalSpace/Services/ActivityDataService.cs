@@ -144,5 +144,35 @@ namespace VocalSpace.Services
 
             return ActivityInfo!;
         }
+
+        /// <summary>
+        /// 我也想去按鈕邏輯
+        /// </summary>
+        public async Task<bool> ToggleInterested(long activityId, long userId)
+        {
+            var isInterest = await _context.Interesteds
+                .FirstOrDefaultAsync(i => i.ActivityId == activityId && i.UserId == userId);
+
+            if (isInterest == null)
+            {
+                // 如果還沒加入，則新增
+                var newInterest = new Interested
+                {
+                    ActivityId = activityId,
+                    UserId = userId,
+                    InterestedDate = DateTime.UtcNow
+                };
+                _context.Interesteds.Add(newInterest);
+            }
+            else
+            {
+                // 如果已經加入，則刪除
+                _context.Interesteds.Remove(isInterest);
+            }
+
+            await _context.SaveChangesAsync();
+
+            return isInterest == null; // 回傳 true 代表新增，false 代表刪除
+        }
     }
 }

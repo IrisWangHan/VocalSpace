@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VocalSpace.Models;
 using VocalSpace.Models.Test;
@@ -202,30 +203,48 @@ namespace VocalSpace.Controllers
             }
         }
 
+        [HttpPost("/Activity/ToggleInterested/{activityId}")]
+        public async Task<IActionResult> Interested(long activityId)
+        {
+            // 取得當前登入的使用者 ID
+            long? userId = HttpContext.Session.GetInt32("UserId");
+
+            if (userId == null)
+            {
+                return Unauthorized(new { success = false, message = "請先登入！" });
+            }
+
+            bool isInterested = await _activityDataService.ToggleInterested(activityId, userId.Value);
+
+            return Ok(new
+            {
+                success = true,
+                interested = isInterested,
+                message = isInterested ? "已加入想去列表！" : "已取消想去！"
+            });
+        }
+        [HttpGet("/Activity/ToggleInterested/{activityId}")]
         public IActionResult ShareModal(int id)
         {
-            // 假設這裡從資料庫獲取 `Activity`
-            var activity = new VocalSpace.Models.Test.Activity
-            {
-                EventCoverPath = "/image/Activity/cs.jpg",
-                Title = "THE CHAINSMOKERS LIVE IN TAIPEI 2025",
-                Location = "大佳河濱公園",
-                City = "臺北市",
-                ActivityDescription = "這是一場精彩的音樂演出，歡迎大家參加！"
-            };
-
-            var model = new ShareModalViewModel
-            {
-                Title = "分享活動",
-                EventName = activity.Title,
-                Date = activity.EventTime, // 這裡可以動態化
-                Location = $"{activity.City}．{activity.Location}",
-                ImageUrl = activity.EventCoverPath ?? "/image/default.jpg",
-                Link = "/Activity/Info"
-            };
-
-            return PartialView("_ShareModal", model);
+            return PartialView("_ShareModal");
         }
+
+        /////<summary>
+        ///// AJAX方式取得加入歌單Modal需要的資料
+        /////</summary>
+        //[HttpGet("Song/GetAddToPlaylistModal/{songid}")]
+        //public async Task<IActionResult> GetAddToPlaylistModal(int songId)
+        //{
+        //    long? userId = HttpContext.Session.GetInt32("UserId");
+        //    if (userId == null || userId == 0)
+        //    {
+        //        return Unauthorized("請先登入");
+        //    }
+
+        //    var PlaylistModalData = await _ModalDataService.GetPlaylistModalData(userId.Value, songId);
+
+        //    return PartialView("_Modal_AddToPlaylist", PlaylistModalData);
+        //}
     }
 
 
