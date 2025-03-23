@@ -52,7 +52,10 @@ namespace VocalSpace.Controllers
         [Route("Selection/GetWorks/{id}")]
         public async Task<IActionResult> GetWorks(int id)
         {
-            var selections = await _selectionService.GetWorks(id);
+            // 取得使用者ID
+            long? UserID = HttpContext.Session.GetInt32("UserId");
+            UserID = UserID == null ? 0 : UserID;
+            var selections = await _selectionService.GetWorks(id, UserID);
             ViewBag.section = "Works";
             return View("EventDescription", selections); // 回傳部分視圖
              
@@ -66,7 +69,9 @@ namespace VocalSpace.Controllers
         [Route("Selection/GetWorks/{id}/{currentPage?}")]
         public async Task<IActionResult> GetWorks(int id, int currentPage = 1)
         {
-            var selections = await _selectionService.GetWorks(id, currentPage);
+            // 取得使用者ID
+            long? UserID = HttpContext.Session.GetInt32("UserId");
+            var selections = await _selectionService.GetWorks(id, UserID, currentPage);
             ViewBag.section = "Works";
             return PartialView("_CardPartial", selections?.Songs);
         }
@@ -152,10 +157,10 @@ namespace VocalSpace.Controllers
 
             // 準備通知郵件內容
             var subject = "表單提交成功通知";
-            var body = $"{request.UserName}您好，\n\n 您已成功提交表單。資訊如下：\n\n" +
+            var body = $"{request.UserName}您好，\n\n 您已成功提交表單,報名資訊如下：\n\n" +
                        $"活動名稱: {selections?.Title}\n" +
-                       $"報名期間: {selections?.StartDate} ~ {selections?.EndDate}\n\n" +
-                       $"投票期間: {selections?.StartDate} ~ {selections?.EndDate}\n\n" +
+                       $"報名期間: \n{selections?.StartDate} ~ {selections?.EndDate}\n\n" +
+                       $"投票期間: \n{selections?.StartDate} ~ {selections?.EndDate}\n\n" +
                        $"報名狀態: 已報名\n\n" +
                        $"報名作品:\n{songList}\n\n" +  // 這裡逐行顯示歌曲名稱
                        "感謝您的提交！";
@@ -168,6 +173,36 @@ namespace VocalSpace.Controllers
                 return Json(new { success = false, message = "寄送email失敗" });
             }
             return Json(new { success = true, message = "表單提交成功,已寄送信件至郵箱" });
+        }
+
+
+        /// <summary>
+        /// AJAX 歌曲按讚邏輯
+        /// </summary>
+        [HttpPost("Selection/AddSelectionVoteSong")]
+        public async Task<IActionResult> AddToVoteSong([FromBody] SelectionSongs song)
+        {
+            // 取得使用者ID
+            int? userId = HttpContext.Session.GetInt32("UserId")!;
+
+            // 確保使用者已登入
+            if (userId == null || userId == 0)
+            {
+                return Unauthorized(new { success = false, message = "請先登入！" });
+            }
+
+            if (song == null || song.SelectionDetailId == 0)
+            {
+                return StatusCode(500, new { message = "操作失敗，請稍後再試。" });
+            }
+            SelectionSongs selectionSong = await _selectionService.AddToVoteSong(userId, song.SelectionDetailId);
+
+            if (selectionSong==null)
+            {
+                return StatusCode(500, new { message = "操作失敗，請稍後再試。" });
+            }
+
+            return Json(new { success = true, message = selectionSong });
         }
 
         public class SubmitApplicationDTO

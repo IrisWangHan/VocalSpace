@@ -112,6 +112,9 @@ $(document).on("click", ".btn-add-to-Likesong", function () {
     let songId = button.data("songid");
     // 根據 songId 找到對應的 likeCount
     let count = $(`.likeCount[data-songid="${songId}"]`);
+    console.log(button);
+    console.log(songId);
+    console.log(count);
     $.ajax({
         url: `/Song/AddLikeSong`,
         type: "POST",
@@ -134,6 +137,40 @@ $(document).on("click", ".btn-add-to-Likesong", function () {
         }
     });
 });
+
+//歌曲投票功能
+$(document).on("click", ".btn-vote-to-selectionSong", function () {
+    let button = $(this);
+    let selectionDetailId = button.attr("data-selectionDetailId");
+
+    console.log("選擇的 selectionDetailId:", selectionDetailId);
+
+    console.log(button);
+    console.log(selectionDetailId);
+
+    $.ajax({
+        url: `/Selection/AddSelectionVoteSong`,
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({ SelectionDetailId: selectionDetailId }),
+        success: function (res) {
+            if (res.success) {
+                if (res.message.isVoted) {
+                    button.addClass("selected");
+                } else {
+                    button.removeClass("selected");
+                }
+                $(`span[data-selectionDetailId="${selectionDetailId}"]`).text(res.message.voteCount);
+            } else {
+                alert("投票失敗，請稍後再試！");
+            }
+        },
+        error: function (xhr) {
+            alert(xhr.responseJSON?.message || "發生錯誤，請稍後再試！");
+        }
+    });
+});
+		});
 
 //歌曲播放功能(尚未開發，僅顯示提示訊息)
 $(document).on("click", ".btn-play", function () {

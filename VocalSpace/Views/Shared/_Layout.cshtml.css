@@ -608,11 +608,14 @@ button.accept-policy {
     }
     .playlist__info p {
         margin: 0;
+        color:aliceblue;
     }
     .playlist__info span {
         color: gray;
     }
-
+.music-player i{
+    color:white;
+}
 /*音樂撥放器(未展開視窗時)*/
 .music-player__for-lg {
     display: flex;
@@ -711,6 +714,7 @@ button.accept-policy {
     margin-left: auto;
     margin-right:5px;
     font-size:10px;
+    color:aliceblue;
 }
 /*音樂撥放器(展開視窗時的icon控制區)*/
 .window__controls {

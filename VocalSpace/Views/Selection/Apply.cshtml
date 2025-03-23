@@ -144,7 +144,7 @@
 		<div class="form-button">
 			@if (Model.JoinState == "開放中" && Model.ApplySongs.Count < 1)
 			{
-				<button class="btn btn-submit--theme" onclick="submitForm()">送出</button>
+				<button class="btn btn-submit--theme submit-forn-btn">送出</button>
 			}
 
 		</div>
@@ -157,13 +157,12 @@
 
 <script>
 	
-				//已選擇作品LIST
-			var chosenUploadList=[];
+		//已選擇作品LIST
+		var chosenUploadList=[];
+
 		$(document).ready(function() {
 
 		   var SelectionId = '@(Model.SelectionId)';
-
-
 			console.log("chosenUploadList");
 			console.log(chosenUploadList);
 			$('.popup__select-works-chosen-ol li').each(function() {
@@ -175,8 +174,7 @@
 				chosenUploadList.push({ songid: songId, songName: songName });
 			});
 
-			/******
-			 * 點選上傳按鈕顯示彈窗 並 加入畫面上已上傳歌曲
+			/* 點選上傳按鈕顯示彈窗 並 加入畫面上已上傳歌曲
 			 * 顯示/隱藏彈窗和 overlay*******/
 			$(".upload__item-file").on("click", function(){
 				$(".popup__select-works").fadeIn();
@@ -184,10 +182,13 @@
 
 
 			});
-			$(".icon__close-pop, .btn-cancel--theme,.btn-submit--theme").on("click", function(){
+			$(".icon__close-pop, .btn-submit--theme").on("click", function(){
 				$(".popup__select-works").fadeOut();
 				$(".overlay").fadeOut();
 			});
+			
+
+
 
 			/****當音樂上傳 勾選狀態改變時****/
 			$(".popup__select-works-input").on("change", function() {
@@ -329,35 +330,27 @@
 					}
 				});
 	
-	});
+			$(".submit-forn-btn").on("click", function(){
 
-	function submitForm(){
-			console.log(chosenUploadList);
-			if(chosenUploadList==null||chosenUploadList.length<1){
-				alert("請選擇作品上傳");
-				return;
-			}
-					alert(list.join(''));
-					"userName":$(".input-name").text(),
-					"email": $(".input-email").text(),
-					"songs":chosenUploadList,
-					"selectionId":@(Model.SelectionId)
-				};
-				console.log(data);
-				// formData.append("email", $("input[name='email']").val());
-				// formData.append("songs", chosenUploadList);
-				var data={
-					"userName":$("input[name='userName']").val(),
-					contentType: "application/json",  // 設置 Content-Type 為 application/json
-					processData: false,
+				if(chosenUploadList==null||chosenUploadList.length<1){
+					alert("請選擇作品上傳");
+					return;
 				}
-				 console.log("data",data);
+				console.log(chosenUploadList);
+				var data = {
+					"UserName": $(".input-name").text(),
+					"Email": $(".input-email").text(),
+					"SongsId": chosenUploadList.map(song => song.songid), // 取出 songId 陣列
+					"SelectionId": SelectionId
+				};
+
+				console.log("data",data);
 				$.ajax({
 					method: "post",
 					url: "/Selection/SubmitApplication",
 					data: JSON.stringify(data),
-					contentType: false,
-						processData: false,
+					contentType: "application/json",
+					processData: false,
 					success: function(res) {
 						alert(res.message);
 					},
@@ -365,7 +358,10 @@
 						alert(res.message);
 					}
 				});
-	}
+			});
+	});
+
+	
 
 </script>
 

@@ -60,6 +60,7 @@ const currentPath = window.location.pathname;
 
 // 確保目前頁面是 /search/searchAll
 if (currentPath === '/search/searchAll') {
+    console.log("search.js");
     // 取得 URL 參數
     const urlParams = new URLSearchParams(window.location.search);
     const query = urlParams.get('q');

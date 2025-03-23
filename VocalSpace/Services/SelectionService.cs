@@ -108,7 +108,7 @@ namespace VocalSpace.Services
         /// <param name="id">徵選活動ID</param>
         /// <param name="currentPage">點選的頁面</param>
         /// <returns></returns>
-        public async Task<SelectionListViewModel?> GetWorks(int? id, int currentPage = 1)
+        public async Task<SelectionListViewModel?> GetWorks(int? id, long? UserID , int currentPage = 1)
         {
             try
             {
@@ -119,7 +119,11 @@ namespace VocalSpace.Services
                             from A in AC.DefaultIfEmpty()  // 這裡模擬 RIGHT JOIN
                             join B in _context.Songs on A.SongId equals B.SongId into AB
                             from B in AB.DefaultIfEmpty()  // LEFT JOIN Songs
-                            where C.SelectionId == id
+                            join D in _context.LikeSongs on B.SongId equals D.SongId into BD
+                            from D in BD.DefaultIfEmpty()  // LEFT JOIN Songs
+                            join E in _context.UserVoteds on A.SelectionDetailId equals E.SelectionDetailId into AE
+                            from E in AE.DefaultIfEmpty()  // LEFT JOIN Songs
+                            where C.SelectionId == id && B.SongStatus==1
                             select new
                             {
                                 SelectionDetailID = A != null ? (long?)A.SelectionDetailId : 0,
@@ -133,7 +137,9 @@ namespace VocalSpace.Services
                                 EndDate = C != null ? C.EndDate : (DateTime?)null,
                                 VotingStartDate = C != null ? C.VotingStartDate : (DateTime?)null,
                                 VotingEndDate = C != null ? C.VotingEndDate : (DateTime?)null,
-                                Title = C != null ? C.Title : ""  // Handle null by providing fallbacks
+                                Title = C != null ? C.Title : "" , // Handle null by providing fallbacks
+                                LikeSongUserId =D!= null ? D.UserId :0,
+                                VoteUserId = E!= null ? E.UserId :0
                             };
 
 
@@ -146,24 +152,52 @@ namespace VocalSpace.Services
                 var queryList = await sortedQuery.ToListAsync();
 
                 // 建立歌曲清單 
-
                 List<SelectionSongs> songsList = new List<SelectionSongs>();
                 foreach (var item in queryList)
                 {
                     if (item.SelectionDetailID != 0)
                     {
-                        songsList.Add(new SelectionSongs
+                        if (UserID == 0)
+                        {//'未登入
+                            songsList.Add(new SelectionSongs
+                            {
+                                SelectionDetailId = (long)item.SelectionDetailID,
+                                VoteCount = item.VoteCount,
+                                CoverPhotoPath = item.CoverPhotoPath,
+                                SongDescription = item.SongDescription,
+                                SongName = item.SongName,
+                                LikeCount = item.LikeCount,
+                                SongPath = item.SongPath,
+                                IsLiked = false,
+                                IsVoted = false
+                            });
+                        }
+                        else
                         {
-                            SelectionDetailId = (long)item.SelectionDetailID,
-                            VoteCount = item.VoteCount,
-                            CoverPhotoPath = item.CoverPhotoPath,
-                            SongDescription = item.SongDescription,
-                            SongName = item.SongName,
-                            LikeCount = item.LikeCount,
-                            SongPath = item.SongPath
-                        });
+                            songsList.Add(new SelectionSongs
+                            {
+                                SelectionDetailId = (long)item.SelectionDetailID,
+                                VoteCount = item.VoteCount,
+                                CoverPhotoPath = item.CoverPhotoPath,
+                                SongDescription = item.SongDescription,
+                                SongName = item.SongName,
+                                LikeCount = item.LikeCount,
+                                SongPath = item.SongPath,
+                                IsLiked = item.LikeSongUserId == UserID ? true : false,
+                                IsVoted = item.VoteUserId == UserID ? true : false
+                            });
+                        }
+                       
                     }
                 }
+
+
+                List<SelectionSongs> songsListDistinct = songsList
+                   .GroupBy(x => x.SelectionDetailId)  // 根據 SelectionDetailId 分組
+                   .Select(g => g.FirstOrDefault(x => (x.IsLiked.GetValueOrDefault(false)) || (x.IsVoted.GetValueOrDefault(false))) ?? g.First())
+                   .ToList();
+
+
                 // 配合前端分頁功能 傳入參數(List物件,當前的頁數,每頁顯示幾筆)
                 // =>會回傳整包的物件 使用方式如下:
                 //        取得該頁面的歌曲列表     PaginationSongs.DataList
@@ -172,7 +206,7 @@ namespace VocalSpace.Services
                 //        取得總分頁數            PaginationSongs.PaginationCount
                 //        第 [起始頁數]           PaginationSongs.StartPageNumber
                 //        第 [結束頁數]           PaginationSongs.EndPageNumber
-                var PaginationSongs = _pagination.GetPaginationToList(songsList, currentPage, pageSize);
+                var PaginationSongs = _pagination.GetPaginationToList(songsListDistinct, currentPage, pageSize);
 
                 var SelectionList = new SelectionListViewModel
                 {
@@ -316,9 +350,13 @@ namespace VocalSpace.Services
                             CoverPhotoPath = x.song.CoverPhotoPath,
                             SongPath = x.song.SongPath,
                             LikeCount = x.song.LikeCount,
-                            SelectionDetailId = (long)x.SelectionDetailId!
+                            SelectionDetailId = x.SelectionDetailId ?? 0  // 修正：null 改為 0
                         })
                         .ToListAsync();
+
+                     applySongs = applySongs
+                    .Where(song => song.SelectionDetailId != 0)
+                    .ToList();
                 }
 
                 // 3️ 無論有無報名，查詢該用戶所有歌曲
@@ -332,8 +370,7 @@ namespace VocalSpace.Services
                          CoverPhotoPath = x.CoverPhotoPath,
                          SongPath = x.SongPath,
                          LikeCount = x.LikeCount,
-
-                         SelectionDetailId = null
+                         SelectionDetailId = 0
                      })
                     .ToListAsync();
 
@@ -405,6 +442,66 @@ namespace VocalSpace.Services
             await _context.SaveChangesAsync();
 
             return true;
+        }
+
+
+        /// <summary>
+        /// 判斷歌曲有沒有按讚，並執行新增或刪除
+        /// </summary>
+        public async Task<SelectionSongs> AddToVoteSong(int? userid, long selectionDetailId)
+        {
+            SelectionSongs selectionSong = new();
+            try
+            {
+                var song = await _context.SelectionDetails
+                   .Where(s => s.SelectionDetailId == selectionDetailId)
+                   .Select(s => new { s.VoteCount })
+                   .FirstOrDefaultAsync();
+                int newVoteCount = song.VoteCount;
+                if (song == null)
+                {
+                    return null;
+                }
+
+                var songVote = await _context.UserVoteds
+                    .FirstOrDefaultAsync(sd => sd.SelectionDetailId == selectionDetailId && sd.UserId == userid);
+
+                if (songVote != null)
+                {
+                    // 已經按讚 → 取消讚
+                    _context.UserVoteds.Remove(songVote);
+                    selectionSong.IsVoted = false;
+                    // 確保 VoteCount 不會小於 0
+                     newVoteCount = Math.Max(0, song.VoteCount - 1);
+                    await _context.Database.ExecuteSqlRawAsync("UPDATE SelectionDetail SET VoteCount = {0} WHERE SelectionDetailID = {1}", newVoteCount, selectionDetailId);
+                }
+                else
+                {
+                    // 沒有按讚 → 新增讚
+                    _context.UserVoteds.Add(new UserVoted
+                    {
+                        SelectionDetailId = selectionDetailId,
+                        UserId = (long)userid!,
+                    });
+                    selectionSong.IsVoted = true;
+                    // 增加 VoteCount
+                     newVoteCount = song.VoteCount + 1;
+                    await _context.Database.ExecuteSqlRawAsync("UPDATE SelectionDetail SET VoteCount = {0} WHERE SelectionDetailID = {1}", newVoteCount, selectionDetailId);
+                }
+
+                await _context.SaveChangesAsync();
+
+
+                selectionSong.SelectionDetailId = selectionDetailId;
+                selectionSong.VoteCount = newVoteCount;
+
+                return selectionSong;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"處理歌單時發生錯誤: {ex.Message}");
+                return null;
+            }
         }
     }
 

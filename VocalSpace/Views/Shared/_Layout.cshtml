@@ -334,20 +334,25 @@
 			    // 取得當前搜尋紀錄，轉為陣列
 				let searchHistory = localStorage.getItem("searchList");
 				let searchArray = searchHistory ? JSON.parse(searchHistory) : [];
+				let theme = localStorage.getItem("theme");
+				 $("html").attr("data-theme",theme);
 
-				// 清空現有搜尋紀錄
+
+				// 搜尋紀錄
 				$(".search-record").html("");
 
 				if(searchArray.length>0){
-					// 遍歷搜尋紀錄陣列，並將每個項目顯示出來
-					searchArray.forEach(function(item) {
-						$(".search-record").append(`<p class="header__menu-item-search header__search-record" style="line-height:5px;">
-							<a style="color:gray;font-size=14px;" href="/search/searchAll?q=${encodeURIComponent(item)}">${item}</a>
-						</p>`);
-					});
+						// 遍歷搜尋紀錄陣列，並將每個項目顯示出來
+						searchArray.forEach(function(item) {
+							$(".search-record").append(`<p class="header__menu-item-search header__search-record" style="line-height:5px;">
+								<a style="color:gray;font-size=14px;" href="/search/searchAll?q=${encodeURIComponent(item)}">${item}</a>
+							</p>`);
+						});
 				}else{
-				$(".search-record").append(`<p class="header__menu-item-search header__search-record"  style="color:gray">你還沒有搜尋紀錄....</p>`);
+						$(".search-record").append(`<p class="header__menu-item-search header__search-record"  style="color:gray">你還沒有搜尋紀錄....</p>`);
 				}
+
+
 			  //【當用戶點下mode icon,交換icon及文字 位置的效果】
 			  let moveRight = true; // 記錄方向
 				$(".header__icon-mode").on("click", function() {
@@ -355,28 +360,26 @@
 						// 1. 切換主題 (利用 data-theme 屬性)
 						var currentTheme = $("html").attr("data-theme");
 						if (currentTheme === "dark") {
+							 theme = localStorage.setItem("theme","light");
 						  $("html").attr("data-theme", "light");
 						} else {
+							theme = localStorage.setItem("theme","dark");
 						  $("html").attr("data-theme", "dark");
 						}
 
 						if (moveRight) {
+								$(".header__icon-mode-svg").animate(
+									{ left: "42px" }, 300);
 
-
-						$(".header__icon-mode-svg").animate(
-							{ left: "42px" }, 300);
-
-						$(".header__icon-mode-span").animate(
-							{
-								left: "10px",          // 移動元素
-								opacity: 0             // 改變透明度為 0（完全透明）
-							},150,function() {                 // 動畫結束後的回調函數
-									$(this).css("opacity", 1);  // 動畫結束後，恢復不透明
-							});
-											setTimeout(function() {
-						$(".header__icon-mode-span").text("Light");
-					}, 150);
-
+								$(".header__icon-mode-span").animate({
+										left: "10px",          // 移動元素
+										opacity: 0             // 改變透明度為 0（完全透明）
+									},150,function() {                 // 動畫結束後的回調函數
+											$(this).css("opacity", 1);  // 動畫結束後，恢復不透明
+									});
+									setTimeout(function() {
+								$(".header__icon-mode-span").text(theme);
+							}, 150);
 						} else {
 							$(".header__icon-mode-svg").animate({ left: "0px" }, 150);
 							$(".header__icon-mode-span").animate(
@@ -390,7 +393,7 @@
 								});
 
 							setTimeout(function() {
-								$(".header__icon-mode-span").text("Dark");
+								$(".header__icon-mode-span").text(theme);
 							}, 150);
 						}
 						moveRight = !moveRight; // 切換方向
@@ -463,7 +466,7 @@
 
 				// 存回 localStorage (轉成 JSON)
 				localStorage.setItem("searchList", JSON.stringify(searchArray));
-
+				console.log(`/search/searchAll?q=${encodeURIComponent(search.value)}`);
 				// 重定向到搜尋結果頁面
 				window.location.href = `/search/searchAll?q=${encodeURIComponent(search.value)}`;
 			}

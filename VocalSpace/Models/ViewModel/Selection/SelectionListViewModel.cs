@@ -41,7 +41,7 @@ namespace VocalSpace.Models.ViewModel.Selection
     }
     public class SelectionSongs
     {
-        public long? SelectionDetailId { get; set; }
+        public long SelectionDetailId { get; set; }
         public long SongId { get; set; }
         public int? VoteCount { get; set; }
         public string? CoverPhotoPath { get; set; }
@@ -49,5 +49,7 @@ namespace VocalSpace.Models.ViewModel.Selection
         public string? SongName { get; set; }
         public int? LikeCount { get; set; }
         public string? SongPath { get; set; }
+        public bool? IsLiked { get; set; }
+        public bool? IsVoted { get; set; }
     }
 }
