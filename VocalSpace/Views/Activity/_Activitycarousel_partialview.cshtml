@@ -1,0 +1,71 @@
+﻿@model IEnumerable<VocalSpace.Models.ViewModel.Activity.ActivityListViewModel>
+@*輪播圖*@
+<div id="eventCarousel" class="carousel slide" data-bs-ride="carousel">
+	<div class="carousel-inner">
+		@* content *@
+		@if (!Model.Any())
+		{
+			<div class="container d-flex justify-content-center align-items-center flex-column position-relative">
+				<div class="image-container w-50">
+					<img src="/image/Sorrynopage_dark.png" alt="404" class="switch-img">
+				</div>
+				<h2>很抱歉！沒有任何資料...</h2>
+			</div>
+		}
+		else
+		{
+
+			@foreach (var activity in Model)
+			{
+				<div class="carousel-item @(activity == Model.First() ? "active" : "")">
+					<div class="d-flex">
+						<div class="col-6">
+							<div class="actpic-container">
+								<a href="/Activity/Info/@activity.ActivityId">
+									<img src="@activity.EventCoverPath" alt="活動封面">
+								</a>
+							</div>
+						</div>
+						<div class="col-6">
+							<div class="carousel-textarea">
+								<div class="row row-xs align-items-center">
+									<div class="col-2">
+										<div class="calende-border-block p-0 text-center">
+											<div class="bg-danger text-white font-size-sm">@activity.EventTime.ToString("M 月")</div>
+											<h3 class="mb-1 mt-1 text-black">@activity.EventTime.Day</h3>
+										</div>
+									</div>
+									<div class="col-10">
+										<a href="/Activity/Info/@activity.ActivityId"><h2 class="text-maxone">@activity.Title</h2></a>
+									</div>
+								</div>
+								<hr>
+								<p>@activity.EventTime.ToString("HH:mm")．@activity.City．@activity.Location</p>
+								<div class="text-maxthree">
+									<p>@activity.ActivityDescription</p>
+								</div>
+								<div class="event-performers">
+									<a href="/Personal/mymusic/@activity.UploaderId" class="performer">
+										<img src="@activity.UploaderAvatarPath">
+										@activity.UploaderName
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			}
+		}
+	</div>
+
+	<!-- 導航按鈕 -->
+	<button class="carousel-control-prev  " type="button" data-bs-target="#eventCarousel" data-bs-slide="prev">
+		<span class="carousel-control-prev-icon sync-data-theme border rounded-circle " aria-hidden="true"></span>
+		<span class="visually-hidden">Previous</span>
+	</button>
+	<button class="carousel-control-next  " type="button" data-bs-target="#eventCarousel" data-bs-slide="next">
+		<span class="carousel-control-next-icon sync-data-theme border rounded-circle " aria-hidden="true"></span>
+		<span class="visually-hidden">Next</span>
+	</button>
+</div>
+

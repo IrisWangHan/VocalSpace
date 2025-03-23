@@ -141,3 +141,29 @@ $(document).on("click", ".btn-play", function () {
     alert(`現正播放：${songName}`);
 });
 
+//我也想去按鈕
+$(document).on("click", "#btn-interested", function () {
+    let activityId = $(this).data("activity-id");
+    let button = $(this); // 儲存按鈕對象，方便後續修改狀態
+
+    $.ajax({
+        url: `/Activity/ToggleInterested/${activityId}`,
+        type: "POST",
+        success: function (res) {
+            if (res.interested) {
+                button.addClass("selected").text("✅ 已想去");
+                alert("去把");
+            } else {
+                button.removeClass("selected").text("⭐ 我也想去！");
+                alert("不去");
+            }
+        },
+        error: function (xhr) {
+            if (xhr.status === 400)
+                alert(xhr.responseJSON?.message || "請先登入！");
+            else
+                alert(xhr.responseJSON?.message || "發生錯誤，請稍後再試！");
+        }
+    });
+});
+

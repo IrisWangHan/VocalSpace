@@ -19,9 +19,11 @@ namespace VocalSpace.Controllers
         //  紀錄歌曲ID
         private static string? SongId;
         private readonly ModalDataService _ModalDataService;
+        private readonly CommentDataService _commentService;
         private readonly IConfiguration? _config;
 
         // 建構函數 DbContext
+        public SongController(VocalSpaceDbContext context, ModalDataService modalDataService, CommentDataService commentService)
 
         public SongController(VocalSpaceDbContext context, DonateService donateService, ModalDataService modalDataService, IConfiguration? config)
         {
@@ -29,6 +31,7 @@ namespace VocalSpace.Controllers
            _donateService = donateService;
             _ModalDataService = modalDataService;
             _config = config;
+            _commentService = commentService;
         }
         /// <summary>
         /// 取得指定歌曲詳細資料以及留言區架構的 Action
@@ -102,21 +105,10 @@ namespace VocalSpace.Controllers
             // 取得目前登入帳號
             string? account = HttpContext.Session.GetString("UserAccount");
 
-            var comments = await _context.SongComments
-                .Where(c => c.SongId == id)//抓取指定SongId的留言
-                .OrderByDescending(c => c.CommentTime)//依照留言時間排序
-                .Select(c => new CommentViewModel
-                {
-                    TargetType = "Song", //留言類型
-                    CommentId = c.SongCommentId, // 留言 ID
-                    TargetId = c.SongId, // 歌曲 ID
-                    Account = c.User.Account, // 使用者帳號
-                    CurrentUserAccount = account ?? "", // 目前登入使用者帳號
-                    UserName = c.User.UserName!, // 使用者名稱
-                    Avatar = c.User.UsersInfo!.AvatarPath, // 使用者頭像
-                    Comment = c.Comment, // 留言內容
-                    CommentTime = c.CommentTime // 留言時間
-                }).ToListAsync();
+            // 呼叫 Service 來取得留言資料，這裡的 commentype 是 "Song"
+            var comments = await _commentService.GetCommentListData(account!, id, "Song");
+
+            // 回傳 PartialView 來顯示留言列表
             return PartialView("_CommentList", comments);
         }
 
@@ -126,6 +118,7 @@ namespace VocalSpace.Controllers
         [HttpPost("/Song/PostComment")]
         public async Task<IActionResult> PostComment([FromBody] CommentRequestViewModel model)
         {
+            //後端阻擋空留言
             if (string.IsNullOrWhiteSpace(model.Comment))
             {
                 return BadRequest(new { success = false, message = "留言內容不能為空！" });
@@ -144,29 +137,23 @@ namespace VocalSpace.Controllers
                 return Unauthorized(new { success = false, message = "請先登入！" });
             }
 
-            // 取得使用者資訊
-            var user = await _context.Users
-                .Include(u => u.UsersInfo)
-                .FirstOrDefaultAsync(u => u.Account == account);
-
-            if (user == null)
+            try
             {
-                return NotFound(new { success = false, message = "使用者不存在！" });
+                // 使用 Service 層來處理留言的邏輯
+                var result = await _commentService.PostCommentAsync(account, model.TargetId, model.TargetType, model.Comment);
+
+                if (result)
+                {
+                    return Ok(new { success = true, message = "留言成功！" });
+                }
+
+                return BadRequest(new { success = false, message = "留言失敗！" });
             }
-
-            // 建立留言物件
-            var comment = new SongComment
+            catch (Exception ex)
             {
-                SongId = model.TargetId,
-                UserId = user.UserId,
-                Comment = model.Comment,
-                CommentTime = DateTime.Now
-            };
-
-            _context.SongComments.Add(comment);
-            await _context.SaveChangesAsync();
-
-            return Ok(new { success = true, message = "留言成功！" });
+                // 捕獲異常並返回統一的錯誤訊息
+                return BadRequest(new { success = false, message = ex.Message });
+            }
         }
 
         /// <summary>
@@ -177,31 +164,31 @@ namespace VocalSpace.Controllers
         {
             // 確保使用者已登入
             string? account = HttpContext.Session.GetString("UserAccount");
+
             if (string.IsNullOrEmpty(account))
             {
-                return Unauthorized("請先登入！");
+                return Unauthorized(new { success = false, message = "請先登入！" });
             }
 
-            // 查找留言
-            var comment = await _context.SongComments
-                .Include(c => c.User)
-                .FirstOrDefaultAsync(c => c.SongCommentId == id);
-
-            if (comment == null)
+            try
             {
-                return NotFound("留言不存在！");
-            }
+                // 呼叫 Service 層的刪除邏輯
+                var result = await _commentService.DeleteCommentAsync(account, id, "Song");
 
-            // 確保只能刪除自己的留言
-            if (comment.User.Account != account)
+                if (result)
+                {
+                    return Ok(new { success = true, message = "留言刪除成功！" });
+                }
+                else
+                {
+                    return NotFound(new { success = false, message = "留言不存在！" });
+                }
+            }
+            catch (Exception ex)
             {
-                return Forbid("您無權刪除此留言！");
+                // 捕獲所有異常並返回統一的錯誤訊息
+                return BadRequest(new { success = false, message = ex.Message });
             }
-
-            _context.SongComments.Remove(comment);
-            await _context.SaveChangesAsync();
-
-            return Ok(new { success = true });
         }
 
         //  1.建立訂單透過<form>傳到綠界，並加入資料庫
