@@ -49,9 +49,19 @@
 				</div>
 			</div>
 			<hr class="mt-5 mb-5">
-			@* 預計加入留言板趴秀 *@
-			@* @await Html.PartialAsync("_CommentInput") *@
-			@* @await Html.PartialAsync("_CommentList") *@
+			<!-- 留言串partialview放這裡 -->
+			<div id="comment-section"
+				 data-target-id="@Model.ActivityId"
+				 data-target-type="Activity">
+
+				<!-- 顯示留言輸入區 (不會被 AJAX 更新) -->
+				@await Html.PartialAsync("_CommentInput", Model.CommentSection)
+
+				<!-- 顯示留言清單 (會被 AJAX 更新) -->
+				<div id="comment-list-container">
+					<p>留言載入中...</p> <!-- AJAX 載入時顯示_CommentList趴秀 -->
+				</div>
+			</div>
 		</div>
 	</div>
 	<div class="col-4 right-container">
@@ -68,6 +78,7 @@
 @* @await Html.PartialAsync("_Modal_ShereActivity") *@
 
 @section Scripts {
+	<script src="~/js/Comment.js" asp-append-version="true"></script>
 	<script>
 		//AJAX 取得UserBar
 				$(function () {

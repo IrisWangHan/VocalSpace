@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using VocalSpace.Models;
 using VocalSpace.Models.ViewModel.Activity;
+using VocalSpace.Models.ViewModel.Global;
 
 namespace VocalSpace.Services
 {
@@ -92,8 +93,27 @@ namespace VocalSpace.Services
         /// <summary>
         /// 抓取所有資料
         /// </summary>
-        public async Task<ActivityInfoViewModel> GetActivityInfoData(int ActivityId)
+        public async Task<ActivityInfoViewModel> GetActivityInfoData(int ActivityId,long? CurrentUserid)
         {
+            // 查詢當前使用者資訊（如果有登入）
+            string? currentAvatar = null;
+            string? currentUserAccount = null;
+            bool isLogin = CurrentUserid.HasValue;
+
+            if (isLogin)
+            {
+                var userInfo = await _context.Users
+                    .Where(u => u.UserId == CurrentUserid)
+                    .Select(u => new { u.Account, Avatar = u.UsersInfo!.AvatarPath })
+                    .FirstOrDefaultAsync();
+
+                if (userInfo != null)
+                {
+                    currentAvatar = userInfo.Avatar;
+                    currentUserAccount = userInfo.Account;
+                }
+            }
+
             // 查詢活動資料
             var ActivityInfo = await _context.Activities
                 .Where(c => c.ActivityId == ActivityId)
@@ -110,8 +130,17 @@ namespace VocalSpace.Services
                     City = c.City,
                     ApprovalStatus = c.ApprovalStatus,
                     ActivityDescription = c.ActivityDescription,
+                    // 填充 CommentSection 資料
+                    CommentSection = new CommentSectionViewModel
+                    {
+                        IsLogin = isLogin,
+                        CurrentAvatar = currentAvatar ?? "",
+                        CurrentUserAccount = currentUserAccount ?? "",
+                        Comments = new List<CommentViewModel>() // 先空值，改用 AJAX 讀取
+                    },
                 }).FirstOrDefaultAsync();
 
+            
 
             return ActivityInfo!;
         }

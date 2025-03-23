@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using VocalSpace.Models;
 using VocalSpace.Models.Test;
 using VocalSpace.Models.ViewModel.Activity;
+using VocalSpace.Models.ViewModel.Global;
 using VocalSpace.Services;
 
 namespace VocalSpace.Controllers
@@ -12,11 +13,13 @@ namespace VocalSpace.Controllers
         public readonly VocalSpaceDbContext _context;
         public readonly ActivityDataService _activityDataService;
         public readonly UserService _userService;
-        public ActivityController(VocalSpaceDbContext context,ActivityDataService activityDataService, UserService userService)
+        public readonly CommentDataService _commentService;
+        public ActivityController(VocalSpaceDbContext context,ActivityDataService activityDataService, UserService userService, CommentDataService commentDataService)
         {
             _context = context;
             _activityDataService = activityDataService;
             _userService = userService;
+            _commentService = commentDataService;
         }
 
         /// <summary>
@@ -93,7 +96,7 @@ namespace VocalSpace.Controllers
 
             Console.WriteLine($"Received activityid: {activityid}");
 
-            var info = await _activityDataService.GetActivityInfoData(activityid);
+            var info = await _activityDataService.GetActivityInfoData(activityid,CurrentUserid);
 
             if (info == null)
             {
@@ -101,6 +104,102 @@ namespace VocalSpace.Controllers
             }
 
             return View(info);
+        }
+
+
+        /// <summary>
+        /// AJAX方式取得留言列表
+        /// </summary>
+        [HttpGet("Activity/{id}/Comments")]
+        public async Task<IActionResult> GetCommentList(int id)
+        {
+            // 取得目前登入帳號
+            string? account = HttpContext.Session.GetString("UserAccount");
+
+            // 呼叫 Service 來取得留言資料，這裡的 commentype 是 "Activity"
+            var comments = await _commentService.GetCommentListData(account!, id, "Activity");
+
+            // 回傳 PartialView 來顯示留言列表
+            return PartialView("_CommentList", comments);
+        }
+
+        /// <summary>
+        /// AJAX 上傳留言邏輯
+        /// </summary>
+        [HttpPost("/Activity/PostComment")]
+        public async Task<IActionResult> PostComment([FromBody] CommentRequestViewModel model)
+        {
+            //後端阻擋空留言
+            if (string.IsNullOrWhiteSpace(model.Comment))
+            {
+                return BadRequest(new { success = false, message = "留言內容不能為空！" });
+            }
+
+            // 確保 TargetType 是 "Activity"
+            if (model.TargetType != "Activity")
+            {
+                return BadRequest(new { success = false, message = "不支援的留言類型！" });
+            }
+
+            // 取得目前登入帳號
+            string? account = HttpContext.Session.GetString("UserAccount");
+            if (string.IsNullOrEmpty(account))
+            {
+                return Unauthorized(new { success = false, message = "請先登入！" });
+            }
+
+            try
+            {
+                // 使用 Service 層來處理留言的邏輯
+                var result = await _commentService.PostCommentAsync(account, model.TargetId, model.TargetType, model.Comment);
+
+                if (result)
+                {
+                    return Ok(new { success = true, message = "留言成功！" });
+                }
+
+                return BadRequest(new { success = false, message = "留言失敗！" });
+            }
+            catch (Exception ex)
+            {
+                // 捕獲異常並返回統一的錯誤訊息
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// AJAX 刪除留言邏輯
+        /// </summary>
+        [HttpDelete("/Activity/DeleteComment/{id}")]
+        public async Task<IActionResult> DeleteComment(int id)
+        {
+            // 確保使用者已登入
+            string? account = HttpContext.Session.GetString("UserAccount");
+
+            if (string.IsNullOrEmpty(account))
+            {
+                return Unauthorized(new { success = false, message = "請先登入！" });
+            }
+
+            try
+            {
+                // 呼叫 Service 層的刪除邏輯
+                var result = await _commentService.DeleteCommentAsync(account, id, "Activity");
+
+                if (result)
+                {
+                    return Ok(new { success = true, message = "留言刪除成功！" });
+                }
+                else
+                {
+                    return NotFound(new { success = false, message = "留言不存在！" });
+                }
+            }
+            catch (Exception ex)
+            {
+                // 捕獲所有異常並返回統一的錯誤訊息
+                return BadRequest(new { success = false, message = ex.Message });
+            }
         }
 
         public IActionResult ShareModal(int id)
