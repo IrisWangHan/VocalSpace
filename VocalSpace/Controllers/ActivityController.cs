@@ -95,8 +95,6 @@ namespace VocalSpace.Controllers
         {
             long? CurrentUserid = HttpContext.Session.GetInt32("UserId");
 
-            Console.WriteLine($"Received activityid: {activityid}");
-
             var info = await _activityDataService.GetActivityInfoData(activityid,CurrentUserid);
 
             if (info == null)
@@ -214,19 +212,15 @@ namespace VocalSpace.Controllers
                 return Unauthorized(new { success = false, message = "請先登入！" });
             }
 
-            bool isInterested = await _activityDataService.ToggleInterested(activityId, userId.Value);
+            var(isInterested,count) = await _activityDataService.ToggleInterested(activityId, userId.Value);
 
             return Ok(new
             {
                 success = true,
                 interested = isInterested,
+                interestedCount = count, // 返回最新的計數
                 message = isInterested ? "已加入想去列表！" : "已取消想去！"
             });
-        }
-        [HttpGet("/Activity/ToggleInterested/{activityId}")]
-        public IActionResult ShareModal(int id)
-        {
-            return PartialView("_ShareModal");
         }
 
         /////<summary>

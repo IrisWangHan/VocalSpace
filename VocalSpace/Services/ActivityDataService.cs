@@ -130,6 +130,12 @@ namespace VocalSpace.Services
                     City = c.City,
                     ApprovalStatus = c.ApprovalStatus,
                     ActivityDescription = c.ActivityDescription,
+                    ShareUrl = $"https://vocalspace.com/Activity/{c.ActivityId}",
+                    Interesteds = new InterestedViewModel
+                    {
+                        IsInterested = isLogin ? c.Interesteds.Any(i => i.UserId == CurrentUserid) : false,
+                        InterestedCount = c.Interesteds.Count,  //.Count為EF提供的屬性，用於計算集合中的資料行數
+                    },
                     // 填充 CommentSection 資料
                     CommentSection = new CommentSectionViewModel
                     {
@@ -148,7 +154,7 @@ namespace VocalSpace.Services
         /// <summary>
         /// 我也想去按鈕邏輯
         /// </summary>
-        public async Task<bool> ToggleInterested(long activityId, long userId)
+        public async Task<(bool isInterested, int count)> ToggleInterested(long activityId, long userId)
         {
             var isInterest = await _context.Interesteds
                 .FirstOrDefaultAsync(i => i.ActivityId == activityId && i.UserId == userId);
@@ -172,7 +178,11 @@ namespace VocalSpace.Services
 
             await _context.SaveChangesAsync();
 
-            return isInterest == null; // 回傳 true 代表新增，false 代表刪除
+            // 計算並返回最新的興趣人數
+            int interestedCount = await _context.Interesteds.CountAsync(i => i.ActivityId == activityId);
+
+            // 回傳 isInterested 狀態和最新計數
+            return (isInterest == null, interestedCount); 
         }
     }
 }

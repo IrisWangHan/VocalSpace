@@ -148,33 +148,5 @@ img {
     padding: 15px;
     box-shadow: 0 2px 4px ;
 }
-/*追蹤按鈕預設設樣式*/
-.btn-follow {
-    background: #ff4d4f;
-    color: white;
-    border: none;
-    padding: 10px 18px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.3s ease-in-out;
-}
-
-    .btn-follow.selected {
-        background: white;
-        color: #ff4d4f;
-        border: 1px solid #ff4d4f;
-    }
-
-    .btn-follow:hover {
-        background: #e63946;
-    }
-
-/* 我的最愛按鈕預設格式 */
-    .btn-add-to-Likesong.selected {
-        background-color: var(--bg-color);
-        border: 1px solid rgb(255, 87, 87);
-        color: rgb(255, 87, 87);
-    }
 
 
