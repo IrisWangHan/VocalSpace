@@ -2,6 +2,7 @@
 {
     public class SongInfoDTO
     {
+        public long SongId { get; set; }
         public string? SongPath { get; set; }
 
         public string? CoverPhotoPath { get; set; }

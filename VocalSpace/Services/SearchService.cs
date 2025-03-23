@@ -21,7 +21,7 @@ namespace VocalSpace.Services
                     _context.Users,
                     song => song.Artist,
                     user => user.UserId,
-                    (song, user) => new SongInfoDTO { SongName = song.SongName, UserName = user.UserName, CoverPhotoPath = song.CoverPhotoPath, LikeCount = song.LikeCount })
+                    (song, user) => new SongInfoDTO { SongId = song.SongId, SongName = song.SongName, UserName = user.UserName, CoverPhotoPath = song.CoverPhotoPath, LikeCount = song.LikeCount })
                 .Where(data => data.SongName!.Contains(q!) || data.UserName!.Contains(q!))
                 .OrderByDescending(data => data.SongName == q)                 //  1.先搜尋歌曲名稱完全符合關鍵字
                 .ThenByDescending(data => data.UserName == q)                   //  2.歌手名稱完全符合關鍵字的歌曲

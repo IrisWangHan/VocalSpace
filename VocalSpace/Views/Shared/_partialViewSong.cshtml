@@ -14,7 +14,8 @@
             <p><a href="#">@Model[k].SongName</a></p>
             <p><a class="artist" href="#">@Model[k].UserName</a></p>
         </div>
-        @await Html.PartialAsync("_SongButtonModal", @Model[k].LikeCount)
+        @*@await Html.PartialAsync("_SongButtonModal", @Model[k].LikeCount) *@
+        @await Component.InvokeAsync("SongButton", new { songId = @Model[k].SongId })
         
     </div>
 }

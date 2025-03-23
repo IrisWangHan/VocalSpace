@@ -21,8 +21,7 @@ namespace VocalSpace.Controllers
 
 
         public searchController(SearchService searchService)
-        {
-          
+        {          
             _searchService = searchService;
         }
         //  搜尋歌曲
@@ -102,7 +101,7 @@ namespace VocalSpace.Controllers
             string? q = Request.Query["q"];
             if ( q != null )
             {
-                AllResult!.Songs = _searchService.LINQsong(q!);
+                AllResult!.Songs = await _searchService.LINQsong(q!);
                 var URLresult = ( AllResult?.Songs?.Count == 0) ? View("searchError") : View(AllResult?.Songs);
                 return URLresult;
             }
@@ -112,12 +111,12 @@ namespace VocalSpace.Controllers
             return resultView;
         }
 
-        public IActionResult searchSonglists()
+        public async Task<IActionResult> searchSonglists()
         {
             string? q = Request.Query["q"];
             if (q != null)
             {
-                AllResult!.Playlists = LINQplaylist(q!).ToList();
+                AllResult!.Playlists = await _searchService.LINQplaylist(q!);
                 var URLresult = (AllResult?.Playlists?.Count == 0) ? View("searchError") : View(AllResult?.Playlists);
                 return URLresult;
             }
@@ -127,12 +126,12 @@ namespace VocalSpace.Controllers
             return resultView;
         }
 
-        public IActionResult searchArtists()
+        public async Task<IActionResult> searchArtists()
         {
             string? q = Request.Query["q"];
             if (q != null)
             {
-                AllResult!.Artists = LINQartist(q!).ToList();
+                AllResult!.Artists =  await _searchService.LINQartist(q!);
                 var URLresult = (AllResult?.Artists?.Count == 0) ? View("searchError") : View(AllResult?.Artists);
                 return URLresult;
             }
@@ -207,10 +206,32 @@ namespace VocalSpace.Controllers
                 default:
                     return RedirectToAction("searchAll");
             }
+        //[HttpGet]
+        //public async Task<IActionResult> searchResult()
+        //{
+        //    q = Request.Query["q"];
+        //    type = Request.Query["type"];
+        //    //Console.WriteLine(Request.Query["q"]);
+        //    List<Song> result = await _context.Songs.Where(data => data.SongName.Contains(q!)).ToListAsync();
+        //    Console.WriteLine(result);
+        //    switch (type)
+        //    {
+        //        case "All":
+        //            return RedirectToAction("searchAll");
+        //        case "Song":
+        //            return RedirectToAction("searchSongs");
+        //        case "Songlist":
+        //            return RedirectToAction("searchSonglists");
+        //        case "artist":
+        //            return RedirectToAction("searchArtists");
+        //        default:
+        //            return RedirectToAction("searchAll");
+        //    }
             
         }
 
 
 
+        //}
     }
 }

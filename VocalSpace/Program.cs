@@ -44,6 +44,7 @@ builder.Services.AddControllersWithViews(options =>
 
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<DonateService>();
+builder.Services.AddScoped<SearchService>();
 
 builder.Services.AddDbContext<VocalSpaceDbContext>(options =>
 {
