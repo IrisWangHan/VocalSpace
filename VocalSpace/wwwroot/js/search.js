@@ -1,5 +1,6 @@
 ﻿window.addEventListener("DOMContentLoaded", (event) => {
-    const navnameArray = Array.from( document.getElementsByClassName("nav-name") );
+
+    const navnameArray = Array.from(document.getElementsByClassName("nav-name"));
     
     navnameArray.forEach(btn => {
         btn.addEventListener("click", function () {
@@ -45,33 +46,51 @@ function loadmore(type) {
             })
 }
 
-//  搜尋功能
-let searchText = document.querySelector('.header__search-input');
+////  搜尋功能
+//let search = document.querySelector('.header__search-input');
 
-searchText.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') {
-        console.log('searchText.value:', searchText.value);
-        search();
-        //window.location.href = '/search?q=' + searchText.value;
+//search.addEventListener('keydown', function (e) {
+//    if (e.key === 'Enter') {
+//        console.log('searchText.value:', search.value);
+//        window.location.href = `/search/searchAll?q=${encodeURIComponent(search.value)}`;
+//    }
+//});
+// 取得目前頁面 URL
+const currentPath = window.location.pathname;
+
+// 確保目前頁面是 /search/searchAll
+if (currentPath === '/search/searchAll') {
+    console.log("search.js");
+    // 取得 URL 參數
+    const urlParams = new URLSearchParams(window.location.search);
+    const query = urlParams.get('q');
+
+    // 如果有 q 參數，則執行 search()
+    if (query) {
+        document.getElementById('search-query').innerHTML = query;
+        searchQuery(query);
     }
-});
+}
+function searchQuery(content) {
+    console.log("/search/searchResult?q=" + content);
 
-function search() {
-    fetch("/search/searchResult?q=" + searchText.value).
-        then(response => {
-            //  response.ok 為 true
+    fetch("/search/searchResult?q=" + encodeURIComponent(content)) // 確保 URL 參數編碼正確
+        .then(response => {
             if (!response.ok) {
                 throw new Error("Network response was not ok");
             }
-            return response;
-        }).
-        then(response => {
-            window.location.href = response;
-        }).
-        catch(error => {
-            console.error("載入歌曲失敗");
+            return response.json(); // 解析 JSON
         })
+        .then(data => {
+            console.log("搜尋結果:", data);
+            //alert("搜尋成功！找到 " + data.length + " 首歌曲");
+        })
+        .catch(error => {
+            console.error("載入歌曲失敗:", error);
+            alert("搜尋失敗，請稍後再試");
+        });
 }
+
 
 
 //const btnLoadmore = document.getElementById('btn-loadmore');

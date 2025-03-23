@@ -48,14 +48,36 @@ public class searchController : Controller
                     return PartialView("_partialViewSong");
             }
         }
-        [HttpGet]
+
         public async Task<IActionResult> searchResult()
         {
-            string? q = Request.Query["q"];
-            Console.WriteLine(Request.Query["q"]);
-            List<Song> result = await _context.Songs.Where(data => data.SongName.Contains(q!)).ToListAsync();
-            Console.WriteLine(result);
-            return View("/search/searchAll");
+            try
+            {
+                string? q = Request.Query["q"];
+
+                if (string.IsNullOrEmpty(q))
+                {
+                    return BadRequest("搜尋關鍵字不能為空"); // 400 錯誤，避免 500 錯誤
+                }
+
+                Console.WriteLine($"搜尋關鍵字: {q}");
+
+                List<Song> result = await _context.Songs
+                    .Where(data => data.SongName.Contains(q))
+                    .ToListAsync();
+
+                Console.WriteLine($"找到 {result.Count} 首歌曲");
+
+                return Ok(result); // 回傳 JSON 給前端
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"發生錯誤: {ex.Message}");
+                return StatusCode(500, "伺服器錯誤");
+            }
         }
+
+
+
     }
 }

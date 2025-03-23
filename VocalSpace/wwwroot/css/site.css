@@ -177,4 +177,8 @@ img {
         color: rgb(255, 87, 87);
     }
 
-
+.btn-vote-to-selectionSong.selected {
+    background-color: var(--bg-color);
+    border: 1px solid rgb(255, 87, 87);
+    color: rgb(255, 87, 87);
+}

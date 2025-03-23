@@ -437,6 +437,7 @@
     padding:5px;
 }
 
+
 .popup__select-works-list {
     height: 200px;
     overflow-y: scroll;
@@ -514,4 +515,18 @@
 
 .form-button .btn-cancel--theme{
     background-color:gray;
+}
+.content-form-list-sm-img {
+    width: 25px;
+    height: 25px;
+    margin-left: auto;
+    border-radius:2px;
+}
+    .content-form-list-sm-img:hover {
+
+        transform: scale(2);
+    }
+
+.alert{
+    display:none;
 }

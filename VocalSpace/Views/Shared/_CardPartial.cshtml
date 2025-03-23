@@ -32,7 +32,7 @@
 	}
 
 	.card__img-box {
-		/* position: relative; */
+		position: relative;
 		cursor: pointer;
 	}
 
@@ -77,243 +77,6 @@
 		justify-content: center;
 	}
 
-	.icon__item, .icon__item-likeCount {
-		font-size: var(--fsize-menu-lg);
-	}
-
-	.icon__item {
-		margin: 5px 15px;
-		cursor: pointer;
-	}
-
-	.icon__item-likeCount {
-		color: #FF66A1;
-		font-weight: bold;
-	}
-
-	.icon__item-vote:hover, .icon__item-like:hover, .icon__item-share:hover, .icon__item-add:hover {
-		fill: red;
-		cursor: pointer;
-	}
-
-	.icon__item-vote:active, .icon__item-like:active, .icon__item-share:active, .icon__item-add:active {
-		transform: scale(1.2);
-	}
-
-	.checkbox-vote, .checkbox-like {
-		display: none;
-	}
-		/* checkbox 選中時改為紅色 */
-		.checkbox-vote:checked + .icon__item-vote, .checkbox-like:checked + .icon__item-like {
-			fill: red;
-		}
-
-
-	/* 分享歌曲按鈕之彈跳視窗 */
-	.shareoverlay {
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		background: rgba(0, 0, 0, 0.5);
-		display: none;
-		justify-content: center;
-		align-items: flex-start;
-		padding-top: 10vh;
-	}
-
-		.shareoverlay span {
-			color: black;
-		}
-
-	.sharepopup {
-		background: white;
-		border-radius: 10px;
-		box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
-		padding: 30px;
-		width: 500px;
-		z-index: 20;
-	}
-
-	.sharepopup-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		font-size: 22px;
-		font-weight: bold;
-	}
-
-	.sharepopup-content {
-		display: flex;
-		align-items: center;
-		margin-top: 15px;
-		background: linear-gradient(to right, #000, #654321);
-		border-radius: 10px;
-		padding: 15px;
-		color: white;
-	}
-
-		.sharepopup-content img {
-			width: 80px;
-			height: 80px;
-			border-radius: 8px;
-			margin-right: 15px;
-		}
-
-		.sharepopup-content div {
-			display: flex;
-			flex-direction: column;
-		}
-
-		.sharepopup-content strong {
-			font-size: 20px;
-		}
-
-	.sharepopup-footer {
-		display: flex;
-		align-items: center;
-		margin-top: 20px;
-	}
-
-		.sharepopup-footer input {
-			margin-left: 15px;
-			flex-grow: 1;
-			padding: 10px;
-			border: 1px solid #ccc;
-			border-radius: 8px;
-			font-size: 16px;
-		}
-
-		.sharepopup-footer .copy {
-			background: #ff4d4f;
-			color: white;
-			border: none;
-			padding: 8px 15px;
-			border-radius: 8px;
-			margin-left: 15px;
-			cursor: pointer;
-			font-size: 16px;
-		}
-
-	.shareclose-btn {
-		cursor: pointer;
-		font-size: 22px;
-	}
-
-
-
-	/* 加入歌單按鈕之彈跳視窗 */
-
-	/* 遮罩層 */
-	.addoverlay {
-		display: none;
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		background: rgba(0, 0, 0, 0.5);
-		z-index: 1000;
-		opacity: 0;
-		transition: opacity 0.3s ease-in-out;
-	}
-
-	/* 彈跳視窗 */
-	.addpopup {
-		position: fixed;
-		top: 20%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		background: white;
-		width: 500px;
-		border-radius: 12px;
-		box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-		padding: 25px;
-		z-index: 1001;
-		display: none;
-		opacity: 0;
-		transition: opacity 0.3s ease-in-out, top 0.3s ease-in-out;
-	}
-
-		.addpopup h2 {
-			font-size: 22px;
-			margin-bottom: 15px;
-			color: Black;
-		}
-
-	/* 搜尋框 */
-	.addsearch-box {
-		width: 100%;
-		padding: 12px;
-		border: 1px solid #ccc;
-		border-radius: 8px;
-		font-size: 16px;
-		margin-bottom: 20px;
-	}
-
-	/* 歌單區域 */
-	.addplaylist-item {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		padding: 12px;
-		border-radius: 8px;
-		border: 1px solid #ddd;
-		margin-bottom: 12px;
-	}
-
-		.addplaylist-item img {
-			width: 50px;
-			height: 50px;
-			border-radius: 8px;
-			margin-right: 12px;
-		}
-
-	.addplaylist-info {
-		display: flex;
-		align-items: center;
-		flex-grow: 1;
-	}
-
-	.addplaylist-name {
-		font-size: 16px;
-		font-weight: bold;
-		color: black;
-	}
-
-	.addplaylist-song {
-		font-size: 14px;
-		color: #666;
-	}
-
-	/* 按鈕 */
-	.addbtn-add {
-		background: #ff4d4f;
-		color: white;
-		border: none;
-		padding: 10px 18px;
-		border-radius: 8px;
-		cursor: pointer;
-		font-size: 14px;
-		transition: all 0.3s ease-in-out;
-	}
-
-		.addbtn-add.selected {
-			background: white;
-			color: #ff4d4f;
-			border: 1px solid #ff4d4f;
-		}
-
-		.addbtn-add:hover {
-			background: #e63946;
-		}
-
-	/* 底部按鈕 */
-	.addpopup-footer {
-		display: flex;
-		margin-top: 20px;
-	}
 
 	.btn {
 		padding: 10px 20px;
@@ -322,7 +85,9 @@
 		border: none;
 		font-size: 16px;
 		justify-content: right;
+		height: 40px;
 	}
+
 
 	.addbtn-cancel {
 		margin-left: 170px;
@@ -349,12 +114,12 @@
 </style>
 @model IEnumerable<VocalSpace.Models.ViewModel.Selection.SelectionSongs>
 <section class="card-container">
-	@foreach(var item in Model)
+	@foreach (var item in Model)
 	{
 		<div class="card__item  card__item-music">
-			<div class="card__img-box">
+			<div class="card__img-box" onclick="playMusic('@(item.SongPath)')">
 				<img class="card__img" src="@(item.CoverPhotoPath)" />
-
+				@* 撥放 & 暫停按鈕 *@
 				<svg class="card-icon__play-circle bi bi-play-circle" xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="white" viewBox="0 0 16 16">
 					<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
 					<path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445" />
@@ -368,202 +133,38 @@
 			<p>@(item.SongDescription)</p>
 
 			<section class="icon-container ">
-				<div class="icon__item">
-					<label>
-						<input type="checkbox" class="checkbox-vote" />
-						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="blue" class="bi bi-hand-thumbs-up-fill icon__item-vote" viewBox="0 0 16 16">
-							<path d="M6.956 1.745C7.021.81 7.908.087 8.864.325l.261.066c.463.116.874.456 1.012.965.22.816.533 2.511.062 4.51a10 10 0 0 1 .443-.051c.713-.065 1.669-.072 2.516.21.518.173.994.681 1.2 1.273.184.532.16 1.162-.234 1.733q.086.18.138.363c.077.27.113.567.113.856s-.036.586-.113.856c-.039.135-.09.273-.16.404.169.387.107.819-.003 1.148a3.2 3.2 0 0 1-.488.901c.054.152.076.312.076.465 0 .305-.089.625-.253.912C13.1 15.522 12.437 16 11.5 16H8c-.605 0-1.07-.081-1.466-.218a4.8 4.8 0 0 1-.97-.484l-.048-.03c-.504-.307-.999-.609-2.068-.722C2.682 14.464 2 13.846 2 13V9c0-.85.685-1.432 1.357-1.615.849-.232 1.574-.787 2.132-1.41.56-.627.914-1.28 1.039-1.639.199-.575.356-1.539.428-2.59z" />
-						</svg>
-					</label>
-					<span class="icon__item-likeCount">@(item.LikeCount)</span>
-				</div>
-				<div class="icon__item">
-					<label>
-						<input type="checkbox" class="checkbox-like" />
-						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="blue" class="bi bi-heart-fill icon__item-like" viewBox="0 0 16 16">
-							<path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314" />
-						</svg>
-					</label>
-				</div>
-				<div class="icon__item">
-					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="blue" class="bi bi-share-fill icon__item-share" id="AAA" viewBox="0 0 16 16">
-						<path d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.5 2.5 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5" />
-					</svg>
-				</div>
-				<div class="icon__item">
-					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="blue" class="bi bi-plus-circle-fill icon__item-add" viewBox="0 0 16 16">
-						<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z" />
-					</svg>
-				</div>
-			</section>
-			<section>
-				<!-- 分享按鈕彈跳視窗 -->
-				<div class="shareoverlay" id="shareoverlay">
-					<div class="sharepopup">
-						<div class="sharepopup-header">
-							<span>分享歌曲</span>
-							<span class="shareclose-btn">&times;</span>
-						</div>
-						<div class="sharepopup-content">
-							<img src="/image/p1.jpg" alt="封面">
-							<div>
-								<strong>打不通的電話 <b>Demo</b></strong>
-								<div>Sean Ko 高翔</div>
-							</div>
-						</div>
-						<div class="sharepopup-footer">
-							<button class="btn fb btn-lg"><i class="bi bi-facebook"></i></button>
-							<button class="btn ig btn-lg"><i class="bi bi-instagram"></i></button>
-							<input type="text" value="https://streetvoice.com/seanko/songs/800" readonly>
-							<button class="copy">複製</button>
-						</div>
-					</div>
-				</div>
-			</section>
-			<section>
-				<!-- 加入歌單彈跳視窗 -->
-				<div class="addoverlay" id="addoverlay"></div>
-
-				<!-- 彈跳視窗 -->
-				<div class="addpopup" id="addpopup">
-					<h2>加入歌單</h2>
-					<input type="text" class="addsearch-box" placeholder="搜尋歌單">
-
-					<!-- 歌單列表 -->
-					<div class="addplaylist-item">
-						<div class="addplaylist-info">
-							<img src="/image/p2.jpeg" alt="封面">
-							<div>
-								<div class="addplaylist-name">tt</div>
-								<div class="addplaylist-song">1 首歌曲: ilyynlvl</div>
-							</div>
-						</div>
-						<button class="addbtn-add" data-musicID="1">+ 加入歌單</button>
-					</div>
-
-					<!-- 底部按鈕 -->
-					<div class="addpopup-footer">
-						<button class="addbtn-newPlaylist">+ 新增歌單</button>
-						<button class="btn addbtn-cancel">取消</button>
-						<button class="btn addbtn-confirm">確定</button>
-					</div>
-				</div>
+				<button class="btn btn-outline-secondary btn-circle btn-vote-to-selectionSong @(item.IsVoted == true ? "selected" : "")" data-selectionDetailId=@item.SelectionDetailId title="投票">
+					<i class="bi bi-hand-thumbs-up-fill"></i>
+					<span class="VoteCount" data-selectionDetailId=@item.SelectionDetailId>@item.VoteCount</span>
+				</button>
+				<button class="btn btn-outline-secondary btn-circle btn-share-song" data-songid=@item.SongId title="分享">
+					<i class="bi bi-share"></i>
+				</button>
+				<button class="btn btn-outline-secondary btn-circle btn-add-to-playlist" data-songid=@item.SongId title="新增">
+					<i class="bi bi-plus-lg"></i>
+				</button>
+				<button class="btn btn-outline-secondary btn-circle btn-add-to-Likesong @(item.IsLiked==true?"selected":"")" data-songid=@item.SongId title="喜歡">
+					<i class="bi bi-heart-fill"></i>
+					<span class="likeCount" data-songid=@item.SongId>@item.LikeCount</span>
+				</button>
 			</section>
 		</div>
 	}
 </section>
 
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script>
-	// 切換播放鍵與暫停鍵
-	$(document).ready(function () {
-		$(".card__img-box").on("click", function () {
-			// 找到 .card-icon__play-circle 和 .card-icon__stop-circle，並切換顯示狀態
-			$(".icon__stop-circle").hide();
-			$(this).find(".card-icon__play-circle, .card-icon__stop-circle").toggle();
-		});
+@section Scripts {
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script>
+		// 切換播放鍵與暫停鍵
+		$(document).ready(function () {
 
-
-
-		$(".checkbox-vote").click(function (e) {
-			if ($(this).prop("checked")) {
-				// 讓其他 checkbox 取消選取
-				$(".checkbox-vote").not(this).prop("checked", false);
-			}
-		});
-
-
-@* 		$(".checkbox-vote").click(function (e) {
-		if ($(this).prop("checked")) {
-			// 讓其他 checkbox 取消選取
-			$(".checkbox-vote").not(this).prop("checked", false);
-		}
-		}); *@
-
-		$(".icon__item-share").on("click",function () {
-			console.log("A");
-			shareshowPopup();
-		});
-
-		$(".shareclose-btn").on("click",function () {
-			console.log("B");
-			shareclosePopup();
-		});
-
-		$(".copy").on("click",function () {
-			sharecopyLink();
-		});
-
-
-
-		// 分享歌曲按鈕之彈跳視窗
-		function shareshowPopup() {
-			document.getElementById('shareoverlay').style.display = 'flex';
-		}
-		function shareclosePopup() {
-			document.getElementById('shareoverlay').style.display = 'none';
-		}
-		function sharecopyLink() {
-			const input = document.querySelector('.sharepopup-footer input');
-			input.select();
-			document.execCommand('copy');
-			alert('連結已複製');
-		}
-
-
-
-			$(".icon__item-add").on("click", function () {
-				addopenPopup();
-			});
-			$(".addoverlay,.addbtn-cancel,.addbtn-confirm").on("click", function () {
-				addclosePopup();
+			$(".card__img-box").on("click", function () {
+				// 找到 .card-icon__play-circle 和 .card-icon__stop-circle，並切換顯示狀態
+				$(".icon__stop-circle").hide();
+				$(this).find(".card-icon__play-circle, .card-icon__stop-circle").toggle();
 			});
 
-			$(document).on("click", ".addbtn-add", function () {
-				console.log("MM");
-				console.log($(this).data("musicID"));
-				var musicID = $(this).data("musicID"); // 正確讀取 data 屬性
-				addtoggleSelection(this); // 傳入 musicID
-			});
+		});
 
-
-
-		// 加入歌單按鈕之彈跳視窗
-		function addopenPopup() {
-			  document.getElementById("addoverlay").style.display = "block";
-			  document.getElementById("addpopup").style.display = "block";
-			// 加入淡入效果
-			setTimeout(() => {
-			  document.getElementById("addoverlay").style.opacity = "1";
-			  document.getElementById("addpopup").style.opacity = "1";
-			  document.getElementById("addpopup").style.top = "30%";
-			  }, 10);
-		}
-
-		function addclosePopup() {
-			 // 淡出效果
-			 document.getElementById("addoverlay").style.opacity = "0";
-			 document.getElementById("addpopup").style.opacity = "0";
-			 document.getElementById("addpopup").style.top = "20%";
-
-			 // 延遲隱藏（等待動畫完成）
-			 setTimeout(() => {
-				 document.getElementById("addoverlay").style.display = "none";
-				 document.getElementById("addpopup").style.display = "none";
-			 }, 300);
-		}
-
-		function addtoggleSelection(button) {
-			  if (button.classList.contains("selected")) {
-				  button.classList.remove("selected");
-				  button.textContent = "+ 加入歌單";
-			  } else {
-				  button.classList.add("selected");
-				  button.textContent = "✔ 已選擇";
-			  }
-		}
-
-
-	});
-
-</script>
+	</script>
+}
