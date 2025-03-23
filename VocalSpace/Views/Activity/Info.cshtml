@@ -1,67 +1,57 @@
-﻿@model VocalSpace.Models.Test.ShareModalViewModel
+﻿@model VocalSpace.Models.ViewModel.Activity.ActivityInfoViewModel
 @{
-	var userBar = ViewData["UserBar"] as VocalSpace.Models.ViewModel.Global.UserBarViewModel;
+	ViewData["Title"] = "快來參加" + Model.Title + "!";
 }
-@{
-	<!-- 帶入登入狀態 -->
-	var tmp = TempData.Peek("isLogin");
-
-	bool isLogin = false;
-	if (tmp != null)
-	{
-		// 如果 TempData 儲存的是字串 "true" 或 "false"
-		bool.TryParse(tmp.ToString(), out isLogin);
-
-		// 如果你確定 TempData 儲存的是布林值，也可以直接轉型：
-		// isLogin = (bool)tempIsLogin;
-	}
-}
-
 <div class="page-container container-xxl">
 	<div class="col-8 left-container">
 		<div class="event-container">
+			<!-- 顯示活動封面圖 -->
 			<div class="event-cover">
-				<img class="event-image" src="/image/Activity/cs.jpg" alt="活動圖片">
+				<img class="event-image" src="@Url.Content(Model.EventCoverPath)" alt="活動圖片">
 				<div class="event-date">
 					<div class="calende-border-block p-0 text-center">
-						<div class="bg-danger text-white font-size-sm T-radius">3 月</div>
-						<h3 class="mb-1 mt-1 text-black">7</h3>
-						<h6 class="mb-1 mt-1 text-black opacity-50">星期五</h6>
+						<div class="bg-danger text-white font-size-sm T-radius">@Model.EventTime.ToString("MMM")</div>
+						<h3 class="mb-1 mt-1 text-black">@Model.EventTime.Day</h3>
+						<h6 class="mb-1 mt-1 text-black opacity-50">@Model.EventTime.ToString("dddd")</h6>
 					</div>
 				</div>
 			</div>
-			<h1 class="event-title mb-4">THE CHAINSMOKERS LIVE IN TAIPEI 2025</h1>
+
+			<!-- 活動標題 -->
+			<h1 class="event-title mb-4">@Model.Title</h1>
+
+			<!-- 活動資訊 -->
 			<div class="event-info">
 				<h6 class="text-gray mb-3">
 					<span class="bi bi-calendar2-minus"></span>
-					2025 年 3 月 7 日 | 星期五 | 20:00
+					@Model.EventTime.ToString("yyyy 年 MM 月 dd 日 | dddd | HH:mm")
 				</h6>
 				<h6 class="text-gray mb-3">
 					<span class="bi bi-geo-alt-fill"></span>
-					臺北市．大佳河濱公園
+					@Model.City．@Model.Location
 				</h6>
 			</div>
 			<hr class="mt-5 mb-2">
+
+			<!-- 上傳者資訊 -->
 			<div class="poster-section">
-				@await Html.PartialAsync("_Songdetail_artist_partial",userBar)
+				@await Html.PartialAsync("_UserbarContainer_partial", Model.UploaderId)
 			</div>
 			<hr class="mt-2 mb-5">
+
+			<!-- 活動介紹 -->
 			<h2>介紹</h2>
-			<div class="introduce-area">
+			<div class="introduce-area pt-2 pb-2">
 				<div class="introduce">
 					<p>
-						介紹內文<br />
-						介紹內文<br />
-						介紹內文<br />
-						介紹內文<br />
-						介紹內文
+						@(string.IsNullOrWhiteSpace(Model.ActivityDescription) ? "此活動沒有任何介紹!" : Html.Raw(Model.ActivityDescription.Replace("\\n", "<br>")))
 					</p>
 				</div>
 			</div>
 			<hr class="mt-5 mb-5">
 			@* 預計加入留言板趴秀 *@
-			@await Html.PartialAsync("_CommentInput")
-			@await Html.PartialAsync("_CommentList")
+			@* @await Html.PartialAsync("_CommentInput") *@
+			@* @await Html.PartialAsync("_CommentList") *@
 		</div>
 	</div>
 	<div class="col-4 right-container">
@@ -75,27 +65,41 @@
 	</div>
 </div>
 @* 直接加载 Modal，并设为隐藏 *@
-@await Html.PartialAsync("_Modal_ShereActivity")
+@* @await Html.PartialAsync("_Modal_ShereActivity") *@
 
 @section Scripts {
 	<script>
-		let isLogin = @isLogin.ToString().ToLower(); // 轉成 JS 的 true/false
-		let interestedCount = 73;
+		//AJAX 取得UserBar
+				$(function () {
+					let userId = $("#userBarContainer").data("userid");
+					$.ajax({
+						url: `/Personal/GetUserBar/${userId}`, // Controller 端點，
+						type: "GET",
+						success: function (partialView) {
+							$("#userBarContainer").html(partialView);
+						},
+						error: function (xhr) {
+							$("#userBarContainer").html(`<p class='error-message'>上傳者載入失敗，錯誤訊息${xhr.responseText}</p>`);
+						}
+					});
+				});
 
-		function handleInterested() {
-		if (!isLogin) {
-			// 如果未登入，導向登入頁
-			window.location.href = "/Accounts/Login";
-			return;
-		}
+		// 		let interestedCount = 73;
 
-			interestedCount++;
-			document.querySelector(".activity-info h3").innerText = `${interestedCount} 人想去`;
-			var myModal = new bootstrap.Modal(document.getElementById('shareModal'));
-			myModal.show();
-		}
-		function addToCalendar() {
-			window.open("https://calendar.google.com/calendar/r/eventedit", "_blank");
-		}
-	</script>
-}
+		// 		function handleInterested() {
+		// 		if (!isLogin) {
+		// 			// 如果未登入，導向登入頁
+		// 			window.location.href = "/Accounts/Login";
+		// 			return;
+		// 		}
+
+		// 			interestedCount++;
+		// 			document.querySelector(".activity-info h3").innerText = `${interestedCount} 人想去`;
+		// 			var myModal = new bootstrap.Modal(document.getElementById('shareModal'));
+		// 			myModal.show();
+		// 		}
+		// 		function addToCalendar() {
+		// 			window.open("https://calendar.google.com/calendar/r/eventedit", "_blank");
+		// 		}
+		// 	</script>
+ }

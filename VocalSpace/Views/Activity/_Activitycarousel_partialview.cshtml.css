@@ -1,0 +1,154 @@
+﻿/*上方區域*/
+
+.text-maxone {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.text-maxthree {
+    min-height: 80px; /* 固定最小高度 */
+    max-height: 80px; /* 避免變化 */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/*輪播圖容器*/
+#carousel {
+    padding: 20px 0px;
+}
+
+.carousel-inner {
+    overflow: hidden; /* 超出部分隱藏 */
+}
+
+.carousel-item {
+    min-height: 250px; /* 設定統一高度 */
+}
+
+/*封面圖*/
+.actpic-container {
+    border-radius: 12px;
+    overflow: hidden;
+    height: 100%;
+    position: relative;
+    padding: 0px 20px;
+    height: 244px;
+    max-height: 244px;
+}
+
+    .actpic-container img {
+        width: 100%; /* 讓圖片寬度填滿容器 */
+        height: 100%; /* 讓圖片高度填滿容器 */
+        object-fit: cover; /* 保持比例並填滿容器，可能會裁切圖片 */
+    }
+
+
+
+.carousel-item h2 {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.badge {
+    font-size: 20px;
+    padding: 10px;
+    border-radius: 12px;
+    text-align: center;
+    width: 70px;
+}
+
+.calende-border-block {
+    display: block;
+    background-color: white;
+    border: 1px solid #e4e4e4;
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, .1);
+    padding: 1.5rem;
+    border-radius: .4rem;
+    word-wrap: break-word;
+}
+
+.bg-danger, .calende-border-block, .p-0 {
+    border-top-left-radius: .4rem;
+    border-top-right-radius: .4rem;
+}
+
+/*上傳者*/
+
+.event-performers {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 5px;
+}
+
+
+.performer {
+    font-size: 12px;
+    padding: 4px 8px;
+    border: 1px solid gray;
+    margin-right: 5px;
+    border-radius: 1rem;
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+    .performer img {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        margin-right: .2rem;
+        vertical-align: bottom;
+    }
+
+[data-theme="light"]
+.sync-data-theme {
+    filter: invert(100%);
+}
+
+/*輪播圖導航鈕*/
+.carousel-control-prev,
+.carousel-control-next {
+    position: absolute;
+    top: 50%;
+    width: 40px;
+    height: 100%;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+    .carousel-control-prev:hover, .carousel-control-next:hover {
+        background-color: rgba(128,128,128,0.2);
+    }
+
+.carousel-control-prev {
+    left: -50px;
+}
+
+.carousel-control-next {
+    right: -50px;
+}
+/*活動文字欄*/
+.carousel-textarea {
+    min-height: 300px; /* 設定一個固定的最小高度 */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* 讓內部元素均勻分布 */
+}
+
+    .carousel-textarea h2 {
+    }
+
+    .carousel-textarea p {
+        opacity: 50%;
+    }
+
+    .carousel-textarea span {
+        opacity: 50%;
+    }

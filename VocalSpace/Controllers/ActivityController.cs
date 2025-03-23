@@ -1,14 +1,68 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using VocalSpace.Models;
 using VocalSpace.Models.Test;
+using VocalSpace.Models.ViewModel.Activity;
+using VocalSpace.Services;
 
 namespace VocalSpace.Controllers
 {
     public class ActivityController : Controller
     {
+        public readonly VocalSpaceDbContext _context;
+        public readonly ActivityDataService _activityDataService;
+        public readonly UserService _userService;
+        public ActivityController(VocalSpaceDbContext context,ActivityDataService activityDataService, UserService userService)
+        {
+            _context = context;
+            _activityDataService = activityDataService;
+            _userService = userService;
+        }
+
+        /// <summary>
+        /// 活動列表頁面，如果點擊我的活動，路由會加上 id 參數
+        /// </summary>
         public IActionResult Index()
         {
             return View();
         }
+
+        /// <summary>
+        /// AJAX 載入活動列表 
+        /// </summary>
+        [HttpGet]
+        public async Task<IActionResult> GetActivityList(int? id,string keyword, string region, string startDate, string endDate)
+        {
+            long? CurrentUserid = HttpContext.Session.GetInt32("UserId");
+
+            // 如果請求「我的活動」，但沒登入 -> 回傳 401 錯誤，讓前端導向登入頁面
+            if (id.HasValue && CurrentUserid == null)
+            {
+                return Unauthorized(new { message = "請先登入" });
+            }
+            else if (id.HasValue && CurrentUserid.HasValue && id != CurrentUserid)
+            {
+                return BadRequest(new { message = "你無權這麼做" });
+            }
+
+            // 透過Service取得活動列表
+
+            var activityList = await _activityDataService.GetActivityListData(id,keyword,region,startDate,endDate);
+
+            return PartialView("_ActivityList_partialview", activityList);
+        }
+
+        /// <summary>
+        /// AJAX 載入輪播圖
+        /// </summary>
+
+        [HttpGet]
+        public async Task<IActionResult> GetActivityCarousel()
+        {
+            var activityList = await _activityDataService.GetActivityListData(); // 只取所有活動
+            return PartialView("_Activitycarousel_partialview", activityList);
+        }
+
 
         public IActionResult Create()
         {
@@ -32,40 +86,21 @@ namespace VocalSpace.Controllers
             };
             return View(model);
         }
-
-        public IActionResult Info()
+        [HttpGet("Activity/Info/{activityid}")]
+        public async Task<IActionResult> Info(int activityid)
         {
-            // 假設這些資料是從資料庫取得的
-            var activity = new VocalSpace.Models.Test.Activity
+            long? CurrentUserid = HttpContext.Session.GetInt32("UserId");
+
+            Console.WriteLine($"Received activityid: {activityid}");
+
+            var info = await _activityDataService.GetActivityInfoData(activityid);
+
+            if (info == null)
             {
-                EventTime = "2025 年 3 月 7 日 | 星期五 | 20:00",
-                EventCoverPath = "/image/Activity/cs.jpg",
-                Title = "THE CHAINSMOKERS LIVE IN TAIPEI 2025",
-                Location = "大佳河濱公園",
-                City = "臺北市",
-                ActivityDescription = "這是一場精彩的音樂演出，歡迎大家參加！"
-            };
+                return NotFound(new { success = false, message = "你查找的活動不存在" });
+            }
 
-            var model = new ShareModalViewModel
-            {
-                Title = "分享想去的活動",
-                EventName = activity.Title,
-                Date = activity.EventTime, // 這裡可以動態化
-                Location = $"{activity.City}．{activity.Location}",
-                ImageUrl = activity.EventCoverPath ?? "/image/default.jpg",
-                Link = "/Activity/Info"
-            };
-
-            var userBar = new VocalSpace.Models.ViewModel.Global.UserBarViewModel
-            {
-                pfp = "/image/Wchi.png",
-                Name = "Wchi",
-                Account = "Wchiii"
-            };
-
-            ViewData["UserBar"] = userBar;
-
-            return View(model);
+            return View(info);
         }
 
         public IActionResult ShareModal(int id)

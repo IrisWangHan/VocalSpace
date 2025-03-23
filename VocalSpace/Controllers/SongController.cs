@@ -14,12 +14,14 @@ namespace VocalSpace.Controllers
         // EF 的 DbContext
         private readonly VocalSpaceDbContext _context;
         private readonly ModalDataService _ModalDataService;
+        private readonly CommentDataService _commentService;
 
         // 建構函數 DbContext
-        public SongController(VocalSpaceDbContext context, ModalDataService modalDataService)
+        public SongController(VocalSpaceDbContext context, ModalDataService modalDataService, CommentDataService commentService)
         {
             _context = context;
             _ModalDataService = modalDataService;
+            _commentService = commentService;
         }
         /// <summary>
         /// 取得指定歌曲詳細資料以及留言區架構的 Action
@@ -92,21 +94,10 @@ namespace VocalSpace.Controllers
             // 取得目前登入帳號
             string? account = HttpContext.Session.GetString("UserAccount");
 
-            var comments = await _context.SongComments
-                .Where(c => c.SongId == id)//抓取指定SongId的留言
-                .OrderByDescending(c => c.CommentTime)//依照留言時間排序
-                .Select(c => new CommentViewModel
-                {
-                    TargetType = "Song", //留言類型
-                    CommentId = c.SongCommentId, // 留言 ID
-                    TargetId = c.SongId, // 歌曲 ID
-                    Account = c.User.Account, // 使用者帳號
-                    CurrentUserAccount = account ?? "", // 目前登入使用者帳號
-                    UserName = c.User.UserName!, // 使用者名稱
-                    Avatar = c.User.UsersInfo!.AvatarPath, // 使用者頭像
-                    Comment = c.Comment, // 留言內容
-                    CommentTime = c.CommentTime // 留言時間
-                }).ToListAsync();
+            // 呼叫 Service 來取得留言資料，這裡的 commentype 是 "Song"
+            var comments = await _commentService.GetCommentListData(account!, id, "Song");
+
+            // 回傳 PartialView 來顯示留言列表
             return PartialView("_CommentList", comments);
         }
 
