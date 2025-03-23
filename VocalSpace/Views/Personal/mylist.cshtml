@@ -1,53 +1,53 @@
 ﻿@model IEnumerable<VocalSpace.Models.ViewModel.Personal.PersonalViewModel>
 
 @{
-	Layout = "_PersonalLayout";  
+    Layout = "_PersonalLayout";  
+    var mylist = ViewData["mylist"] as List<VocalSpace.Models.ViewModel.Song.SongViewModel>;
 }
- <nav class="menu" id="myList">
-        <a href="/Personal/mymusic/@Model.FirstOrDefault()!.UserId">音樂</a>
-        	@if (Model.FirstOrDefault()!.CurrentUserId == Model.FirstOrDefault()!.UserId) { 
+<nav class="menu" id="myList">
+    <a href="/Personal/mymusic/@Model.FirstOrDefault()!.UserId">音樂</a>
+    @if (Model.FirstOrDefault()!.CurrentUserId == Model.FirstOrDefault()!.UserId) { 
 
-         <a href="/Personal/mylist/@Model.FirstOrDefault()!.UserId" class="active">歌單</a>
-         <a href="/Personal/mylike/@Model.FirstOrDefault()!.UserId">喜歡</a>
-            }
-        <a href="/Personal/myabout/@Model.FirstOrDefault()!.UserId">關於</a>
-    </nav>
-<div class="playlist">
+        <a href="/Personal/mylist/@Model.FirstOrDefault()!.UserId" class="active">歌單</a>
+        <a href="/Personal/mylike/@Model.FirstOrDefault()!.UserId">喜歡</a>
+    }
+    <a href="/Personal/myabout/@Model.FirstOrDefault()!.UserId">關於</a>
+</nav>
+@if (mylist != null)
+{
+    <div class="playlist">
         <div class="playlist-card">
 
             <h2>歌單</h2>
-            <div class="ranking-item">
-            <a href="#"><img src="/image/p2.jpeg" alt="song cover"></a>
+            @foreach (var item in mylist)
+            {
+                <div class="ranking-item">
+                    <a asp-action="listdetail" asp-route-id="@item.PlayListId">
+                        <img src="@item.PlayListCoverImagePath" alt="song cover">
+                </a>
 
                 <div class="listinfo">
-                <a href="/Personal/listdetail"><p class="song">打不通的電話</p></a>
-                <p class="artist">1 首歌曲．<a href="/Personal/mymusic">Sean Ko 高翔</a></p>
+                        <a asp-action="listdetail" asp-route-id="@item.PlayListId"><p class="song">@item.PlayListName</p></a>
+                        <p class="artist">@item.PlayListSongCount 首歌曲．<a href="/Personal/mymusic/@item.UserId">@item.UserName</a></p>
                 </div>
 
                 <button class="btn btn-outline-secondary deletelist" data-bs-toggle="modal"
-                    data-bs-target="#exampleModal"><i class="bi bi-trash"></i></button>
+                data-bs-target="#exampleModal"><i class="bi bi-trash"></i></button>
                 <button class="btn btn-outline-secondary editlist" onclick="editlist()"><i
-                        class="bi bi-pencil-square"></i></button>
+                    class="bi bi-pencil-square"></i></button>
                 <button class="btn btn-outline-secondary book"><i class="bi bi-bookmark-check-fill"></i></button>
                 <button class="btn btn-outline-secondary random"><i class="bi bi-shuffle"></i></button>
             </div>
 
-            <div class="ranking-item">
-
-            <a href="#"><img src="/image/p3.jpeg" alt="song cover"></a>
-                <div class="listinfo">
-                <a href="/Personal/listdetail"><p class="song">打不通的電話</p></a>
-                <p class="artist">1 首歌曲．<a href="/Personal/mymusic">Sean Ko 高翔</a></p>
-                </div>
-                <button class="btn btn-outline-secondary deletelist" data-bs-toggle="modal"
-                    data-bs-target="#exampleModal"><i class="bi bi-trash"></i></button>
-                <button class="btn btn-outline-secondary editlist" onclick="editlist()"><i
-                        class="bi bi-pencil-square"></i></button>
-                <button class="btn btn-outline-secondary book"><i class="bi bi-bookmark-check-fill"></i></button>
-                <button class="btn btn-outline-secondary random"><i class="bi bi-shuffle"></i></button>
-            </div>
+            }
         </div>
     </div>
+}
+else
+{
+    <h2 class="no-data">尚未建立歌單</h2>
+}
+
     <!-- 刪除歌單彈窗 -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">

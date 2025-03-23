@@ -28,6 +28,10 @@ namespace VocalSpace.Controllers
         {
             var currentUserId = HttpContext.Session.GetInt32("UserId");
 
+            int FollowCount =  _context.UserFollows
+                                    .Where(uf => uf.FollowedUserId == id)
+                                    .Count();
+
             IQueryable<PersonalViewModel> personals = from user in _context.Users
                                                       join UsersInfo in _context.UsersInfos on user.UserId equals UsersInfo.UserId
                                                       where user.UserId == id
@@ -36,10 +40,12 @@ namespace VocalSpace.Controllers
                                                           CurrentUserId = currentUserId ?? 0,
                                                           UserId = user.UserId,
                                                           UserName = user.UserName,
+                                                          PersonalIntroduction = UsersInfo.PersonalIntroduction,
                                                           Account = user.Account,
                                                           CreateTime = user.CreateTime,
                                                           BannerImagePath = UsersInfo.BannerImagePath,
                                                           AvatarPath = UsersInfo.AvatarPath,
+                                                          FollowCount = FollowCount,
                                                           isFollowing = currentUserId.HasValue && currentUserId != 0  //如果使用者未登入，預設為false
                                                             ? _context.UserFollows.Any(f => f.UserId == currentUserId && f.FollowedUserId == id) : false
                                                       };
@@ -56,9 +62,28 @@ namespace VocalSpace.Controllers
             return View(personal(id).ToList());
         }
         [HttpGet("Personal/mylist/{id}")]
-        public IActionResult mylist(long id)
+        public async Task<IActionResult> mylist(long id)
         {
-            return View(personal(id).ToList());
+            long? currentUserId = HttpContext.Session.GetInt32("UserId");
+            if (currentUserId == id)
+            {
+                var songdata = await _context.PlayLists
+                 .Where(p => p.UserId == id) // 篩選該使用者的歌單
+                .Select(p => new SongViewModel
+                {
+                    UserId = p.UserId,
+                    UserName = p.User.UserName!,
+                    PlayListId = p.PlayListId,
+                    PlayListName = p.Name,
+                    PlayListCoverImagePath = p.CoverImagePath,
+                    PlayListSongCount = p.PlayListSongs.Count() // 計算歌單內歌曲數量
+                }).ToListAsync();
+                ViewData["mylist"] = songdata.Any() ? songdata : null;
+                return View(personal(id).ToList());
+            }
+            return Content("<script>alert('無權查看'); window.history.back();</script>", "text/html; charset=utf-8");
+
+           
         }
         [HttpGet("Personal/mylike/{id}")]
         public async Task<IActionResult> mylike(long id)

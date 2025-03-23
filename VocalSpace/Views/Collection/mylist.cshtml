@@ -117,38 +117,6 @@ const list = document.getElementById('myList');
     });
 
 
-// 分享歌曲按鈕之彈跳視窗
-function deletelist() {
-  document.getElementById('shareoverlay').style.display = 'flex';
-}
-function shareclosePopup() {
-  document.getElementById('shareoverlay').style.display = 'none';
-}
-
-// 加入歌單按鈕之彈跳視窗
-function addopenPopup() {
-  document.getElementById("addoverlay").style.display = "block";
-  document.getElementById("addpopup").style.display = "block";
-    // 加入淡入效果
-    setTimeout(() => {
-      document.getElementById("addoverlay").style.opacity = "1";
-      document.getElementById("addpopup").style.opacity = "1";
-      document.getElementById("addpopup").style.top = "30%";
-  }, 10);
-}
-
-function addclosePopup() {
- // 淡出效果
- document.getElementById("addoverlay").style.opacity = "0";
- document.getElementById("addpopup").style.opacity = "0";
- document.getElementById("addpopup").style.top = "20%";
-
- // 延遲隱藏（等待動畫完成）
- setTimeout(() => {
-     document.getElementById("addoverlay").style.display = "none";
-     document.getElementById("addpopup").style.display = "none";
- }, 300);
-}
 
 </script>
 

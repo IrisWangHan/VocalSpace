@@ -1,4 +1,5 @@
-﻿
+﻿@model IEnumerable<VocalSpace.Models.ViewModel.Song.SongViewModel>
+
 <title>蒐藏庫</title>
 
 
@@ -8,56 +9,51 @@
     <div class="content">
         <aside class="sidebar">
             <ul id="myList">                    
-                <a asp-action ="like"><li>我的喜歡<i class="bi bi-bookmark-heart"></i></li></a>
-                <a asp-action="mylist"><li>我的歌單</li></a>
-                <a asp-action="playrecord"><li>播放紀錄</li></a>
-                <a asp-action="booking"><li  class="selected">我訂閱的歌單</li></a>
+                <a asp-action ="like" asp-route-id="@ViewBag.LoginId"><li>我的喜歡<i class="bi bi-bookmark-heart"></i></li></a>
+                <a asp-action="mylist" asp-route-id="@ViewBag.LoginId"><li>我的歌單</li></a>
+                <a asp-action="playrecord" asp-route-id="@ViewBag.LoginId"><li>播放紀錄</li></a>
+                <a asp-action="booking" asp-route-id="@ViewBag.LoginId"><li  class="selected">我訂閱的歌單</li></a>
             </ul>
         </aside>           
 
         <main class="ranking">
             <div class="h2-row"><h2>蒐藏庫  /</h2><h2 class="red">我訂閱的歌單</h2></div>
 
- 
+
             <br />
-            <div id="realtime" class="ranking-list">
+            @if (Model == null)
+            {
+                <h2 class="no-data">暫無資料</h2>
+            }
+            else
+            {
 
-                <h2>歌單</h2>
+                <div id="realtime" class="ranking-list">
 
+                    <h2>歌單</h2>
+                    @foreach (var item in Model)
+                    {
                         <div class="ranking-item">
 
-                    <a href="/Personal/listdetail">
-                        <img src="/image/p1.jpg" alt="song cover">
-                    </a>
-                        <div class="info">
-                        <a href="/Personal/listdetail"><p class="song">打不通的電話</p></a>
-						<p class="artist">1 首歌曲．<a href="/Personal/mymusic">Sean Ko 高翔</a></p>
-					</div>
-                        <button class="btn btn-outline-secondary deletelist" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-trash"></i></button>                        
-                        <button class="btn btn-outline-secondary editlist" onclick="editlist()"><i class="bi bi-pencil-square"></i></button>
-                        <button class="btn btn-outline-secondary book"><i class="bi bi-bookmark-check-fill"></i></button>
-                        <button class="btn btn-outline-secondary random"><i class="bi bi-shuffle"></i></button>
-                    </div>
-                     <div class="ranking-item">
+                            <a asp-action="listdetail" asp-route-id="@item.PlayListId">
+                                <img src="@item.PlayListCoverImagePath" alt="song cover">
+                            </a>
+                            <div class="info">
+                                <a asp-action="listdetail" asp-route-id="@item.PlayListId"><p class="song">@item.PlayListName</p></a>
+                                <p class="artist">@item.PlayListSongCount 首歌曲．<a href="/Personal/mymusic/@item.UserId">@item.UserName</a></p>
+                            </div>
+                            <button class="btn btn-outline-secondary deletelist" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-trash"></i></button>
+                            <button class="btn btn-outline-secondary editlist" onclick="editlist()"><i class="bi bi-pencil-square"></i></button>
+                            <button class="btn btn-outline-secondary book"><i class="bi bi-bookmark-check-fill"></i></button>
+                            <button class="btn btn-outline-secondary random"><i class="bi bi-shuffle"></i></button>
+                        </div>
 
-                    <a href="/Personal/listdetail">
-                        <img src="/image/p1.jpg" alt="song cover">
-                    </a>
-                        <div class="info">
-                        <a href="/Personal/listdetail"><p class="song">打不通的電話</p></a>
-                        <p class="artist">1 首歌曲．<a href="/Personal/mymusic">Sean Ko 高翔</a></p>
-                    </div>
-                        <button class="btn btn-outline-secondary deletelist" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-trash"></i></button>                        
-                        <button class="btn btn-outline-secondary editlist" onclick="editlist()"><i class="bi bi-pencil-square"></i></button>
-                        <button class="btn btn-outline-secondary book"><i class="bi bi-bookmark-check-fill"></i></button>
-                        <button class="btn btn-outline-secondary random"><i class="bi bi-shuffle"></i></button>
-                    </div>
-
-
+                    }
                 </div>
 
+            }
 
-            </main>
+        </main>
         </div>
     </div>
 
@@ -119,39 +115,6 @@ const list = document.getElementById('myList');
         }
     });
 
-
-// 分享歌曲按鈕之彈跳視窗
-function deletelist() {
-  document.getElementById('shareoverlay').style.display = 'flex';
-}
-function shareclosePopup() {
-  document.getElementById('shareoverlay').style.display = 'none';
-}
-
-// 加入歌單按鈕之彈跳視窗
-function addopenPopup() {
-  document.getElementById("addoverlay").style.display = "block";
-  document.getElementById("addpopup").style.display = "block";
-    // 加入淡入效果
-    setTimeout(() => {
-      document.getElementById("addoverlay").style.opacity = "1";
-      document.getElementById("addpopup").style.opacity = "1";
-      document.getElementById("addpopup").style.top = "30%";
-  }, 10);
-}
-
-function addclosePopup() {
- // 淡出效果
- document.getElementById("addoverlay").style.opacity = "0";
- document.getElementById("addpopup").style.opacity = "0";
- document.getElementById("addpopup").style.top = "20%";
-
- // 延遲隱藏（等待動畫完成）
- setTimeout(() => {
-     document.getElementById("addoverlay").style.display = "none";
-     document.getElementById("addpopup").style.display = "none";
- }, 300);
-}
 
 </script>
 

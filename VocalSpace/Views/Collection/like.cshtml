@@ -52,10 +52,11 @@
 										<p class="song">@item.SongName</p>
 									</a>
 									<a href="/Personal/mymusic/@item.UserId"> <p class="artist">@item.UserName</p></a>
-									<div>
-										@await Component.InvokeAsync("SongButton", new { songId = item.SongId })
-									</div>
 									
+									
+								</div>
+								<div>
+									@await Component.InvokeAsync("SongButton", new { songId = item.SongId })
 								</div>
 							</div>
 							count ++;

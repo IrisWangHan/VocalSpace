@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using VocalSpace.Filters;
 using VocalSpace.Models;
+using VocalSpace.Models.Test.Selection;
 using VocalSpace.Models.ViewModel.Song;
 
 namespace VocalSpace.Controllers
@@ -64,42 +65,22 @@ namespace VocalSpace.Controllers
                     PlayListSongCount = p.PlayListSongs.Count() // 計算歌單內歌曲數量
                 }).ToListAsync();
 
-                //var songdata = await _context.Songs
-                //    .Include(s => s.ArtistNavigation)                    
-                //    .Include(s => s.PlayListSongs.Any())
-                //    .Where(s => s.LikeSongs.Any(like => like.UserId == id))
-                //    .Select(s => new SongViewModel
-                //    {
-                //        SongId = s.SongId,
-                //        SongCoverPhotoPath = s.CoverPhotoPath,
-                //        SongName = s.SongName,
-                //        UserName = s.ArtistNavigation.UserName!,
-                //        UserId= id,
-                //        LikeId = s.LikeSongs.FirstOrDefault()!.LikeId
-                //    }).ToListAsync();
-
                 return View(songdata);
             }
             return Content("<script>alert('無權查看'); window.history.back();</script>", "text/html; charset=utf-8");
 
         }
         [SessionToLogin]
-        public IActionResult playrecord()
+        public async Task<IActionResult> playrecord(long id)
         {
-            return View();
-        }
-        [SessionToLogin]
-        public async Task<IActionResult> booking(long id)
-        {
-            // 未完成
             long? currentUserId = HttpContext.Session.GetInt32("UserId");
             ViewBag.LoginID = currentUserId;
             if (id == currentUserId)
             {
                 var songdata = await _context.Songs
                     .Include(s => s.ArtistNavigation)
-                    .Include(s => s.LikeSongs)
-                    .Where(s => s.LikeSongs.Any(like => like.UserId == id))
+                    .Include(s => s.PlayHistories)
+                    .Where(s => s.PlayHistories.Any(play => play.UserId == id))
                     .Select(s => new SongViewModel
                     {
                         SongId = s.SongId,
@@ -108,6 +89,35 @@ namespace VocalSpace.Controllers
                         UserName = s.ArtistNavigation.UserName!,
                         UserId = s.ArtistNavigation!.UserId,
                         LikeId = s.LikeSongs.FirstOrDefault()!.LikeId,
+
+                    }).ToListAsync();
+                return View(songdata.Any() ? songdata : null);
+
+            }
+            else
+            {
+                return Content("<script>alert('無權查看'); window.history.back();</script>", "text/html; charset=utf-8");
+
+            }
+        }
+        [SessionToLogin]
+        public async Task<IActionResult> booking(long id)
+        {            
+            long? currentUserId = HttpContext.Session.GetInt32("UserId");
+            ViewBag.LoginID = currentUserId;
+
+            if (id == currentUserId)
+            {
+                var songdata = await _context.Favoriteplaylists
+                   .Where(f => f.UserId == id)
+                    .Select(f => new SongViewModel
+                    {
+                        UserId = f.PlayList.User.UserId,
+                        UserName= f.PlayList.User.UserName!,
+                        PlayListId = f.PlayList.PlayListId, // 直接透過關聯屬性取值
+                        PlayListName = f.PlayList.Name,
+                        PlayListCoverImagePath = f.PlayList.CoverImagePath,
+                        PlayListSongCount = _context.PlayListSongs.Count(ps => ps.PlayListId == f.PlayList.PlayListId)
 
                     }).ToListAsync();
                 return View(songdata.Any() ? songdata : null);
@@ -129,10 +139,31 @@ namespace VocalSpace.Controllers
         {
             return View();
         }
-        
-        public IActionResult listdetail()
+
+        public async Task<IActionResult> listdetail(long id)
         {
-            return View();
+            var songViewModels = await _context.PlayLists     
+             .Select(p => new SongViewModel
+             {
+                 UserId = p.UserId,
+                 UserName = p.User.UserName!, // 歌單作者名稱
+                 PlayListId = p.PlayListId,  // 歌單 ID
+                 PlayListName = p.Name,      // 歌單名稱
+                 PlayListCoverImagePath = p.CoverImagePath, // 歌單封面
+                 PlayListSongCount = p.PlayListSongs.Count(), // 歌單內歌曲數量
+                 PlayListCreateTime = p.CreateTime,
+                 PlayCount = p.PlayListSongs.Sum(ps => ps.Song.PlayHistories.Count), // 所有歌曲的播放次數總和
+                 LikeCount = p.Favoriteplaylists.Count(), // 歌單的喜歡次數
+                 Songs = p.PlayListSongs.Select(ps => new SongDetail
+                 {
+                     SongId = ps.SongId,
+                     SongName = ps.Song.SongName,
+                     ArtistId= ps.Song.ArtistNavigation.UserId,
+                     SongArtist = ps.Song.ArtistNavigation.UserName!, // 歌曲作者
+                     SongCoverPhotoPath = ps.Song.CoverPhotoPath // 歌曲封面
+                 }).ToList() // 歌單內每首歌曲的詳細資訊
+             }).ToListAsync();
+            return View(songViewModels.Any() ? songViewModels : null);
         }
 
     }

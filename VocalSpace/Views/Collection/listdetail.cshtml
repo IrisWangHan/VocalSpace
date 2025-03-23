@@ -1,21 +1,20 @@
-﻿@{
-
+﻿@model IEnumerable<VocalSpace.Models.ViewModel.Song.SongViewModel>
+@{
+	int count = 1;
 }
-<link rel="stylesheet" href="~/css/song.css" asp-append-version="true" />
 
-<title>聲維宇宙排行榜</title>
 <div class="page-container mb-5">
 	<div class="top-container container">
 		<!-- 左側圖片區域 -->
 		<div class="col-md-4 songpfp">
-			<img src="/image/p1.jpg">
+			<img src="@Model.FirstOrDefault()!.PlayListCoverImagePath">
 		</div>
 		<!-- 右側音樂介紹區域 -->
 		<div class="row col-md-8 songinfo">
-			<h1>打不通的電話</h1>
+			<h1>@Model.FirstOrDefault()!.PlayListName</h1>
 			<div class="opacity-50">
 				<div>
-					<a>1首歌</a>
+					<a>@Model.FirstOrDefault()!.PlayListSongCount 首歌</a>
 				</div>
 			</div>
 			<div class="cols-2">
@@ -23,11 +22,11 @@
 					<ul class="list-inline opacity-75">
 						<li class="list-inline-item">
 							<h4 class="fs-6">播放次數</h4>
-							<h4>0</h4>
+							<h4>@Model.FirstOrDefault()!.PlayCount</h4>
 						</li>
 						<li class="list-inline-item">
 							<h4 class="fs-6">喜歡</h4>
-							<h4>0</h4>
+							<h4>@Model.FirstOrDefault()!.LikeCount</h4>
 						</li>
 					</ul>
 					<div class="ui-button">
@@ -43,10 +42,12 @@
 	<!-- 放在圖片下方的歌手資訊 -->
 	<div class="bottom-container container">
 		<div class="left-container  col-4">
-			@await Html.PartialAsync("_Songdetail_artist_partial")
+			<!-- AJAX動態載入-UserBar -->
+			<!--用個假趴秀先封裝AJAX用的div-->
+			@await Html.PartialAsync("_UserbarContainer_partial", Model.FirstOrDefault()!.UserId)
 			<div class="container">
 				<hr class="mt-5 mb-2">
-				<p class="text-gray-light mb-2 opacity-50">發布日期:2025/02/28</p>
+				<p class="text-gray-light mb-2 opacity-50">發布日期:@(Model.FirstOrDefault()!.PlayListCreateTime.ToString("yyyy/MM/dd"))</p>
 				<hr class="mt-2 mb-5">
 			</div>
 			@* 廣告圖 *@
@@ -56,30 +57,51 @@
 		</div>
 		<div class="right-container col-8">
 			<h3>曲目</h3>
-				@await Html.PartialAsync("_partialViewSong")
+			@if (Model == null)
+			{
+				<h2 class="no-data">暫無資料</h2>
+			}
+			else
+			{
+				<div id="realtime" class="ranking-list">
+					<div class="Randomplay">
+						<h3>歌曲</h3>
+						<button class="btn btn-danger" onclick="RandomPlay()">
+							<i class="bi bi-shuffle"></i>隨機播放
+						</button>
+					</div>
+					@{
+						foreach (var playlist in Model) { 
+						foreach (var item in playlist.Songs)
+						{
+							<div class="ranking-item">
+								<span class="rank">@count</span>
+								<a href="/Song/@item.SongId">
+									<img src="@item.SongCoverPhotoPath" alt="song cover">
+								</a>
+								<div class="info">
+									<a href="/Song/@item.SongId">
+										<p class="song">@item.SongName</p>
+									</a>
+										<a href="/Personal/mymusic/@item.ArtistId"> <p class="artist">@item.SongArtist</p></a>
+								</div>
+								<div>
+									@await Component.InvokeAsync("SongButton", new { songId = item.SongId })
+								</div>
+							</div>
+							count++;
+						}
+						}
+					}
+				</div>
+			}
 		</div>
 	</div>
 </div>
-<script src="~/js/partialViewSong.js" asp-append-version="true"></script>
 
 @section Scripts {
 	<script>
-	@* document.addEventListener("DOMContentLoaded", function () {
-				var toggleBtn = document.querySelector(".toggle-btn");
-				var introduce = document.querySelector(".introduce");
 
-				toggleBtn.addEventListener("click", function () {
-					if (introduce.classList.contains("expanded")) {
-						// 目前展開，點擊後收合
-						introduce.classList.remove("expanded");
-						toggleBtn.textContent = "查看更多";
-					} else {
-						// 目前收合，點擊後展開
-						introduce.classList.add("expanded");
-						toggleBtn.textContent = "收合";
-					}
-				});
-			}); *@
 
 			$(document).ready(function () {
 				$('.toggle-btn').click(function () {
