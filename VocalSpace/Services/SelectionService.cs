@@ -212,7 +212,7 @@ namespace VocalSpace.Services
                     // 使用 await 查詢使用者資料
                     var userData = await _context.Users
                         .FromSqlRaw("SELECT A.UserID,UserName, Email,AvatarPath FROM Users A INNER JOIN UsersInfo B ON A.UserID=B.UserID WHERE A.UserID=@UserID", new SqlParameter("@UserID", UserID))
-                        .Select(u => new { u.UserName, u.UsersInfo!.Email, u.UsersInfo.AvatarPath })  // 使用匿名類型選擇需要的欄位
+                        .Select(u => new { u.UserId, u.UserName, u.UsersInfo!.Email, u.UsersInfo.AvatarPath })  // 使用匿名類型選擇需要的欄位
                         .FirstOrDefaultAsync();
 
                     // 檢查是否找到使用者資料
@@ -222,6 +222,7 @@ namespace VocalSpace.Services
                         data.UserName = userData.UserName;
                         data.Email = userData.Email;
                         data.AvatarPath = userData.AvatarPath;
+                        data.UserId = userData.UserId;
                     }
                 }
                 return data!;
@@ -287,12 +288,11 @@ namespace VocalSpace.Services
         {
             try
             {
-                //判斷user登入
-                long UserID = 11;
+
                 SelectionFormViewModel data = new();
                 // 1️ 先判斷是否報名過
                 bool hasJoined = await _context.SelectionDetails
-                    .AnyAsync(sd => sd.Selection.SelectionId == id && sd.Song.Artist == UserID);
+                    .AnyAsync(sd => sd.Selection.SelectionId == id && sd.Song.Artist == userData.UserId);
 
                 List<SelectionSongs> songs;
                 List<SelectionSongs> applySongs = new List<SelectionSongs>(); 
@@ -301,7 +301,7 @@ namespace VocalSpace.Services
                 {
                     // 2️ 已報名，查詢對應的歌曲 左外聯結 (GroupJoin() + Select())
                     applySongs = await _context.Songs
-                        .Where(s => s.Artist == UserID) // 取得該用戶所有歌曲
+                        .Where(s => s.Artist == userData.UserId) // 取得該用戶所有歌曲
                         .GroupJoin(
                             _context.SelectionDetails.Where(sd => sd.SelectionId == id), // 只選擇對應 SelectionID 的報名資料
                             song => song.SongId,
@@ -323,7 +323,7 @@ namespace VocalSpace.Services
 
                 // 3️ 無論有無報名，查詢該用戶所有歌曲
                 songs = await _context.Songs
-                    .Where(s => s.Artist == UserID)
+                    .Where(s => s.Artist == userData.UserId)
                      .Select(x => new SelectionSongs
                      {
                          SongId = x.SongId,

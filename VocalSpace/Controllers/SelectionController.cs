@@ -85,7 +85,6 @@ namespace VocalSpace.Controllers
 
             if (UserID == null|| UserID==0)
             {
-                TempData["ErrorMessage"] = "尚未登入,即將幫您跳轉！";
                 return RedirectToAction("Login", "Accounts"); // 重導讓 View 收到 TempData
             }
             //取得user資料
@@ -95,7 +94,6 @@ namespace VocalSpace.Controllers
             SelectionFormViewModel selectionData = await _selectionService.CheckSelectionOnTime(id);           
             if (selectionData == null)
             {
-                TempData["ErrorMessage"] = "目前非報名期間！";
                 return RedirectToAction("Index", "Selection"); // 重導讓 View 收到 TempData
             }
             
