@@ -63,6 +63,31 @@
 	</div>
 </div>
 
+<div class="modal fade" id="ActivityCommitModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="shareModalLabel">活動申請提交 - 上傳進度</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="container w-100 h-100 d-flex align-items-center">
+					<div class="col-6 d-flex justify-content-center align-items-center">
+						<i class="text-black bi bi-cloud-check display-1"></i>
+					</div>
+					<div class="col-6 text-black d-flex flex-column justify-content-center align-items-center">
+						<p class="fs-4">您的活動已申請提交</p>
+						<p class="fs-4">等待管理員審核中!</p>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 @*公用彈窗*@
 @await Html.PartialAsync("_ShareModal")
 
@@ -96,87 +121,87 @@
 			}
 		}
 
-		$(function () {
+					$(function () {
 
-		// 表單提交驗證
-		document.getElementById("eventForm").addEventListener("submit", function (e) {
-			e.preventDefault(); // 防止表單直接提交
+			// 表單提交驗證
+			document.getElementById("eventForm").addEventListener("submit", function (e) {
+				e.preventDefault(); // 防止表單直接提交
 
-			//未填寫的欄位紅框
-			let isValid = true;
-			function validateField(inputId, errorId) {
-				let inputField = document.getElementById(inputId);
-				let errorMsg = document.getElementById(errorId);
+				//未填寫的欄位紅框
+				let isValid = true;
+				function validateField(inputId, errorId) {
+					let inputField = document.getElementById(inputId);
+					let errorMsg = document.getElementById(errorId);
 
-				if (!inputField.value.trim()) {
-					inputField.classList.add("is-invalid");
-					errorMsg.style.display = "block";
-					isValid = false;
-				} else {
-					inputField.classList.remove("is-invalid");
-					errorMsg.style.display = "none";
+					if (!inputField.value.trim()) {
+						inputField.classList.add("is-invalid");
+						errorMsg.style.display = "block";
+						isValid = false;
+					} else {
+						inputField.classList.remove("is-invalid");
+						errorMsg.style.display = "none";
+					}
 				}
-			}
 
-			validateField("eventTitle", "eventTitleError");
-			validateField("eventDate", "eventDateError");
-			validateField("eventLocation", "eventLocationError");
-			validateField("eventCity", "eventCityError");
+				validateField("eventTitle", "eventTitleError");
+				validateField("eventDate", "eventDateError");
+				validateField("eventLocation", "eventLocationError");
+				validateField("eventCity", "eventCityError");
 
 
-			// 取得表單欄位值
-			const title = document.getElementById("eventTitle").value.trim();
-			const eventDate = document.getElementById("eventDate").value;
-			const location = document.getElementById("eventLocation").value.trim();
-			const city = document.getElementById("eventCity").value.trim();
-			const description = document.getElementById("eventDescription").value.trim();
-			const coverImageInput = document.getElementById("coverImageInput");
+				// 取得表單欄位值
+				const title = document.getElementById("eventTitle").value.trim();
+				const eventDate = document.getElementById("eventDate").value;
+				const location = document.getElementById("eventLocation").value.trim();
+				const city = document.getElementById("eventCity").value.trim();
+				const description = document.getElementById("eventDescription").value.trim();
+				const coverImageInput = document.getElementById("coverImageInput");
 
 				// 準備表單資料
-			   const formData = new FormData();
-			   formData.append("Title", title);
-			   formData.append("EventDate", eventDate);
-			   formData.append("Location", location);
-			   formData.append("City", city);
-			   formData.append("ActivityDescription", description);
+				const formData = new FormData();
+				formData.append("Title", title);
+				formData.append("EventDate", eventDate);
+				formData.append("Location", location);
+				formData.append("City", city);
+				formData.append("ActivityDescription", description);
 
-			// 封面圖片
-			if (coverImageInput.files.length > 0) {
-				formData.append("CoverImage", coverImageInput.files[0]);
-			}
+				// 封面圖片
+				if (coverImageInput.files.length > 0) {
+					formData.append("CoverImage", coverImageInput.files[0]);
+				}
 
-					$.ajax({
-			url: "/Activity/Submit",
-			type: "POST",
-			data: formData,
-			contentType: false,
-			processData: false,
-			success: function (data) {
-				alert("活動投稿成功！");
-				window.location.href = "/Activity/List";
-			},
-			error: function (xhr) {
-				console.error("錯誤訊息:", xhr.responseText);
-				const response = JSON.parse(xhr.responseText);
-				alert("錯誤：" + response.message + "\n詳細：" + (response.errors ? response.errors.join("\n") : "未知錯誤"));
-			}
-		});
+				$.ajax({
+					url: "/Activity/Submit",
+					type: "POST",
+					data: formData,
+					contentType: false,
+					processData: false,
+					success: function (data) {
 
-		// 取消按鈕返回首頁
-		let cancelBtn = document.getElementById("cancelBtn");
-		if (cancelBtn) {
-			cancelBtn.addEventListener("click", function () {
-				window.location.href = '/Activity/index';
+						window.location.href = "/Activity/Index";
+					},
+					error: function (xhr) {
+						console.error("錯誤訊息:", xhr.responseText);
+						const response = JSON.parse(xhr.responseText);
+						alert("錯誤：" + response.message + "\n詳細：" + (response.errors ? response.errors.join("\n") : "未知錯誤"));
+					}
+				});
+
+				// 取消按鈕返回首頁
+				let cancelBtn = document.getElementById("cancelBtn");
+				if (cancelBtn) {
+					cancelBtn.addEventListener("click", function () {
+						window.location.href = '/Activity/Index';
+					});
+				}
+
+				// 彈窗關閉返回首頁
+				let shareModalElement = document.getElementById("shareModal");
+				shareModalElement.addEventListener("hidden.bs.modal", function () {
+					window.location.href = '/Activity/Index';
+				});
 			});
-		}
-
-		// 彈窗關閉返回首頁
-		let shareModalElement = document.getElementById("shareModal");
-		shareModalElement.addEventListener("hidden.bs.modal", function () {
-			window.location.href = '/Activity/index';
 		});
-		});
-
 	</script>
 }
 

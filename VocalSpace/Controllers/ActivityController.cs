@@ -31,6 +31,11 @@ namespace VocalSpace.Controllers
             return View();
         }
 
+        public IActionResult Create()
+        {
+            return View();
+        }
+
         /// <summary>
         /// AJAX 載入活動列表 
         /// </summary>
@@ -67,29 +72,6 @@ namespace VocalSpace.Controllers
             return PartialView("_Activitycarousel_partialview", activityList);
         }
 
-
-        public IActionResult Create()
-        {
-            var model = new ShareModalViewModel
-            {
-                Title = "活動{活動標題}-上傳進度",
-                CustomContent = "<div class='container w-100 h-100 d-flex align-items-center'>" +
-                                    "<div class='col-6 d-flex justify-content-center align-items-center '>" +
-                                    "<i class='  text-black bi bi-cloud-check display-1'></i>" +
-                                    "</div>" +
-                                    "<div class=' col-6 text-black d-flex flex-column justify-content-center align-items-center '>" +
-                                        "<p class='fs-4'>您的活動已申請提交</p>" +
-                                        "<p class='fs-4'>等待管理員審核中!</p>" +
-                                    "</div>" +
-                                "</div>",
-                ImageUrl = "", // 不傳圖片
-                Link = "", // 讓輸入框消失
-                EventName = "",
-                Date = "",
-                Location = ""
-            };
-            return View(model);
-        }
         [HttpGet("Activity/Info/{activityid}")]
         public async Task<IActionResult> Info(int activityid)
         {

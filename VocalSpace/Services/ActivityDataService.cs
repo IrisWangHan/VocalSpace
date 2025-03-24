@@ -198,6 +198,7 @@ namespace VocalSpace.Services
                 Location = model.Location,
                 ActivityDescription = model.ActivityDescription ?? "",
                 UploaderId = userId,
+                City = model.City
             };
 
             // 如果有封面圖片，處理上傳
