@@ -1,8 +1,7 @@
 ﻿$(function () {
-    console.log('Activity.js已載入');
     let userId = $('#userId').data("userid");
-    console.log(userId);
-    loadActivityList();
+    let isFilterMyActivities = false; //用以篩選我的活動
+    loadActivityList(userId, isFilterMyActivities);
     loadActivityCarousel();
 
     //宣告一個 filters 物件，用來存放篩選條件
@@ -27,7 +26,8 @@
             window.location.href = "/Accounts/Login";
         } else {
             // 更新活動列表
-            loadActivityList(type === "mine" ? userId : null);
+            isFilterMyActivities = (type === "mine");
+            loadActivityList(userId, isFilterMyActivities);
         }
     })
 
@@ -47,8 +47,8 @@
         $('#keywordFilter').text(''); // 清空關鍵字
     }
 
-    //載入活動列表
-    function loadActivityList(userId) {
+    //載入活動列表，filterMyActivities將傳至後端用以判斷是否過濾我的活動
+    function loadActivityList(userId, filterMyActivities = false) {
         if (typeof filters === 'undefined' || filters === null) {
             filters = { // 如果 filters 是 undefined，重新初始化
                 keyword: '',
@@ -69,7 +69,9 @@
             // 如果有 userId，則傳遞 id
             requestData.id = userId;
         }
-        console.log(requestData);
+        // 傳遞 filterMyActivities 參數
+        requestData.filterMyActivities = filterMyActivities;
+        console.log("requestData", requestData);
         $.ajax({
             url: '/Activity/GetActivityList/',
             data: requestData,
@@ -102,7 +104,7 @@
     // 監聽關鍵字篩選
     $('#keywordFilter').on('input', function () {
         filters.keyword = $(this).val();
-        loadActivityList(userId);
+        loadActivityList(userId, isFilterMyActivities);
     });
 
     // 讓點擊「地區」按鈕時可以切換 active 狀態
@@ -112,7 +114,7 @@
 
         // 獲取選中的地區
         filters.region = $(this).data('region');
-        loadActivityList(userId)
+        loadActivityList(userId, isFilterMyActivities);
     });
 
     // 更新活動列表標題
@@ -147,7 +149,7 @@
                 $('#activityListTitle').text("活動列表");
                 filters.startDate = "";
                 filters.endDate = "";
-                loadActivityList(userId)
+                loadActivityList(userId, isFilterMyActivities);
                 return;
         }
         updateTitle(startDate, endDate);
@@ -182,7 +184,7 @@
     function updateTitle(start, end) {
         filters.startDate = start;
         filters.endDate = end;
-        loadActivityList(userId)
+        loadActivityList(userId, isFilterMyActivities);
         $('#activityListTitle').text(`活動列表：${start} ~ ${end}`);
     }
 

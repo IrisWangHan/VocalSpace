@@ -40,7 +40,7 @@ namespace VocalSpace.Controllers
         /// AJAX 載入活動列表 
         /// </summary>
         [HttpGet]
-        public async Task<IActionResult> GetActivityList(int? id,string keyword, string region, string startDate, string endDate)
+        public async Task<IActionResult> GetActivityList(int? id,string keyword, string region, string startDate, string endDate,bool filterMyActivities)
         {
             long? CurrentUserid = HttpContext.Session.GetInt32("UserId");
 
@@ -56,7 +56,7 @@ namespace VocalSpace.Controllers
 
             // 透過Service取得活動列表
 
-            var activityList = await _activityDataService.GetActivityListData(id,keyword,region,startDate,endDate);
+            var activityList = await _activityDataService.GetActivityListData(id,keyword,region,startDate,endDate,filterMyActivities);
 
             return PartialView("_ActivityList_partialview", activityList);
         }
@@ -234,6 +234,28 @@ namespace VocalSpace.Controllers
             }
 
             return Ok(new { success = true, message = "活動投稿成功！" });
+        }
+
+
+        /// <summary>
+        /// 取得所有所有對活動感興趣的人
+        /// </summary>
+        [HttpGet("/Activity/GetInterestedAvatars/{activityId}")]
+        public async Task<IActionResult> GetInterestedAvatars(long activityId)
+        {
+            //搜尋對活動感興趣的人
+            var interestedUsers = await _context.Interesteds
+                .Include(i => i.User)           // 先 Include User
+                .ThenInclude(u => u.UsersInfo)  // 再 Include UsersInfo
+                .Where(i => i.ActivityId == activityId)
+                .Select(i => new { 
+                    AvatarPath = i.User.UsersInfo!.AvatarPath, 
+                    userId=i.User.UserId,
+                    Account=i.User.Account
+                })
+                .ToListAsync();
+
+            return PartialView("_InterestedAvatarsPartial", interestedUsers);
         }
     }
 

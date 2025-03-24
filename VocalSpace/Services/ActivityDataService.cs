@@ -48,7 +48,7 @@ namespace VocalSpace.Services
         /// <summary>
         /// 抓取活動資料
         /// </summary>
-        public async Task<List<ActivityListViewModel>> GetActivityListData(long? currentUserId, string keyword, string region, string startDate, string endDate)
+        public async Task<List<ActivityListViewModel>> GetActivityListData(long? currentUserId, string keyword, string region, string startDate, string endDate, bool filterMyActivities)
         {
             // 查詢活動資料
             var ActivityList = await GetActivityListData();
@@ -59,8 +59,8 @@ namespace VocalSpace.Services
                 ActivityList = ActivityList.Where(a => a.Title.Contains(keyword, StringComparison.OrdinalIgnoreCase) || a.ActivityDescription.Contains(keyword, StringComparison.OrdinalIgnoreCase)).ToList();
             }
 
-            // 我的活動 => 只顯示自己上傳的活動
-            if (currentUserId.HasValue)
+            // 依照filterMyActivities決定是否過濾我的活動
+            if (filterMyActivities && currentUserId.HasValue)
             {
                 ActivityList = ActivityList.Where(c => c.UploaderId == currentUserId).ToList();
             }

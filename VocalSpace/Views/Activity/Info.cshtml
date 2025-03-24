@@ -51,15 +51,14 @@
 			<div class="introduce-area pt-2 pb-2">
 				<div class="introduce">
 					<p>
-						@(string.IsNullOrWhiteSpace(Model.ActivityDescription) ? "此活動沒有任何介紹!" : Html.Raw(Model.ActivityDescription.Replace("\\n", "<br>")))
+						@(string.IsNullOrWhiteSpace(Model.ActivityDescription) ? "此活動沒有任何介紹!" :
+												Html.Raw(Model.ActivityDescription.Replace("\\n", "<br>")))
 					</p>
 				</div>
 			</div>
 			<hr class="mt-5 mb-5">
 			<!-- 留言串partialview放這裡 -->
-			<div id="comment-section"
-				 data-target-id="@Model.ActivityId"
-				 data-target-type="Activity">
+			<div id="comment-section" data-target-id="@Model.ActivityId" data-target-type="Activity">
 
 				<!-- 顯示留言輸入區 (不會被 AJAX 更新) -->
 				@await Html.PartialAsync("_CommentInput", Model.CommentSection)
@@ -76,8 +75,12 @@
 			<div class="interested-count">
 				<h3><span id="interested-count">@Model.Interesteds.InterestedCount</span> 人想去</h3>
 			</div>
+			<div class="interested-avatars" id="interested-avatars" data-activity-id="@Model.ActivityId">
+				<!-- 頭像將通過 AJAX 載入 -->
+			</div>
 			<div class="activity-buttons">
-				<button class="btn interested-btn @(Model.Interesteds.IsInterested ? "selected" : "")" id="btn-interested" data-activity-id="@Model.ActivityId">★ 我也想去！</button>
+				<button class="btn interested-btn @(Model.Interesteds.IsInterested ? "selected" : "")"
+					id="btn-interested" data-activity-id="@Model.ActivityId">★ 我也想去！</button>
 				<button class="btn calendar-btn" onclick="addToCalendar()">📅 加入行事曆</button>
 			</div>
 		</div>
@@ -90,19 +93,73 @@
 	<script src="~/js/Comment.js" asp-append-version="true"></script>
 	<script>
 		//AJAX 取得UserBar
-				$(function () {
-					let userId = $("#userBarContainer").data("userid");
-					$.ajax({
-						url: `/Personal/GetUserBar/${userId}`, // Controller 端點，
-						type: "GET",
-						success: function (partialView) {
-							$("#userBarContainer").html(partialView);
-						},
-						error: function (xhr) {
-							$("#userBarContainer").html(`<p class='error-message'>上傳者載入失敗，錯誤訊息${xhr.responseText}</p>`);
-						}
-					});
+		$(function () {
+			let ActivityId = $("#interested-avatars").data("activity-id");
+			let userId = $("#userBarContainer").data("userid");
+			loadAvatars(ActivityId)
+			$.ajax({
+				url: `/Personal/GetUserBar/${userId}`, // Controller 端點，
+				type: "GET",
+				success: function (partialView) {
+					$("#userBarContainer").html(partialView);
+				},
+				error: function (xhr) {
+					$("#userBarContainer").html(`<p class='error-message'>上傳者載入失敗，錯誤訊息${xhr.responseText}</p>`);
+				}
+			});
+			//AJAX 取得想去的人
+			function loadAvatars(ActivityId) {
+				$.ajax({
+					url: `/Activity/GetInterestedAvatars/${ActivityId}`, // Controller 端點，
+					type: "GET",
+					success: function (partialView) {
+						$("#interested-avatars").html(partialView);
+					},
+					error: function (xhr) {
+						$("#interested-avatars").html(`<p class='error-message'>載入失敗，錯誤訊息${xhr.responseText}</p>`);
+					}
 				});
+			}
+			//我也想去按鈕
+			$(document).on("click", "#btn-interested", function () {
+				let activityId = $(this).data("activity-id");
+				let button = $(this);
+				$.ajax({
+					url: `/Activity/ToggleInterested/${activityId}`,
+					type: "POST",
+					success: function (res) {
+						if (res.success) {
+							// Controller返回 success interested interestedCount message
+							if (res.interested) {
+								button.addClass("selected");
+							} else {
+								button.removeClass("selected");
+							}
+
+							// 更新興趣人數
+							$('#interested-count').text(res.interestedCount);
+							loadAvatars(ActivityId);
+							// 如果是加入感興趣，顯示分享模態框
+							if (res.interested) {
+								$('#ShareActivityModal').modal('show');
+							}
+						} else {
+							alert(res.message || "操作失敗");
+						}
+					},
+					error: function (xhr) {
+						if (xhr.status === 401) {
+							alert(xhr.responseJSON?.message || "請先登入！");
+							window.location.href = "/Accounts/Login";
+						}
+						else
+							alert(xhr.responseJSON?.message || "發生錯誤，請稍後再試！");
+					}
+				});
+			});
+		});
+
+
 		//加入行事曆功能
 		function addToCalendar() {
 			var eventName = @Html.Raw(Json.Serialize(Model.Title));
@@ -133,4 +190,4 @@
 			window.open(calendarUrl, "_blank");
 		}
 	</script>
- }
+}

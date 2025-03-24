@@ -1,0 +1,23 @@
+﻿@model IEnumerable<dynamic> //動態ViewModel
+<div class="avatars mt-4 mb-4">
+    @foreach (var user in Model)
+    {
+        <a href="/Personal/mymusic/@user.userId" title="@user.Account">
+        <img src="@user.AvatarPath" class="avatar" alt="User Avatar" />
+        </a>
+    }
+</div>
+
+<style>
+    .avatars {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+    }
+</style>

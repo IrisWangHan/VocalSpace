@@ -15,10 +15,11 @@
 								<div class="cover-preview" id="coverPreview">
 								</div>
 							</div>
-							<input type="file" id="coverImageInput" class="d-none" accept="image/*" onchange="previewCoverImage(this)">
+							<input type="file" id="coverImageInput" class="d-none" accept="image/*"
+								onchange="previewCoverImage(this)">
 							<label for="coverImageInput" class="btn btn-outline-secondary btn-sm mt-2">選擇圖片</label>
 						</div>
-						<p class="small text-muted">圖片尺寸至少 1200x628px，大小不可超過2MB。</p>
+						<p class="small text-muted">圖片尺寸建議至少 1200x628px，大小不可超過2MB。</p>
 						<div class="error-feedback mt-1" id="coverError">請上傳封面圖片！</div>
 						@* 驗證使用者用 *@
 						<div id="UserId" data-userid=@userId></div>
@@ -26,7 +27,7 @@
 						<div class="form-group mt-3">
 							<label for="eventTitle">活動標題 *</label>
 							<input type="text" class="form-control" id="eventTitle">
-							<div class="error-feedback mt-1"  id="eventTitleError">請填寫活動標題!</div>
+							<div class="error-feedback mt-1" id="eventTitleError">請填寫活動標題!</div>
 						</div>
 						<div class="form-group mt-3">
 							<label for="eventDate">活動時間 *</label>
@@ -42,7 +43,13 @@
 
 						<div class="form-group mt-3">
 							<label for="eventCity">所在區域 *</label>
-							<input type="text" class="form-control" id="eventCity">
+							<select class="form-control" id="eventCity">
+								<option value="">請選擇所在區域</option>
+								@foreach (var region in VocalSpace.Models.RegionMapping.RegionDict.Keys)
+								{
+									<option value="@region">@region</option>
+								}
+							</select>
 							<div class="error-feedback mt-1" id="eventCityError">請填寫所在區域</div>
 						</div>
 
@@ -87,12 +94,8 @@
 		</div>
 	</div>
 </div>
-
-@*公用彈窗*@
-@await Html.PartialAsync("_ShareModal")
-
-
 @section Scripts {
+	<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places" asp-append-version="true"></script>
 	<script>
 		// 從頁面中獲取 userId
 		let userId = $("#UserId").data("userid");
@@ -121,7 +124,50 @@
 			}
 		}
 
-					$(function () {
+		$(function () {
+			// 載入頁面時檢查LocalStorage是否有草稿
+			const draft = JSON.parse(localStorage.getItem("eventDraft"));
+			if (draft) {
+				document.getElementById("eventTitle").value = draft.title;
+				document.getElementById("eventDate").value = draft.eventDate;
+				document.getElementById("eventLocation").value = draft.location;
+				document.getElementById("eventCity").value = draft.city;
+				document.getElementById("eventDescription").value = draft.description;
+				if (draft.coverImage) {
+					const reader = new FileReader();
+					reader.onload = function (e) {
+						document.getElementById('coverPreview').innerHTML = `<img src="${e.target.result}" alt="封面預覽" style="width: 100%; height: 100%; object-fit: cover;">`;
+					};
+					reader.readAsDataURL(draft.coverImage);
+				}
+			}
+			// 取消按鈕返回首頁
+			document.getElementById("cancelBtn").addEventListener("click", function () {
+				// 檢查表單是否有內容
+				const title = document.getElementById("eventTitle").value.trim();
+				const eventDate = document.getElementById("eventDate").value;
+				const location = document.getElementById("eventLocation").value.trim();
+				const city = document.getElementById("eventCity").value.trim();
+				const description = document.getElementById("eventDescription").value.trim();
+				const coverImageInput = document.getElementById("coverImageInput");
+
+				if (title || eventDate || location || city || description || coverImageInput.files.length > 0) {
+					if (confirm("表單有內容，是否儲存草稿到LocalStorage？")) {
+						const draft = {
+							title: title,
+							eventDate: eventDate,
+							location: location,
+							city: city,
+							description: description,
+							coverImage: coverImageInput.files.length > 0 ? coverImageInput.files[0] : null
+						};
+						localStorage.setItem("eventDraft", JSON.stringify(draft));
+					}
+					else
+						localStorage.removeItem("eventDraft")
+				}
+				window.location.href = '/Activity/Index';
+			});
 
 			// 表單提交驗證
 			document.getElementById("eventForm").addEventListener("submit", function (e) {
@@ -147,7 +193,9 @@
 				validateField("eventDate", "eventDateError");
 				validateField("eventLocation", "eventLocationError");
 				validateField("eventCity", "eventCityError");
+				validateField("coverImageInput", "coverError");
 
+				if (!isValid) return;
 
 				// 取得表單欄位值
 				const title = document.getElementById("eventTitle").value.trim();
@@ -169,7 +217,7 @@
 				if (coverImageInput.files.length > 0) {
 					formData.append("CoverImage", coverImageInput.files[0]);
 				}
-
+				//上傳活動AJAX=>ActivityController接收=>ActivityService處理資料
 				$.ajax({
 					url: "/Activity/Submit",
 					type: "POST",
@@ -177,32 +225,19 @@
 					contentType: false,
 					processData: false,
 					success: function (data) {
-
-						window.location.href = "/Activity/Index";
+						$("#ActivityCommitModal").modal("show");
+						localStorage.removeItem("eventDraft"); //清除草稿資料
 					},
 					error: function (xhr) {
-						console.error("錯誤訊息:", xhr.responseText);
 						const response = JSON.parse(xhr.responseText);
-						alert("錯誤：" + response.message + "\n詳細：" + (response.errors ? response.errors.join("\n") : "未知錯誤"));
+						alert("錯誤：" + response.message);
 					}
 				});
-
-				// 取消按鈕返回首頁
-				let cancelBtn = document.getElementById("cancelBtn");
-				if (cancelBtn) {
-					cancelBtn.addEventListener("click", function () {
-						window.location.href = '/Activity/Index';
-					});
-				}
-
-				// 彈窗關閉返回首頁
-				let shareModalElement = document.getElementById("shareModal");
-				shareModalElement.addEventListener("hidden.bs.modal", function () {
+				// 當 ActivityCommitModal 彈窗關閉時，導回 /Activity/Index
+				$('#ActivityCommitModal').on('hidden.bs.modal', function () {
 					window.location.href = '/Activity/Index';
 				});
 			});
 		});
 	</script>
 }
-
-
