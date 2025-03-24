@@ -1,6 +1,6 @@
 ﻿namespace VocalSpace.Models.ViewModel.Activity
 {
-    public class ActivityCreateModel
+    public class ActivityCreateModel //必須與前端表單名字一致
     {
         public required string Title { get; set; } = null!;
 

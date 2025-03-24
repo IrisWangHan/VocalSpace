@@ -26,7 +26,7 @@
 						<div class="form-group mt-3">
 							<label for="eventTitle">活動標題 *</label>
 							<input type="text" class="form-control" id="eventTitle">
-							<div class="error-feedback mt-1" id="eventTitleError">請填寫活動標題!</div>
+							<div class="error-feedback mt-1"  id="eventTitleError">請填寫活動標題!</div>
 						</div>
 						<div class="form-group mt-3">
 							<label for="eventDate">活動時間 *</label>
@@ -117,42 +117,49 @@
 					errorMsg.style.display = "none";
 				}
 			}
+
 			validateField("eventTitle", "eventTitleError");
 			validateField("eventDate", "eventDateError");
 			validateField("eventLocation", "eventLocationError");
 			validateField("eventCity", "eventCityError");
 
-			let formData = new FormData();
-			formData.append("EventTitle", document.getElementById("eventTitle").value);
-			formData.append("EventDate", document.getElementById("eventDate").value);
-			formData.append("EventLocation", document.getElementById("eventLocation").value);
-			formData.append("EventDescription", document.getElementById("eventDescription").value);
-			formData.append("EventCity", document.getElementById("eventCity").value);
+
+			// 取得表單欄位值
+			const title = document.getElementById("eventTitle").value.trim();
+			const eventDate = document.getElementById("eventDate").value;
+			const location = document.getElementById("eventLocation").value.trim();
+			const city = document.getElementById("eventCity").value.trim();
+			const description = document.getElementById("eventDescription").value.trim();
+			const coverImageInput = document.getElementById("coverImageInput");
+
+				// 準備表單資料
+			   const formData = new FormData();
+			   formData.append("Title", title);
+			   formData.append("EventDate", eventDate);
+			   formData.append("Location", location);
+			   formData.append("City", city);
+			   formData.append("ActivityDescription", description);
 
 			// 封面圖片
-			let coverImageInput = document.getElementById("coverImageInput");
 			if (coverImageInput.files.length > 0) {
 				formData.append("CoverImage", coverImageInput.files[0]);
 			}
 
-			// 發送 AJAX 請求
-			fetch("/Activity/Submit", {
-				method: "POST",
-				body: formData
-			})
-			.then(response => response.json())
-			.then(data => {
-				if (data.success) {
-					alert("活動投稿成功！");
-					window.location.href = "/Activity/index"; // 成功後返回首頁
-				} else {
-					alert(data.message || "投稿失敗，請稍後再試！");
-				}
-			})
-			.catch(error => {
-				console.error("發生錯誤:", error);
-				alert("發生錯誤，請稍後再試！");
-			});
+					$.ajax({
+			url: "/Activity/Submit",
+			type: "POST",
+			data: formData,
+			contentType: false,
+			processData: false,
+			success: function (data) {
+				alert("活動投稿成功！");
+				window.location.href = "/Activity/List";
+			},
+			error: function (xhr) {
+				console.error("錯誤訊息:", xhr.responseText);
+				const response = JSON.parse(xhr.responseText);
+				alert("錯誤：" + response.message + "\n詳細：" + (response.errors ? response.errors.join("\n") : "未知錯誤"));
+			}
 		});
 
 		// 取消按鈕返回首頁
