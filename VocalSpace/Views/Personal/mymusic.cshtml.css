@@ -1,4 +1,10 @@
-﻿.menu {
+﻿.no-data {
+    text-align: center;
+    margin-top: 50px;
+    color: cornflowerblue
+}
+
+.menu {
     display: flex;
     justify-content: center;
     gap: 20px;

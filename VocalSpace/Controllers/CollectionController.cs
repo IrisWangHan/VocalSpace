@@ -135,8 +135,24 @@ namespace VocalSpace.Controllers
             return View();
         }
         [SessionToLogin]
-        public IActionResult createlist()
+        [HttpPost]
+        public async Task<IActionResult> createlist(PlayList model)
         {
+            long? currentUserId = HttpContext.Session.GetInt32("UserId");
+            if (ModelState.IsValid)
+            {
+                model.CreateTime = DateTime.Now; // 設定建立時間
+                               
+                model.UserId = (long)currentUserId!;
+
+                _context.PlayLists.Add(model);
+                await _context.SaveChangesAsync();
+                // 設定 TempData 用於顯示成功訊息
+                TempData["SuccessMessage"] = "新增成功";
+
+                // 跳轉到 CollectionController 的 MyList
+                return RedirectToAction("mylist", "Collection");
+            }
             return View();
         }
 

@@ -1,4 +1,11 @@
-﻿<div class="container">
+﻿@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<div class="container">
     <div class="h1"><h1>蒐藏庫</h1></div>
     <hr />
     <div class="cont">
@@ -11,7 +18,7 @@
             </ul>
         </div>
 
-
+        <form method="post" asp-action="createlist">
         <div class="createform">
             <div class="title"><h2>蒐藏庫 / 我的歌單 /</h2><h2 class="red">新增歌單</h2></div>
             <div class="content">
@@ -27,7 +34,7 @@
                         </div>
                         <label class="upload-btn">
                             選擇圖片
-                            <input type="file" id="fileInput" accept="image/*">
+                                <input type="file" id="fileInput" name="PlayListCoverImagePath" accept="image/*">
                         </label>
                     </div>
 
@@ -35,23 +42,24 @@
                 </div>
 
                 <div class="rightcontent">
-                    <input type="text" class="input-field" placeholder="請輸入歌單名稱">
+                        <input type="text" class="input-field" name="PlayListName" placeholder="請輸入歌單名稱">
                     <div class="introduce">
                         <h4>介紹</h4>
-                        <textarea class="input-field" placeholder="請輸入歌單介紹文字"></textarea>
+                            <textarea class="input-field" name="PlaylistDescription" placeholder="請輸入歌單介紹文字"></textarea>
                     </div>
                     
                     <div class="status-toggle">
                         <h4>歌單狀態</h4>
                         <label class="switch">
-                            <input type="checkbox" id="toggleSwitch">
+                                <input type="checkbox" id="toggleSwitch" name="IsPublic">
                             <span class="slider"></span>
                         </label>
                     </div>
-                    <button class="create-btn">新增歌單</button>
+                    <button type="submit" class="create-btn">新增歌單</button>
                 </div>
             </div>
         </div>
+        </form>
     </div>
 </div>
 <script>
