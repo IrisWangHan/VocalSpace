@@ -163,20 +163,20 @@ namespace VocalSpace.Controllers
             string email = ValidateResetToken(token); // 解析 & 驗證 token
             if (email == null)
             {
-                return BadRequest("無效或過期的 Token");
+                return Json(new { success = false, message = "重設密碼連結已過期..." });
             }
 
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UsersInfo.Email == email);
             if (user == null)
             {
-                return BadRequest("找不到使用者");
+                return Json(new { success = false, message = "找不到使用者" });
             }
 
             // 更新密碼（記得使用 Hash）
             user.Password = HashPasswordWithBcrypt(newPassword);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Login");
+            return Json(new { success = true, message = "密碼已成功重設" });
         }
 
         public string ValidateResetToken(string token)

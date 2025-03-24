@@ -170,7 +170,7 @@ $(document).on("click", ".btn-vote-to-selectionSong", function () {
         }
     });
 });
-		});
+	
 
 //歌曲播放功能(尚未開發，僅顯示提示訊息)
 $(document).on("click", ".btn-play", function () {

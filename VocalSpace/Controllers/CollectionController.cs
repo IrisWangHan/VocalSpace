@@ -122,11 +122,7 @@ namespace VocalSpace.Controllers
         [SessionToLogin]
         public IActionResult uploadMusic()
         {
-            if (HttpContext.Session.GetString("IsLoggedIn") == "true")
-            {
-                return View();
-            }
-            return RedirectToAction("Login", "Accounts");
+            return View();
         }
         [SessionToLogin]
         public IActionResult createlist()
