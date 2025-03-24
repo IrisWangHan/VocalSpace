@@ -82,16 +82,16 @@ namespace VocalSpace.Controllers
              TempData["q"] = q;
             
             AllResult!.Songs = await _searchService.LINQsong(q!);
-          
+
             AllResult.Artists = await _searchService.LINQartist(q!);
-                
+
             AllResult.Playlists = await _searchService.LINQplaylist(q!);
 
-            //   找不到搜尋結果 或 透過URL直接進入searchAll頁面，導向searchError頁面
-            //  IsEmpty = true，代表沒資料
-            AllResult.IsEmpty = ( AllResult.Songs.Count == 0 & AllResult.Artists.Count == 0 & AllResult.Playlists.Count == 0 );
-            var resultView = (  AllResult.IsEmpty || q == null ) ? View("searchError") : View("searchAll", AllResult);
-            return resultView;
+            //找不到搜尋結果 或 透過URL直接進入searchAll頁面，導向searchError頁面
+            //IsEmpty = true，代表沒資料
+            AllResult.IsEmpty = (AllResult.Songs.Count == 0 & AllResult.Artists.Count == 0 & AllResult.Playlists.Count == 0);
+            var resultView = (AllResult.IsEmpty || q == null) ? View("searchError") : View("searchAll", AllResult);
+            return resultView; 
         }
         
         public async Task<IActionResult> searchSongs()
@@ -162,50 +162,34 @@ namespace VocalSpace.Controllers
             }
         }
 
-        public async Task<IActionResult> searchResult()
-        {
-            try
-            {
-                string? q = Request.Query["q"];
+        //public async Task<IActionResult> searchResult()
+        //{
+        //    try
+        //    {
+        //        string? q = Request.Query["q"];
 
-                if (string.IsNullOrEmpty(q))
-                {
-                    return BadRequest("搜尋關鍵字不能為空"); // 400 錯誤，避免 500 錯誤
-                }
+        //        if (string.IsNullOrEmpty(q))
+        //        {
+        //            return BadRequest("搜尋關鍵字不能為空"); // 400 錯誤，避免 500 錯誤
+        //        }
 
-                Console.WriteLine($"搜尋關鍵字: {q}");
+        //        Console.WriteLine($"搜尋關鍵字: {q}");
 
-                List<Song> result = await _context.Songs
-                    .Where(data => data.SongName.Contains(q))
-                    .ToListAsync();
+        //        List<Song> result = await _context.Songs
+        //            .Where(data => data.SongName.Contains(q))
+        //            .ToListAsync();
 
-                Console.WriteLine($"找到 {result.Count} 首歌曲");
+        //        Console.WriteLine($"找到 {result.Count} 首歌曲");
 
-                return Ok(result); // 回傳 JSON 給前端
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"發生錯誤: {ex.Message}");
-                return StatusCode(500, "伺服器錯誤");
-            }
-            q = Request.Query["q"];
-            type = Request.Query["type"];
-            //Console.WriteLine(Request.Query["q"]);
-            List<Song> result = await _context.Songs.Where(data => data.SongName.Contains(q!)).ToListAsync();
-            Console.WriteLine(result);
-            switch (type)
-            {
-                case "All":
-                    return RedirectToAction("searchAll");
-                case "Song":
-                    return RedirectToAction("searchSongs");
-                case "Songlist":
-                    return RedirectToAction("searchSonglists");
-                case "artist":
-                    return RedirectToAction("searchArtists");
-                default:
-                    return RedirectToAction("searchAll");
-            }
+        //        return Ok(result); // 回傳 JSON 給前端
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($"發生錯誤: {ex.Message}");
+        //        return StatusCode(500, "伺服器錯誤");
+        //    }
+            
+        // }
         //[HttpGet]
         //public async Task<IActionResult> searchResult()
         //{
@@ -228,7 +212,7 @@ namespace VocalSpace.Controllers
         //            return RedirectToAction("searchAll");
         //    }
             
-        }
+        //}
 
 
 

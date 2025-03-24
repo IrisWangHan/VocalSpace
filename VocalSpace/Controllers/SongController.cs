@@ -27,7 +27,7 @@ namespace VocalSpace.Controllers
         public SongController(VocalSpaceDbContext context, DonateService donateService, ModalDataService modalDataService, IConfiguration? config, CommentDataService commentService)
         {
             _context = context;
-           _donateService = donateService;
+            _donateService = donateService;
             _ModalDataService = modalDataService;
             _config = config;
             _commentService = commentService;
@@ -73,8 +73,8 @@ namespace VocalSpace.Controllers
                 Comments = new List<CommentViewModel>() //不在這裡查詢留言，改用 AJAX 讀取
             },
             LikeInfo = new SongLikeViewModel
-        {
-            LikeCount = s.LikeCount + _context.LikeSongs
+            {
+                LikeCount = s.LikeCount + _context.LikeSongs
                 .Where(ls => ls.SongId == s.SongId)
                 .Count(),
             }
@@ -215,7 +215,7 @@ namespace VocalSpace.Controllers
             //  Guid.NewGuid() : 產生全球唯一識別碼 (UUID)
             //  orderId : 產生隨機20碼訂單編號
             var orderId = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 20);
-                    
+
             var order = new Dictionary<string, string>
             {
                 //綠界需要的參數
@@ -228,7 +228,7 @@ namespace VocalSpace.Controllers
                 { "CustomField2",  SongId!},
                 { "CustomField3",  ""},
                 { "CustomField4",  ""},
-                { "ReturnURL",  $"{_config?["ECPay:website"]}Song/AddPayInfo"},  
+                { "ReturnURL",  $"{_config?["ECPay:website"]}Song/AddPayInfo"},
                 { "ClientBackURL",  $"{_config?["ECPay:website"]}Song/{SongId}"},
                 { "MerchantID",  "3002607"},
                 { "PaymentType",  "aio"},
@@ -239,10 +239,10 @@ namespace VocalSpace.Controllers
             // 新增訂單到資料庫
             await _donateService.AddOrderToDbAsync(order);
             //檢查碼
-           order["CheckMacValue"] = _donateService.GetCheckMacValue(order);
+            order["CheckMacValue"] = _donateService.GetCheckMacValue(order);
             //  產生綠界表單(自動送出)
             string Form = _donateService.PrepareECPayForm(order);
-            
+
             return Content(Form, "text/html");
 
         }
@@ -252,7 +252,7 @@ namespace VocalSpace.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> AddPayInfo(IFormCollection form)
         {
-            
+
             // 將綠界傳來的 Form 資料轉成 Dictionary 
             var collection = form.ToDictionary(x => x.Key, x => x.Value.ToString());
             //  沒收到 檢查碼 則回傳錯誤
@@ -356,7 +356,7 @@ namespace VocalSpace.Controllers
             }
 
 
-            var (isSuccess, isliked,likeCount) = await _ModalDataService.AddToLikesong(userId.Value, model.SongId);
+            var (isSuccess, isliked, likeCount) = await _ModalDataService.AddToLikesong(userId.Value, model.SongId);
 
             if (!isSuccess)
             {
@@ -366,9 +366,22 @@ namespace VocalSpace.Controllers
             return Ok(new
             {
                 isliked,
-                likeCount, 
+                likeCount,
                 message = isliked ? "歌曲已加入收藏" : "歌曲已移除收藏"
             });
+        }
+
+        [HttpPost("/Song/AddLikePlaylist")]
+        public async Task<IActionResult> AddLikePlaylist([FromBody] Favoriteplaylist model)
+        {
+            // 取得使用者ID
+            long? userId = HttpContext.Session.GetInt32("UserId");
+
+            // 確保使用者已登入
+            if (userId == null || userId == 0)
+            {
+                return Unauthorized(new { success = false, message = "請先登入！" });
+            }
         }
     }
 }

@@ -239,7 +239,7 @@ $(document).on("click", "#btn-interested", function () {
     });
 });
 
-// Write your JavaScript code.
+
 
 //  搜尋功能
 let searchText = document.querySelector('.header__search-input');
@@ -266,7 +266,7 @@ function search() {
             //  導向到搜尋結果url
          
             window.location.assign(responseUrl);
-            conlo
+            
             document.getElementById('alllink').setAttribute('href', '/search/searchAll/?q=' + searchText.value);
                       
         }).
@@ -274,3 +274,35 @@ function search() {
             console.error("載入歌曲失敗");
         })
 }
+
+//  收藏歌單
+$(document).on("click", ".btn-add-to-Likeplaylist", function () {
+    let button = $(this);
+    let platlistid = button.data("platlistid");
+    // 根據 songId 找到對應的 likeCount
+    //let count = $(`.likeCount[data-songid="${songId}"]`);
+    console.log(button);
+    console.log(platlistid);
+    //console.log(count);
+    $.ajax({
+        url: `/Song/AddLikePlaylist`,
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({ PlatlistId: platlistid }),
+        success: function (res) {
+            if (res.isliked) {
+                button.addClass("selected");
+            }
+            else {
+                button.removeClass("selected");
+            }
+            // **只有當 count 存在時才更新讚數**
+            if (count.length > 0) {
+                count.text(res.likeCount);
+            }
+        },
+        error: function (xhr) {
+            alert(xhr.responseJSON?.message || "發生錯誤，請稍後再試！");
+        }
+    });
+});
