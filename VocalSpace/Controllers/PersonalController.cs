@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VocalSpace.Filters;
@@ -46,8 +47,26 @@ namespace VocalSpace.Controllers
             return personals;
         }
         [HttpGet("Personal/mymusic/{id}")]        
-        public IActionResult mymusic(long id)
+        public async Task<IActionResult> mymusic(long id)
         {
+
+            var SongCount = await _context.Songs
+            .Where(song => song.Artist == id)
+            .CountAsync();
+
+            var songdata= await _context.Songs
+                .Include(s => s.ArtistNavigation)
+                .Where(s =>s.Artist == id)
+                .Select(s => new SongViewModel
+                {
+                    SongId = s.SongId,
+                    SongCoverPhotoPath = s.CoverPhotoPath,
+                    SongName = s.SongName,
+                    UserId = s.Artist,
+                    UserName = s.ArtistNavigation.UserName!,
+                    SongCount= SongCount
+                }).ToListAsync();
+            ViewData["song"] = songdata.Any() ? songdata : null;
             return View(personal(id).ToList());
         }
         [HttpGet("Personal/myabout/{id}")]

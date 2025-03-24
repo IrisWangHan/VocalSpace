@@ -22,6 +22,7 @@
 
         public string SongName { get; set; } = null!;
 
+        public int? SongCount { get; set; }
         //from model.SongRank
         public byte PreRank { get; set; }
         public byte CurrentRank { get; set; }
