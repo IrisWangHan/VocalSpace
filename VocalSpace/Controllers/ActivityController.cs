@@ -201,6 +201,9 @@ namespace VocalSpace.Controllers
             }
         }
 
+        /// <summary>
+        /// 我也想去按鈕邏輯
+        /// </summary>
         [HttpPost("/Activity/ToggleInterested/{activityId}")]
         public async Task<IActionResult> Interested(long activityId)
         {
@@ -223,22 +226,33 @@ namespace VocalSpace.Controllers
             });
         }
 
-        /////<summary>
-        ///// AJAX方式取得加入歌單Modal需要的資料
-        /////</summary>
-        //[HttpGet("Song/GetAddToPlaylistModal/{songid}")]
-        //public async Task<IActionResult> GetAddToPlaylistModal(int songId)
-        //{
-        //    long? userId = HttpContext.Session.GetInt32("UserId");
-        //    if (userId == null || userId == 0)
-        //    {
-        //        return Unauthorized("請先登入");
-        //    }
+        /// <summary>
+        /// 投稿活動表單上傳
+        /// </summary>
+        [HttpPost("/Activity/Submit")]
+        public async Task<IActionResult> SubmitActivity([FromForm] ActivityCreateModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new { success = false, message = "請填寫所有必要欄位！" });
+            }
 
-        //    var PlaylistModalData = await _ModalDataService.GetPlaylistModalData(userId.Value, songId);
+            // 取得當前登入的使用者 ID
+            long? userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+            {
+                return Unauthorized(new { success = false, message = "請先登入！" });
+            }
 
-        //    return PartialView("_Modal_AddToPlaylist", PlaylistModalData);
-        //}
+            // 呼叫 Service 儲存活動資料
+            bool isCreated = await _activityDataService.CreateActivityAsync(model, userId.Value);
+            if (!isCreated)
+            {
+                return StatusCode(500, new { success = false, message = "活動投稿失敗，請稍後再試！" });
+            }
+
+            return Ok(new { success = true, message = "活動投稿成功！" });
+        }
     }
 
 

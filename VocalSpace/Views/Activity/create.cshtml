@@ -1,4 +1,8 @@
-﻿<div class="page-container container-xxl ">
+﻿@{
+	ViewData["Title"] = "活動投稿";
+	var userId = ViewData["uid"] ?? null;
+}
+<div class="page-container container-xxl ">
 	<h2 class="text-center mt-4">投稿活動</h2>
 	<div class="row justify-content-center">
 		<div class="col-md-8">
@@ -11,19 +15,19 @@
 								<div class="cover-preview" id="coverPreview">
 								</div>
 							</div>
-								<input type="file" id="coverImageInput" class="d-none" accept="image/*" onchange="previewCoverImage(this)">
-								<label for="coverImageInput" class="btn btn-outline-secondary btn-sm mt-2">選擇圖片</label>
+							<input type="file" id="coverImageInput" class="d-none" accept="image/*" onchange="previewCoverImage(this)">
+							<label for="coverImageInput" class="btn btn-outline-secondary btn-sm mt-2">選擇圖片</label>
 						</div>
 						<p class="small text-muted">圖片尺寸至少 1200x628px，大小不可超過2MB。</p>
 						<div class="error-feedback mt-1" id="coverError">請上傳封面圖片！</div>
-
+						@* 驗證使用者用 *@
+						<div id="UserId" data-userid=@userId></div>
 						<!-- 活動資訊區 -->
 						<div class="form-group mt-3">
 							<label for="eventTitle">活動標題 *</label>
 							<input type="text" class="form-control" id="eventTitle">
 							<div class="error-feedback mt-1" id="eventTitleError">請填寫活動標題!</div>
 						</div>
-
 						<div class="form-group mt-3">
 							<label for="eventDate">活動時間 *</label>
 							<input type="datetime-local" class="form-control" id="eventDate">
@@ -34,6 +38,12 @@
 							<label for="eventLocation">活動地點 *</label>
 							<input type="text" class="form-control" id="eventLocation">
 							<div class="error-feedback mt-1" id="eventLocationError">這填寫活動地點!</div>
+						</div>
+
+						<div class="form-group mt-3">
+							<label for="eventCity">所在區域 *</label>
+							<input type="text" class="form-control" id="eventCity">
+							<div class="error-feedback mt-1" id="eventCityError">請填寫所在區域</div>
 						</div>
 
 						<div class="form-group mt-3">
@@ -48,7 +58,7 @@
 						</div>
 					</form>
 				</div>
-			</div>			
+			</div>
 		</div>
 	</div>
 </div>
@@ -59,9 +69,17 @@
 
 @section Scripts {
 	<script>
+		// 從頁面中獲取 userId
+		let userId = $("#UserId").data("userid");
+		// 檢查用戶是否登入
+		if (!userId) {
+			alert("請先登入！");
+			window.location.href = '/Accounts/Login';
+		}
+
 		// 封面圖片預覽與檔案大小驗證
 		function previewCoverImage(input) {
-			const preview = document.getElementById('coverContainer');
+			const preview = document.getElementById('coverPreview');
 			const maxSizePhoto = 2 * 1024 * 1024; // 2MB 限制
 
 			if (input.files && input.files[0]) {
@@ -78,49 +96,63 @@
 			}
 		}
 
+		$(function () {
+
 		// 表單提交驗證
 		document.getElementById("eventForm").addEventListener("submit", function (e) {
-			e.preventDefault(); // 防止表單提交
+			e.preventDefault(); // 防止表單直接提交
 
+			//未填寫的欄位紅框
 			let isValid = true;
-
 			function validateField(inputId, errorId) {
 				let inputField = document.getElementById(inputId);
 				let errorMsg = document.getElementById(errorId);
 
 				if (!inputField.value.trim()) {
-					inputField.classList.add("is-invalid"); 
-					errorMsg.style.display = "block"; 
+					inputField.classList.add("is-invalid");
+					errorMsg.style.display = "block";
 					isValid = false;
 				} else {
-					inputField.classList.remove("is-invalid"); 
+					inputField.classList.remove("is-invalid");
 					errorMsg.style.display = "none";
 				}
 			}
-
 			validateField("eventTitle", "eventTitleError");
 			validateField("eventDate", "eventDateError");
 			validateField("eventLocation", "eventLocationError");
+			validateField("eventCity", "eventCityError");
 
-				 // 檢查封面圖片是否已上傳
-		const coverImageInput = document.getElementById('coverImageInput');
-		const coverPreview = document.getElementById('coverContainer');
-		const coverError = document.getElementById('coverError');
+			let formData = new FormData();
+			formData.append("EventTitle", document.getElementById("eventTitle").value);
+			formData.append("EventDate", document.getElementById("eventDate").value);
+			formData.append("EventLocation", document.getElementById("eventLocation").value);
+			formData.append("EventDescription", document.getElementById("eventDescription").value);
+			formData.append("EventCity", document.getElementById("eventCity").value);
 
-		if (!coverImageInput.files.length) {
-			coverPreview.classList.add('is-invalid');
-			coverError.style.display = 'block';
-			isValid = false;
-		} else {
-			coverPreview.classList.remove('is-invalid');
-			coverError.style.display = 'none';
-		}
-
-			if (isValid) {
-				// 這裡可以加入表單提交的邏輯
-					let shareModal = new bootstrap.Modal(document.getElementById("shareModal"));
-					shareModal.show();
+			// 封面圖片
+			let coverImageInput = document.getElementById("coverImageInput");
+			if (coverImageInput.files.length > 0) {
+				formData.append("CoverImage", coverImageInput.files[0]);
 			}
+
+			// 發送 AJAX 請求
+			fetch("/Activity/Submit", {
+				method: "POST",
+				body: formData
+			})
+			.then(response => response.json())
+			.then(data => {
+				if (data.success) {
+					alert("活動投稿成功！");
+					window.location.href = "/Activity/index"; // 成功後返回首頁
+				} else {
+					alert(data.message || "投稿失敗，請稍後再試！");
+				}
+			})
+			.catch(error => {
+				console.error("發生錯誤:", error);
+				alert("發生錯誤，請稍後再試！");
+			});
 		});
 
 		// 取消按鈕返回首頁
@@ -135,6 +167,7 @@
 		let shareModalElement = document.getElementById("shareModal");
 		shareModalElement.addEventListener("hidden.bs.modal", function () {
 			window.location.href = '/Activity/index';
+		});
 		});
 
 	</script>
