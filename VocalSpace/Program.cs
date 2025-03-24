@@ -34,6 +34,8 @@ builder.Services.AddScoped<UserService>();      //µù¥UService¡A¥Î©ó³B²zUserªº¸ê®
 builder.Services.AddScoped<ModalDataService>(); //µù¥UService¡A¥Î©ó³B²zModalªº¸ê®Æ(¥[¤Jºq³æ¡A¤À¨Éºq¦±¡AÃÙ§U¡A¤À¨É¬¡°Ê)
 builder.Services.AddScoped<ActivityDataService>(); //µù¥UService¡A¥Î©ó³B²zActivityªº¸ê®Æ(ActivityList¡BActivityInfo¡BInterested)
 builder.Services.AddScoped<CommentDataService>(); //µù¥UService¡A¥Î©ó³B²z¯d¨¥ªO¸ê®Æ(¯d¨¥¿é¤J®Ø§PÂ_µn¤J¡A¯d¨¥¦Cªí)
+builder.Services.AddScoped<FileService>();//µù¥UService¡A¥Î©ó³B²zÀÉ®×¤W¶Ç(ªí³æ´£¥æ©Ò»ÝÀÉ®×)
+
 builder.Services.AddControllersWithViews(options =>
 {
     options.Filters.Add<GetSessionData>();     //Filter¥Î³~: ¦b°õ¦æAction¤§«e©Î¤§«á°õ¦æ¬Y¨Çµ{¦¡½X¡A³oÃä§Ú¥Î¨Ó±aViewDataªº¸ê®Æ

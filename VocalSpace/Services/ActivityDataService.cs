@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
 using VocalSpace.Models;
 using VocalSpace.Models.ViewModel.Activity;
 using VocalSpace.Models.ViewModel.Global;
@@ -10,11 +9,13 @@ namespace VocalSpace.Services
     {
         // EF 的 DbContext
         private readonly VocalSpaceDbContext _context;
+        private readonly FileService _fileService;
 
         // 建構函數 DbContext
-        public ActivityDataService(VocalSpaceDbContext context)
+        public ActivityDataService(VocalSpaceDbContext context, FileService fileService)
         {
             _context = context;
+            _fileService = fileService;
         }
 
         /// <summary>
@@ -130,6 +131,12 @@ namespace VocalSpace.Services
                     City = c.City,
                     ApprovalStatus = c.ApprovalStatus,
                     ActivityDescription = c.ActivityDescription,
+                    ShareUrl = $"https://w6r821w7-7145.asse.devtunnels.ms/Activity/Info/{c.ActivityId}",
+                    Interesteds = new InterestedViewModel
+                    {
+                        IsInterested = isLogin ? c.Interesteds.Any(i => i.UserId == CurrentUserid) : false,
+                        InterestedCount = c.Interesteds.Count,  //.Count為EF提供的屬性，用於計算集合中的資料行數
+                    },
                     // 填充 CommentSection 資料
                     CommentSection = new CommentSectionViewModel
                     {
@@ -148,7 +155,7 @@ namespace VocalSpace.Services
         /// <summary>
         /// 我也想去按鈕邏輯
         /// </summary>
-        public async Task<bool> ToggleInterested(long activityId, long userId)
+        public async Task<(bool isInterested, int count)> ToggleInterested(long activityId, long userId)
         {
             var isInterest = await _context.Interesteds
                 .FirstOrDefaultAsync(i => i.ActivityId == activityId && i.UserId == userId);
@@ -172,7 +179,37 @@ namespace VocalSpace.Services
 
             await _context.SaveChangesAsync();
 
-            return isInterest == null; // 回傳 true 代表新增，false 代表刪除
+            // 計算並返回最新的興趣人數
+            int interestedCount = await _context.Interesteds.CountAsync(i => i.ActivityId == activityId);
+
+            // 回傳 isInterested 狀態和最新計數
+            return (isInterest == null, interestedCount); 
+        }
+
+        /// <summary>
+        /// 投稿活動表單上傳
+        /// </summary>
+        public async Task<bool> CreateActivityAsync(ActivityCreateModel model, long userId)
+        {
+            var activity = new VocalSpace.Models.Activity
+            {
+                Title = model.Title,
+                EventTime = model.EventDate,
+                Location = model.Location,
+                ActivityDescription = model.ActivityDescription ?? "",
+                UploaderId = userId,
+            };
+
+            // 如果有封面圖片，處理上傳
+            if (model.CoverImage != null)
+            {
+                string filePath = await _fileService.UploadActivityCover(model.CoverImage);
+                activity.EventCoverPath = filePath;
+            }
+
+            _context.Activities.Add(activity);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

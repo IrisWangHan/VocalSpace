@@ -95,8 +95,6 @@ namespace VocalSpace.Controllers
         {
             long? CurrentUserid = HttpContext.Session.GetInt32("UserId");
 
-            Console.WriteLine($"Received activityid: {activityid}");
-
             var info = await _activityDataService.GetActivityInfoData(activityid,CurrentUserid);
 
             if (info == null)
@@ -203,6 +201,9 @@ namespace VocalSpace.Controllers
             }
         }
 
+        /// <summary>
+        /// 我也想去按鈕邏輯
+        /// </summary>
         [HttpPost("/Activity/ToggleInterested/{activityId}")]
         public async Task<IActionResult> Interested(long activityId)
         {
@@ -214,37 +215,44 @@ namespace VocalSpace.Controllers
                 return Unauthorized(new { success = false, message = "請先登入！" });
             }
 
-            bool isInterested = await _activityDataService.ToggleInterested(activityId, userId.Value);
+            var(isInterested,count) = await _activityDataService.ToggleInterested(activityId, userId.Value);
 
             return Ok(new
             {
                 success = true,
                 interested = isInterested,
+                interestedCount = count, // 返回最新的計數
                 message = isInterested ? "已加入想去列表！" : "已取消想去！"
             });
         }
-        [HttpGet("/Activity/ToggleInterested/{activityId}")]
-        public IActionResult ShareModal(int id)
+
+        /// <summary>
+        /// 投稿活動表單上傳
+        /// </summary>
+        [HttpPost("/Activity/Submit")]
+        public async Task<IActionResult> SubmitActivity([FromForm] ActivityCreateModel model)
         {
-            return PartialView("_ShareModal");
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new { success = false, message = "請填寫所有必要欄位！" });
+            }
+
+            // 取得當前登入的使用者 ID
+            long? userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+            {
+                return Unauthorized(new { success = false, message = "請先登入！" });
+            }
+
+            // 呼叫 Service 儲存活動資料
+            bool isCreated = await _activityDataService.CreateActivityAsync(model, userId.Value);
+            if (!isCreated)
+            {
+                return StatusCode(500, new { success = false, message = "活動投稿失敗，請稍後再試！" });
+            }
+
+            return Ok(new { success = true, message = "活動投稿成功！" });
         }
-
-        /////<summary>
-        ///// AJAX方式取得加入歌單Modal需要的資料
-        /////</summary>
-        //[HttpGet("Song/GetAddToPlaylistModal/{songid}")]
-        //public async Task<IActionResult> GetAddToPlaylistModal(int songId)
-        //{
-        //    long? userId = HttpContext.Session.GetInt32("UserId");
-        //    if (userId == null || userId == 0)
-        //    {
-        //        return Unauthorized("請先登入");
-        //    }
-
-        //    var PlaylistModalData = await _ModalDataService.GetPlaylistModalData(userId.Value, songId);
-
-        //    return PartialView("_Modal_AddToPlaylist", PlaylistModalData);
-        //}
     }
 
 

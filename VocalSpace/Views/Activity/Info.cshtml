@@ -1,6 +1,13 @@
 ﻿@model VocalSpace.Models.ViewModel.Activity.ActivityInfoViewModel
-@{
-	ViewData["Title"] = "快來參加" + Model.Title + "!";
+
+@section MetaTags {
+	<meta property="og:url" content="@Model.ShareUrl" />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="@Model.Title" />
+	<meta property="og:description" content="@Model.ActivityDescription" />
+	@* 測試通道 測試FB分享 *@
+	<meta property="og:image" content="https://w6r821w7-7145.asse.devtunnels.ms/@(Model.EventCoverPath.TrimStart('/'))" />
+	<meta property="fb:app_id" content="660181899931384" />
 }
 <div class="page-container container-xxl">
 	<div class="col-8 left-container">
@@ -66,16 +73,18 @@
 	</div>
 	<div class="col-4 right-container">
 		<div class="activity-info">
-			<h3>73 人想去</h3>
+			<div class="interested-count">
+				<h3><span id="interested-count">@Model.Interesteds.InterestedCount</span> 人想去</h3>
+			</div>
 			<div class="activity-buttons">
-				<button class="btn interested-btn" id="btn-interested" data-activity-id="@Model.ActivityId">★ 我也想去！</button>
-				<button class="btn calendar-btn">📅 加入行事曆</button>
+				<button class="btn interested-btn @(Model.Interesteds.IsInterested ? "selected" : "")" id="btn-interested" data-activity-id="@Model.ActivityId">★ 我也想去！</button>
+				<button class="btn calendar-btn" onclick="addToCalendar()">📅 加入行事曆</button>
 			</div>
 		</div>
 	</div>
 </div>
 @* 直接加载 Modal，并设为隐藏 *@
-@* @await Html.PartialAsync("_Modal_ShereActivity") *@
+@await Html.PartialAsync("_Modal_ShereActivity", Model)
 
 @section Scripts {
 	<script src="~/js/Comment.js" asp-append-version="true"></script>
@@ -94,23 +103,34 @@
 						}
 					});
 				});
+		//加入行事曆功能
+		function addToCalendar() {
+			var eventName = @Html.Raw(Json.Serialize(Model.Title));
+			var eventTime = @Html.Raw(Json.Serialize(Model.EventTime));
+			var location = @Html.Raw(Json.Serialize(Model.Location + ", " + Model.City));
+			var details = @Html.Raw(Json.Serialize(Model.ActivityDescription));
 
-		// 		let interestedCount = 73;
+			//將時間格式轉換為Google日曆所需的格式 (YYYYMMDDTHHMMSS/YYYYMMDDTHHMMSS)
+			// 注意：移除了可能存在的引號
+			var timeString = eventTime.replace(/"/g, '');
+			var startDate = new Date(timeString);
 
-		// 		function handleInterested() {
-		// 		if (!isLogin) {
-		// 			// 如果未登入，導向登入頁
-		// 			window.location.href = "/Accounts/Login";
-		// 			return;
-		// 		}
+			//正則表達式將日期格式化
+			var formattedStart = startDate.toISOString().replace(/-|:|\.\d+/g, '');
 
-		// 			interestedCount++;
-		// 			document.querySelector(".activity-info h3").innerText = `${interestedCount} 人想去`;
-		// 			var myModal = new bootstrap.Modal(document.getElementById('shareModal'));
-		// 			myModal.show();
-		// 		}
-		// 		function addToCalendar() {
-		// 			window.open("https://calendar.google.com/calendar/r/eventedit", "_blank");
-		// 		}
-		// 	</script>
+			//活動沒有設定結束時間，因此設為開始時間加一小時
+			var endDate = new Date(startDate);
+			endDate.setHours(endDate.getHours() + 1);
+			var formattedEnd = endDate.toISOString().replace(/-|:|\.\d+/g, '');
+
+			// 組合Google日曆URL
+			var calendarUrl = 'https://calendar.google.com/calendar/r/eventedit?';
+			calendarUrl += 'text=' + encodeURIComponent(eventName);
+			calendarUrl += '&dates=' + formattedStart + '/' + formattedEnd;
+			calendarUrl += '&location=' + encodeURIComponent(location);
+			calendarUrl += '&details=' + encodeURIComponent(details); // 添加活動描述
+
+			window.open(calendarUrl, "_blank");
+		}
+	</script>
  }

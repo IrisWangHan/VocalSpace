@@ -89,7 +89,7 @@ function sharecopyLink() {
     let shareName = $(".shareName").val();
 
     navigator.clipboard.writeText(shareText).then(() => {
-        alert(`歌曲連結已複製！快分享給朋友一起聽《${shareName}》吧！`);
+        alert(`連結已複製！快分享給朋友《${shareName}》吧！`);
     }).catch(err => {
         console.error("複製失敗:", err);
         alert("複製失敗，請手動複製連結！");
@@ -181,23 +181,35 @@ $(document).on("click", ".btn-play", function () {
 //我也想去按鈕
 $(document).on("click", "#btn-interested", function () {
     let activityId = $(this).data("activity-id");
-    let button = $(this); // 儲存按鈕對象，方便後續修改狀態
-
+    let button = $(this);
     $.ajax({
         url: `/Activity/ToggleInterested/${activityId}`,
         type: "POST",
         success: function (res) {
-            if (res.interested) {
-                button.addClass("selected").text("✅ 已想去");
-                alert("去把");
+            if (res.success) {
+                // Controller返回 success interested interestedCount message
+                if (res.interested) {
+                    button.addClass("selected");
+                } else {
+                    button.removeClass("selected");
+                }
+
+                // 更新興趣人數
+                $('#interested-count').text(res.interestedCount);
+
+                // 如果是加入感興趣，顯示分享模態框
+                if (res.interested) {
+                    $('#ShareActivityModal').modal('show');
+                }
             } else {
-                button.removeClass("selected").text("⭐ 我也想去！");
-                alert("不去");
+                alert(res.message || "操作失敗");
             }
         },
         error: function (xhr) {
-            if (xhr.status === 400)
+            if (xhr.status === 401) {
                 alert(xhr.responseJSON?.message || "請先登入！");
+                window.location.href = "/Accounts/Login";
+            }
             else
                 alert(xhr.responseJSON?.message || "發生錯誤，請稍後再試！");
         }
