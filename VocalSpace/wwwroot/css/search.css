@@ -64,7 +64,7 @@
 .nav-name {
     color: var(--text-color);
     font-size: 1.5rem;
-        background-color: var(--bg-color);
+    background-color: var(--bg-color);
         border-color: var(--bg-color);
     transition: all 0.1s ease;
 }
@@ -81,9 +81,14 @@
             background-color: #f9595f;
         }
 
-    .nav-name:hover {
+.nav-name:hover {
         color: red;
         border-bottom: 1px solid red;
+}
+
+.nav-name:active {
+    background-color: #f9595f;
+    color: var(--text-color);
 }
 
 

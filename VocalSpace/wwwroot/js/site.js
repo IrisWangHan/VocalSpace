@@ -267,7 +267,7 @@ function search() {
          
             window.location.assign(responseUrl);
             
-            document.getElementById('alllink').setAttribute('href', '/search/searchAll/?q=' + searchText.value);
+            document.getElementById('All').setAttribute('href', '/search/searchAll/?q=' + searchText.value);
                       
         }).
         catch(error => {

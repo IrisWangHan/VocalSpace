@@ -13,7 +13,7 @@ namespace VocalSpace.Controllers
     {
         
         private readonly SearchExploreService _SearchExploreService;
-        private string? q;
+        private static string? q;
         private string? type;
 
         //  靜態全域變數result，3種LINQ查詢結果的DTO物件
@@ -24,60 +24,11 @@ namespace VocalSpace.Controllers
         {
             _SearchExploreService = SearchExploreService;
         }
-        //  搜尋歌曲
-        //private IOrderedQueryable<SongInfoDTO> LINQsong(string q)
-        //{
-            
-        //    //  將資料透過DTO物件傳遞到前端
-        //    var Songs = _context.Songs.Join(
-        //            _context.Users,
-        //            song => song.Artist,
-        //            user => user.UserId,
-        //            (song, user) => new SongInfoDTO { SongName = song.SongName, UserName = user.UserName, CoverPhotoPath = song.CoverPhotoPath, LikeCount = song.LikeCount })
-        //        .Where(data => data.SongName!.Contains(q!) || data.UserName!.Contains(q!))
-        //        .OrderByDescending(data => data.SongName == q)                 //  1.先搜尋歌曲名稱完全符合關鍵字
-        //        .ThenByDescending(data => data.UserName == q)                   //  2.歌手名稱完全符合關鍵字的歌曲
-        //        .ThenByDescending(data => data.SongName!.Contains(q!))     //  3.有包含關鍵字的歌曲名稱
-        //        .ThenByDescending(data => data.UserName!.Contains(q!));     //   4.有包含關鍵字的歌手名稱的歌曲
-        //    return Songs;
-        //}
-
-        //private IQueryable<ArtistDTO> LINQartist(string q)
-        //{
-        //    var Artists = from users in _context.Users
-        //                       join infos in _context.UsersInfos on users.UserId equals infos.UserId
-        //                       where users.UserName!.Contains(q!)
-        //                       select new ArtistDTO { AvatarPath = infos.AvatarPath, UserName = users.UserName };
-        //    //  1.先搜尋歌手名稱完全符合關鍵字
-        //    //  2.有包含關鍵字的歌手
-        //    Artists  = Artists.OrderByDescending(data => data.UserName == q).ThenByDescending(data => data.UserName!.Contains(q!));
-        //    return Artists;
-        //}
-
-        //private IQueryable<PlaylistDTO> LINQplaylist(string q)
-        //{
-        //    var Playlists = from user in _context.Users
-        //                    join playlist in _context.PlayLists on user.UserId equals playlist.UserId
-        //                    join playlistsong in _context.PlayListSongs on playlist.PlayListId equals playlistsong.PlayListId
-        //                    where playlist.Name.Contains(q!) || user.UserName!.Contains(q!)
-        //                    group new { user, playlist, playlistsong } by new
-        //                    {
-        //                        user.UserName,
-        //                        playlist.Name,
-        //                        playlist.CoverImagePath
-        //                    } into g
-        //                    select new PlaylistDTO { Name = g.Key.Name, UserName = g.Key.UserName, CoverImagePath = g.Key.CoverImagePath };
-        //    Playlists = Playlists.OrderByDescending(data => data.Name == q)
-        //         .ThenByDescending(data => data.UserName == q)
-        //         .ThenByDescending(data => data.Name!.Contains(q!));
-        //    return Playlists;
-        //}
-
-     
+           
         [HttpGet]
         public async Task<IActionResult> searchAll()
         {
-            string? q = Request.Query["q"];
+            q = Request.Query["q"];
             string? type = Request.Query["type"];
             //  搜尋關鍵字q 傳到  _searchLayout ，
             TempData["q"] = q;
@@ -94,22 +45,25 @@ namespace VocalSpace.Controllers
             var resultView = (AllResult.IsEmpty || q == null) ? View("searchError") : View("searchAll", AllResult);
             return resultView; 
         }
+
         
-        public async Task<IActionResult> searchSongs()
+        [HttpGet]
+        public async Task<IActionResult> SearchType(string type)
         {
-            
-            //  輸入/?q=Bob，沒有結果，導向searchError，有結果，導向searchSong結果，ok
-            string? q = Request.Query["q"];
-            if ( q != null )
+            switch (type) 
             {
-                AllResult!.Songs = await _SearchExploreService.LINQsong(q!);
-                var URLresult = ( AllResult?.Songs?.Count == 0) ? View("searchError") : View(AllResult?.Songs);
-                return URLresult;
-            }
-            //  1. 輸入/search/searchSongs/進來，導向searchError，導向searchSong結果，ok
-            //  2. searchAll有結果，點擊歌曲進入，正常顯示
-            var resultView = (AllResult?.Songs?.Count == 0 ) ? View("searchError") : View(AllResult?.Songs);
-            return resultView;
+                case "Song":
+                    AllResult!.Songs = await _SearchExploreService.LINQsong(q!);
+                    return PartialView("_partialViewSong", AllResult.Songs);
+                case "Playlist":
+                    AllResult!.Playlists = await _SearchExploreService.LINQplaylist(q!);
+                    return PartialView("_partialViewSonglist", AllResult.Playlists);
+                case "Artist":  
+                    AllResult!.Artists = await _SearchExploreService.LINQartist(q!);
+                    return PartialView("_partialViewArtist", AllResult.Artists);
+                default:
+                    goto case "Song";
+            }            
         }
 
         public async Task<IActionResult> searchSonglists()
