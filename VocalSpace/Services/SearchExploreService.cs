@@ -1,13 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using VocalSpace.Models;
 using VocalSpace.Models.ViewModel.Search;
+using VocalSpace.Models.ViewModel.Selection;
 
 namespace VocalSpace.Services
 {
-    public class SearchService
+    public class SearchExploreService
     {
         private readonly VocalSpaceDbContext _context;
-        public SearchService(VocalSpaceDbContext context)
+        //  ExploreResult : 歌曲資訊 (歌名，歌手名，圖，喜歡數)
+        private static List<SongInfoDTO>? ExploreResult;
+        public SearchExploreService(VocalSpaceDbContext context)
         {
             _context = context;
         }
@@ -51,14 +54,49 @@ namespace VocalSpace.Services
                             group new { user, playlist, playlistsong } by new
                             {
                                 user.UserName,
+                                playlist.PlayListId,
                                 playlist.Name,
                                 playlist.CoverImagePath
                             } into g
-                            select new PlaylistDTO { Name = g.Key.Name, UserName = g.Key.UserName, CoverImagePath = g.Key.CoverImagePath };
+                            select new PlaylistDTO { PlayListId = g.Key.PlayListId, Name = g.Key.Name, UserName = g.Key.UserName, CoverImagePath = g.Key.CoverImagePath };
             Playlists = Playlists.OrderByDescending(data => data.Name == q)
                  .ThenByDescending(data => data.UserName == q)
                  .ThenByDescending(data => data.Name!.Contains(q!));
             return await Playlists.ToListAsync();
+        }
+
+        //  發現音樂
+        private IQueryable<SongInfoDTO> ExploreSong()
+        {
+            var a = from song in _context.Songs
+                                        join user in _context.Users
+                                        on song.Artist equals user.UserId
+                                        join category in _context.SongCategories
+                                        on song.SongCategoryId equals category.SongCategoryId
+                                        select new SongInfoDTO
+                                        //  LikeCount = song.LikeCount(預設值) + 後續增加的喜歡數
+                                        { SongId = song.SongId, CoverPhotoPath = song.CoverPhotoPath, SongName = song.SongName, UserName = user.UserName, LikeCount = song.LikeCount + _context.LikeSongs.Count(ls => ls.SongId == song.SongId) , CreateTime = song.CreateTime, PlayCount = song.PlayCount, SongCategoryId = category.SongCategoryId };
+            return a;
+        }
+        //  對LINQ結果進行篩選(Where)，排序(OrderByDescending)
+        public List<SongInfoDTO> ExploreSongWhereOrder(byte type, string rank)
+        {
+            //  type == 0 代表全部歌曲
+            IQueryable<SongInfoDTO> result = (type == 0) ? ExploreSong() : ExploreSong().Where(song => song.SongCategoryId == type);
+            switch (rank)
+            {    //  song.LikeCount+_context.LikeSongs.Count(ls => ls.SongId == songId)
+                case "mostlike":
+                    ExploreResult = result.OrderByDescending(songinfo => songinfo.LikeCount).ToList();
+                    return ExploreResult;
+                case "new":
+                    ExploreResult = result.OrderByDescending(songinfo => songinfo.CreateTime).ToList();
+                    return ExploreResult;
+                case "mostplay":
+                    ExploreResult = result.OrderByDescending(songinfo => songinfo.PlayCount).ToList();
+                    return ExploreResult;
+                default:
+                    goto case "new";
+            }
         }
     }
 }

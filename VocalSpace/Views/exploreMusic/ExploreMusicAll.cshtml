@@ -75,15 +75,19 @@
             
             e.preventDefault();
             //  依歌曲發布時間，撥放數，喜歡數排序(由大到小)
-            const SortId = $(this).attr('id');
+            let rank = $(this).attr('id');
+            console.log(rank);
             $.ajax({
                 type:'GET',
-                url: `/exploreMusic/RankType/${SortId}`,
+                url: `/exploreMusic/RankType/${rank}`,
                 dataType: 'html',
                 success: function (response) {
                     //  更新 #tab-content 內的歌曲
                     $('#tab-content').html(response);
-                }
+                },
+				Error: function (err) {
+					console.log('歌曲排序:'+err);
+				}
             })
         })
 

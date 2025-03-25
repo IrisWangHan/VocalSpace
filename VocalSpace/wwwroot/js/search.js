@@ -106,32 +106,3 @@ function search() {
 
 
 
-//const btnLoadmore = document.getElementById('btn-loadmore');
-//function loadmore(type) {
-
-//    window.addEventListener('scroll', () => {
-
-
-
-
-//        if (window.scrollY != 0 && window.scrollY % 1000 === 0) {
-
-//            fetch("search/loadmore?type=" + type).
-//                then(response => {
-//                    //  response.ok 為 true
-//                    if (!response.ok) {
-//                        throw new Error("Network response was not ok");
-//                    }
-//                    return response.text();
-//                }).
-//                then(responseHTML => {
-//                    document.getElementById('tab-content').innerHTML += responseHTML;
-//                }).
-//                catch(error => {
-//                    console.error("載入歌曲失敗");
-//                })
-            
-//        } 
-
-//    })
-//}

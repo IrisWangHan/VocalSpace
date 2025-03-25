@@ -4,7 +4,6 @@
 }
 @model VocalSpace.Models.ViewModel.Search.SearchViewModel
 <link rel="stylesheet" href="~/css/search.css" asp-append-version="true" />
-<link rel="stylesheet" href="~/css/song.css" asp-append-version="true" /> 
 
 <div class="container pb-10 pt-5">
     <h1 class="mb-4 position-relative search-title">
@@ -16,16 +15,16 @@
         <div class="col-md-9">
             <ul class="nav nav-pills mb-3">
                 <li class="nav-item">
-                    <a class="nav-link nav-name" id="alllink" href='/search/searchAll/@( ( TempData.Peek("q") != null ) ? $"?q={TempData.Peek("q")}" : "" )'>全部</a>
+                    <a class="nav-link nav-name type-link" id="alllink" href='/search/searchAll/@( ( TempData.Peek("q") != null ) ? $"?q={TempData.Peek("q")}" : "" )'>全部</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link nav-name" href="/search/searchSongs">歌曲</a>
+                    <a class="nav-link nav-name type-link" href="/search/searchSongs">歌曲</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link nav-name" href="/search/searchSonglists">歌單</a>
+                    <a class="nav-link nav-name type-link" href="/search/searchSonglists">歌單</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link nav-name" href="/search/searchArtists">音樂人</a>
+                    <a class="nav-link nav-name type-link" href="/search/searchArtists">音樂人</a>
                 </li>
             </ul>
             <div class="tab-content" id="tab-content">
@@ -44,4 +43,29 @@
 </div>
 <script src="~/js/search.js" asp-append-version="true"></script>
 <script src="~/js/partialViewSong.js" asp-append-version="true"></script> 
-                
+@section Scripts {
+    <script>
+        $('.type-link').click(function(e){
+            e.preventDefault();
+            //  依歌曲發布時間，撥放數，喜歡數排序(由大到小)
+            // let rank = $(this).attr('id');
+            console.log(rank);
+            let data = {
+                type : 
+            };
+            $.ajax({
+                type:'GET',
+                url: `/exploreMusic/RankType/${rank}`,
+                content:
+                dataType: 'html',
+                success: function (response) {
+                    //  更新 #tab-content 內的歌曲
+                    $('#tab-content').html(response);
+                },
+                Error: function (err) {
+                    console.log('歌曲排序:'+err);
+                }
+            })
+        })
+    </script>
+}

@@ -371,17 +371,6 @@ namespace VocalSpace.Controllers
             });
         }
 
-        [HttpPost("/Song/AddLikePlaylist")]
-        public async Task<IActionResult> AddLikePlaylist([FromBody] Favoriteplaylist model)
-        {
-            // 取得使用者ID
-            long? userId = HttpContext.Session.GetInt32("UserId");
-
-            // 確保使用者已登入
-            if (userId == null || userId == 0)
-            {
-                return Unauthorized(new { success = false, message = "請先登入！" });
-            }
-        }
+       
     }
 }

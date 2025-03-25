@@ -278,17 +278,17 @@ function search() {
 //  收藏歌單
 $(document).on("click", ".btn-add-to-Likeplaylist", function () {
     let button = $(this);
-    let platlistid = button.data("platlistid");
+    let playlistid = button.data("playlistid");
     // 根據 songId 找到對應的 likeCount
     //let count = $(`.likeCount[data-songid="${songId}"]`);
     console.log(button);
-    console.log(platlistid);
+    console.log(playlistid);
     //console.log(count);
     $.ajax({
-        url: `/Song/AddLikePlaylist`,
+        url: `/Personal/AddLikePlaylist`,
         type: "POST",
         contentType: "application/json",
-        data: JSON.stringify({ PlatlistId: platlistid }),
+        data: JSON.stringify({ PlaylistId: playlistid }),
         success: function (res) {
             if (res.isliked) {
                 button.addClass("selected");
@@ -296,10 +296,7 @@ $(document).on("click", ".btn-add-to-Likeplaylist", function () {
             else {
                 button.removeClass("selected");
             }
-            // **只有當 count 存在時才更新讚數**
-            if (count.length > 0) {
-                count.text(res.likeCount);
-            }
+            
         },
         error: function (xhr) {
             alert(xhr.responseJSON?.message || "發生錯誤，請稍後再試！");

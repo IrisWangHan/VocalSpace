@@ -11,7 +11,7 @@
             <p class="song">@Model[k].Name</p>
             <p class="artist">1 首歌曲．@Model[k].UserName</p>
         </div>
-        @*@await Html.PartialAsync("_SongListButtonModal") *@
+		@await Component.InvokeAsync("PlayListButton", new { PlayListId = Model[k].PlayListId })
     </div>
 }
 
