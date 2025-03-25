@@ -73,8 +73,10 @@ main {
 
 /*上方區塊*/
 .songpfp img {
+	object-fit:cover;
 	width: 100%;
 	max-width: 380px;
+	max-height:380px;
 	border: 5px solid;
 	border-radius: 2px;
 }
@@ -159,15 +161,51 @@ main {
 		border-radius: 2px;
 	}
 /*右邊區塊*/
-/*介紹 歌詞區*/
-
-.introduce {
-	max-height: 50px;
-	position: relative;
-	overflow: hidden;
-	transition: max-height 0.5s ease-in-out; /* 添加動畫效果 */
+/*介紹 歌曲列表*/
+.Randomplay {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin: auto;
 }
 
+	.Randomplay h3 {
+		margin: 0px 0px 0px;
+	}
+
+	.Randomplay .btn-danger {
+		display: flex;
+		justify-content: right;
+		margin-top: 0px;
+	}
+.ranking-list {
+	padding: 10px;
+	
+	box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.ranking-item {
+	display: flex;
+	align-items: center;
+	padding: 10px 0;
+	border-bottom: 1px solid #ddd;
+}
+.rank {
+	width: 30px;
+	font-weight: bold;
+	text-align: center;
+}
+
+.SongCover {
+	width: 50px;
+	height: 50px;
+	margin: 0 10px;
+	border-radius: 5px;
+}
+
+.info {
+	flex-grow: 1;
+}
 
 /*rwd*/
 

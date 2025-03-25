@@ -154,3 +154,8 @@ img {
     border: 1px solid rgb(255, 87, 87);
     color: rgb(255, 87, 87);
 }
+/* 無資料時 */
+.no-data {
+    text-align:center;
+    margin-top:30px;
+}

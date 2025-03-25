@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using VocalSpace.Filters;
 using VocalSpace.Models;
-using VocalSpace.Models.Test.Selection;
 using VocalSpace.Models.ViewModel.Song;
 
 namespace VocalSpace.Controllers
@@ -47,6 +46,7 @@ namespace VocalSpace.Controllers
             
         }
         [SessionToLogin]
+        [HttpGet("/Collection/mylist/{id}")]
         public async Task<IActionResult> mylist(long id)
         {
             long? currentUserId = HttpContext.Session.GetInt32("UserId");
@@ -65,7 +65,10 @@ namespace VocalSpace.Controllers
                     PlayListSongCount = p.PlayListSongs.Count() // 計算歌單內歌曲數量
                 }).ToListAsync();
 
-                return View(songdata);
+                // 顯示成功訊息
+                ViewBag.SuccessMessage = TempData["SuccessMessage"];
+
+                return View(songdata.Any()?songdata:null);
             }
             return Content("<script>alert('無權查看'); window.history.back();</script>", "text/html; charset=utf-8");
 
@@ -135,39 +138,143 @@ namespace VocalSpace.Controllers
             return View();
         }
 
-        public IActionResult createlist()
+        public IActionResult createlist(long id)
         {
-            //long? currentUserId = HttpContext.Session.GetInt32("UserId");
-            //if (ModelState.IsValid)
-            //{
-            //    model.CreateTime = DateTime.Now; // 設定建立時間
-
-            //    model.UserId = (long)currentUserId!;
-
-            //    _context.PlayLists.Add(model);
-            //    await _context.SaveChangesAsync();
-            //    // 設定 TempData 用於顯示成功訊息
-            //    TempData["SuccessMessage"] = "新增成功";
-
-            //    // 跳轉到 CollectionController 的 MyList
-            //    return RedirectToAction("mylist", "Collection");
-            //}
+            long? currentUserId = HttpContext.Session.GetInt32("UserId");
+            ViewBag.LoginID = currentUserId;
             return View();
         }
+        [SessionToLogin]
+        [HttpPost]
+        public async Task<IActionResult> createlist(PlayList model, IFormFile? CoverImage ,bool IsPublic) 
+        {
+            TempData["SuccessMessage"] =null;
+            long? currentUserId = HttpContext.Session.GetInt32("UserId");
+            if (currentUserId == null) return RedirectToAction("Login", "Account");
+            ViewBag.LoginID = currentUserId;           
 
+                if (ModelState.IsValid)
+                {
+                model.CreateTime = DateTime.Now; // 設定建立時間
+
+                model.UserId = currentUserId.Value;
+
+                if (IsPublic == true) { model.IsPublic = true; } else { model.IsPublic = false; }
+
+                // 處理圖片上傳
+                if (CoverImage != null && CoverImage.Length > 0)
+                {
+
+                    var filePath = Path.Combine("wwwroot/image/playlist", CoverImage.FileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await CoverImage.CopyToAsync(stream);
+                    }
+
+                    model.CoverImagePath = "/image/" + CoverImage.FileName; // 儲存相對路徑
+                }
+                else { model.CoverImagePath = "/image/playlist/default.jpg"; }
+
+
+                    _context.PlayLists.Add(model);
+                await _context.SaveChangesAsync();
+
+                // 設定 TempData 用於顯示成功訊息
+                TempData["SuccessMessage"] = "播放清單新增成功！";
+
+                // 跳轉到 CollectionController 的 MyList
+
+                return RedirectToAction("mylist", "Collection", new { id = currentUserId.Value });
+            }
+            return View(model);
+            
+        }
+        [HttpGet("Collection/editlist/{id}")]
+        public async Task<IActionResult> editlist(long? id)
+        {
+            long? currentUserId = HttpContext.Session.GetInt32("UserId");
+            if (currentUserId == null) return RedirectToAction("Login", "Account");
+            ViewBag.LoginID = currentUserId;
+            
+                if (id == null)
+                {
+                    return NotFound();
+                }
+
+                var list = await _context.PlayLists.FindAsync(id);
+            if (currentUserId == list!.UserId)
+            {
+                if (list == null)
+                {
+                    return NotFound();
+                }
+                return View(list);
+            }
+            else 
+            {
+                return Forbid("<script>alert('無權查看'); window.history.back();</script>", "text/html; charset=utf-8");
+            }
+        }
+        [SessionToLogin]
+        [HttpPost]
+        public async Task<IActionResult> editlist(PlayList model, IFormFile? CoverImage, bool IsPublic)
+        {
+            TempData["SuccessMessage"] = null;
+            long? currentUserId = HttpContext.Session.GetInt32("UserId");
+            if (currentUserId == null) return RedirectToAction("Login", "Account");
+            ViewBag.LoginID = currentUserId;
+
+            if (ModelState.IsValid)
+            {
+                model.CreateTime = DateTime.Now; // 設定建立時間
+
+                model.UserId = currentUserId.Value;
+
+                if (IsPublic == true) { model.IsPublic = true; } else { model.IsPublic = false; }
+
+                // 處理圖片上傳
+                if (CoverImage != null && CoverImage.Length > 0)
+                {
+
+                    var filePath = Path.Combine("wwwroot/image/playlist", CoverImage.FileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await CoverImage.CopyToAsync(stream);
+                    }
+
+                    model.CoverImagePath = "/image/" + CoverImage.FileName; // 儲存相對路徑
+                }
+                else { model.CoverImagePath = "/image/playlist/default.jpg"; }
+
+
+                _context.PlayLists.Add(model);
+                await _context.SaveChangesAsync();
+
+                // 設定 TempData 用於顯示成功訊息
+                TempData["SuccessMessage"] = "播放清單新增成功！";
+
+                // 跳轉到 CollectionController 的 MyList
+
+                return RedirectToAction("mylist", "Collection", new { id = currentUserId.Value });
+            }
+            return View(model);
+
+        }
         public async Task<IActionResult> listdetail(long id)
         {
             var songViewModels = await _context.PlayLists     
+                .Where(p =>p.PlayListId == id)
              .Select(p => new SongViewModel
              {
                  UserId = p.UserId,
-                 UserName = p.User.UserName!, // 歌單作者名稱
+                 UserName = p.User!.UserName!, // 歌單作者名稱
                  PlayListId = p.PlayListId,  // 歌單 ID
                  PlayListName = p.Name,      // 歌單名稱
                  PlayListCoverImagePath = p.CoverImagePath, // 歌單封面
                  PlayListSongCount = p.PlayListSongs.Count(), // 歌單內歌曲數量
                  PlayListCreateTime = p.CreateTime,
-                 PlayCount = p.PlayListSongs.Sum(ps => ps.Song.PlayHistories.Count), // 所有歌曲的播放次數總和
                  LikeCount = p.Favoriteplaylists.Count(), // 歌單的喜歡次數
                  Songs = p.PlayListSongs.Select(ps => new SongDetail
                  {

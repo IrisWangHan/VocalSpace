@@ -1,8 +1,14 @@
 ﻿@model IEnumerable<VocalSpace.Models.ViewModel.Song.SongViewModel>
 
+
 <title>蒐藏庫</title>
 
-
+@if (ViewBag.SuccessMessage != null)
+{
+    <div class="alert alert-success">
+        @ViewBag.SuccessMessage
+    </div>
+}
 <div class="container">
     <h1>蒐藏庫</h1>
     <hr />
@@ -20,7 +26,7 @@
             <div class="h2-row"><h2>蒐藏庫  /</h2><h2 class="red">我的歌單</h2></div>
 
             <div class="Randomplay">
-                <a class="btn-danger addbtn-newPlaylist" href="/Collection/createlist"><i class="bi bi-plus-lg"></i> 新增歌單</a>
+                <a class="btn-danger addbtn-newPlaylist" href="/Collection/createlist/@ViewBag.LoginId"><i class="bi bi-plus-lg"></i> 新增歌單</a>
             </div>
             <br />
             @if (Model == null)

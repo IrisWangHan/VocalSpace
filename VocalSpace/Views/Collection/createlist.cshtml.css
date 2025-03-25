@@ -1,4 +1,8 @@
-﻿/*.alert {
+﻿form {
+    width:100%;
+}
+
+.alert {
     padding: 10px;
     margin: 10px 0;
     border-radius: 5px;
@@ -18,8 +22,8 @@
 
         .title {            
         display: flex;        
-        gap: 10px;*/ /* 控制各標籤間距 */
-        /*} 
+       gap: 10px;  /* 控制各標籤間距 */
+        } 
 
         .red {
             color: red;
@@ -27,22 +31,22 @@
         li:hover {
     background-color: #2C2A29;
     color: whitesmoke;
-}*/
+}
 
 /* 選取後的樣式 */
-/*li.selected {
+li.selected {
     border-left: 3px solid red;
     color: red;
-}*/
+}
 
-/* .sidebar {
+ .sidebar {
     width: 20%;
     border: 1px solid gray;
     padding: 10px;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-} */
+} 
 
-    /*.sidebar ul {
+    .sidebar ul {
         list-style: none;
         padding: 0;
     }
@@ -58,8 +62,8 @@
         }
 .sidebar {
     width: 200px;
-    flex-shrink: 0;*/ /* 防止縮小 */
-    /*padding: 20px;
+    flex-shrink: 0; /* 防止縮小 */
+    padding: 20px;
     border-radius: 10px;
     border: 1px solid;
 
@@ -68,9 +72,9 @@
     height: fit-content;
 }
         .createform {
-        flex-grow: 1;*/ /* 讓 createfrom 填滿剩餘空間 */
-        /*max-width: calc(100% - 220px);*/ /* 讓它不超過父容器寬度，保留間距 */
-        /*}   
+        flex-grow: 1;  /*讓 createfrom 填滿剩餘空間 */
+       max-width: calc(100% - 220px);  /* 讓它不超過父容器寬度，保留間距 */
+        }   
         .sidebar ul {
             list-style: none;
             padding: 0;
@@ -138,8 +142,8 @@
         .status-toggle {
             display: flex;
             align-items: center;
-            justify-content: space-between;*/ /* h4 靠左, switch 靠右 */
-            /*width: 100%;
+          justify-content: space-between;  /*  h4 靠左, switch 靠右 */
+            width: 100%;
             cursor: pointer;
             margin: 20px 0;
         }
@@ -160,8 +164,8 @@
             float: right;
             border-radius: 5px;
             margin-top: 20px;
-        }*/
-        /* .cover-upload {
+        }
+         .cover-upload {
             width: 150px;
             height: 150px;
             background: #eee;
@@ -170,9 +174,9 @@
             justify-content: center;
             margin-bottom: 10px;
             border-radius: 5px;
-        } */
+        } 
 
-        /*.cover-container {
+        .cover-container {
             position: relative;
             width: 150px;
             height: 150px;
@@ -228,9 +232,9 @@
         }
         .h4{
             margin-trim:none;
-        }*/
-        /* 滑動開關 */
-        /*.switch {
+        }
+/*         滑動開關 */
+        .switch {
             position: relative;
             display: inline-block;
             width: 80px;
@@ -280,29 +284,29 @@
 
         input:checked + .slider:before {
             transform: translateX(46px);
-        }*/
+        }
 
-        /* 文字變化 */
-        /*.slider::after {
+         文字變化 
+        .slider::after {
             content: "隱藏";
             position: absolute;
-            right: 12px;*/ /* 靠右 */            
-            /*transition: .4s;
+           right: 12px;  /* 靠右 */            
+            transition: .4s;
         }
 
         input:checked + .slider::after {
             content: "公開";
             left: auto;
-            left: 12px;*/ /* 靠左 */
-        /*}*/
+           left: 12px;  /* 靠左 */
+        }
 
 /* 新增 RWD 設定 */
-/*@media (max-width:786px) {
+@media(max-width:786px) {
     .sidebar ul {
-        display: none;*/ /* 隱藏 ul 列表 */
-    /*}
+       display: none;  /* 隱藏 ul 列表 */
+    }
 
     .sidebar {
-        display: none;*/ /* 隱藏 sidebar */
-    /*}
-}*/
+       display: none;  /* 隱藏 sidebar */
+    }
+}
