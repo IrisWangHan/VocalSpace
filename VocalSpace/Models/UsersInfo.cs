@@ -9,9 +9,9 @@ public partial class UsersInfo
 
     public string? BannerImagePath { get; set; }
 
-    public string? AvatarPath { get; set; }
+    public string AvatarPath { get; set; } = null!;
 
-    public DateOnly? Birthday { get; set; }
+    public DateOnly Birthday { get; set; }
 
     public string? PersonalIntroduction { get; set; }
 

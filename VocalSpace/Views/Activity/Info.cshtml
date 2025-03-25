@@ -1,97 +1,193 @@
-﻿@{
-	<!-- 帶入登入狀態 -->
-	var tmp = TempData.Peek("isLogin");
+﻿@model VocalSpace.Models.ViewModel.Activity.ActivityInfoViewModel
 
-	bool isLogin = false;
-	if (tmp != null)
-	{
-		// 如果 TempData 儲存的是字串 "true" 或 "false"
-		bool.TryParse(tmp.ToString(), out isLogin);
-
-		// 如果你確定 TempData 儲存的是布林值，也可以直接轉型：
-		// isLogin = (bool)tempIsLogin;
-	}
+@section MetaTags {
+	<meta property="og:url" content="@Model.ShareUrl" />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="@Model.Title" />
+	<meta property="og:description" content="@Model.ActivityDescription" />
+	@* 測試通道 測試FB分享 *@
+	<meta property="og:image" content="https://w6r821w7-7145.asse.devtunnels.ms/@(Model.EventCoverPath.TrimStart('/'))" />
+	<meta property="fb:app_id" content="660181899931384" />
 }
-
 <div class="page-container container-xxl">
 	<div class="col-8 left-container">
 		<div class="event-container">
+			<!-- 顯示活動封面圖 -->
 			<div class="event-cover">
-				<img class="event-image" src="/image/Activity/cs.jpg" alt="活動圖片">
+				<img class="event-image" src="@Url.Content(Model.EventCoverPath)" alt="活動圖片">
 				<div class="event-date">
 					<div class="calende-border-block p-0 text-center">
-						<div class="bg-danger text-white font-size-sm T-radius">3 月</div>
-						<h3 class="mb-1 mt-1 text-black">7</h3>
-						<h6 class="mb-1 mt-1 text-black opacity-50">星期五</h6>
+						<div class="bg-danger text-white font-size-sm T-radius">@Model.EventTime.ToString("MMM")</div>
+						<h3 class="mb-1 mt-1 text-black">@Model.EventTime.Day</h3>
+						<h6 class="mb-1 mt-1 text-black opacity-50">@Model.EventTime.ToString("dddd")</h6>
 					</div>
 				</div>
 			</div>
-			<h1 class="event-title mb-4">THE CHAINSMOKERS LIVE IN TAIPEI 2025</h1>
+
+			<!-- 活動標題 -->
+			<h1 class="event-title mb-4">@Model.Title</h1>
+
+			<!-- 活動資訊 -->
 			<div class="event-info">
 				<h6 class="text-gray mb-3">
 					<span class="bi bi-calendar2-minus"></span>
-					2025 年 3 月 7 日 | 星期五 | 20:00
+					@Model.EventTime.ToString("yyyy 年 MM 月 dd 日 | dddd | HH:mm")
 				</h6>
 				<h6 class="text-gray mb-3">
 					<span class="bi bi-geo-alt-fill"></span>
-					臺北市．大佳河濱公園
+					@Model.City．@Model.Location
 				</h6>
 			</div>
 			<hr class="mt-5 mb-2">
+
+			<!-- 上傳者資訊 -->
 			<div class="poster-section">
-				@await Html.PartialAsync("_Songdetail_artist_partial")
+				@await Html.PartialAsync("_UserbarContainer_partial", Model.UploaderId)
 			</div>
 			<hr class="mt-2 mb-5">
+
+			<!-- 活動介紹 -->
 			<h2>介紹</h2>
-			<div class="introduce-area">
+			<div class="introduce-area pt-2 pb-2">
 				<div class="introduce">
 					<p>
-						介紹內文<br />
-						介紹內文<br />
-						介紹內文<br />
-						介紹內文<br />
-						介紹內文
+						@(string.IsNullOrWhiteSpace(Model.ActivityDescription) ? "此活動沒有任何介紹!" :
+												Html.Raw(Model.ActivityDescription.Replace("\\n", "<br>")))
 					</p>
 				</div>
 			</div>
 			<hr class="mt-5 mb-5">
-			@* 預計加入留言板趴秀 *@
-			@await Html.PartialAsync("_CommentInput")
-			@await Html.PartialAsync("_CommentList")
+			<!-- 留言串partialview放這裡 -->
+			<div id="comment-section" data-target-id="@Model.ActivityId" data-target-type="Activity">
+
+				<!-- 顯示留言輸入區 (不會被 AJAX 更新) -->
+				@await Html.PartialAsync("_CommentInput", Model.CommentSection)
+
+				<!-- 顯示留言清單 (會被 AJAX 更新) -->
+				<div id="comment-list-container">
+					<p>留言載入中...</p> <!-- AJAX 載入時顯示_CommentList趴秀 -->
+				</div>
+			</div>
 		</div>
 	</div>
 	<div class="col-4 right-container">
 		<div class="activity-info">
-			<h3>73 人想去</h3>
+			<div class="interested-count">
+				<h3><span id="interested-count">@Model.Interesteds.InterestedCount</span> 人想去</h3>
+			</div>
+			<div class="interested-avatars" id="interested-avatars" data-activity-id="@Model.ActivityId">
+				<!-- 頭像將通過 AJAX 載入 -->
+			</div>
 			<div class="activity-buttons">
-				<button class="btn interested-btn" onclick="handleInterested()">★ 我也想去！</button>
+				<button class="btn interested-btn @(Model.Interesteds.IsInterested ? "selected" : "")"
+					id="btn-interested" data-activity-id="@Model.ActivityId">★ 我也想去！</button>
 				<button class="btn calendar-btn" onclick="addToCalendar()">📅 加入行事曆</button>
 			</div>
 		</div>
 	</div>
 </div>
 @* 直接加载 Modal，并设为隐藏 *@
-@await Html.PartialAsync("_ShareModal")
+@await Html.PartialAsync("_Modal_ShereActivity", Model)
 
 @section Scripts {
+	<script src="~/js/Comment.js" asp-append-version="true"></script>
 	<script>
-		let isLogin = @isLogin.ToString().ToLower(); // 轉成 JS 的 true/false
-		let interestedCount = 73;
+		//AJAX 取得UserBar
+		$(function () {
+			let ActivityId = $("#interested-avatars").data("activity-id");
+			let userId = $("#userBarContainer").data("userid");
+			loadAvatars(ActivityId)
+			$.ajax({
+				url: `/Personal/GetUserBar/${userId}`, // Controller 端點，
+				type: "GET",
+				success: function (partialView) {
+					$("#userBarContainer").html(partialView);
+				},
+				error: function (xhr) {
+					$("#userBarContainer").html(`<p class='error-message'>上傳者載入失敗，錯誤訊息${xhr.responseText}</p>`);
+				}
+			});
+			//AJAX 取得想去的人
+			function loadAvatars(ActivityId) {
+				$.ajax({
+					url: `/Activity/GetInterestedAvatars/${ActivityId}`, // Controller 端點，
+					type: "GET",
+					success: function (partialView) {
+						$("#interested-avatars").html(partialView);
+					},
+					error: function (xhr) {
+						$("#interested-avatars").html(`<p class='error-message'>載入失敗，錯誤訊息${xhr.responseText}</p>`);
+					}
+				});
+			}
+			//我也想去按鈕
+			$(document).on("click", "#btn-interested", function () {
+				let activityId = $(this).data("activity-id");
+				let button = $(this);
+				$.ajax({
+					url: `/Activity/ToggleInterested/${activityId}`,
+					type: "POST",
+					success: function (res) {
+						if (res.success) {
+							// Controller返回 success interested interestedCount message
+							if (res.interested) {
+								button.addClass("selected");
+							} else {
+								button.removeClass("selected");
+							}
 
-		function handleInterested() {
-		if (!isLogin) {
-			// 如果未登入，導向登入頁
-			window.location.href = "/Accounts/Login";
-			return;
-		}
+							// 更新興趣人數
+							$('#interested-count').text(res.interestedCount);
+							loadAvatars(ActivityId);
+							// 如果是加入感興趣，顯示分享模態框
+							if (res.interested) {
+								$('#ShareActivityModal').modal('show');
+							}
+						} else {
+							alert(res.message || "操作失敗");
+						}
+					},
+					error: function (xhr) {
+						if (xhr.status === 401) {
+							alert(xhr.responseJSON?.message || "請先登入！");
+							window.location.href = "/Accounts/Login";
+						}
+						else
+							alert(xhr.responseJSON?.message || "發生錯誤，請稍後再試！");
+					}
+				});
+			});
+		});
 
-			interestedCount++;
-			document.querySelector(".activity-info h3").innerText = `${interestedCount} 人想去`;
-			var myModal = new bootstrap.Modal(document.getElementById('shareModal'));
-			myModal.show();
-		}
+
+		//加入行事曆功能
 		function addToCalendar() {
-			window.open("https://calendar.google.com/calendar/r/eventedit", "_blank");
+			var eventName = @Html.Raw(Json.Serialize(Model.Title));
+			var eventTime = @Html.Raw(Json.Serialize(Model.EventTime));
+			var location = @Html.Raw(Json.Serialize(Model.Location + ", " + Model.City));
+			var details = @Html.Raw(Json.Serialize(Model.ActivityDescription));
+
+			//將時間格式轉換為Google日曆所需的格式 (YYYYMMDDTHHMMSS/YYYYMMDDTHHMMSS)
+			// 注意：移除了可能存在的引號
+			var timeString = eventTime.replace(/"/g, '');
+			var startDate = new Date(timeString);
+
+			//正則表達式將日期格式化
+			var formattedStart = startDate.toISOString().replace(/-|:|\.\d+/g, '');
+
+			//活動沒有設定結束時間，因此設為開始時間加一小時
+			var endDate = new Date(startDate);
+			endDate.setHours(endDate.getHours() + 1);
+			var formattedEnd = endDate.toISOString().replace(/-|:|\.\d+/g, '');
+
+			// 組合Google日曆URL
+			var calendarUrl = 'https://calendar.google.com/calendar/r/eventedit?';
+			calendarUrl += 'text=' + encodeURIComponent(eventName);
+			calendarUrl += '&dates=' + formattedStart + '/' + formattedEnd;
+			calendarUrl += '&location=' + encodeURIComponent(location);
+			calendarUrl += '&details=' + encodeURIComponent(details); // 添加活動描述
+
+			window.open(calendarUrl, "_blank");
 		}
 	</script>
 }

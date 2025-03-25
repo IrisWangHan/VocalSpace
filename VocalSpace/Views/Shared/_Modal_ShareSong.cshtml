@@ -1,0 +1,29 @@
+﻿@model VocalSpace.Models.ViewModel.Global.ShareSongViewModel
+ <!-- 分享歌曲彈跳視窗-->
+<div class="modal fade" id="Modal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="Modal2">分享歌曲</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="sharepopup-content">
+                    <img src=@Model.CoverImage alt="封面">
+                    <div>
+                        <strong>@Model.SongName</strong>
+                        <div>@Model.ArtistName</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn fb btn-lg" onclick="shareOnFacebook()"><i class="bi bi-facebook"></i></button>
+                <button class="btn ig btn-lg" onclick="shareOnInstagram()"><i class="bi bi-instagram"></i></button>
+                <input type="text" class="shareUrl" value="@Model.ShareUrl" readonly>
+                <input type="hidden" class="shareName" value="@Model.SongName">
+                <button class="copy" onclick="sharecopyLink()">複製</button>
+            </div>
+        </div>
+
+    </div>
+</div>

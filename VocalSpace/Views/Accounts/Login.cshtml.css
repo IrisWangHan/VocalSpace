@@ -71,6 +71,12 @@
     /*    position: relative;*/
 }
 
+.login-fail-msg {
+    color: #F9595F;
+    font-size: 1.5vh;
+    text-align: left;
+}
+
 a.btn.btn-link {
     text-decoration: none;
     color: #F9595F;

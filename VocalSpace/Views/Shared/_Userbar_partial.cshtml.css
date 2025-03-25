@@ -1,0 +1,53 @@
+﻿.userinfo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.userpic {
+    width: 25%;
+}
+
+.userid {
+    width: 50%;
+}
+
+.userfollow {
+    width: 25%;
+}
+
+.pfp {
+    width: 100%;
+    max-width: 70px;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 0 5px;
+}
+
+.pftext {
+    padding: 0;
+    margin: 0;
+}
+
+.btn-follow {
+    background: #ff4d4f;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease-in-out;
+}
+    .btn-follow.selected {
+        background: white;
+        color: #ff4d4f;
+        border: 1px solid #ff4d4f;
+    }
+
+    .btn-follow:hover {
+        background: #e63946;
+    }

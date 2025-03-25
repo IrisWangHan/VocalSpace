@@ -9,7 +9,7 @@ public partial class UserFollow
 
     public long FollowedUserId { get; set; }
 
-    public DateTime? FollowTime { get; set; }
+    public DateTime FollowTime { get; set; }
 
     public virtual User FollowedUser { get; set; } = null!;
 

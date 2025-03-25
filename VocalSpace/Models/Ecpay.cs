@@ -13,22 +13,26 @@ public partial class Ecpay
     /// <summary>
     /// 對應綠界MerchantMemberID
     /// </summary>
-    public long DonationId { get; set; }
+    public long SponsorId { get; set; }
+
+    public long ReceiverId { get; set; }
 
     /// <summary>
     /// 回傳的收款用戶註冊綠界時的ID(綠界辨識用)
     /// </summary>
-    public string MerchantId { get; set; } = null!;
+    public string MerchantTradeNo { get; set; } = null!;
+
+    public string? EcpayTradeNo { get; set; }
 
     /// <summary>
     /// 回傳的交易編號,收款者可查詢交易狀態
     /// </summary>
-    public string TradeNo { get; set; } = null!;
+    public string ItemName { get; set; } = null!;
 
     /// <summary>
     /// 回傳的交易狀態碼。0 未付款,1成功
     /// </summary>
-    public int RtnCode { get; set; }
+    public int? RtnCode { get; set; }
 
     /// <summary>
     /// 回傳的交易狀態訊息
@@ -38,7 +42,7 @@ public partial class Ecpay
     /// <summary>
     /// 回傳的交易金額
     /// </summary>
-    public int? TradeAmt { get; set; }
+    public int TradeAmt { get; set; }
 
     /// <summary>
     /// 支付方式的類型
@@ -55,5 +59,9 @@ public partial class Ecpay
     /// </summary>
     public string? MerchantTradeDate { get; set; }
 
-    public virtual Donation Donation { get; set; } = null!;
+    public DateTime? PaymentDate { get; set; }
+
+    public virtual User Receiver { get; set; } = null!;
+
+    public virtual User Sponsor { get; set; } = null!;
 }

@@ -32,12 +32,17 @@
     justify-content: center;
 }
 
-.coverbutton {
-    width: 80%;
-    display: flex;
 
-    align-items: end;
-    justify-content: end;
+.coverbutton {
+    position: absolute;
+    top: 70%;
+    right:10%;
+    color: white;
+
+    border-radius: 5px;
+
+
+
 }
 
 .btn-danger {
@@ -151,6 +156,9 @@ input[type="file"] {
 .cover-container:hover .coverupload-btn {
     opacity: 1;
 }
+.cover-container:hover .coverbutton {
+    opacity: 1;
+}
 
 /**/
 
@@ -161,13 +169,13 @@ input[type="file"] {
     flex-direction: column;
     justify-content: left;
     margin-left: 20px;
-    p{
-        margin: 0px 0px 8px;
-        }
-
     
 }
+.osinfo p {
+    margin: 0px 0px 8px;
+}
 
+    
 .stats {
     font-size: 18px;
     justify-content: right;
@@ -310,14 +318,6 @@ input[type="file"] {
     }
 }
 
-.btn-danger {
-    color: white;
-    cursor: pointer;
-    display: block;
-    margin-left: auto;
-    position: relative;
-}
-
 .playAll {
     display: flex;
     justify-content: right;
@@ -400,3 +400,5 @@ input[type="file"] {
             margin-bottom: 5px;
         }
 }
+
+

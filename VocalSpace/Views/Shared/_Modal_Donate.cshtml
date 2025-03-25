@@ -1,0 +1,100 @@
+﻿@model VocalSpace.Models.ViewModel.Song.SongInfoViewModel
+<style>
+    .donation-btn {
+        border-radius: 10px;
+        padding: 10px 20px;
+        font-size: 16px;
+    }
+
+    .donate-avatar {
+        margin-bottom:1vh;
+        width: 150px;
+        height: 150px;
+        object-fit: cover; 
+        border-radius: 2px;
+    }
+
+    .donation-buttons .btn:focus {
+        box-shadow:none;
+    }
+</style>
+<!-- Modal -->
+<div class="modal fade" id="donateModal" tabindex="-1" aria-labelledby="donateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header border-0">
+                <h5 class="modal-title w-100 text-center" id="donateModalLabel">支持你喜愛的創作者</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img src="@Model.UsersInfo.AvatarPath" alt="大頭貼" class="donate-avatar">
+                <p class="mb-4">小額贊助，向「@(Model.User?.UserName ?? Model.User?.Account)」表示支持</p>
+                <div class="donation-buttons d-flex justify-content-center gap-3">
+                    <button class="btn btn-outline-light donation-btn" value="30">
+                        <i class="bi bi-music-note d-block fs-5"></i> NTD 30
+                    </button>
+                    <button class="btn btn-outline-light donation-btn" value="90">
+                        <i class="bi bi-music-note d-block fs-5"></i> NTD 90
+                    </button>
+                    <button class="btn btn-outline-light donation-btn" value="150">
+                        <i class="bi bi-music-note d-block fs-5"></i> NTD 150
+                    </button>
+                </div>
+
+                <div class="modal-footer border-0 d-flex justify-content-center mt-2">
+                    <button type="button" class="btn btn-danger" id="confirmDonate">確定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 贊助彈窗 -->
+@* <div id="redirectModal" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" aria-hidden="true" tabindex="-1"> *@
+@*     <div class="modal-dialog modal-dialog-centered"> *@
+@*         <div class="modal-content bg-dark text-white text-center p-4"  style="width:350px;"> *@
+@*             <p class="mb-0">導向綠界科技 ECPay 中...</p> *@
+@*         </div> *@
+@*     </div> *@
+@* </div> *@
+@* <script src="~/lib/jquery/dist/jquery.min.js"></script> *@
+<script>
+        // $(document).ready(function () {
+        //     let selectedAmount = null; 儲存選中的金額
+
+        //     $(".donation-btn").click(function () {
+        //         $(".donation-btn").removeClass("btn-outline-warning").addClass("btn-outline-light");
+        //         $(this).removeClass("btn-outline-light").addClass("btn-outline-warning");
+        //         記錄選擇的金額
+        //         selectedAmount = $(this).val();
+        //     });
+
+        //     $("#confirmDonate").click(function () {
+        //         if (!selectedAmount) {
+        //             alert("請先選擇贊助金額！");
+        //             return;
+        //         }
+
+        //         $("#redirectModal").modal("show");
+        //         $("#donateModal").modal("hide");
+
+                // 偽 API 導向
+            //     setTimeout(function () {
+            //     window.location.href = "https:www.ecpay.com.tw/" + selectedAmount;
+            //     $.ajax({
+            //             type:'POST',
+            //             url :'AddOrder',
+				        // data: {arguments:selectedAmount},
+					    
+				        // success: function (res) {
+					       //  console.log(res);
+				        // },
+				        // error: function (err) {
+					       //  console.log(err);
+				        // }
+            //         })
+            //     }, 3000);
+        //     });
+        // });
+
+</script>

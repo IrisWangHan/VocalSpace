@@ -1,41 +1,29 @@
-﻿@* @model IEnumerable<MessageModel> <<<這邊model以後拿來帶留言區資料
-
-*@
+﻿@model VocalSpace.Models.ViewModel.Global.CommentSectionViewModel
 <h2 class="p-3">留言區</h2>
 @{
-	<!-- 帶入登入狀態 -->
-	var tmp = TempData.Peek("isLogin");
 
-	bool isLogin = false;
-	if (tmp != null)
-	{
-		// 如果 TempData 儲存的是字串 "true" 或 "false"
-		bool.TryParse(tmp.ToString(), out isLogin);
-
-		// 如果你確定 TempData 儲存的是布林值，也可以直接轉型：
-		// isLogin = (bool)tempIsLogin;
-	}
 }
-	@if (isLogin)
-	{
-	<div class="comment-container">
-			<!-- 第一行：頭像 + 輸入框 + 圖示 -->
-			<div class="comment-input-row">
-				<div class="comment-avatar">
-					<!-- 您可換成自己的頭像或圖示 -->
-					<img src="/image/SadsaucE.png" alt="Avatar">
-				</div>
-				<input type="text" class="comment-input" placeholder="想說點什麼？" />
+@if (Model.IsLogin)
+{
+	<div class="comment-container mb-3 input-container ">
+		<!-- 第一行：頭像 + 輸入框 + 圖示 -->
+		<div class="comment-input-row">
+			<div class="comment-avatar">
+				<!-- 您可換成自己的頭像或圖示 -->
+
+				<img src="@Model.CurrentAvatar" alt="Avatar">
 			</div>
-				<div class="action-row">
-					<button class="btn btn-danger">留言</button>
-				</div>
+			<input type="text" class="comment-input" id="comment-input" placeholder="想說點什麼？" />
 		</div>
-	}
-	else
-	{
-		<div class="comment-alert">
-			<p>欲留言請先 <a class="RED_HOVER" href="#">登入</a> 或 <a class="RED_HOVER" href="#">成為 VocalSpace 的會員。</a></p>
+		<div class="action-row">
+			<button class="btn btn-danger" id="submit-comment">留言</button>
 		</div>
-	}
+	</div>
+}
+else
+{
+	<div class="comment-alert">
+		<p>欲留言請先 <a class="RED_HOVER" href="/Accounts/Login">登入</a> 或 <a class="RED_HOVER" href="/Accounts/Signup">成為 VocalSpace 的會員。</a></p>
+	</div>
+}
 

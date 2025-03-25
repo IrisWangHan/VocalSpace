@@ -1,63 +1,82 @@
-﻿@{
-	var deadline = "2024-01-01";
-	var joinState = "已截止";
-	var voteState = "徵選中";
-	var applyState = "ok";
-}
+﻿@model VocalSpace.Models.ViewModel.Selection.SelectionFormViewModel
+
 <section class="content ">
 	<div class="content__area">
 		<h1>徵選報名表</h1>
+		@* 顯示表單報名狀態 *@
 		<div class="content__area-state">
-			@if (applyState == "ok")
-			{
-				<h2>報名完成</h2>
-			}
-			else if (applyState == "notyet")
-			{
-				<h2>您尚未報名</h2>
-			}
-			else if (applyState == "error")
-			{
-				<h2>報名失敗,請聯繫主辦單位</h2>
-			}
-
+			<img src="@(Model.ApplyStatusPath)" />
+			<h2>@(Model.ApplyStatusText)</h2>
 		</div>
+
 		<div class="content__area-form">
+
+			@* 顯示活動資訊 *@
 			<div class="content__area-form-title">
-				<p>活動名稱:&nbsp; <span style="color:darkgoldenrod">2025最新徵選</span></p>
-				<p>徵選截止日:&nbsp;<span style="color:darkgoldenrod">@deadline</span></p>
-				<p>
-					徵選狀態:&nbsp; <span style="color:@(joinState == "徵選中" ? "#8B0000" : "gray")">@joinState</span>
-				</p>
-				<p>
-					投票狀態:&nbsp; <span style="color:@(voteState == "徵選中" ? "#8B0000" : "gray")">@voteState</span>
-				</p>
+				<div class="content-form-img-cover">
+					<img src="@(Model.SelectionCoverPath)" />
+				</div>
+				<div class="content-form-text">
+					<p>活動名稱:&nbsp; <span style="color:darkgoldenrod">@Model.Title</span></p>
+					<p>徵選截止日:&nbsp;<span style="color:darkgoldenrod">@Model.EndDate</span></p>
+					<p>
+						徵選狀態:&nbsp; <span style="color:@(Model.JoinState == "開放中" ? "#8B0000" : "gray")">@Model.JoinState</span>
+					</p>
+					<p>
+						投票狀態:&nbsp; <span style="color:@(Model.VoteState == "開放中" ? "#8B0000" : "gray")">@Model.VoteState</span>
+					</p>
+				</div>
 			</div>
 
+			@* 顯示表單 *@
 			<div class="content-form">
 				<ol class="content-form-list">
+					@* li 表單填寫內容區 *@
 					<li class="border-bottom">
 						<p> 姓名</p>
-						<input type="text" class="content-form-input" name="userName" />
-					</li>
-					<li class="border-bottom">
-						<p> 連絡電話</p>
-						<input type="text" class="content-form-input" name="tel" />
+						<span class="content-form-input input-name">@(Model.UserName)</span>
 					</li>
 					<li class="border-bottom">
 						<p> 電子信箱</p>
-						<input type="text" class="content-form-input" name="email" />
+						<span class="content-form-input input-email">@(Model.Email)</span>
 					</li>
-					<li class="border-bottom content-form-item">
+					@* li 上傳作品區 *@
+					<li class=" content-form-item">
+						@* 上傳按鈕 A1 *@
 						<div class="upload__title">
 							<p> 上傳作品</p>
-							<label class="upload__item-file">
-								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-arrow-up-fill" viewBox="0 0 16 16">
-									<path d="M8 2a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 6.095 0 7.555 0 9.318 0 11.366 1.708 13 3.781 13h8.906C14.502 13 16 11.57 16 9.773c0-1.636-1.242-2.969-2.834-3.194C12.923 3.999 10.69 2 8 2m2.354 5.146a.5.5 0 0 1-.708.708L8.5 6.707V10.5a.5.5 0 0 1-1 0V6.707L6.354 7.854a.5.5 0 1 1-.708-.708l2-2a.5.5 0 0 1 .708 0z" />
-								</svg>
-							</label>
+							@* 活動開放中+從未報名過 可以上傳作品 *@
+							@if (Model.JoinState == "開放中" && Model.ApplySongs.Count < 1)
+							{
+								<label class="upload__item-file">
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-arrow-up-fill" viewBox="0 0 16 16">
+										<path d="M8 2a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 6.095 0 7.555 0 9.318 0 11.366 1.708 13 3.781 13h8.906C14.502 13 16 11.57 16 9.773c0-1.636-1.242-2.969-2.834-3.194C12.923 3.999 10.69 2 8 2m2.354 5.146a.5.5 0 0 1-.708.708L8.5 6.707V10.5a.5.5 0 0 1-1 0V6.707L6.354 7.854a.5.5 0 1 1-.708-.708l2-2a.5.5 0 0 1 .708 0z" />
+									</svg>
+								</label>
+							}
 						</div>
-						<ol class="upload__list"></ol>
+
+						@* 顯示已報名的作品 *@
+						<ol class="upload__list">
+							@if (Model.ApplySongs.Count <= 0)
+							{
+								<li>目前沒有任何歌曲</li>
+							}
+							else
+							{
+								@foreach (var item in Model.ApplySongs)
+								{
+									<li class="upload__item" data-songid="@(item.SongId)">
+										<span class="upload__item-title">@(item.SongName)</span>
+										@* 歌曲封面縮圖 *@
+										<img src="@(item.CoverPhotoPath)" class="content-form-list-sm-img" />
+									</li>
+								}
+							}
+						</ol>
+
+
+						@* 上傳作品的彈窗 A1*@
 						<div class="popup__select-works">
 							<div class="popup__select-works-title">
 								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-up-fill" viewBox="0 0 16 16">
@@ -68,339 +87,281 @@
 									<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
 								</svg>
 							</div>
+
+							@* 彈窗上方顯示區:勾選的歌曲 *@
 							<div class="popup__select-works-chosen">
 								<ol class="popup__select-works-chosen-ol">
+									@foreach (var item in Model.ApplySongs)
+									{
+										@if (item.SelectionDetailId != 0)
+										{
+											<li data-songid="@item.SongId">
+												@(item.SongName) &nbsp;
+												<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-x icon__close icon__close-data" viewBox="0 0 16 16">
+													<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+												</svg>
+											</li>
+										}
+									}
 								</ol>
 							</div>
+
+							@* 彈窗下方顯示區: 顯示所有歌曲 *@
 							<div class="popup__select-works-list">
 								<ol>
-									<li class="border-bottom ">
-										<label>
-											<input type="checkbox" class="popup__select-works-input" data-id="item1" />&nbsp;
-											<span>ABBBXXXX</span>
-										</label>
-									</li>
-									<li class="border-bottom ">
-										<label>
-											<input type="checkbox" class="popup__select-works-input" data-id="item2" />&nbsp;
-											<span>ZZZAXXXX</span>
-										</label>
-									</li>									
+									@if (Model.Songs.Count <= 0)
+									{
+										<li class="text-secondary">&nbsp;目前沒有任何歌曲</li>
+									}
+									else
+									{
+										@foreach (var item in Model.Songs)
+										{
+											<li class="border-bottom ">
+												<label>
+													<input type="checkbox" class="popup__select-works-input" data-songid="@(item.SongId)" />&nbsp;
+													<span>@(item.SongName)</span>
+												</label>
+											</li>
+										}
+									}
 								</ol>
 							</div>
 							<div class="popup__select-works-button">
-								<button class="btn btn-submit--theme">送出</button>
-								<button class="btn btn-cancel--theme">取消</button>
+								<button class="btn btn-submit--theme" data-selectionId="@(Model.SelectionId)">儲存</button>
 							</div>
 						</div>
 					</li>
 
 				</ol>
+				@* 大頭照 *@
 				<div class="content-form-img">
-					<img src="/image/selection//voteAD.png" />
+					<img src="@(Model.AvatarPath)" />
 				</div>
 
 			</div>
 		</div>
 		<div class="form-button">
-			<button class="btn btn-cancel--theme">清除</button>
-			<button class="btn btn-submit--theme">送出</button>
+			@if (Model.JoinState == "開放中" && Model.ApplySongs.Count < 1)
+			{
+				<button class="btn btn-submit--theme submit-forn-btn">送出</button>
+			}
+
 		</div>
 	</div>
 </section>
 <div class="overlay">
 </div>
+
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 
 <script>
-	$(document).ready(function() {
+	
+		//已選擇作品LIST
+		var chosenUploadList=[];
 
-		/******顯示/隱藏彈窗和 overlay*******/
-		$(".upload__item-file").on("click", function(){
-			$(".popup__select-works").fadeIn();
-			$(".overlay").fadeIn();
-		});
-		$(".icon__close-pop, .btn-cancel--theme,.btn-submit--theme").on("click", function(){
-			$(".popup__select-works").fadeOut();
-			$(".overlay").fadeOut();
-		});
+		$(document).ready(function() {
+
+		   var SelectionId = '@(Model.SelectionId)';
+			console.log("chosenUploadList");
+			console.log(chosenUploadList);
+			$('.popup__select-works-chosen-ol li').each(function() {
+				// 取得 data-songid 和歌曲名稱
+				let songId = $(this).data('songid');
+				let songName = $(this).text().trim();
+
+				// 將每個歌曲的資料加入到陣列中
+				chosenUploadList.push({ songid: songId, songName: songName });
+			});
+
+			/* 點選上傳按鈕顯示彈窗 並 加入畫面上已上傳歌曲
+			 * 顯示/隱藏彈窗和 overlay*******/
+			$(".upload__item-file").on("click", function(){
+				$(".popup__select-works").fadeIn();
+				$(".overlay").fadeIn();
 
 
-		/******作品清單有勾選時 加入LIST*******/
-		let chosenUpload=[];
-		$(".popup__select-works-input").on("change", function() {
+			});
+			$(".icon__close-pop, .btn-submit--theme").on("click", function(){
+				$(".popup__select-works").fadeOut();
+				$(".overlay").fadeOut();
+			});
+			
 
-			const id = $(this).data("id");				   // 取得 item 標識符
-			const itemText = $(this).siblings("span").text();  // 取得同層的 <span> 文字
 
 
-			// 當[勾選]時，加入陣列
-			if ($(this).prop("checked")) {
-					// 將 item 物件加入 chosenUpload
-					chosenUpload.push({ id: id, name: itemText })
+			/****當音樂上傳 勾選狀態改變時****/
+			$(".popup__select-works-input").on("change", function() {
 
-					// 動態加項目 到 [被選擇清單列表chosen]
-					$(".popup__select-works-chosen-ol").append(`
-						<li data-item="${id}">
-							${itemText} &nbsp;
-							<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-x icon__close icon__close-data" viewBox="0 0 16 16">
-								<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
-							</svg>
-						</li>
-					`);
-						$(".popup__select-works-chosen-ol li").last().css({
-							"margin": "5px",
-							"background-color": "lightgray",
-							"border-radius":"5px",
-							"font-size":"12px",
-							"padding":"5px"
+				//取得音樂的ID
+				const songid = $(this).data("songid");
+
+				//取得音樂的名稱(選取器 取得同層的 <span> 文字)
+				const songName = $(this).siblings("span").text();
+
+				//當[勾選]時，加入陣列
+				if ($(this).prop("checked")) {
+
+						//將 音樂物件 加入 被選擇清單中
+						chosenUploadList.push({ songid: songid, songName: songName })
+
+						//動態加項目 到 [被選擇清單列表chosen]
+						$(".popup__select-works-chosen-ol").append(`
+							<li data-songid="${songid}">
+								${songName} &nbsp;
+								<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-x icon__close icon__close-data" viewBox="0 0 16 16">
+									<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+								</svg>
+							</li>
+						`);
+							$(".popup__select-works-chosen-ol li").last().css({
+								"margin": "5px",
+								"background-color": "darkgray",
+								"border-radius":"5px",
+								"font-size":"20px",
+								"padding":"5px"
+							});
+
+						$(".popup__select-works-chosen-ol li svg").last().css("cursor", "pointer");
+						$(".popup__select-works-chosen-ol li svg").last().hover(
+							function () {
+								$(this).css("transform", "scale(1.2)");
+							},
+							function () {
+								$(this).css("transform", "scale(1)");
+							}
+						);
+						console.log(chosenUploadList);
+				}
+				else {
+						// 當[取消勾選]時，從陣列中移除該項目
+						chosenUploadList = chosenUploadList.filter(function(item) {
+							return item.songid !== songid;
 						});
 
-					$(".popup__select-works-chosen-ol li svg").last().css("cursor", "pointer");
-					$(".popup__select-works-chosen-ol li svg").last().hover(
-						function () {
-							$(this).css("transform", "scale(1.2)");
-						},
-						function () {
-							$(this).css("transform", "scale(1)");
-						}
-					);
+						console.log(chosenUploadList);
+						// 從畫面上動態移除
+						$(".popup__select-works-chosen-ol li[data-songid='" + songid + "']").remove();
 
-			}
-			else {
-					// 當[取消勾選]時，從陣列中移除該項目
-					chosenUpload = chosenUpload.filter(function(val) {
-						return val.id !== id;
-					});
-					// 如果要動態移除chosen
-					$(`.popup__select-works-chosen-ol li[data-item="${id}"]`).remove();
-			}
-		});
-
-
-
-		/*****當點選[被選擇清單列表chosen]中的X 則從陣列中移除該項目*******/
-		$(".popup__select-works-chosen-ol").on("click", ".icon__close-data", function() {
-			const id = $(this).closest("li").data("item"); // 取得對應的項目
-
-			// 從陣列中移除該項目
-			chosenUpload = chosenUpload.filter(function(val) {console.log(val);
-				return val.id !== id;
+				}
 			});
 
-			// 從被選擇清單列表移除該項目
-			$(this).closest("li").remove();
 
-			// 取消對應的 checkbox 選取狀態
-			$(`.popup__select-works-list input[type="checkbox"][data-id="${id}"]`).prop("checked", false);
-		});
+			/*****移除 [被選擇的音樂] 則從陣列中移除該項目*******/
+			$(".popup__select-works-chosen-ol").on("click", ".icon__close-data", function() {
 
+				const songid = $(this).closest("li").data("songid"); // 取得對應的項目
 
+				// 從陣列中移除該項目
+				chosenUploadList = chosenUploadList.filter(function(item) {
+					return item.songid !== songid;
+				});
 
-		/*****頁面沒有關閉 會自動儲存輸入的內容*******/
-		let userName = sessionStorage.getItem('userName');
-		let email = sessionStorage.getItem('email');
-		let tel = sessionStorage.getItem('tel');
-
-		if (userName) {
-			$("input[name='userName']").val(userName);
-		}
-
-		if (email) {
-			$("input[name='email']").val(email);
-		}
-
-		if (tel) {
-			$("input[name='tel']").val(tel);
-		}
-
-		$("input[type='text']").on("input", function() {
-				sessionStorage.setItem("userName", $("input[name='userName']").val());
-				sessionStorage.setItem("tel", $("input[name='tel']").val());
-				sessionStorage.setItem("email", $("input[name='email']").val());
-
-		})
+				// 從被選擇清單列表移除該項目
+				$(this).closest("li").remove();
+				console.log("被選擇的音樂");
+				console.log($(`.popup__select-works-list input[type="checkbox"][data-songid="${songid}"]`));
+				// 取消對應的 checkbox 選取狀態
+				$(`.popup__select-works-list input[type="checkbox"][data-songid="${songid}"]`).prop("checked", false);
+			});
 
 
-
-		/******使用者上傳封面 顯示圖片名*******/
-		$(".upload__item-cover >input[type='file']").on("change", function() {
-
-			if (this.files.length > 0) {
-					let file = this.files[0];								 // 取檔案
-					let fileName = file.name;								 // 取檔名
-					$(".content-form-list-sm-img-filename").text(fileName);  // 顯示檔案名稱
-
-					// 只顯示圖片預覽（確保選擇的是圖片）
-					if (file.type.startsWith("image/")) {
-							let reader = new FileReader();
-							reader.onload = function(e) {
-								$(".content-form-list-sm-img").attr("src", e.target.result); // 設定圖片來源
-							};
-							reader.readAsDataURL(file); // 轉換為 Base64
-					} else {
-						console.log("選擇的不是圖片，無法顯示預覽");
-					}
-			}
-			else {
-				console.log("沒有選擇檔案");
-			}
-		});
-
-
-			/*****點選上傳作品的確認紐 將勾選清單加入 上傳作品清單******/
-
+			/*****作品確認上傳 =>將勾選清單加入畫面上的清單******/
 			$(".popup__select-works-button > .btn-submit--theme").on("click",function(){
-				console.log(chosenUpload);
-				$(".upload__list").empty();
-				for (let i = 0; i < chosenUpload.length; i++) {
-					const id =chosenUpload[i]["id"];  // 取得 item 標識符
-					const itemText =chosenUpload[i]["name"];  // 取得 item 標識符
+					console.log(chosenUploadList);
+					// 清掉畫面上顯示的清單
+					$(".upload__list").empty();
 
+					//重新加入到畫面上
+					for (let i = 0; i < chosenUploadList.length; i++) {
 
-				// 動態添加項目到列表
-				$(".upload__list").append(`
-					<li class="upload__item"  data-item="${id}">
-						<span class="upload__item-title">${itemText}</span>
-						<label class="upload__item-cover">
-							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-upload" viewBox="0 0 16 16">
-								<path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
-								<path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708z" />
-							</svg>&nbsp;封面
-							<input type="file" style="display:none" />
-						</label>
-						<img src="/image/selection//voteAD.png" class="content-form-list-sm-img" />
-						<span class="content-form-list-sm-img-filename"></span>
-					</li>
-				`);
-					// 設定清單的樣式
-					$(".upload__list li").last().css({
-						"margin": "5px",
-						"display": "flex",
-						"align-items": "center",
-						"margin-bottom": "5px",
-						"font-size": "var(--fsize-menu)",
-						"height": "30px",
-						"border-bottom": "1px solid gray",
-						"padding-bottom": "5px",
-						"color":"darkgoldenrod"
-					});
-					// 設定按鈕的樣式
-					$(".upload__list li label").css({
-						"width": "80px",
-						"background-color": "#4CAF50",
-						"width": "80px",
-						"height": "100%",
-						"margin":" 5px",
-						"border-radius": "5px",
-						"color": "aliceblue",
-						"font-weight": "bold",
-						"text-align": "center",
-						"cursor":"pointer",
-						"margin-left":"auto"
-					});
+						const songid =chosenUploadList[i]["songid"];
+						const songName =chosenUploadList[i]["songName"];
 
-					// 設定縮圖的樣式
-					$(".content-form-list-sm-img").last().css({
-						"transition": "transform 0.3s ease-in-out",
-						"width": "25px",
-						"height": "25px",
-						"border-radius":" 2px",
-						"margin-right": "20px",
-						"cursor":"pointer"
-					});
+					// 將清單顯示到畫面上
+					$(".upload__list").append(`
+						<li class="upload__item"  data-songid="${songid}">
+							<span class="upload__item-title">${songName}</span>
+							<img src="/image/selection/voteAD.png" class="content-form-list-sm-img" />
+							<span class="content-form-list-sm-img-filename"></span>
+						</li>
+					`);
+						$(".upload__list li").last().css({
+							"margin": "5px",
+							"display": "flex",
+							"align-items": "center",
+							"margin-bottom": "5px",
+							"font-size": "20px",
+							"height": "30px",
+							"border-bottom": "1px solid gray",
+							"padding-bottom": "5px",
+							"color":"darkgoldenrod"
+						});
+						$(".upload__list li label").css({
+							"width": "80px",
+							"background-color": "#4CAF50",
+							"width": "80px",
+							"height": "100%",
+							"margin":" 5px",
+							"border-radius": "5px",
+							"color": "aliceblue",
+							"font-weight": "bold",
+							"text-align": "center",
+							"cursor":"pointer",
+							"margin-left":"auto"
+						});
+						$(".content-form-list-sm-img").last().css({
+							"transition": "transform 0.3s ease-in-out",
+							"width": "25px",
+							"height": "25px",
+							"border-radius":" 2px",
+							"margin-left": "auto",
+							"cursor":"pointer"
+						});
+						$(".content-form-list-sm-img").last().hover(
+							function () {
+								$(this).css("transform", "scale(3)");
+							},
+							function () {
+								$(this).css("transform", "scale(1)");
+							}
 
-					// 設定縮圖的 hover 事件
-					$(".content-form-list-sm-img ").last().hover(
-						function () {
-							$(this).css("transform", "scale(5)");
-						},
-						function () {
-							$(this).css("transform", "scale(1)");
-						}
+						);
+					}
+				});
+	
+			$(".submit-forn-btn").on("click", function(){
 
-					);
-
-				}
-
-
-			});
-
-
-		/*****點選送出按鈕 檢查是否都有填寫******/
-		$(".form-button > .btn-submit--theme").on("click",function(){
-
-				//取值
-				let userName = $("input[name='userName']");
-				let email = $("input[name='email']");
-				let tel = $("input[name='tel']");
-				let fileInput = $("input[type='file']")[0]; // 取得 DOM 元素
-				let files = fileInput.files; // 獲取檔案清單
-
-				 console.log(userName, email, tel,files);  // 在控制台顯示取得的值
-
-				//必填判斷
-				let list=[];
-				if(userName.val()==""){
-					userName.focus();
-					list.push("請填寫姓名\n");
-				}
-				if(email.val()==""){
-					email.focus();
-					list.push("請填寫電子信箱\n");
-				}
-				if(tel.val()==""){
-					tel.focus();
-					list.push("請填寫電話\n");
-				}
-				if (files.length < 1) {
-					list.push("請上傳檔案\n");
-				}
-				if(list.length>0)
-				{
-					alert(list.join(''));
+				if(chosenUploadList==null||chosenUploadList.length<1){
+					alert("請選擇作品上傳");
 					return;
 				}
-				let formData = new FormData();
-				formData.append("file", $("input[type='file']")[0].files[0]); // 加入檔案
-				formData.append("userName", $("input[name='userName']").val());
-				formData.append("tel", $("input[name='tel']").val());
-				formData.append("email", $("input[name='email']").val());
+				console.log(chosenUploadList);
+				var data = {
+					"UserName": $(".input-name").text(),
+					"Email": $(".input-email").text(),
+					"SongsId": chosenUploadList.map(song => song.songid), // 取出 songId 陣列
+					"SelectionId": SelectionId
+				};
 
+				console.log("data",data);
 				$.ajax({
 					method: "post",
 					url: "/Selection/SubmitApplication",
-					data: formData,
-					contentType: false,
-						processData: false,
+					data: JSON.stringify(data),
+					contentType: "application/json",
+					processData: false,
 					success: function(res) {
-						console.log(res);
-						sessionStorage.removeItem("userName");
-						sessionStorage.removeItem("email");
-						sessionStorage.removeItem("tel");
+						alert(res.message);
 					},
 					error: function(err) {
-						console.log(err);
-					},
-					complete: function() {
-						console.log("完成");
+						alert(res.message);
 					}
 				});
-
-
 			});
-
-		/*****點選取消按鈕 將input清除******/
-		$(".form-button > .btn-cancel--theme").on("click",function(){
-						sessionStorage.removeItem("userName");
-						sessionStorage.removeItem("email");
-						sessionStorage.removeItem("tel");
-							$("input[name='userName']").val('');   // 清空 userName 欄位
-							$("input[name='email']").val('');      // 清空 email 欄位
-							$("input[name='tel']").val('');        // 清空 tel 欄位
-							$("input[type='file']").val('');       // 清空檔案選擇欄位
-							$(".upload__item").remove();
-
-		});
 	});
+
+	
+
 </script>
+

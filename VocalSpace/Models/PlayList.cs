@@ -13,7 +13,7 @@ public partial class PlayList
 
     public string? CoverImagePath { get; set; }
 
-    public DateTime? CreateTime { get; set; }
+    public DateTime CreateTime { get; set; }
 
     public string? PlaylistDescription { get; set; }
 

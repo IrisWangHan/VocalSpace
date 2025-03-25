@@ -59,18 +59,18 @@
 }
 
 .content__card-area {
-  width: 100%;
-  height: auto;
-  min-height: 600px;
-  border-radius: 10px;
-  background-color: #ffffff;
-  color: black;
-  padding: 60px 20px 10px 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  position: relative;
+    width: 100%;
+    height: auto;
+    min-height: 600px;
+    border-radius: 10px;
+    background-color: var(--bg-color);
+    color: black;
+    padding: 60px 20px 10px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    position: relative;
 }
 
 @media (max-width: 576px) {

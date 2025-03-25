@@ -1,0 +1,63 @@
+﻿/* 加入歌單，分享歌曲按鈕之彈跳視窗 */
+
+.modal-title {
+    margin-bottom: 0;
+    line-height: 1.5;
+    color: black;
+}
+
+.modal-content {
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+    padding: 30px;
+}
+
+.modal-footer {
+    justify-content: flex-start;
+    padding: 20px 0 0 0;
+}
+
+    .modal-footer .copy {
+        background: #ff4d4f;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 8px;
+        margin-left: 15px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+.sharepopup-content {
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+    background: linear-gradient(to right, #000, #654321);
+    border-radius: 10px;
+    padding: 15px;
+    color: white;
+}
+
+    .sharepopup-content img {
+        width: 80px;
+        height: 80px;
+        border-radius: 8px;
+        margin-right: 15px;
+    }
+
+    .sharepopup-content div {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .sharepopup-content strong {
+        font-size: 20px;
+    }
+
+.modal-footer input {
+    flex-grow: 1;
+    padding: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+}

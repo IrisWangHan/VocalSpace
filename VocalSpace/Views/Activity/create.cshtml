@@ -1,4 +1,8 @@
-﻿<div class="page-container container-xxl ">
+﻿@{
+	ViewData["Title"] = "活動投稿";
+	var userId = ViewData["uid"] ?? null;
+}
+<div class="page-container container-xxl ">
 	<h2 class="text-center mt-4">投稿活動</h2>
 	<div class="row justify-content-center">
 		<div class="col-md-8">
@@ -11,19 +15,20 @@
 								<div class="cover-preview" id="coverPreview">
 								</div>
 							</div>
-								<input type="file" id="coverImageInput" class="d-none" accept="image/*" onchange="previewCoverImage(this)">
-								<label for="coverImageInput" class="btn btn-outline-secondary btn-sm mt-2">選擇圖片</label>
+							<input type="file" id="coverImageInput" class="d-none" accept="image/*"
+								onchange="previewCoverImage(this)">
+							<label for="coverImageInput" class="btn btn-outline-secondary btn-sm mt-2">選擇圖片</label>
 						</div>
-						<p class="small text-muted">圖片尺寸至少 1200x628px，大小不可超過2MB。</p>
+						<p class="small text-muted">圖片尺寸建議至少 1200x628px，大小不可超過2MB。</p>
 						<div class="error-feedback mt-1" id="coverError">請上傳封面圖片！</div>
-
+						@* 驗證使用者用 *@
+						<div id="UserId" data-userid=@userId></div>
 						<!-- 活動資訊區 -->
 						<div class="form-group mt-3">
 							<label for="eventTitle">活動標題 *</label>
 							<input type="text" class="form-control" id="eventTitle">
 							<div class="error-feedback mt-1" id="eventTitleError">請填寫活動標題!</div>
 						</div>
-
 						<div class="form-group mt-3">
 							<label for="eventDate">活動時間 *</label>
 							<input type="datetime-local" class="form-control" id="eventDate">
@@ -34,6 +39,18 @@
 							<label for="eventLocation">活動地點 *</label>
 							<input type="text" class="form-control" id="eventLocation">
 							<div class="error-feedback mt-1" id="eventLocationError">這填寫活動地點!</div>
+						</div>
+
+						<div class="form-group mt-3">
+							<label for="eventCity">所在區域 *</label>
+							<select class="form-control" id="eventCity">
+								<option value="">請選擇所在區域</option>
+								@foreach (var region in VocalSpace.Models.RegionMapping.RegionDict.Keys)
+								{
+									<option value="@region">@region</option>
+								}
+							</select>
+							<div class="error-feedback mt-1" id="eventCityError">請填寫所在區域</div>
 						</div>
 
 						<div class="form-group mt-3">
@@ -48,20 +65,49 @@
 						</div>
 					</form>
 				</div>
-			</div>			
+			</div>
 		</div>
 	</div>
 </div>
 
-@*公用彈窗*@
-@await Html.PartialAsync("_ShareModal")
-
-
+<div class="modal fade" id="ActivityCommitModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="shareModalLabel">活動申請提交 - 上傳進度</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="container w-100 h-100 d-flex align-items-center">
+					<div class="col-6 d-flex justify-content-center align-items-center">
+						<i class="text-black bi bi-cloud-check display-1"></i>
+					</div>
+					<div class="col-6 text-black d-flex flex-column justify-content-center align-items-center">
+						<p class="fs-4">您的活動已申請提交</p>
+						<p class="fs-4">等待管理員審核中!</p>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+			</div>
+		</div>
+	</div>
+</div>
 @section Scripts {
+	<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places" asp-append-version="true"></script>
 	<script>
+		// 從頁面中獲取 userId
+		let userId = $("#UserId").data("userid");
+		// 檢查用戶是否登入
+		if (!userId) {
+			alert("請先登入！");
+			window.location.href = '/Accounts/Login';
+		}
+
 		// 封面圖片預覽與檔案大小驗證
 		function previewCoverImage(input) {
-			const preview = document.getElementById('coverContainer');
+			const preview = document.getElementById('coverPreview');
 			const maxSizePhoto = 2 * 1024 * 1024; // 2MB 限制
 
 			if (input.files && input.files[0]) {
@@ -78,66 +124,120 @@
 			}
 		}
 
-		// 表單提交驗證
-		document.getElementById("eventForm").addEventListener("submit", function (e) {
-			e.preventDefault(); // 防止表單提交
-
-			let isValid = true;
-
-			function validateField(inputId, errorId) {
-				let inputField = document.getElementById(inputId);
-				let errorMsg = document.getElementById(errorId);
-
-				if (!inputField.value.trim()) {
-					inputField.classList.add("is-invalid"); 
-					errorMsg.style.display = "block"; 
-					isValid = false;
-				} else {
-					inputField.classList.remove("is-invalid"); 
-					errorMsg.style.display = "none";
+		$(function () {
+			// 載入頁面時檢查LocalStorage是否有草稿
+			const draft = JSON.parse(localStorage.getItem("eventDraft"));
+			if (draft) {
+				document.getElementById("eventTitle").value = draft.title;
+				document.getElementById("eventDate").value = draft.eventDate;
+				document.getElementById("eventLocation").value = draft.location;
+				document.getElementById("eventCity").value = draft.city;
+				document.getElementById("eventDescription").value = draft.description;
+				if (draft.coverImage) {
+					const reader = new FileReader();
+					reader.onload = function (e) {
+						document.getElementById('coverPreview').innerHTML = `<img src="${e.target.result}" alt="封面預覽" style="width: 100%; height: 100%; object-fit: cover;">`;
+					};
+					reader.readAsDataURL(draft.coverImage);
 				}
 			}
+			// 取消按鈕返回首頁
+			document.getElementById("cancelBtn").addEventListener("click", function () {
+				// 檢查表單是否有內容
+				const title = document.getElementById("eventTitle").value.trim();
+				const eventDate = document.getElementById("eventDate").value;
+				const location = document.getElementById("eventLocation").value.trim();
+				const city = document.getElementById("eventCity").value.trim();
+				const description = document.getElementById("eventDescription").value.trim();
+				const coverImageInput = document.getElementById("coverImageInput");
 
-			validateField("eventTitle", "eventTitleError");
-			validateField("eventDate", "eventDateError");
-			validateField("eventLocation", "eventLocationError");
-
-				 // 檢查封面圖片是否已上傳
-		const coverImageInput = document.getElementById('coverImageInput');
-		const coverPreview = document.getElementById('coverContainer');
-		const coverError = document.getElementById('coverError');
-
-		if (!coverImageInput.files.length) {
-			coverPreview.classList.add('is-invalid');
-			coverError.style.display = 'block';
-			isValid = false;
-		} else {
-			coverPreview.classList.remove('is-invalid');
-			coverError.style.display = 'none';
-		}
-
-			if (isValid) {
-				// 這裡可以加入表單提交的邏輯
-					let shareModal = new bootstrap.Modal(document.getElementById("shareModal"));
-					shareModal.show();
-			}
-		});
-
-		// 取消按鈕返回首頁
-		let cancelBtn = document.getElementById("cancelBtn");
-		if (cancelBtn) {
-			cancelBtn.addEventListener("click", function () {
-				window.location.href = '/Activity/index';
+				if (title || eventDate || location || city || description || coverImageInput.files.length > 0) {
+					if (confirm("表單有內容，是否儲存草稿到LocalStorage？")) {
+						const draft = {
+							title: title,
+							eventDate: eventDate,
+							location: location,
+							city: city,
+							description: description,
+							coverImage: coverImageInput.files.length > 0 ? coverImageInput.files[0] : null
+						};
+						localStorage.setItem("eventDraft", JSON.stringify(draft));
+					}
+					else
+						localStorage.removeItem("eventDraft")
+				}
+				window.location.href = '/Activity/Index';
 			});
-		}
 
-		// 彈窗關閉返回首頁
-		let shareModalElement = document.getElementById("shareModal");
-		shareModalElement.addEventListener("hidden.bs.modal", function () {
-			window.location.href = '/Activity/index';
+			// 表單提交驗證
+			document.getElementById("eventForm").addEventListener("submit", function (e) {
+				e.preventDefault(); // 防止表單直接提交
+
+				//未填寫的欄位紅框
+				let isValid = true;
+				function validateField(inputId, errorId) {
+					let inputField = document.getElementById(inputId);
+					let errorMsg = document.getElementById(errorId);
+
+					if (!inputField.value.trim()) {
+						inputField.classList.add("is-invalid");
+						errorMsg.style.display = "block";
+						isValid = false;
+					} else {
+						inputField.classList.remove("is-invalid");
+						errorMsg.style.display = "none";
+					}
+				}
+
+				validateField("eventTitle", "eventTitleError");
+				validateField("eventDate", "eventDateError");
+				validateField("eventLocation", "eventLocationError");
+				validateField("eventCity", "eventCityError");
+				validateField("coverImageInput", "coverError");
+
+				if (!isValid) return;
+
+				// 取得表單欄位值
+				const title = document.getElementById("eventTitle").value.trim();
+				const eventDate = document.getElementById("eventDate").value;
+				const location = document.getElementById("eventLocation").value.trim();
+				const city = document.getElementById("eventCity").value.trim();
+				const description = document.getElementById("eventDescription").value.trim();
+				const coverImageInput = document.getElementById("coverImageInput");
+
+				// 準備表單資料
+				const formData = new FormData();
+				formData.append("Title", title);
+				formData.append("EventDate", eventDate);
+				formData.append("Location", location);
+				formData.append("City", city);
+				formData.append("ActivityDescription", description);
+
+				// 封面圖片
+				if (coverImageInput.files.length > 0) {
+					formData.append("CoverImage", coverImageInput.files[0]);
+				}
+				//上傳活動AJAX=>ActivityController接收=>ActivityService處理資料
+				$.ajax({
+					url: "/Activity/Submit",
+					type: "POST",
+					data: formData,
+					contentType: false,
+					processData: false,
+					success: function (data) {
+						$("#ActivityCommitModal").modal("show");
+						localStorage.removeItem("eventDraft"); //清除草稿資料
+					},
+					error: function (xhr) {
+						const response = JSON.parse(xhr.responseText);
+						alert("錯誤：" + response.message);
+					}
+				});
+				// 當 ActivityCommitModal 彈窗關閉時，導回 /Activity/Index
+				$('#ActivityCommitModal').on('hidden.bs.modal', function () {
+					window.location.href = '/Activity/Index';
+				});
+			});
 		});
-
 	</script>
 }
-
-

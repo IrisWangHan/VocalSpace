@@ -70,6 +70,11 @@ li.selected {
         background-color: red;
     }
 
+h2 {
+    text-align:center;
+    margin-top:30px;
+}
+
 .ranking-list {
     padding: 10px;
     border:1px solid gray;
@@ -187,7 +192,7 @@ img {
 
     .Randomplay .btn-danger {
         display: flex;
-        justify-content: right;
+        justify-content: right
     }
 
 .h2-row {

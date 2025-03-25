@@ -27,6 +27,8 @@ public partial class VocalSpaceDbContext : DbContext
 
     public virtual DbSet<LikeSong> LikeSongs { get; set; }
 
+    public virtual DbSet<PlayHistory> PlayHistories { get; set; }
+
     public virtual DbSet<PlayList> PlayLists { get; set; }
 
     public virtual DbSet<PlayListSong> PlayListSongs { get; set; }
@@ -55,15 +57,13 @@ public partial class VocalSpaceDbContext : DbContext
     {
         modelBuilder.Entity<Activity>(entity =>
         {
-            entity.HasKey(e => e.ActivityId).HasName("PK__Activity__45F4A7F154A71235");
+            entity.HasKey(e => e.ActivityId).HasName("PK__Activity__45F4A7F197DB201F");
 
             entity.ToTable("Activity");
 
-            entity.HasIndex(e => e.ActivityId, "UQ__Activity__45F4A7F09510B12B").IsUnique();
-
             entity.Property(e => e.ActivityId).HasColumnName("ActivityID");
             entity.Property(e => e.ActivityDescription).HasMaxLength(255);
-            entity.Property(e => e.ApprovalStatus).HasDefaultValue((byte)0);
+            entity.Property(e => e.ApprovalStatus).HasComment("0:待審核 1:通過 2;未通過");
             entity.Property(e => e.City).HasMaxLength(5);
             entity.Property(e => e.CreateTime).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.EventCoverPath).HasMaxLength(255);
@@ -80,9 +80,7 @@ public partial class VocalSpaceDbContext : DbContext
 
         modelBuilder.Entity<ActivityComment>(entity =>
         {
-            entity.HasKey(e => e.ActivityCommentId).HasName("PK__Activity__CDDE91BDA0B73A22");
-
-            entity.HasIndex(e => e.ActivityCommentId, "UQ__Activity__CDDE91BC7B0CD57B").IsUnique();
+            entity.HasKey(e => e.ActivityCommentId).HasName("PK__Activity__F569732DA198E90B");
 
             entity.Property(e => e.ActivityCommentId).HasColumnName("ActivityCommentID");
             entity.Property(e => e.ActivityId).HasColumnName("ActivityID");
@@ -93,7 +91,7 @@ public partial class VocalSpaceDbContext : DbContext
             entity.HasOne(d => d.Activity).WithMany(p => p.ActivityComments)
                 .HasForeignKey(d => d.ActivityId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ActivityC__Activ__02084FDA");
+                .HasConstraintName("FK__ActivityC__Activ__0A9D95DB");
 
             entity.HasOne(d => d.User).WithMany(p => p.ActivityComments)
                 .HasForeignKey(d => d.UserId)
@@ -103,11 +101,11 @@ public partial class VocalSpaceDbContext : DbContext
 
         modelBuilder.Entity<Authority>(entity =>
         {
-            entity.HasKey(e => e.AuthorityId).HasName("PK__Authorit__433B1E6DDE6918FC");
+            entity.HasKey(e => e.AuthorityId).HasName("PK__Authorit__433B1E6D6D4C7045");
 
             entity.ToTable("Authority");
 
-            entity.HasIndex(e => e.AuthorityId, "UQ__Authorit__433B1E6C0F417D64").IsUnique();
+            entity.HasIndex(e => e.Name, "UQ_Authority").IsUnique();
 
             entity.Property(e => e.AuthorityId)
                 .ValueGeneratedOnAdd()
@@ -144,42 +142,53 @@ public partial class VocalSpaceDbContext : DbContext
         {
             entity.ToTable("Ecpay", tb => tb.HasComment("紀錄贊助詳細資訊"));
 
+            entity.HasIndex(e => e.MerchantTradeNo, "IX_Ecpay").IsUnique();
+
             entity.Property(e => e.EcpayId).HasColumnName("EcpayID");
-            entity.Property(e => e.DonationId)
-                .HasComment("對應綠界MerchantMemberID")
-                .HasColumnName("DonationID");
-            entity.Property(e => e.MerchantId)
+            entity.Property(e => e.EcpayTradeNo)
+                .HasMaxLength(20)
+                .HasColumnName("ECPayTradeNo");
+            entity.Property(e => e.ItemName)
                 .HasMaxLength(50)
-                .HasDefaultValue("")
-                .HasComment("回傳的收款用戶註冊綠界時的ID(綠界辨識用)")
-                .HasColumnName("MerchantID");
+                .HasComment("回傳的交易編號,收款者可查詢交易狀態");
             entity.Property(e => e.MerchantTradeDate)
                 .HasMaxLength(50)
                 .HasComment("交易成立的時間");
+            entity.Property(e => e.MerchantTradeNo)
+                .HasMaxLength(20)
+                .HasDefaultValue("")
+                .HasComment("回傳的收款用戶註冊綠界時的ID(綠界辨識用)");
+            entity.Property(e => e.PaymentDate).HasColumnType("datetime");
             entity.Property(e => e.PaymentType)
-                .HasMaxLength(50)
+                .HasMaxLength(20)
                 .HasComment("支付方式的類型");
             entity.Property(e => e.PaymentTypeChargeFee)
                 .HasMaxLength(50)
                 .HasComment("支付手續費。 0表示沒有手續費");
+            entity.Property(e => e.ReceiverId).HasColumnName("ReceiverID");
             entity.Property(e => e.RtnCode).HasComment("回傳的交易狀態碼。0 未付款,1成功");
             entity.Property(e => e.RtnMsg)
                 .HasMaxLength(50)
                 .HasComment("回傳的交易狀態訊息");
+            entity.Property(e => e.SponsorId)
+                .HasComment("對應綠界MerchantMemberID")
+                .HasColumnName("SponsorID");
             entity.Property(e => e.TradeAmt).HasComment("回傳的交易金額");
-            entity.Property(e => e.TradeNo)
-                .HasMaxLength(50)
-                .HasComment("回傳的交易編號,收款者可查詢交易狀態");
 
-            entity.HasOne(d => d.Donation).WithMany(p => p.Ecpays)
-                .HasForeignKey(d => d.DonationId)
+            entity.HasOne(d => d.Receiver).WithMany(p => p.EcpayReceivers)
+                .HasForeignKey(d => d.ReceiverId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Ecpay_Donations");
+                .HasConstraintName("FK_Ecpay_Users1");
+
+            entity.HasOne(d => d.Sponsor).WithMany(p => p.EcpaySponsors)
+                .HasForeignKey(d => d.SponsorId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Ecpay_Users");
         });
 
         modelBuilder.Entity<Favoriteplaylist>(entity =>
         {
-            entity.HasKey(e => new { e.PlayListId, e.UserId }).HasName("PK__Favorite__E908137153E205DB");
+            entity.HasKey(e => new { e.PlayListId, e.UserId }).HasName("PK__Favorite__E9081371355A6DAE");
 
             entity.ToTable("Favoriteplaylist");
 
@@ -190,7 +199,7 @@ public partial class VocalSpaceDbContext : DbContext
             entity.HasOne(d => d.PlayList).WithMany(p => p.Favoriteplaylists)
                 .HasForeignKey(d => d.PlayListId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Favoritep__PlayL__7C4F7684");
+                .HasConstraintName("FK__Favoritep__PlayL__0F624AF8");
 
             entity.HasOne(d => d.User).WithMany(p => p.Favoriteplaylists)
                 .HasForeignKey(d => d.UserId)
@@ -200,19 +209,17 @@ public partial class VocalSpaceDbContext : DbContext
 
         modelBuilder.Entity<Interested>(entity =>
         {
-            entity.HasKey(e => e.InterestedId).HasName("PK__Interest__4F84193ECCCE3ACD");
-
             entity.ToTable("Interested");
 
-            entity.HasIndex(e => e.ActivityId, "UQ__Interest__45F4A7F09CF90B37").IsUnique();
+            entity.HasIndex(e => new { e.ActivityId, e.UserId }, "UQ_Interested").IsUnique();
 
             entity.Property(e => e.InterestedId).HasColumnName("InterestedID");
             entity.Property(e => e.ActivityId).HasColumnName("ActivityID");
             entity.Property(e => e.InterestedDate).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.UserId).HasColumnName("UserID");
 
-            entity.HasOne(d => d.Activity).WithOne(p => p.Interested)
-                .HasForeignKey<Interested>(d => d.ActivityId)
+            entity.HasOne(d => d.Activity).WithMany(p => p.Interesteds)
+                .HasForeignKey(d => d.ActivityId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Intereste__Activ__06CD04F7");
 
@@ -224,14 +231,14 @@ public partial class VocalSpaceDbContext : DbContext
 
         modelBuilder.Entity<LikeSong>(entity =>
         {
-            entity.HasKey(e => new { e.LikeId, e.UserId, e.SongId }).HasName("PK__LikeSong__85F843E85F24E7A1");
+            entity.HasKey(e => e.LikeId);
 
-            entity.Property(e => e.LikeId)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("LikeID");
-            entity.Property(e => e.UserId).HasColumnName("UserID");
-            entity.Property(e => e.SongId).HasColumnName("SongID");
+            entity.HasIndex(e => new { e.SongId, e.UserId }, "UQ_LikeSongs").IsUnique();
+
+            entity.Property(e => e.LikeId).HasColumnName("LikeID");
             entity.Property(e => e.CreateTime).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.SongId).HasColumnName("SongID");
+            entity.Property(e => e.UserId).HasColumnName("UserID");
 
             entity.HasOne(d => d.Song).WithMany(p => p.LikeSongs)
                 .HasForeignKey(d => d.SongId)
@@ -244,13 +251,35 @@ public partial class VocalSpaceDbContext : DbContext
                 .HasConstraintName("FK__LikeSongs__UserI__7F2BE32F");
         });
 
+        modelBuilder.Entity<PlayHistory>(entity =>
+        {
+            entity.HasKey(e => e.HistoryId).HasName("PK__PlayHist__4D7B4ADD679AA6EF");
+
+            entity.ToTable("PlayHistory");
+
+            entity.Property(e => e.HistoryId).HasColumnName("HistoryID");
+            entity.Property(e => e.PlayTime).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.SongId).HasColumnName("SongID");
+            entity.Property(e => e.UserId).HasColumnName("UserID");
+
+            entity.HasOne(d => d.Song).WithMany(p => p.PlayHistories)
+                .HasForeignKey(d => d.SongId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_PlayHistory_Songs");
+
+            entity.HasOne(d => d.User).WithMany(p => p.PlayHistories)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_PlayHistory_Users");
+        });
+
         modelBuilder.Entity<PlayList>(entity =>
         {
-            entity.HasKey(e => e.PlayListId).HasName("PK__PlayList__38709FBB7FFA7661");
+            entity.HasKey(e => e.PlayListId).HasName("PK__PlayList__38709FBB8F33B645");
 
             entity.ToTable("PlayList");
 
-            entity.HasIndex(e => e.PlayListId, "UQ__PlayList__38709FBA3A337F35").IsUnique();
+            entity.HasIndex(e => new { e.Name, e.UserId }, "UQ_PlayList").IsUnique();
 
             entity.Property(e => e.PlayListId).HasColumnName("PlayListID");
             entity.Property(e => e.CoverImagePath).HasMaxLength(255);
@@ -270,8 +299,6 @@ public partial class VocalSpaceDbContext : DbContext
         {
             entity.HasKey(e => new { e.PlayListId, e.SongId }).HasName("PK__PlayList__595EA2D4E5686B5E");
 
-            entity.HasIndex(e => e.SongId, "UQ__PlayList__12E3D6F68D7A392C").IsUnique();
-
             entity.Property(e => e.PlayListId).HasColumnName("PlayListID");
             entity.Property(e => e.SongId).HasColumnName("SongID");
             entity.Property(e => e.CreateTime).HasDefaultValueSql("(getdate())");
@@ -281,8 +308,8 @@ public partial class VocalSpaceDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__PlayListS__PlayL__73BA3083");
 
-            entity.HasOne(d => d.Song).WithOne(p => p.PlayListSong)
-                .HasForeignKey<PlayListSong>(d => d.SongId)
+            entity.HasOne(d => d.Song).WithMany(p => p.PlayListSongs)
+                .HasForeignKey(d => d.SongId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__PlayListS__SongI__75A278F5");
         });
@@ -292,6 +319,8 @@ public partial class VocalSpaceDbContext : DbContext
             entity.HasKey(e => e.SelectionId).HasName("PK__Selectio__7F17912F0F589520");
 
             entity.ToTable("Selection");
+
+            entity.HasIndex(e => e.Title, "UQ_Selection").IsUnique();
 
             entity.Property(e => e.SelectionId).HasColumnName("SelectionID");
             entity.Property(e => e.CreateTime).HasDefaultValueSql("(getdate())");
@@ -308,11 +337,12 @@ public partial class VocalSpaceDbContext : DbContext
 
             entity.ToTable("SelectionDetail");
 
+            entity.HasIndex(e => new { e.SelectionId, e.SongId }, "UQ_SelectionDetail").IsUnique();
+
             entity.Property(e => e.SelectionDetailId).HasColumnName("SelectionDetailID");
             entity.Property(e => e.CreateTime).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.SelectionId).HasColumnName("SelectionID");
             entity.Property(e => e.SongId).HasColumnName("SongID");
-            entity.Property(e => e.VoteCount).HasDefaultValue(0);
 
             entity.HasOne(d => d.Selection).WithMany(p => p.SelectionDetails)
                 .HasForeignKey(d => d.SelectionId)
@@ -327,25 +357,22 @@ public partial class VocalSpaceDbContext : DbContext
 
         modelBuilder.Entity<Song>(entity =>
         {
-            entity.HasKey(e => e.SongId).HasName("PK__Songs__12E3D6F7719E04F4");
-
-            entity.HasIndex(e => e.SongId, "UQ__Songs__12E3D6F67B409495").IsUnique();
+            entity.HasKey(e => e.SongId).HasName("PK__Songs__12E3D6F7A5969905");
 
             entity.Property(e => e.SongId).HasColumnName("SongID");
             entity.Property(e => e.CoverPhotoPath)
                 .HasMaxLength(255)
-                .HasDefaultValue("");
+                .HasDefaultValue("/image/Song/default.jpg");
             entity.Property(e => e.CreateTime).HasDefaultValueSql("(getdate())");
-            entity.Property(e => e.IsRemove).HasDefaultValue(false);
-            entity.Property(e => e.LikeCount).HasDefaultValue(0);
+            entity.Property(e => e.IsRemove).HasComment("0未刪除 1已刪除");
             entity.Property(e => e.Lyrics).HasDefaultValue("");
-            entity.Property(e => e.PlayCount).HasDefaultValue(0);
             entity.Property(e => e.SongCategoryId).HasColumnName("SongCategoryID");
             entity.Property(e => e.SongDescription)
                 .HasMaxLength(255)
                 .HasDefaultValue("");
             entity.Property(e => e.SongName).HasMaxLength(20);
             entity.Property(e => e.SongPath).HasMaxLength(255);
+            entity.Property(e => e.SongStatus).HasComment("0審核中 1通過 2失敗");
 
             entity.HasOne(d => d.ArtistNavigation).WithMany(p => p.Songs)
                 .HasForeignKey(d => d.Artist)
@@ -355,16 +382,16 @@ public partial class VocalSpaceDbContext : DbContext
             entity.HasOne(d => d.SongCategory).WithMany(p => p.Songs)
                 .HasForeignKey(d => d.SongCategoryId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Songs__SongCateg__797309D9");
+                .HasConstraintName("FK__Songs__SongCateg__1DB06A4F");
         });
 
         modelBuilder.Entity<SongCategory>(entity =>
         {
-            entity.HasKey(e => e.SongCategoryId).HasName("PK__SongCate__BD6CF5D99FDD1B86");
+            entity.HasKey(e => e.SongCategoryId).HasName("PK__SongCate__BD6CF5D9EC4D6DFF");
 
             entity.ToTable("SongCategory");
 
-            entity.HasIndex(e => e.SongCategoryId, "UQ__SongCate__BD6CF5D880EFE2AD").IsUnique();
+            entity.HasIndex(e => e.CategoryName, "UQ_SongCategory");
 
             entity.Property(e => e.SongCategoryId)
                 .ValueGeneratedOnAdd()
@@ -375,8 +402,6 @@ public partial class VocalSpaceDbContext : DbContext
         modelBuilder.Entity<SongComment>(entity =>
         {
             entity.HasKey(e => e.SongCommentId).HasName("PK__SongComm__CDDE91BDF671567C");
-
-            entity.HasIndex(e => e.SongCommentId, "UQ__SongComm__CDDE91BCC8084B24").IsUnique();
 
             entity.Property(e => e.SongCommentId).HasColumnName("SongCommentID");
             entity.Property(e => e.Comment).HasMaxLength(255);
@@ -397,18 +422,16 @@ public partial class VocalSpaceDbContext : DbContext
 
         modelBuilder.Entity<SongRank>(entity =>
         {
-            entity.HasKey(e => e.SongId).HasName("PK__SongRank__12E3D6F75D69C5FC");
+            entity.HasKey(e => new { e.SongId, e.RankPeriod }).HasName("PK__SongRank__12E3D6F75D69C5FC");
 
             entity.ToTable("SongRank");
 
-            entity.HasIndex(e => e.SongId, "UQ__SongRank__12E3D6F6353DFB7C").IsUnique();
+            entity.HasIndex(e => new { e.RankPeriod, e.CurrentRank }, "UQ_SongRank");
 
-            entity.Property(e => e.SongId)
-                .ValueGeneratedNever()
-                .HasColumnName("SongID");
+            entity.Property(e => e.SongId).HasColumnName("SongID");
 
-            entity.HasOne(d => d.Song).WithOne(p => p.SongRank)
-                .HasForeignKey<SongRank>(d => d.SongId)
+            entity.HasOne(d => d.Song).WithMany(p => p.SongRanks)
+                .HasForeignKey(d => d.SongId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__SongRank__SongID__7A672E12");
         });
@@ -417,16 +440,16 @@ public partial class VocalSpaceDbContext : DbContext
         {
             entity.HasKey(e => e.UserId).HasName("PK__Users__1788CCACF244AD17");
 
-            entity.HasIndex(e => e.Account, "IX_Users").IsUnique();
-
-            entity.HasIndex(e => e.UserId, "UQ__Users__1788CCAD1150EEC1").IsUnique();
+            entity.HasIndex(e => e.Account, "UQ_Users").IsUnique();
 
             entity.Property(e => e.UserId).HasColumnName("UserID");
             entity.Property(e => e.Account).HasMaxLength(50);
             entity.Property(e => e.AuthorityId).HasColumnName("AuthorityID");
             entity.Property(e => e.CreateTime).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.Password).HasMaxLength(255);
-            entity.Property(e => e.Status).HasDefaultValue(false);
+            entity.Property(e => e.Status)
+                .HasDefaultValue((byte)1)
+                .HasComment("0刪除 1啟用 2停用");
             entity.Property(e => e.TempPassword)
                 .HasMaxLength(255)
                 .HasDefaultValue("");
@@ -442,7 +465,7 @@ public partial class VocalSpaceDbContext : DbContext
 
         modelBuilder.Entity<UserFollow>(entity =>
         {
-            entity.HasKey(e => new { e.UserId, e.FollowedUserId }).HasName("PK__UserFoll__597EE9E91933E0E3");
+            entity.HasKey(e => new { e.UserId, e.FollowedUserId }).HasName("PK__UserFoll__597EE9E9CFBAEE1F");
 
             entity.Property(e => e.UserId).HasColumnName("UserID");
             entity.Property(e => e.FollowedUserId).HasColumnName("FollowedUserID");
@@ -461,14 +484,12 @@ public partial class VocalSpaceDbContext : DbContext
 
         modelBuilder.Entity<UserVoted>(entity =>
         {
-            entity.HasKey(e => new { e.SelectionDetailId, e.UserId }).HasName("PK__UserVote__6EDB06EA57146ADA");
+            entity.HasKey(e => new { e.UserId, e.SelectionDetailId });
 
             entity.ToTable("UserVoted");
 
-            entity.Property(e => e.SelectionDetailId)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("SelectionDetailID");
             entity.Property(e => e.UserId).HasColumnName("UserID");
+            entity.Property(e => e.SelectionDetailId).HasColumnName("SelectionDetailID");
             entity.Property(e => e.VoteTime).HasDefaultValueSql("(getdate())");
 
             entity.HasOne(d => d.SelectionDetail).WithMany(p => p.UserVoteds)
@@ -488,22 +509,18 @@ public partial class VocalSpaceDbContext : DbContext
 
             entity.ToTable("UsersInfo");
 
-            entity.HasIndex(e => e.Email, "IX_UsersInfo").IsUnique();
-
-            entity.HasIndex(e => e.UserId, "UQ__UsersInf__1788CCAD339DF13E").IsUnique();
+            entity.HasIndex(e => e.Email, "UQ_UsersInfo").IsUnique();
 
             entity.Property(e => e.UserId)
                 .ValueGeneratedNever()
                 .HasColumnName("UserID");
             entity.Property(e => e.AvatarPath)
                 .HasMaxLength(255)
-                .HasDefaultValue("");
+                .HasDefaultValue("/image/Avatar/default.png");
             entity.Property(e => e.BannerImagePath)
                 .HasMaxLength(255)
                 .HasDefaultValue("");
-            entity.Property(e => e.Birthday).HasDefaultValueSql("(CONVERT([date],getdate()))");
             entity.Property(e => e.Email).HasMaxLength(254);
-            entity.Property(e => e.PersonalIntroduction).HasDefaultValue("");
 
             entity.HasOne(d => d.User).WithOne(p => p.UsersInfo)
                 .HasForeignKey<UsersInfo>(d => d.UserId)

@@ -9,7 +9,7 @@ public partial class PlayListSong
 
     public long SongId { get; set; }
 
-    public DateTime? CreateTime { get; set; }
+    public DateTime CreateTime { get; set; }
 
     public virtual PlayList PlayList { get; set; } = null!;
 

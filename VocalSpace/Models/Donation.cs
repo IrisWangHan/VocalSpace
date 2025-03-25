@@ -19,11 +19,9 @@ public partial class Donation
     /// </summary>
     public string PaymentGateway { get; set; } = null!;
 
-    public DateTime? CreateTime { get; set; }
+    public DateTime CreateTime { get; set; }
 
     public virtual User DonationNavigation { get; set; } = null!;
-
-    public virtual ICollection<Ecpay> Ecpays { get; set; } = new List<Ecpay>();
 
     public virtual User Receiver { get; set; } = null!;
 }

@@ -1,18 +1,15 @@
-﻿
-@*
-    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model VocalSpace.Models.ViewModel.Global.UserBarViewModel
 <div class="userinfo container">
 	<div class="userpic">
-		<a class="Avater-link" href="#">
-			<img class="pfp" src="/image/Wchi.png">
+		<a class="Avater-link" href="/Personal/mymusic/@Model.Account">
+			<img class="pfp" src="@Model.pfp">
 		</a>
 	</div>
 	<div class="userid">
-		<a class="pf" href="#">Wchi</a>
-		<p class="pftext">@@wchiii</p>
+		<a class="pf" href="/Personal/mymusic/@Model.Account">@(Model.Name ?? Model.Account)</a>
+		<p class="pftext">@@@Model.Account</p>
 	</div>
-	<div class="userfollow">
-		<button class="btn btn-danger follow">追蹤</button>
-	</div>
+    <div class="userfollow">
+        <button class="btn btn-danger btn-follow" data-userid="@Model.Account">追蹤</button>
+    </div>
 </div>

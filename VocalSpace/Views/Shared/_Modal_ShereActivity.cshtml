@@ -1,0 +1,40 @@
+﻿@model VocalSpace.Models.ViewModel.Activity.ActivityInfoViewModel
+
+<div class="modal fade" id="ShareActivityModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="shareModalLabel">分享想去的活動</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+					<div class="share-content">
+						<div class="blur-cover-block">
+							<img src="@Model.EventCoverPath" class="blur-cover">
+						</div>
+						<div class="share-image">
+							<a href="/Activity/Info/@Model.ActivityId">
+							<img src="@Model.EventCoverPath" alt="活動封面">
+							</a>
+						</div>
+						<div class="share-info">
+							<strong>@Model.Title</strong>
+						<div>@Model.EventTime.ToString("yyyy-MM-dd．ddd．HH:mm", new System.Globalization.CultureInfo("zh-TW"))</div>
+						<div>@Model.City．@Model.Location</div>
+						</div>
+					</div>
+				<div class="share-actions">
+					<button class="btn fb btn-lg" onclick="shareOnFacebook()"><i class="bi bi-facebook"></i></button>
+					<button class="btn ig btn-lg" onclick="shareOnInstagram()"><i class="bi bi-instagram"></i></button>
+					<input type="text" class="shareUrl share" value="@Model.ShareUrl" readonly>
+					<input type="hidden" class="shareName" value="@Model.Title">
+					<button class="copy" onclick="sharecopyLink()">複製</button>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+			</div>
+		</div>
+	</div>
+</div>
+

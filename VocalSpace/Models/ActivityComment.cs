@@ -13,7 +13,7 @@ public partial class ActivityComment
 
     public string Comment { get; set; } = null!;
 
-    public DateTime? CommentTime { get; set; }
+    public DateTime CommentTime { get; set; }
 
     public virtual Activity Activity { get; set; } = null!;
 

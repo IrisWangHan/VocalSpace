@@ -11,17 +11,17 @@ public partial class Selection
 
     public string SelectionCoverPath { get; set; } = null!;
 
-    public DateTime? CreateTime { get; set; }
+    public DateTime CreateTime { get; set; }
 
-    public DateTime? StartDate { get; set; }
+    public DateTime StartDate { get; set; }
 
-    public DateTime? EndDate { get; set; }
+    public DateTime EndDate { get; set; }
 
-    public DateTime? VotingStartDate { get; set; }
+    public DateTime VotingStartDate { get; set; }
 
-    public DateTime? VotingEndDate { get; set; }
+    public DateTime VotingEndDate { get; set; }
 
-    public bool? Visible { get; set; }
+    public bool Visible { get; set; }
 
     public string Description { get; set; } = null!;
 

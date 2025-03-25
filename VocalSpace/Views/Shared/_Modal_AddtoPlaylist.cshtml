@@ -1,0 +1,56 @@
+﻿@model VocalSpace.Models.ViewModel.Global.AddToPlaylistViewModel
+
+<!-- 加入歌單彈跳視窗 -->
+<div class="modal fade" id="Modal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">加入歌單</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<!-- 歌單列表 -->
+				<div id="playlist-container">
+					@if (Model.Playlists.Any())
+					{
+						@foreach (var playlist in Model.Playlists)
+						{
+							<div class="addplaylist-item">
+								<div class="addplaylist-info">
+									<img src="/image/default_playlist.jpg" alt="封面">
+									<div>
+										<div class="addplaylist-name">@playlist.PlayListName</div>
+									</div>
+								</div>
+								<button class="addbtn-add @(playlist.SonginPlaylist ? "selected" : "")"
+										data-playlist-id="@playlist.PlayListID"
+										data-song-id="@Model.SongId">
+									@(playlist.SonginPlaylist ? "✔ 已加入" : "+ 加入歌單")
+								</button>
+							</div>
+						}
+					}
+					else
+					{
+						<p class="text-black">尚無歌單，請點擊「+ 新增歌單」建立一個。</p>
+					}
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="addbtn-newPlaylist" onclick="window.location.href='/Collection/createlist'">+ 新增歌單</button>
+				<button class="btn addbtn-confirm" data-bs-dismiss="modal">確定</button>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	function addtoggleSelection(button) {
+		if (button.classList.contains("selected")) {
+			button.classList.remove("selected");
+			button.textContent = "+ 加入歌單";
+		} else {
+			button.classList.add("selected");
+			button.textContent = "✔ 已選擇";
+		}
+	}
+</script>

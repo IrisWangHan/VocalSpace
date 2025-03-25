@@ -1,18 +1,25 @@
-﻿
-@*
-
-*@
+﻿@model IEnumerable<VocalSpace.Models.ViewModel.Activity.ActivityListViewModel>
 <div class="main-container">
-	@{
-		for (var i = 0; i <= 1; i++)
+	@if (!Model.Any())
+	{
+		<div class="container d-flex justify-content-center align-items-center flex-column position-relative">
+			<div class="image-container w-50">
+				<img src="/image/Sorrynopage_dark.png" alt="404" class="switch-img">
+			</div>
+			<h2>很抱歉！沒有任何資料...</h2>
+		</div>
+	}
+	else
+	{
+		@foreach (var activity in Model)
 		{
 			<div class="event-container">
 				<!-- 日期部分 -->
 				<div class="col-auto left-container">
 					<div class="calende-border-block p-0 text-center">
-						<div class="bg-danger text-white font-size-sm">3 月</div>
-						<h3 class="mb-1 mt-1 text-black">7</h3>
-						<h6 class="mb-1 mt-1 text-black opacity-50">星期五</h6>
+						<div class="bg-danger text-white font-size-sm">@activity.EventTime.ToString("M 月")</div>
+						<h3 class="mb-1 mt-1 text-black">@activity.EventTime.Day</h3>
+						<h6 class="mb-1 mt-1 text-black opacity-50">@activity.EventTime.ToString("dddd")</h6>
 					</div>
 				</div>
 
@@ -22,17 +29,17 @@
 						<!-- 活動  -->
 						<div class="event-item">
 							<div class="event-image">
-								<a href="Activity/Info">
-									<img src="/image/Activity/cs.jpg" alt="Event 1">
+								<a href="/Activity/Info/@activity.ActivityId">
+									<img src="@activity.EventCoverPath" alt="Event 1">
 								</a>
 							</div>
 							<div class="event-details">
-								<a href="/Activity/Info" class="event-title">THE CHAINSMOKERS LIVE IN TAIPEI 2025</a>
-								<div class="event-time-location">17:00．臺北市．大佳河濱公園</div>
+								<a href="/Activity/Info/@activity.ActivityId" class="event-title">@activity.Title</a>
+								<div class="event-time-location">@activity.EventTime.ToString("HH:mm")．@activity.City．@activity.Location</div>
 								<div class="event-performers">
-									<a class="performer">
-										<img src="/image/p1.jpg">
-										The Chainsmokers
+									<a href="/Personal/mymusic/@activity.UploaderId" class="performer">
+										<img src="@activity.UploaderAvatarPath" alt="@activity.UploaderName">
+										@activity.UploaderName
 									</a>
 								</div>
 							</div>

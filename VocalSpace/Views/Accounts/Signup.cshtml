@@ -1,20 +1,20 @@
 ﻿@{
 	Layout = "_SignupLayout";  
 }
-<form action="~/Home/Index" method="post">
+<form id="SignupForm">
     <!-- Step 1: 帳號密碼設定 -->
     <div class="step" id="step1">
         <h3>帳號密碼設定</h3>
         <div class="form-group">
             <h5 >帳號</h5>
-            <p class="text-tip">只能包含英文字母、數字、_ 符號<br />且長度介於 3 ~ 30 個字元，不建議使用私密資訊</p>
-            <input type="text" id="username" name="username" required />
+            <p class="text-tip">只能包含英文字母、數字<br />且長度介於 3 ~ 30 個字元，不建議使用私密資訊</p>
+            <input type="text" id="userAccount" name="SignupAccount" required />
         </div>
         <div class="form-group">
             <h5>密碼</h5>
             <p class="text-tip">長度須介於 6 ~ 28 個字元</p>
             <div class="input-group" >
-                <input type="password" id="newPassword" name="newPassword" class="form-control" required />
+                <input type="password" id="newPassword" name="SignupPassword" class="form-control" required />
                 <span class="password-toggle">
                     <i class="bi bi-eye-fill" id="togglePassword"></i>
                 </span> 
@@ -27,7 +27,7 @@
     <div class="step" id="step2" style="display: none;">
         <h3>電子信箱</h3>
         <div class="form-group">
-            <input type="email" id="email" name="email" placeholder="請輸入電子郵件" required />
+            <input type="email" id="email" name="SignupEmail" placeholder="請輸入電子郵件" required />
         </div>
         <div class="g-recaptcha mt-3" data-sitekey="6Lc1ydwqAAAAANi3QFvKUuS-7VinRux5SQtfMJmU"></div>
         <button type="button" class="btn-next" data-step="2" disabled>下一步</button>
@@ -38,7 +38,7 @@
         <h3>接收驗證碼</h3>
         <div class="form-group">
             <h5>驗證碼</h5>
-            <input type="text" id="verification_code" name="verification_code" required />
+            <input type="text" id="verification_code" name="SignupVerificationCode" required />
         </div>
         <button type="button" id="resendCode" disabled>重新發送 (180)</button>
         <button type="button" class="btn-next" data-step="3" disabled>下一步</button>
@@ -51,37 +51,36 @@
             <div class="form-label required">
                 <h5>暱稱（顯示名稱）</h5>
             </div>
-            <input type="text" id="nickname" name="nickname" required />
+            <input type="text" id="nickname" name="SignupUserName" required />
         </div>
         <div class="form-group">
             <div class="form-label required">
                 <h5>生日</h5>
             </div>
-            <input type="date" id="birthdate" name="birthdate" required />
+            <input type="date" id="birthdate" name="SignupUserBirthdate" required />
         </div>
         <div class="form-group">
             <div class="form-label">
                 <h5>介紹</h5>
             </div>
-            <textarea id="bio" name="bio"></textarea>
+            <textarea id="bio" name="SignupUserBio"></textarea>
         </div>
         <button type="submit" class="btn-next" data-step="4" disabled>送出</button>
     </div>
-
-    <div class="step" id="step5" style="display: none;">
-        <h4 id="step5-title">完成註冊🎉</h4>
-        <p style="font-weight: bold; margin-bottom:2em">已成功註冊聲維宇宙會員</p>
-        <a href="/Home/Index" class="btn-backHome">回到首頁</a>
-    </div>
-
 </form>
+
+<div class="step" id="step5" style="display: none;">
+    <h4 id="step5-title">完成註冊🎉</h4>
+    <p style="font-weight: bold; margin-bottom:2em">已成功註冊聲維宇宙會員</p>
+    <a href="/Home/Index" class="btn-backHome">回到首頁</a>
+</div>
+
 
 
 
 
 @section Scripts {
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="~/js/Accounts.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
             // 監聽所有步驟的 input 和 select
@@ -97,48 +96,132 @@
                 nextButton.prop("disabled", !allFilled);
             });
 
-            let countdown = 180; // 初始倒數秒數
-            let timer; // 用來存 setInterval()
 
-            // 下一步按鈕邏輯
+            // 下一步按鈕邏輯 (註冊1-4步驟)
             $(".btn-next").click(function () {
                 let currentStep = $(this).data("step");
-
-                // 如果是 step2，則檢查 reCAPTCHA 是否通過驗證
-                if (currentStep === 2) {
-                    let recaptchaResponse = grecaptcha.getResponse();
-                    if (!recaptchaResponse) {
-                        alert("請完成 reCAPTCHA 驗證再繼續！");
-                        return; // 停止執行，不跳到下一步
+                let accountCount = $("#userAccount").val().length;
+                let pwdCount = $("#newPassword").val().length;
+                if (currentStep === 1) 
+                {
+                    if (accountCount < 3 || accountCount > 30) {
+                        alert("帳號長度須介於 3 ~ 30 個字元！");
+                        return;
                     }
+
+                    if (pwdCount < 6 || pwdCount > 28) {
+                        alert("密碼長度須介於 6 ~ 28 個字元！");
+                        return;
+                    }
+                    checkUserAccount().then(isValid => {
+                            if (isValid) {
+                                goToNextStep(currentStep);
+                                updateProgress(currentStep+1);
+                            }
+                    });
+                    return; // 確保 AJAX 結果回來後才決定是否跳轉
                 }
 
-                $(`#step${currentStep}`).hide();
-                $(`#step${currentStep + 1}`).show();
-                updateProgress(currentStep+1);
                 if (currentStep === 2) {
                     startCountdown();
+                    if (!validateRecaptcha()) return;
+                    checkUserEmail().then(isValid => {
+                            if (isValid) {
+                                sendVerificationCode();
+                                goToNextStep(currentStep);
+                                updateProgress(currentStep+1);
+                            }else{
+                                return;
+                            }
+                        });
+                    return; // 確保 AJAX 結果回來後才決定是否跳轉
+                }
+
+                if (currentStep === 3) {
+                    validateVerificationCode().then(isValid => {
+                            if (isValid) {
+                                goToNextStep(currentStep);
+                                updateProgress(currentStep+1);
+                            }else{
+                                return;
+                            }
+                        });
+                    return; // 確保 AJAX 結果回來後才決定是否跳轉
+                }
+                goToNextStep(currentStep);
+                updateProgress(currentStep+1);
+            });
+        });
+
+        // 下一步 按鈕
+        function goToNextStep(step) {
+            console.log("跳到下一步: Step " + (step + 1));
+            $(`#step${step}`).hide();
+            $(`#step${step+1}`).show();
+        }
+
+        // 發送驗證碼
+        function sendVerificationCode(){
+            return new Promise(resolve =>{
+                let userEmail = $("#email").val();
+                $.post("/Accounts/SendVerificationCode", { email: userEmail }, function (data) {
+                    if (data.success) {
+                        resolve(true);
+
+                    } else {
+                        console.log("驗證碼發送失敗！");
+                        alert("驗證碼發送失敗！");
+                        resolve(false);
+                    }
+                });
+            })
+        };
+
+        function validateVerificationCode (){
+            return new Promise(resolve =>{
+                var code = $("#verification_code").val();
+                $.post("/Accounts/VerifyCode", { code: code }, function (data) {
+                    if (!data.success) {
+                        alert("驗證碼錯誤！");
+                        resolve(false);
+                    }else{
+                        resolve(true);
+                    }
+                });
+            })
+        };
+
+        // 提交註冊表單並存入資料庫
+        $("#SignupForm").on("submit", function (e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+            $.post("/Accounts/Signup", formData, function (data) {
+                if (data.success) {
+                    console.log("註冊成功！");
+                } else {
+                    console.log(data.message);
                 }
             });
         });
 
-
-
-        document.getElementById("togglePassword").addEventListener("click", function () {
-            let newPasswordField = document.getElementById("newPassword");
-            if (newPasswordField.type === "password") {
-                newPasswordField.type = "text";
-                this.classList.replace("bi-eye-fill", "bi-eye-slash-fill"); // 切換圖標
+        // 隱藏or顯示密碼
+        $("#togglePassword").on("click", function () {
+            let newPasswordField = $("#newPassword");
+            if (newPasswordField.attr("type") === "password") {
+                newPasswordField.attr("type", "text");
+                $(this).removeClass("bi-eye-fill").addClass("bi-eye-slash-fill"); // 切換圖標
             } else {
-                newPasswordField.type = "password";
-                this.classList.replace("bi-eye-slash-fill", "bi-eye-fill"); // 切換回來
+                newPasswordField.attr("type", "password");
+                $(this).removeClass("bi-eye-slash-fill").addClass("bi-eye-fill"); // 切換回來
             }
         });
 
+        let countdown = 180; // 初始倒數秒數
+        let timer; // 用來存 setInterval()
         // 倒數計時函數
         function startCountdown() {
             clearInterval(timer); // 確保不會有重複的計時器
-            countdown = 10;
+            countdown = 180;
             $("#resendCode").prop("disabled", true).text(`重新發送 (${countdown})`);
 
             timer = setInterval(() => {
@@ -152,10 +235,11 @@
             }, 1000);
         }
 
-        // 監聽重新發送按鈕
+        // 重新發送驗證碼
         $("#resendCode").click(function () {
-            alert("驗證碼已重新發送！");
             startCountdown();
+            sendVerificationCode();
+            console.log("驗證碼已重新發送！");
         });
 
     </script>
