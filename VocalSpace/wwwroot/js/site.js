@@ -1,4 +1,10 @@
-﻿//用戶追蹤功能，btn-follow是按鈕的class，需先在View中設定data-userid
+﻿//未登入跳轉，登入後導回
+function nologin() {
+    let currentUrl = window.location.href;
+    window.location.href = `/Accounts/Login?returnUrl=${encodeURIComponent(currentUrl)}`;
+}
+
+//用戶追蹤功能，btn-follow是按鈕的class，需先在View中設定data-userid
 $(document).on("click", ".btn-follow", function () {
     let button = $(this);
     let targetUserId = $(this).data("userid");
@@ -35,6 +41,7 @@ $(document).on("click", ".btn-add-to-playlist", function () {
         error: function (xhr) {
             if (xhr.status === 401) {
                 alert("請先登入");
+                nologin();
             } else {
                 alert("發生錯誤，請稍後再試！");
             }

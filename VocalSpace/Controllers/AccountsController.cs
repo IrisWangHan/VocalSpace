@@ -39,8 +39,15 @@ namespace VocalSpace.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult Login(string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            return View();
+        }
+
         [HttpPost]
-        public async Task<IActionResult> Login(string account, string password)
+        public async Task<IActionResult> Login(string account, string password, string returnUrl = null)
         {
             var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.Account == account || u.UsersInfo!.Email == account);
@@ -55,6 +62,11 @@ namespace VocalSpace.Controllers
                 HttpContext.Session.SetInt32("UserId", (int)user.UserId);
                 HttpContext.Session.SetString("IsLoggedIn", "true");
                 Console.WriteLine("登入成功!!");
+                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                {
+                    return Redirect(returnUrl);
+                }
+
                 return RedirectToAction("Index", "Home");
             }
             
