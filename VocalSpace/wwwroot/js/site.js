@@ -1,7 +1,8 @@
 ﻿//未登入跳轉，登入後導回
 function nologin() {
     let currentUrl = window.location.href;
-    window.location.href = `/Accounts/Login?returnUrl=${encodeURIComponent(currentUrl)}`;
+    let returnUrl = encodeURIComponent(currentUrl);
+    window.location.href = `/Accounts/Login?returnUrl=${returnUrl}`;
 }
 
 //用戶追蹤功能，btn-follow是按鈕的class，需先在View中設定data-userid

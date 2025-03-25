@@ -2,12 +2,13 @@
 	Layout = "_AccountLayout";
 	var loginFail = TempData.ContainsKey("loginFailMsg");
 	var SSOFail = TempData.ContainsKey("SSOFailMsg");
-
+	var returnUrl = ViewData["ReturnUrl"] as string;
 }
 
 
 <h3>歡迎使用 Vocal Space</h3>
 <form method="post" action="/Accounts/Login" class="Login">
+	<input type="hidden" name="returnUrl" value="@returnUrl" />
 	<div class="form-group">
 		<input type="text" id="Username" name="account" class="form-control" placeholder="帳號 / 電子信箱" required />
 	</div>

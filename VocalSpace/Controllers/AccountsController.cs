@@ -15,6 +15,7 @@ using VocalSpace.Models.ViewModel.Account;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System.Net;
 using System.Text;
+using System.Web;
 
 
 
@@ -34,14 +35,13 @@ namespace VocalSpace.Controllers
         // 確保頁面刷新時拿到最新狀態
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [SessionAuthorize]
-        public IActionResult Login()
-        {
-            return View();
-        }
-
         [HttpGet]
         public IActionResult Login(string returnUrl = null)
         {
+            if (!string.IsNullOrEmpty(returnUrl))
+            {
+                returnUrl = HttpUtility.UrlDecode(returnUrl); // 確保 returnUrl 正確解碼
+            }
             ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
@@ -62,9 +62,19 @@ namespace VocalSpace.Controllers
                 HttpContext.Session.SetInt32("UserId", (int)user.UserId);
                 HttpContext.Session.SetString("IsLoggedIn", "true");
                 Console.WriteLine("登入成功!!");
-                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                // 檢查 returnUrl 是否為有效的本地 URL
+                // 檢查 returnUrl 是否為有效的本地 URL
+                if (!string.IsNullOrEmpty(returnUrl))
                 {
-                    return Redirect(returnUrl);
+                    Uri uri;
+                    if (Uri.TryCreate(returnUrl, UriKind.Absolute, out uri) && uri.Host == Request.Host.Host)
+                    {
+                        return Redirect(returnUrl);
+                    }
+                    else if (Uri.TryCreate(returnUrl, UriKind.Relative, out uri))
+                    {
+                        return Redirect(returnUrl);
+                    }
                 }
 
                 return RedirectToAction("Index", "Home");
