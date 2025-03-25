@@ -42,10 +42,12 @@
                                 <a asp-action="listdetail" asp-route-id="@item.PlayListId"><p class="song">@item.PlayListName</p></a>
                                 <p class="artist">@item.PlayListSongCount 首歌曲．<a href="/Personal/mymusic/@item.UserId">@item.UserName</a></p>
                             </div>
-                            <button class="btn btn-outline-secondary deletelist" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-trash"></i></button>
-                            <button class="btn btn-outline-secondary editlist" onclick="editlist()"><i class="bi bi-pencil-square"></i></button>
-                            <button class="btn btn-outline-secondary book"><i class="bi bi-bookmark-check-fill"></i></button>
-                            <button class="btn btn-outline-secondary random"><i class="bi bi-shuffle"></i></button>
+                            <div class="btnarea d-flex justify-content-between">
+                                <button class="btn btn-outline-secondary deletelist" data-bs-toggle="modal" data-bs-target="#exampleModal" data-playlist-id="@item.PlayListId"><i class="bi bi-trash"></i></button>
+                                <a asp-action="editlist" asp-route-id="@item.PlayListId" class="btn btn-outline-secondary editlist" onclick="editlist()"><i class="bi bi-pencil-square"></i></a>
+                                <button class="btn btn-outline-secondary book"><i class="bi bi-bookmark-check-fill"></i></button>
+                                <button class="btn btn-outline-secondary random"><i class="bi bi-shuffle"></i></button>
+                            </div>
                         </div>
 
                     }
@@ -70,7 +72,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" data-bs-dismiss="modal">取消</button>
-              <button type="button" class="btn btn-secondary">確定</button>
+                <button type="button" class="btn btn-secondary confirmDelete">確定</button>
             </div>
           </div>
         </div>
@@ -116,5 +118,38 @@ const list = document.getElementById('myList');
     });
 
 
+        // 點擊刪除
+        document.addEventListener("DOMContentLoaded", function () {
+            let playlistIdToDelete = null;
+
+            // 當刪除按鈕被點擊時，取得對應的 playlistId
+            document.querySelectorAll(".deletelist").forEach(button => {
+                button.addEventListener("click", function () {
+                    playlistIdToDelete = this.getAttribute("data-playlist-id");
+                });
+            });
+
+            // 當確定刪除時，發送 AJAX 請求
+            document.querySelector(".confirmDelete").addEventListener("click", function () {
+                if (!playlistIdToDelete) return;
+
+                fetch(`/Collection/DeleteList/${playlistIdToDelete}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": document.querySelector('input[name="__RequestVerificationToken"]')?.value
+                    },
+                    body: JSON.stringify({ id: playlistIdToDelete })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        location.reload(); // 重新載入頁面
+                    } else {
+                        alert("刪除失敗，請稍後再試");
+                    }
+                })
+                .catch(error => console.error("Error:", error));
+            });
+        });
 </script>
 

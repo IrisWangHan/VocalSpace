@@ -30,13 +30,12 @@
                         <a asp-action="listdetail" asp-route-id="@item.PlayListId"><p class="song">@item.PlayListName</p></a>
                         <p class="artist">@item.PlayListSongCount 首歌曲．<a href="/Personal/mymusic/@item.UserId">@item.UserName</a></p>
                 </div>
-
-                <button class="btn btn-outline-secondary deletelist" data-bs-toggle="modal"
-                data-bs-target="#exampleModal"><i class="bi bi-trash"></i></button>
-                <button class="btn btn-outline-secondary editlist" onclick="editlist()"><i
-                    class="bi bi-pencil-square"></i></button>
-                <button class="btn btn-outline-secondary book"><i class="bi bi-bookmark-check-fill"></i></button>
-                <button class="btn btn-outline-secondary random"><i class="bi bi-shuffle"></i></button>
+                <div class="btnarea d-flex justify-content-between">
+                    <button class="btn btn-outline-secondary deletelist" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-trash"></i></button>
+                    <a asp-controller="Collection" asp-action="editlist" asp-route-id="@item.PlayListId" class="btn btn-outline-secondary editlist" onclick="editlist()"><i class="bi bi-pencil-square"></i></a>
+                    <button class="btn btn-outline-secondary book"><i class="bi bi-bookmark-check-fill"></i></button>
+                    <button class="btn btn-outline-secondary random"><i class="bi bi-shuffle"></i></button>
+                </div>
             </div>
 
             }

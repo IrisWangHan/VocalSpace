@@ -49,10 +49,12 @@
                                 <a asp-action="listdetail" asp-route-id="@item.PlayListId"><p class="song">@item.PlayListName</p></a>
                                 <p class="artist">@item.PlayListSongCount 首歌曲．<a href="/Personal/mymusic/@item.UserId">@item.UserName</a></p>
                         </div>
-                        <button class="btn btn-outline-secondary deletelist" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-trash"></i></button>                        
-                        <button class="btn btn-outline-secondary editlist" onclick="editlist()"><i class="bi bi-pencil-square"></i></button>
+                            <div class="btnarea d-flex justify-content-between">
+                        <button class="btn btn-outline-secondary deletelist" data-bs-toggle="modal" data-bs-target="#exampleModal" data-playlist-id="@item.PlayListId"><i class="bi bi-trash"></i></button>
+                        <a asp-action="editlist" asp-route-id="@item.PlayListId" class="btn btn-outline-secondary editlist" onclick="editlist()"><i class="bi bi-pencil-square"></i></a>
                         <button class="btn btn-outline-secondary book"><i class="bi bi-bookmark-check-fill"></i></button>
                         <button class="btn btn-outline-secondary random"><i class="bi bi-shuffle"></i></button>
+                        </div>
                     </div>
 
                     }
@@ -77,7 +79,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" data-bs-dismiss="modal">取消</button>
-              <button type="button" class="btn btn-secondary">確定</button>
+              <button type="button" class="btn btn-secondary confirmDelete">確定</button>
             </div>
           </div>
         </div>
@@ -123,6 +125,54 @@ const list = document.getElementById('myList');
     });
 
 
+
+         // 點擊刪除
+                 document.addEventListener("DOMContentLoaded", function () {
+        let playlistIdToDelete = null;
+
+        // 當點擊刪除按鈕時，儲存 playlistId
+        document.querySelectorAll(".deletelist").forEach(button => {
+            button.addEventListener("click", function () {
+                playlistIdToDelete = this.getAttribute("data-playlist-id");
+                console.log("準備刪除歌單 ID:", playlistIdToDelete); // Debug
+            });
+        });
+
+        // 監聽「確定刪除」按鈕
+        document.querySelector(".confirmDelete").addEventListener("click", function () {
+            if (!playlistIdToDelete) {
+                alert("未找到播放清單 ID");
+                return;
+            }
+
+            console.log("正在發送刪除請求，播放清單 ID:", playlistIdToDelete); // Debug
+
+                fetch(`/Collection/DeleteList/${playlistIdToDelete}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": document.querySelector('input[name="__RequestVerificationToken"]')?.value
+        }
+    }),
+                body; JSON.stringify({ id: playlistIdToDelete }) // 可改成空 body，依後端需求
+            })
+            .then(response => response.text())  // 先轉文字，檢查回應內容
+            .then(text => {
+                console.log("伺服器回應內容:", text); // Debugging
+                return JSON.parse(text); // 解析 JSON
+            })
+            .then(data => {
+                if (data.success) {
+                    console.log("刪除成功，刷新頁面");
+                    location.reload();
+                } else {
+                    console.error("刪除失敗：", data.message);
+                    alert("刪除失敗：" + data.message);
+                }
+            })
+            .catch(error => console.error("發送刪除請求時發生錯誤:", error));
+        });
+    
 
 </script>
 

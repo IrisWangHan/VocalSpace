@@ -58,7 +58,7 @@ namespace VocalSpace.Controllers
                 .Select(p => new SongViewModel
                 {
                     UserId = p.UserId,
-                    UserName = p.User.UserName!,
+                    UserName = p.User!.UserName!,
                     PlayListId = p.PlayListId,
                     PlayListName = p.Name,
                     PlayListCoverImagePath = p.CoverImagePath,
@@ -115,7 +115,7 @@ namespace VocalSpace.Controllers
                    .Where(f => f.UserId == id)
                     .Select(f => new SongViewModel
                     {
-                        UserId = f.PlayList.User.UserId,
+                        UserId = f.PlayList.User!.UserId,
                         UserName= f.PlayList.User.UserName!,
                         PlayListId = f.PlayList.PlayListId, // 直接透過關聯屬性取值
                         PlayListName = f.PlayList.Name,
@@ -172,7 +172,7 @@ namespace VocalSpace.Controllers
                         await CoverImage.CopyToAsync(stream);
                     }
 
-                    model.CoverImagePath = "/image/" + CoverImage.FileName; // 儲存相對路徑
+                    model.CoverImagePath = "/image/playlist/" + CoverImage.FileName; // 儲存相對路徑
                 }
                 else { model.CoverImagePath = "/image/playlist/default.jpg"; }
 
@@ -218,50 +218,46 @@ namespace VocalSpace.Controllers
         }
         [SessionToLogin]
         [HttpPost]
-        public async Task<IActionResult> editlist(PlayList model, IFormFile? CoverImage, bool IsPublic)
+        public async Task<IActionResult> editlist(long id, PlayList model, IFormFile? CoverImage, bool IsPublic,string PlaylistDescription)
         {
             TempData["SuccessMessage"] = null;
             long? currentUserId = HttpContext.Session.GetInt32("UserId");
             if (currentUserId == null) return RedirectToAction("Login", "Account");
             ViewBag.LoginID = currentUserId;
 
+            var playlist = await _context.PlayLists.FindAsync(id);
+            if (playlist == null || playlist.UserId != currentUserId.Value)
+            {
+                return NotFound();
+            }
+
             if (ModelState.IsValid)
             {
-                model.CreateTime = DateTime.Now; // 設定建立時間
-
-                model.UserId = currentUserId.Value;
-
-                if (IsPublic == true) { model.IsPublic = true; } else { model.IsPublic = false; }
+                playlist.Name = model.Name;
+                playlist.IsPublic = IsPublic;
+                playlist.PlaylistDescription = PlaylistDescription;
 
                 // 處理圖片上傳
                 if (CoverImage != null && CoverImage.Length > 0)
                 {
-
                     var filePath = Path.Combine("wwwroot/image/playlist", CoverImage.FileName);
-
                     using (var stream = new FileStream(filePath, FileMode.Create))
                     {
                         await CoverImage.CopyToAsync(stream);
                     }
-
-                    model.CoverImagePath = "/image/" + CoverImage.FileName; // 儲存相對路徑
+                    playlist.CoverImagePath = "/image/playlist/" + CoverImage.FileName;
                 }
-                else { model.CoverImagePath = "/image/playlist/default.jpg"; }
 
-
-                _context.PlayLists.Add(model);
+                _context.PlayLists.Update(playlist);
                 await _context.SaveChangesAsync();
 
-                // 設定 TempData 用於顯示成功訊息
-                TempData["SuccessMessage"] = "播放清單新增成功！";
-
-                // 跳轉到 CollectionController 的 MyList
-
+                TempData["SuccessMessage"] = "播放清單更新成功！";
                 return RedirectToAction("mylist", "Collection", new { id = currentUserId.Value });
             }
-            return View(model);
 
+            return View(model);
         }
+
         public async Task<IActionResult> listdetail(long id)
         {
             var songViewModels = await _context.PlayLists     
@@ -288,5 +284,21 @@ namespace VocalSpace.Controllers
             return View(songViewModels.Any() ? songViewModels : null);
         }
 
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteList(long id)
+        {
+            var playlist = await _context.PlayLists.FindAsync(id);
+            if (playlist == null)
+            {
+                return NotFound(new { success = false, message = "播放清單不存在" });
+            }
+
+            _context.PlayLists.Remove(playlist);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { success = true, message = "刪除成功" });
+        }
     }
 }
