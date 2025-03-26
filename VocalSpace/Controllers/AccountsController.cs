@@ -40,7 +40,11 @@ namespace VocalSpace.Controllers
         {
             if (!string.IsNullOrEmpty(returnUrl))
             {
-                returnUrl = HttpUtility.UrlDecode(returnUrl); // 確保 returnUrl 正確解碼
+                Uri uri;
+                if (Uri.TryCreate(returnUrl, UriKind.Absolute, out uri))
+                {
+                    returnUrl = uri.PathAndQuery;
+                }
             }
             ViewData["ReturnUrl"] = returnUrl;
             return View();
@@ -63,17 +67,9 @@ namespace VocalSpace.Controllers
                 HttpContext.Session.SetString("IsLoggedIn", "true");
                 Console.WriteLine("登入成功!!");
                 // 檢查 returnUrl 是否為有效的本地 URL
-                if (!string.IsNullOrEmpty(returnUrl))
+                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                 {
-                    Uri uri;
-                    if (Uri.TryCreate(returnUrl, UriKind.Absolute, out uri) && uri.Host == Request.Host.Host)
-                    {
-                        return Redirect(returnUrl);
-                    }
-                    else if (Uri.TryCreate(returnUrl, UriKind.Relative, out uri))
-                    {
-                        return Redirect(returnUrl);
-                    }
+                    return Redirect(returnUrl);
                 }
 
                 return RedirectToAction("Index", "Home");
@@ -357,30 +353,35 @@ namespace VocalSpace.Controllers
 
 
         //  整合  AccountSettings
+        [SessionToLogin]
         public IActionResult memberInformation()
         {
 
             return View();
         }
+        [SessionToLogin]
         public IActionResult imageSetting()
         {
             return View();
         }
+        [SessionToLogin]
 
         public IActionResult changeEmail()
         {
             return View();
         }
+        [SessionToLogin]
 
         public IActionResult Income()
         {
             return View();
         }
-
+        [SessionToLogin]
         public IActionResult changePassword()
         {
             return View();
         }
+        [SessionToLogin]
         public IActionResult deleteAccount()
         {
             return View();

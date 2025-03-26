@@ -23,7 +23,7 @@
 
         if (type === "mine" && !userId) {
             alert("請先登入會員！");
-            window.location.href = "/Accounts/Login";
+            nologin();
         } else {
             // 更新活動列表
             isFilterMyActivities = (type === "mine");
@@ -82,7 +82,7 @@
                 if (xhr.status === 401) {
                     // 未登入，導向登入頁面
                     alert("請先登入!");
-                    window.location.href = "/Accounts/Login";
+                    nologin();
                 } else {
                     alert("發生錯誤，請稍後再試！");
                 }

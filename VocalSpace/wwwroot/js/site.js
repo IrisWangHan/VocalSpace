@@ -22,6 +22,11 @@ $(document).on("click", ".btn-follow", function () {
         error: function (xhr) {
             if (xhr.status === 400)
                 alert(xhr.responseJSON?.message || "無法追蹤自己");
+            else if (xhr.status === 401)
+            {
+                alert(xhr.responseJSON?.message || "請先登入");
+                nologin();
+            }
             else
                 alert(xhr.responseJSON?.message || "發生錯誤，請稍後再試！");
         }
@@ -179,6 +184,11 @@ $(document).on("click", ".btn-vote-to-selectionSong", function () {
             }
         },
         error: function (xhr) {
+            if (xhr.status === 401) {
+                alert(xhr.responseJSON?.message || "請先登入");
+                nologin();
+            }
+            else
             alert(xhr.responseJSON?.message || "發生錯誤，請稍後再試！");
         }
     });
