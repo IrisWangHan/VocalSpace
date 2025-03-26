@@ -141,7 +141,12 @@ $(document).on("click", ".btn-add-to-Likesong", function () {
             }
         },
         error: function (xhr) {
-            alert(xhr.responseJSON?.message || "發生錯誤，請稍後再試！");
+            if (xhr.status === 401) {
+                alert("請先登入");
+                nologin();
+            } else {
+                alert("發生錯誤，請稍後再試！");
+            }
         }
     });
 });

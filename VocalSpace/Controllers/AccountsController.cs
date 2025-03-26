@@ -63,7 +63,6 @@ namespace VocalSpace.Controllers
                 HttpContext.Session.SetString("IsLoggedIn", "true");
                 Console.WriteLine("登入成功!!");
                 // 檢查 returnUrl 是否為有效的本地 URL
-                // 檢查 returnUrl 是否為有效的本地 URL
                 if (!string.IsNullOrEmpty(returnUrl))
                 {
                     Uri uri;
