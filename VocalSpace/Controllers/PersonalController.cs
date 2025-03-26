@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VocalSpace.Filters;
@@ -8,6 +9,7 @@ using VocalSpace.Models.ViewModel.Personal;
 using VocalSpace.Models.ViewModel.Song;
 using VocalSpace.Services;
 
+
 namespace VocalSpace.Controllers
 {
     //設定路由
@@ -16,12 +18,14 @@ namespace VocalSpace.Controllers
         // 建構函式，初始化資料庫context和service
         private readonly VocalSpaceDbContext _context;
         private readonly UserService _UserService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
 
-        public PersonalController(VocalSpaceDbContext context, UserService UserService)
+        public PersonalController(VocalSpaceDbContext context, UserService UserService, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
             _UserService = UserService;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         private IQueryable<PersonalViewModel> personal(long id) 
@@ -137,51 +141,119 @@ namespace VocalSpace.Controllers
 
         }
 
-        [HttpPost("Uploadcover")]
-        public async Task<IActionResult> Uploadcover(IFormFile file, long userId)
+
+        [HttpPost("Personal/UploadAvatar")]
+        public async Task<IActionResult> UploadAvatar(IFormFile avatarFile)
         {
-            if (file == null || file.Length == 0)
+            if (avatarFile != null && avatarFile.Length > 0)
             {
-                return Json(new { success = false, message = "無效的文件" });
-            }
+                var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "image", "Avatar", avatarFile.FileName);
 
-            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/image/Avatar");
-            if (!Directory.Exists(uploadsFolder))
-            {
-                Directory.CreateDirectory(uploadsFolder);
-            }
-
-            var fileName = Path.GetFileName(file.FileName);
-            string extension = Path.GetExtension(file.FileName);
-            string finalFileName = fileName + extension;
-            string filePath = Path.Combine(uploadsFolder, finalFileName);
-            int count = 1;
-
-            while (System.IO.File.Exists(filePath))
-            {
-                finalFileName = $"{fileName}{count}{extension}";
-                filePath = Path.Combine(uploadsFolder, finalFileName);
-                count++;
-            }
-
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
-
-            var dbFilePath = $"wwwroot/image/Avatar/{fileName}";
-
-            
-                var userInfo = _context.UsersInfos.FirstOrDefault(u => u.UserId == userId);
-                if (userInfo != null)
+                try
                 {
-                    userInfo.BannerImagePath = dbFilePath;
-                await _context.SaveChangesAsync();
-                }
-            
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await avatarFile.CopyToAsync(stream);
+                    }
 
-            return Json(new { success = true, filePath = dbFilePath });
+                    // 更新用戶的頭貼路徑
+                    var userInfo = await _context.UsersInfos.FirstOrDefaultAsync(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
+                    if (userInfo != null)
+                    {
+                        userInfo.AvatarPath = "/image/Avatar/" + avatarFile.FileName;
+                        await _context.SaveChangesAsync();
+                    }
+
+                    return Json(new { filePath = "/image/Avatar/" + avatarFile.FileName });
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(500, new { message = "上傳失敗", error = ex.Message });
+                }
+            }
+
+            return BadRequest(new { message = "無效的文件" });
         }
+
+        [HttpPost("Personal/UploadBanner")]
+        public async Task<IActionResult> UploadBanner(IFormFile bannerFile)
+        {
+            if (bannerFile != null && bannerFile.Length > 0)
+            {
+                var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "image", "banners", bannerFile.FileName);
+
+                try
+                {
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await bannerFile.CopyToAsync(stream);
+                    }
+
+                    // 更新用戶的封面路徑
+                    var userInfo = await _context.UsersInfos.FirstOrDefaultAsync(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
+                    if (userInfo != null)
+                    {
+                        userInfo.BannerImagePath = "/image/banners/" + bannerFile.FileName;
+                        await _context.SaveChangesAsync();
+                    }
+
+                    return Json(new { filePath = "/image/banners/" + bannerFile.FileName });
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(500, new { message = "上傳失敗", error = ex.Message });
+                }
+            }
+
+            return BadRequest(new { message = "無效的文件" });
+        }
+
+
+        //[HttpPost("Uploadcover")]
+        //public async Task<IActionResult> Uploadcover(IFormFile file, long userId)
+        //{
+        //    if (file == null || file.Length == 0)
+        //    {
+        //        return Json(new { success = false, message = "無效的文件" });
+        //    }
+
+        //    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/image/Avatar");
+        //    if (!Directory.Exists(uploadsFolder))
+        //    {
+        //        Directory.CreateDirectory(uploadsFolder);
+        //    }
+
+        //    var fileName = Path.GetFileName(file.FileName);
+        //    string extension = Path.GetExtension(file.FileName);
+        //    string finalFileName = fileName + extension;
+        //    string filePath = Path.Combine(uploadsFolder, finalFileName);
+        //    int count = 1;
+
+        //    while (System.IO.File.Exists(filePath))
+        //    {
+        //        finalFileName = $"{fileName}{count}{extension}";
+        //        filePath = Path.Combine(uploadsFolder, finalFileName);
+        //        count++;
+        //    }
+
+        //    using (var stream = new FileStream(filePath, FileMode.Create))
+        //    {
+        //        await file.CopyToAsync(stream);
+        //    }
+
+        //    var dbFilePath = $"wwwroot/image/Avatar/{fileName}";
+
+
+        //        var userInfo = _context.UsersInfos.FirstOrDefault(u => u.UserId == userId);
+        //        if (userInfo != null)
+        //        {
+        //            userInfo.BannerImagePath = dbFilePath;
+        //        await _context.SaveChangesAsync();
+        //        }
+
+
+        //    return Json(new { success = true, filePath = dbFilePath });
+        //}
 
         /// <summary>
         /// 追蹤功能API方法邏輯
@@ -235,6 +307,8 @@ namespace VocalSpace.Controllers
             }
             return PartialView("_Userbar_partial", userBarData);
         }
+
+
     }
 }
 
