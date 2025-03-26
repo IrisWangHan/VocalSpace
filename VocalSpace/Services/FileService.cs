@@ -42,5 +42,84 @@ namespace VocalSpace.Services
             // 回傳相對路徑，存入資料庫
             return $"/image/Activity/{uniqueFileName}";
         }
+
+        public async Task<string> UploadAudioFileAsync(IFormFile audioFile)
+        {
+            Console.WriteLine("fileService - audioFile:" + audioFile);
+            if (audioFile == null || audioFile.Length == 0)
+            {
+                throw new ArgumentException("請選擇音樂檔案");
+            }
+
+            // 檢查副檔名
+            var extension = Path.GetExtension(audioFile.FileName);
+            if (extension.ToLower() != ".mp3")
+            {
+                throw new ArgumentException("僅允許 MP3 檔案");
+            }
+
+            // 限制檔案大小（30MB）
+            if (audioFile.Length > 30 * 1024 * 1024)
+            {
+                throw new ArgumentException("檔案大小不可超過 30MB");
+            }
+
+            // 儲存檔案
+            var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "audio");
+
+            // 確保資料夾存在
+            if (!Directory.Exists(uploadsFolder))
+            {
+                Directory.CreateDirectory(uploadsFolder);
+            }
+
+            // 生成唯一檔名並儲存檔案
+            var uniqueFileName = Guid.NewGuid().ToString() + extension;
+            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await audioFile.CopyToAsync(fileStream);
+            }
+
+            return $"/audio/{uniqueFileName}";
+        }
+
+        // 上傳封面圖片
+        public async Task<string> UploadSongCoverAsync(IFormFile coverImage)
+        {
+            Console.WriteLine("fileService - coverImage:" + coverImage);
+            if (coverImage == null || coverImage.Length == 0)
+            {
+                throw new ArgumentException("請選擇封面圖片");
+            }
+
+            var extension = Path.GetExtension(coverImage.FileName).ToLower();
+            if (extension != ".jpg" && extension != ".jpeg" && extension != ".png")
+            {
+                throw new ArgumentException("僅允許 JPG、JPEG、PNG 圖片");
+            }
+
+            if (coverImage.Length > 2 * 1024 * 1024) // 限制 2MB
+            {
+                throw new ArgumentException("封面圖片大小不可超過 2MB");
+            }
+
+            string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "image", "Song");
+            if (!Directory.Exists(uploadsFolder))
+            {
+                Directory.CreateDirectory(uploadsFolder);
+            }
+
+            string uniqueFileName = $"{Guid.NewGuid()}{extension}";
+            string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await coverImage.CopyToAsync(fileStream);
+            }
+
+            return $"/image/Song/{uniqueFileName}"; // 回傳相對路徑
+        }
     }
 }

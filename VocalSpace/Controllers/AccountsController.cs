@@ -7,16 +7,12 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Facebook;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System.Security.Cryptography;
-using Org.BouncyCastle.Crypto.Generators;
-using BCrypt.Net;
 using VocalSpace.Models.ViewModel.Account;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
-using System.Net;
 using System.Text;
 using System.Web;
 
+ 
 
 
 namespace VocalSpace.Controllers
@@ -64,7 +60,7 @@ namespace VocalSpace.Controllers
             }
 
             Console.WriteLine("開始驗證");
-            var isCorrectPwd = VerifyPassword(password, user.Password);
+            var isCorrectPwd = VerifyPassword(password, user!.Password);
             Console.WriteLine("驗證密碼結果>>> "+ isCorrectPwd);
 
             if ( user != null  && isCorrectPwd)
@@ -160,7 +156,7 @@ namespace VocalSpace.Controllers
         public async Task<IActionResult> ForgetPassword(string userEmail)
         {
             var userInfo = await _context.UsersInfos.FirstOrDefaultAsync(u => u.Email == userEmail);
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userInfo.UserId);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userInfo!.UserId);
             if (userInfo == null)
             {
                 Console.WriteLine("後端查無此email");
@@ -187,7 +183,7 @@ namespace VocalSpace.Controllers
                 return Json(new { success = false, message = "重設密碼連結已過期..." });
             }
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.UsersInfo.Email == email);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UsersInfo!.Email == email);
             if (user == null)
             {
                 return Json(new { success = false, message = "找不到使用者" });
@@ -236,7 +232,7 @@ namespace VocalSpace.Controllers
             {
                 // Token 無效或過期
                 Console.WriteLine(ex.Message);
-                return null;
+                return "Token 已過期";
             }
         }
 
@@ -271,7 +267,7 @@ namespace VocalSpace.Controllers
 
         public async Task<IActionResult> VerifyCode(string code)
         {
-            var correctCode = HttpContext.Session.GetString("VerificationCode");
+            var correctCode = await Task.FromResult(HttpContext.Session.GetString("VerificationCode"));
             if (correctCode == code)
             {
                 Console.WriteLine("輸入驗證碼OK");
@@ -293,13 +289,13 @@ namespace VocalSpace.Controllers
             {
                 return Json(new { success = false, message = "帳號已被使用" });
             }
-            string hashedPassword = HashPasswordWithBcrypt(model.SignupPassword);
+            string hashedPassword = await Task.FromResult(HashPasswordWithBcrypt(model.SignupPassword!));
 
             var user = new User
             {
                 UserName = model.SignupUserName,
                 AuthorityId = 2,
-                Account = model.SignupAccount,
+                Account = model.SignupAccount!,
                 Password = hashedPassword,
                 CreateTime = DateTime.Now
             };
@@ -313,7 +309,7 @@ namespace VocalSpace.Controllers
                 UserId = user.UserId,
                 Birthday = model.SignupUserBirthdate,
                 PersonalIntroduction = model.SignupUserBio,
-                Email = model.SignupEmail
+                Email = model.SignupEmail!
             };
             Console.WriteLine("寫入userinfo start");
             _context.UsersInfos.Add(userInfo);

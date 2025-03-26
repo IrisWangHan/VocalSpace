@@ -67,7 +67,7 @@
                             <!-- 歌曲資訊表單 -->
                             <div class="mt-4">
                                 <h5>歌曲資訊</h5>
-                                <form id="songInfoForm" asp-action="UploadSong" asp-controller="Collection" method="post" enctype="multipart/form-data">
+                                <div id="songInfoForm">
                                     <div class="row mb-3">
                                         <div class="col-md-11">
                                             <input type="text" class="form-control" name="songName" id="songTitle" value="" placeholder="歌曲標題">
@@ -98,9 +98,9 @@
                                         </div>
                                     </div>
                                     <div class="text-end">
-                                        <button type="submit" class="btn btn-primary" style="background-color:#F9595F;border: 0px">送出</button>
+                                        <button id="submitSong" class="btn btn-primary" style="background-color:#F9595F;border: 0px">送出</button>
                                     </div>
-                                </form>
+                                </div>
                             </div>
                             <!-- 上傳成功彈窗 -->
                             <div class="custom-modal" id="successModal">
@@ -125,6 +125,10 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script>
         console.log("ok");
+        const maxSizeInBytes = 30 * 1024 * 1024; // 30MB 檔案大小限制
+        const maxSizePhoto = 2 * 1024 * 1024; // 2MB 封面圖片大小限制
+        let coverFile = null;
+        let audioFile = null;
 
         // 重置上傳界面
         function resetUpload() {
@@ -135,6 +139,7 @@
         // 封面圖片預覽
         function previewCoverImage(input) {
             const file = input.files[0];
+            coverFile = file;
             const preview = $('#coverPreview');
             if (file) {
                 if (file.size <= maxSizePhoto) {
@@ -149,11 +154,44 @@
             }
         }
 
-        const maxSizeInBytes = 30 * 1024 * 1024; // 30MB 檔案大小限制
-        const maxSizePhoto = 2 * 1024 * 1024; // 2MB 封面圖片大小限制
+        // 提交歌曲資訊表單
+        function checkTitleAndGenre() {
+            const songTitle = $('#songTitle');
+            const songGenre = $('#songGenre');
+            if (!$('#fileInput').val()) {
+                alert('請先上傳音樂檔案！');
+                return false;
+            }
+
+            if (songTitle.val() === '') {
+                $('#titleError').show();
+                songTitle.addClass('is-invalid');
+                songTitle.on('change', function () {
+                    if ($(this).val() !== '') {
+                        $('#titleError').hide();
+                        $(this).removeClass('is-invalid');
+                    }
+                });
+                    return false;
+            }
+
+            if (songGenre.val() === '0') {
+                $('#genreError').show();
+                songGenre.addClass('is-invalid');
+                songGenre.on('change', function () {
+                    if ($(this).val() !== '0') {
+                        $('#genreError').hide();
+                        $(this).removeClass('is-invalid');
+                        return true;
+                    }
+                });
+                return false;
+            }
+
+            return true;
+        };
 
         $(document).ready(function () {
-
             // 顯示錯誤訊息
             function showErrorMessage(message) {
                 $('#uploadArea').hide();
@@ -209,6 +247,7 @@
             function handleFileSelection(file) {
                 if (file) {
                     if (file.type === "audio/mpeg" && file.size <= maxSizeInBytes) {
+                        audioFile = file;
                         submitForm();
                     } else {
                         let errorMsg = file.type !== "audio/mpeg"
@@ -222,7 +261,6 @@
             }
             // 點擊觸發檔案選擇器
             $('.upload-container').off('click').on('click', function () {
-                console.log("點擊觸發檔案選擇器ok");
                 $('#fileInput')[0].click(); // 直接觸發檔案選擇器
             });
 
@@ -251,69 +289,28 @@
             });
 
             // 表單提交與音樂檔案上傳
-            $('#uploadAudioForm').on('submit', function (e) {
-                e.preventDefault();
-                const formData = new FormData(this);
+            // $('#uploadAudioForm').on('submit', function (e) {
+            //     e.preventDefault();
+            //     const formData = new FormData(this);
 
-                $.ajax({
-                    url: '/Collection/UploadAudio',
-                    method: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function (data) {
-                        if (data.audioPath) {
-                            $('#audioPathInput').val(data.audioPath);
-                            $('#uploadSongContainer').show();
-                            alert('音樂檔案上傳成功！請繼續填寫歌曲資訊');
-                        }
-                    },
-                    error: function () {
-                        alert('音樂上傳失敗，請重試');
-                    }
-                });
-            });
-
-            // 提交歌曲資訊表單
-            $('#songInfoForm').on('submit', function (e) {
-                e.preventDefault();
-
-                const songTitle = $('#songTitle');
-                const songGenre = $('#songGenre');
-                if (!$('#fileInput').val()) {
-                    alert('請先上傳音樂檔案！');
-                    return;
-                }
-
-                if (songTitle.val() === '') {
-                    $('#titleError').show();
-                    songTitle.addClass('is-invalid');
-                    songTitle.on('change', function () {
-                        if ($(this).val() !== '') {
-                            $('#titleError').hide();
-                            $(this).removeClass('is-invalid');
-                        }
-                    });
-                    return;
-                }
-
-                if (songGenre.val() === '0') {
-                    $('#genreError').show();
-                    songGenre.addClass('is-invalid');
-                    songGenre.on('change', function () {
-                        if ($(this).val() !== '0') {
-                            $('#genreError').hide();
-                            $(this).removeClass('is-invalid');
-                        }
-                    });
-                    return;
-                }
-
-                $('#successModal').css('display', 'flex');
-                setTimeout(() => {
-                    window.location.href = '/home/index';
-                }, 5000);
-            });
+            //     $.ajax({
+            //         url: '/Collection/UploadAudio',
+            //         method: 'POST',
+            //         data: formData,
+            //         processData: false,
+            //         contentType: false,
+            //         success: function (data) {
+            //             if (data.audioPath) {
+            //                 $('#audioPathInput').val(data.audioPath);
+            //                 $('#uploadSongContainer').show();
+            //                 alert('音樂檔案上傳成功！請繼續填寫歌曲資訊');
+            //             }
+            //         },
+            //         error: function () {
+            //             alert('音樂上傳失敗，請重試');
+            //         }
+            //     });
+            // });
 
             // 取消上傳功能
             $('#cancelUploadBtn').on('click', function () {
@@ -322,7 +319,53 @@
                     $('#uploadArea').show();
                 }
             });
-        });
+
+            // 送出表單
+            $("#submitSong").click(function () {
+                if (!coverFile || !audioFile) {
+                    alert("請選擇封面圖片和音樂檔案！");
+                    return;
+                }
+
+                
+                if(!checkTitleAndGenre()){
+                    return;
+                }
+
+                console.log($('#songTitle').val());
+                console.log($('#songGenre').val());
+                console.log($('#songDescription').val());
+                console.log($('#songLyrics').val());
+                console.log(audioFile);
+
+
+                let formData = new FormData();
+                formData.append("songName", $('#songTitle').val());
+                formData.append("categoryID", $('#songGenre').val());
+                formData.append("description", $('#songDescription').val());
+                formData.append("lyrics", $('#songLyrics').val());
+                formData.append("coverImage", coverFile);
+                formData.append("audioFile", audioFile);
+
+                $.ajax({
+                    url: "/Collection/UploadMusic",
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function () {
+                        alert("歌曲上傳成功！");
+                        $('#successModal').css('display', 'flex');
+                        setTimeout(() => {
+                            window.location.href = '/home/index';
+                        }, 5000);
+                    },
+                    error: function () {
+                        alert("歌曲上傳失敗！");
+                    }
+                });
+            });
+    });
     </script>
     
 }
