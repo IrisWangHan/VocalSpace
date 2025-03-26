@@ -11,6 +11,9 @@ namespace VocalSpace.Services
             _webHostEnvironment = webHostEnvironment;
         }
 
+        /// <summary>
+        /// 上傳活動封面 邏輯
+        /// </summary>
         public async Task<string> UploadActivityCover(IFormFile file)
         {
             if (file == null || file.Length == 0)

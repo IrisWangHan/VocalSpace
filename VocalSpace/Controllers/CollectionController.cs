@@ -4,6 +4,7 @@ using VocalSpace.Filters;
 using VocalSpace.Models;
 using VocalSpace.Models.ViewModel.Song;
 
+
 namespace VocalSpace.Controllers
 {
     public class CollectionController : Controller
@@ -234,9 +235,9 @@ namespace VocalSpace.Controllers
             if (ModelState.IsValid)
             {
                 playlist.Name = model.Name;
-                playlist.IsPublic = IsPublic;
+                
                 playlist.PlaylistDescription = PlaylistDescription;
-
+                if (IsPublic == true) { playlist.IsPublic = true; } else { playlist.IsPublic = false; }
                 // 處理圖片上傳
                 if (CoverImage != null && CoverImage.Length > 0)
                 {
@@ -285,20 +286,20 @@ namespace VocalSpace.Controllers
         }
 
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteList(long id)
+        
+        [HttpPost("Collection/Delete/{id}")]
+        public IActionResult Delete(long id)
         {
-            var playlist = await _context.PlayLists.FindAsync(id);
+            var playlist = _context.PlayLists.Find(id);
             if (playlist == null)
             {
-                return NotFound(new { success = false, message = "播放清單不存在" });
+                return NotFound();
             }
 
             _context.PlayLists.Remove(playlist);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
 
-            return Ok(new { success = true, message = "刪除成功" });
+            return Ok(new { message = "刪除成功" });
         }
     }
 }

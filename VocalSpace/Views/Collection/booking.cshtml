@@ -1,6 +1,8 @@
 ﻿@model IEnumerable<VocalSpace.Models.ViewModel.Song.SongViewModel>
 
-<title>蒐藏庫</title>
+@{
+    var userid = ViewData["uid"] ?? null;
+}
 
 
 <div class="container">
@@ -43,8 +45,10 @@
                                 <p class="artist">@item.PlayListSongCount 首歌曲．<a href="/Personal/mymusic/@item.UserId">@item.UserName</a></p>
                             </div>
                             <div class="btnarea d-flex justify-content-between">
-                                <button class="btn btn-outline-secondary deletelist" data-bs-toggle="modal" data-bs-target="#exampleModal" data-playlist-id="@item.PlayListId"><i class="bi bi-trash"></i></button>
+                                @if (item.UserId == (long?)userid) { 
+                                <button class="btn btn-outline-secondary deletelist" data-bs-toggle="modal" data-bs-target="#deleteplaylist" data-user-id="@userid" data-playlist-id="@item.PlayListId"><i class="bi bi-trash"></i></button>
                                 <a asp-action="editlist" asp-route-id="@item.PlayListId" class="btn btn-outline-secondary editlist" onclick="editlist()"><i class="bi bi-pencil-square"></i></a>
+                                }
                                 <button class="btn btn-outline-secondary book"><i class="bi bi-bookmark-check-fill"></i></button>
                                 <button class="btn btn-outline-secondary random"><i class="bi bi-shuffle"></i></button>
                             </div>
@@ -58,27 +62,10 @@
         </main>
         </div>
     </div>
+@await Html.PartialAsync("_Modal_DeletePlayList")
 
-    <!-- 刪除歌單彈窗 -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h2 class="modal-title" id="exampleModalLabel">刪除</h2>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                你確定要刪除這個歌單？
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-secondary confirmDelete">確定</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-
+    @section Scripts{
+    <script src="/js/PlayList.js"></script>
 <script>
 
 const list = document.getElementById('myList');
@@ -107,49 +94,7 @@ const list = document.getElementById('myList');
     });
 
 
-    // 訂閱按鈕效果
-    document.getElementById("toggleButton").addEventListener("click", function() {
-        let icon = document.getElementById("icon");
-        if (icon.classList.contains("bi-bookmark-plus-fill")) {
-            icon.classList.replace("bi-bookmark-plus-fill", "bi-bookmark-check-fill");
-        } else {
-            icon.classList.replace("bi-bookmark-check-fill", "bi-bookmark-plus-fill");
-        }
-    });
 
-
-        // 點擊刪除
-        document.addEventListener("DOMContentLoaded", function () {
-            let playlistIdToDelete = null;
-
-            // 當刪除按鈕被點擊時，取得對應的 playlistId
-            document.querySelectorAll(".deletelist").forEach(button => {
-                button.addEventListener("click", function () {
-                    playlistIdToDelete = this.getAttribute("data-playlist-id");
-                });
-            });
-
-            // 當確定刪除時，發送 AJAX 請求
-            document.querySelector(".confirmDelete").addEventListener("click", function () {
-                if (!playlistIdToDelete) return;
-
-                fetch(`/Collection/DeleteList/${playlistIdToDelete}`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": document.querySelector('input[name="__RequestVerificationToken"]')?.value
-                    },
-                    body: JSON.stringify({ id: playlistIdToDelete })
-                })
-                .then(response => {
-                    if (response.ok) {
-                        location.reload(); // 重新載入頁面
-                    } else {
-                        alert("刪除失敗，請稍後再試");
-                    }
-                })
-                .catch(error => console.error("Error:", error));
-            });
-        });
 </script>
 
+        }
