@@ -133,10 +133,7 @@ namespace VocalSpace.Services
                         UserName = u.UserName,
                         Birthday = u.UsersInfo!.Birthday.ToString("yyyy-MM-dd"),
                         PersonalIntroduction = u.UsersInfo!.PersonalIntroduction,
-                        //BannerImagePath = u.UsersInfo!.BannerImagePath,
-                        //AvatarPath = u.UsersInfo!.AvatarPath,
-                        //Password = u.Password,
-                        //Email = u.UsersInfo!.Email
+                        
                     })
                     .FirstOrDefaultAsync();
 
@@ -148,6 +145,7 @@ namespace VocalSpace.Services
                 return null;
             }
         }
+        //  更新使用者資料，名稱、生日、個人介紹
         public async Task<bool> UpdateUserDataAsync(UserSettingViewModel model)
         {
             try
@@ -156,21 +154,16 @@ namespace VocalSpace.Services
                     .Include(u => u.UsersInfo)
                     .Where(u => u.UserId == model.UserId)
                     .FirstOrDefaultAsync();
-                
-                    
+                                   
                 user!.UserName = model.UserName;
                 user.UsersInfo!.Birthday = DateOnly.Parse(model.Birthday!);
                 user.UsersInfo!.PersonalIntroduction = model.PersonalIntroduction;
-                //user.UsersInfo!.BannerImagePath = model.BannerImagePath;
-                //user.UsersInfo!.AvatarPath = model.AvatarPath;
-                //user.Password = model.Password;
-                //user.UsersInfo!.Email = model.Email;
                 await _context.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"UpdateUserData 執行時發生錯誤: {ex.Message}");
+                Console.WriteLine($"UpdateUserDataAsync 執行時發生錯誤: {ex.Message}");
                 return false;
             }
         }

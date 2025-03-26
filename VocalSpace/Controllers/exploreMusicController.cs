@@ -28,7 +28,16 @@ namespace VocalSpace.Controllers
             ExploreResult = _SearchExploreService.ExploreSongWhereOrder(type, "new");
             return View(ExploreResult);
         }
-        
+        //  Rock / Pop / Jazz / HipHop / Classical...
+        [HttpGet]
+        public IActionResult MusicType(string id)
+        {
+            //  id = 最新 / 最多播放 / 最多喜歡
+            type = Convert.ToByte(id);
+            ExploreResult = _SearchExploreService.ExploreSongWhereOrder(type, "new");
+            return PartialView("_partialViewSong", ExploreResult);
+        }
+
         [HttpGet]
         public IActionResult RankType(string id)
         {

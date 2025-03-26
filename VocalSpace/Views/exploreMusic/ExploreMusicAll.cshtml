@@ -16,25 +16,25 @@
                 <h2 class="mb-4">類型</h2>
                 <ul class="list-inline">
                     <li>
-                        <a href="/exploreMusic/ExploreMusicAll/0" class="btn btn-sm btn-tag btn-white mb-2">全部</a>
+                        <a href="/exploreMusic/ExploreMusicAll/0" id="0" class="btn btn-sm btn-tag btn-white mb-2 active">全部</a>
                     </li>
                     <li>
-                        <a href="/exploreMusic/ExploreMusicAll/1" class="btn btn-sm btn-tag btn-white mb-2" id="RockLink">搖滾</a>
+                        <a href="#" id="1" class="btn btn-sm btn-tag btn-white mb-2">搖滾</a>
                     </li>
                     <li>
-                        <a href="/exploreMusic/ExploreMusicAll/2" class="btn btn-sm btn-tag btn-white mb-2">民謠</a>
+                        <a href="#" id="2" class="btn btn-sm btn-tag btn-white mb-2">民謠</a>
                     </li>
                     <li>
-                        <a href="/exploreMusic/ExploreMusicAll/3" class="btn btn-sm btn-tag btn-white mb-2 active">嘻哈</a>
+                        <a href="/exploreMusic/ExploreMusicAll/3" id="3" class="btn btn-sm btn-tag btn-white mb-2">嘻哈</a>
                     </li>
                     <li>
-                        <a href="/exploreMusic/ExploreMusicAll/4" class="btn btn-sm btn-tag btn-white mb-2">都會</a>
+                        <a href="/exploreMusic/ExploreMusicAll/4" id="4" class="btn btn-sm btn-tag btn-white mb-2">都會</a>
                     </li>
                     <li>
-                        <a href="/exploreMusic/ExploreMusicAll/5" class="btn btn-sm btn-tag btn-white mb-2">電子</a>
+                        <a href="/exploreMusic/ExploreMusicAll/5" id="5" class="btn btn-sm btn-tag btn-white mb-2">電子</a>
                     </li>
                     <li>
-                        <a href="/exploreMusic/ExploreMusicAll/6" class="btn btn-sm btn-tag btn-white mb-2">探索</a>
+                        <a href="/exploreMusic/ExploreMusicAll/6" id="6" class="btn btn-sm btn-tag btn-white mb-2">探索</a>
                     </li>
                 </ul>
                 <hr class="mb-4 mt-4">
@@ -65,12 +65,30 @@
     </div>
 </div>
 
-<script src="https://kit.fontawesome.com/5eeb73de16.js" crossorigin="anonymous"></script>
+@*<script src="https://kit.fontawesome.com/5eeb73de16.js" crossorigin="anonymous"></script>
 <script src="~/js/exploreMusic.js" asp-append-version="true"></script>
-<script src="~/js/partialViewSong.js" asp-append-version="true"></script>
+<script src="~/js/partialViewSong.js" asp-append-version="true"></script>  *@
 @section Scripts {
     <script>
-       
+        $('.btn-white').click(function(e){
+            e.preventDefault();
+            $('.btn-white').removeClass('active');
+            $(this).addClass('active');
+			let type = $(this).attr('id');
+            console.log(type);
+			$.ajax({
+				type:'GET',
+                url: `/exploreMusic/MusicType/${type}`,
+				dataType: 'html',
+				success: function (response) {
+					//  更新 #tab-content 內的歌曲
+					$('#tab-content').html(response);
+				},
+                Error: function (err) {
+                    console.log('歌曲類別:'+err);
+                }
+        })
+
         $('.btn-sort').click(function(e){
             
             e.preventDefault();
@@ -89,10 +107,7 @@
 					console.log('歌曲排序:'+err);
 				}
             })
-        })
-
-
-        
+        })      
     </script>
 }
             

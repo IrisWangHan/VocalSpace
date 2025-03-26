@@ -357,8 +357,6 @@ namespace VocalSpace.Controllers
             return Convert.ToBase64String(Encoding.UTF8.GetBytes(tokenPayload)); // 使用 Base64 編碼來生成最終 Token
         }
 
-
-
         //  整合  AccountSettings
         public async Task<IActionResult> memberInformation(string id)
         {
@@ -384,11 +382,8 @@ namespace VocalSpace.Controllers
             {
                 return StatusCode(500, new { message = "操作失敗，請稍後再試。" });
             }
-
-            return Ok(new
-            {
-                message = "個人資料已更新"
-            });
+            //  導向 /Accounts/memberInformation/{id = userId }
+            return RedirectToAction("memberInformation", new { id = userId });
         }
         [SessionToLogin]
         public IActionResult imageSetting()
