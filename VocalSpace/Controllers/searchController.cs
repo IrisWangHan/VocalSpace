@@ -14,7 +14,7 @@ namespace VocalSpace.Controllers
         
         private readonly SearchExploreService _SearchExploreService;
         private static string? q;
-        private string? type;
+        //private string? type;
 
         //  靜態全域變數result，3種LINQ查詢結果的DTO物件
         private static SearchViewModel? AllResult = new SearchViewModel();
@@ -30,7 +30,7 @@ namespace VocalSpace.Controllers
         {
             q = Request.Query["q"];
             string? type = Request.Query["type"];
-            //  搜尋關鍵字q 傳到  _searchLayout ，
+            //  搜尋關鍵字q 傳到前端 
             TempData["q"] = q;
             
             AllResult!.Songs = await _SearchExploreService.LINQsong(q!);
@@ -78,21 +78,6 @@ namespace VocalSpace.Controllers
             //  1. 輸入/search/searchSongs/進來，導向searchError，導向searchSong結果，ok
             //  2. searchAll有結果，點擊歌曲進入，正常顯示
             var resultView = (AllResult?.Playlists?.Count == 0) ? View("searchError") : View(AllResult?.Playlists);
-            return resultView;
-        }
-
-        public async Task<IActionResult> searchArtists()
-        {
-            string? q = Request.Query["q"];
-            if (q != null)
-            {
-                AllResult!.Artists =  await _SearchExploreService.LINQartist(q!);
-                var URLresult = (AllResult?.Artists?.Count == 0) ? View("searchError") : View(AllResult?.Artists);
-                return URLresult;
-            }
-            //  1. 輸入/search/searchSongs/進來，導向searchError，導向searchSong結果，ok
-            //  2. searchAll有結果，點擊歌曲進入，正常顯示
-            var resultView = (AllResult?.Artists?.Count == 0) ? View("searchError") : View(AllResult?.Artists);
             return resultView;
         }
 
@@ -145,32 +130,5 @@ namespace VocalSpace.Controllers
         //    }
 
             // }
-            //[HttpGet]
-            //public async Task<IActionResult> searchResult()
-            //{
-            //    q = Request.Query["q"];
-            //    type = Request.Query["type"];
-            //    //Console.WriteLine(Request.Query["q"]);
-            //    List<Song> result = await _context.Songs.Where(data => data.SongName.Contains(q!)).ToListAsync();
-            //    Console.WriteLine(result);
-            //    switch (type)
-            //    {
-            //        case "All":
-            //            return RedirectToAction("searchAll");
-            //        case "Song":
-            //            return RedirectToAction("searchSongs");
-            //        case "Songlist":
-            //            return RedirectToAction("searchSonglists");
-            //        case "artist":
-            //            return RedirectToAction("searchArtists");
-            //        default:
-            //            return RedirectToAction("searchAll");
-            //    }
-
-            //}
-
-
-
-            //}
         }
 }

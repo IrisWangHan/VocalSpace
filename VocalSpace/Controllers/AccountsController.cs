@@ -16,6 +16,7 @@ using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pag
 using System.Net;
 using System.Text;
 using System.Web;
+using VocalSpace.Services;
 
 
 
@@ -26,10 +27,12 @@ namespace VocalSpace.Controllers
 
         private readonly VocalSpaceDbContext _context;
         private readonly EmailService _emailService;
-        public AccountsController(VocalSpaceDbContext context, EmailService emailService)
+        private readonly UserService _userService;
+        public AccountsController(VocalSpaceDbContext context, EmailService emailService, UserService userService)
         {
             _context = context;
             _emailService = emailService;
+            _userService = userService;
         }
 
         // 確保頁面刷新時拿到最新狀態
@@ -357,11 +360,35 @@ namespace VocalSpace.Controllers
 
 
         //  整合  AccountSettings
-        [SessionToLogin]
-        public IActionResult memberInformation()
+        public async Task<IActionResult> memberInformation(string id)
         {
+            int currentUserId = Convert.ToInt32(id);
+            UserSettingViewModel? UserViewModel = await _userService.GetUserDataAsync(currentUserId);
+            return View(UserViewModel);
+        }
+        //  接收 memberInformation表單資料
+        [HttpPost("/Accounts/UserInfo")]
+        public async Task<IActionResult> ChangeUserInfo(IFormCollection form)
+        {
+            long? userId = HttpContext.Session.GetInt32("UserId");
+            UserSettingViewModel UserViewModel = new UserSettingViewModel
+            {
+                UserId = userId!.Value,
+                UserName = form["username"],
+                Birthday = form["birthday"],
+                PersonalIntroduction = form["introduction"]
+            };
+           bool isSuccess = await _userService.UpdateUserDataAsync(UserViewModel);
 
-            return View();
+            if (!isSuccess)
+            {
+                return StatusCode(500, new { message = "操作失敗，請稍後再試。" });
+            }
+
+            return Ok(new
+            {
+                message = "個人資料已更新"
+            });
         }
         [SessionToLogin]
         public IActionResult imageSetting()

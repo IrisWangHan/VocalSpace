@@ -2,9 +2,8 @@
 @{
     
 }
+@model VocalSpace.Models.ViewModel.Account.UserSettingViewModel
 <link rel="stylesheet" href="~/css/memberInformation.css" asp-append-version="true"/>
-
-
 
 <section>
     <div class="container">
@@ -13,30 +12,30 @@
         <div class="row">                     
             @await Html.PartialAsync("partialViewAccountSettings")
             <div class="col-md-8 col-lg-8">
-                <form>
+                <form method='POST' action='/Accounts/UserInfo'>
                     <div class="form-group">
                         <h2>基本資料</h2>
                     </div>
                     <div class="form-group">
                         <h3>你的名字(顯示名稱)</h3>
-                        <input class="form-control" name="username" id="name" placeholder="請輸入名字">
+                        <input class="form-control" name="username" id="name" value="@Model.UserName" placeholder="請輸入名字">
                     </div>
                     <div class="form-group">
                         <h3>生日</h3>
                         <div class="d-flex justify-content-between">
-                            <input type="date" class="form-control" style="width: 40%" name="birthday" id="">
-                            <select class="form-control" style="width: 40%;" name="access" id="">
+                            <input type="date" class="form-control" style="width: 40%" name="birthday" id="" value="@Model.Birthday">
+                            @*<select class="form-control" style="width: 40%;" name="access" id="">
                                 <option value="public">公開</option>
                                 <option value="private">不公開</option>
-                            </select>
+                            </select>*@
                         </div>
                     </div>
                     <div class="form-group">
                         <h3>介紹</h3>
-                        <textarea class="form-control" name="introduction" style="height:10vw" placeholder="請輸入介紹"></textarea>
+                        <textarea class="form-control" name="introduction" style="height:10vw" placeholder="請輸入介紹">@Model.PersonalIntroduction</textarea>
                     </div>
                     <div class="form-group">
-                        <button>儲存變更</button>
+                        <button type="submit">儲存變更</button>
                     </div>
                 </form>
             </div>

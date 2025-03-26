@@ -15,16 +15,16 @@
         <div class="col-md-9">
             <ul class="nav nav-pills mb-3">
                 <li class="nav-item">
-                    <a class="nav-link nav-name type-link" href='/search/searchAll/@( ( TempData.Peek("q") != null ) ? $"?q={TempData.Peek("q")}" : "" )'>全部</a>
+                    <a class="nav-link nav-name activate active" id="All" href="/search/searchAll?q=@TempData.Peek("q")">全部</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link nav-name type-link active" id="Song" href="#">歌曲</a>
+                    <a class="nav-link nav-name type-link activate" id="Song" href="#">歌曲</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link nav-name type-link" id="Playlist" href="#">歌單</a>
+                    <a class="nav-link nav-name type-link activate" id="Playlist" href="#">歌單</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link nav-name type-link" id="Artist" href="#">音樂人</a>
+                    <a class="nav-link nav-name type-link activate" id="Artist" href="#">音樂人</a>
                 </li>
             </ul>
             <div class="tab-content" id="tab-content">
@@ -47,8 +47,6 @@
     <script>
         $('.type-link').click(function(e){
             e.preventDefault();
-            $('.type-link').removeClass('active');
-            $(this).addClass('active');
 
             // 參數放在 data: { } 會自動附加為 QueryString
             $.ajax({
@@ -64,5 +62,10 @@
                 }
             })
         })
+
+		$('.activate').click(function(e){		
+			$('.activate').removeClass('active');
+			$(this).addClass('active');
+		})
     </script>
 }

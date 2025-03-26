@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using VocalSpace.Models;
+using VocalSpace.Models.ViewModel.Account;
 using VocalSpace.Models.ViewModel.Global;
 
 namespace VocalSpace.Services
@@ -112,6 +114,64 @@ namespace VocalSpace.Services
             {
                 Console.WriteLine($"GetUserBarData 執行時發生錯誤: {ex.Message}");
                 return null;
+            }
+        }
+
+        /// <summary>
+        /// 取得 memberInformation 頁面需要的資料
+        /// </summary>
+        public async Task<UserSettingViewModel?> GetUserDataAsync(long? currentUserId )
+        {
+            try
+            {
+                var user = await _context.Users
+                    .Include(u => u.UsersInfo)
+                    .Where(u => u.UserId == currentUserId)
+                    .Select(u => new UserSettingViewModel
+                    {
+                        UserId = u.UserId,
+                        UserName = u.UserName,
+                        Birthday = u.UsersInfo!.Birthday.ToString("yyyy-MM-dd"),
+                        PersonalIntroduction = u.UsersInfo!.PersonalIntroduction,
+                        //BannerImagePath = u.UsersInfo!.BannerImagePath,
+                        //AvatarPath = u.UsersInfo!.AvatarPath,
+                        //Password = u.Password,
+                        //Email = u.UsersInfo!.Email
+                    })
+                    .FirstOrDefaultAsync();
+
+                return user;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"GetUserData 執行時發生錯誤: {ex.Message}");
+                return null;
+            }
+        }
+        public async Task<bool> UpdateUserDataAsync(UserSettingViewModel model)
+        {
+            try
+            {
+                var user = await _context.Users
+                    .Include(u => u.UsersInfo)
+                    .Where(u => u.UserId == model.UserId)
+                    .FirstOrDefaultAsync();
+                
+                    
+                user!.UserName = model.UserName;
+                user.UsersInfo!.Birthday = DateOnly.Parse(model.Birthday!);
+                user.UsersInfo!.PersonalIntroduction = model.PersonalIntroduction;
+                //user.UsersInfo!.BannerImagePath = model.BannerImagePath;
+                //user.UsersInfo!.AvatarPath = model.AvatarPath;
+                //user.Password = model.Password;
+                //user.UsersInfo!.Email = model.Email;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"UpdateUserData 執行時發生錯誤: {ex.Message}");
+                return false;
             }
         }
     }

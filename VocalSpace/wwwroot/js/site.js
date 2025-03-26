@@ -267,13 +267,14 @@ function search() {
          
             window.location.assign(responseUrl);
             
-            document.getElementById('All').setAttribute('href', '/search/searchAll/?q=' + searchText.value);
+            document.getElementById('All').setAttribute('href', '/search/searchAll/?q=' + searchText.value);  
                       
         }).
         catch(error => {
             console.error("載入歌曲失敗");
         })
 }
+
 
 //  收藏歌單
 $(document).on("click", ".btn-add-to-Likeplaylist", function () {
