@@ -3,6 +3,8 @@
 @{
     Layout = "_PersonalLayout";  
     var mylist = ViewData["mylist"] as List<VocalSpace.Models.ViewModel.Song.SongViewModel>;
+    var userid = ViewData["uid"];
+
 }
 <nav class="menu" id="myList">
     <a href="/Personal/mymusic/@Model.FirstOrDefault()!.UserId">音樂</a>
@@ -22,17 +24,17 @@
             @foreach (var item in mylist)
             {
                 <div class="ranking-item">
-                    <a asp-action="listdetail" asp-route-id="@item.PlayListId">
+                    <a asp-controller="Collection" asp-action="listdetail" asp-route-id="@item.PlayListId">
                         <img src="@item.PlayListCoverImagePath" alt="song cover">
                 </a>
 
                 <div class="listinfo">
-                        <a asp-action="listdetail" asp-route-id="@item.PlayListId"><p class="song">@item.PlayListName</p></a>
+                        <a asp-controller="Collection" asp-action="listdetail" asp-route-id="@item.PlayListId"><p class="song">@item.PlayListName</p></a>
                         <p class="artist">@item.PlayListSongCount 首歌曲．<a href="/Personal/mymusic/@item.UserId">@item.UserName</a></p>
                 </div>
                 <div class="btnarea d-flex justify-content-between">
-                    <button class="btn btn-outline-secondary deletelist" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-trash"></i></button>
-                    <a asp-controller="Collection" asp-action="editlist" asp-route-id="@item.PlayListId" class="btn btn-outline-secondary editlist" onclick="editlist()"><i class="bi bi-pencil-square"></i></a>
+                        <button class="btn btn-outline-secondary deletelist" data-bs-toggle="modal" data-bs-target="#deleteplaylist" data-user-id="@userid" data-playlist-id="@item.PlayListId"><i class="bi bi-trash"></i></button>
+                        <a class="btn btn-outline-secondary editlist" href="/Collection/editlist/@item.PlayListId" onclick="editlist()"><i class="bi bi-pencil-square"></i></a>
                     <button class="btn btn-outline-secondary book"><i class="bi bi-bookmark-check-fill"></i></button>
                     <button class="btn btn-outline-secondary random"><i class="bi bi-shuffle"></i></button>
                 </div>
@@ -46,23 +48,8 @@ else
 {
     <h2 class="no-data">尚未建立歌單</h2>
 }
+@await Html.PartialAsync("_Modal_DeletePlayList")
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="/js/PlayList.js"></script>
 
-    <!-- 刪除歌單彈窗 -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content webtheme">
-                <div class="modal-header">
-                    <h2 class="modal-title" id="exampleModalLabel">刪除</h2>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    你確定要刪除這個歌單？
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-secondary">確定</button>
-                </div>
-            </div>
-        </div>
-    </div>
 

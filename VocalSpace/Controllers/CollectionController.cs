@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using VocalSpace.Filters;
 using VocalSpace.Models;
+using VocalSpace.Models.ViewModel.Selection;
 using VocalSpace.Models.ViewModel.Song;
 
 
@@ -10,7 +11,7 @@ namespace VocalSpace.Controllers
     public class CollectionController : Controller
     {
         private readonly VocalSpaceDbContext _context;
-        
+
         public CollectionController(VocalSpaceDbContext context)
         {
             _context = context;
@@ -34,17 +35,17 @@ namespace VocalSpace.Controllers
                         UserName = s.ArtistNavigation.UserName!,
                         UserId = s.ArtistNavigation!.UserId,
                         LikeId = s.LikeSongs.FirstOrDefault()!.LikeId,
-                        
+
                     }).ToListAsync();
                 return View(songdata.Any() ? songdata : null);
 
             }
-            else 
+            else
             {
                 return Content("<script>alert('無權查看'); window.history.back();</script>", "text/html; charset=utf-8");
 
             }
-            
+
         }
         [SessionToLogin]
         [HttpGet("/Collection/mylist/{id}")]
@@ -69,7 +70,7 @@ namespace VocalSpace.Controllers
                 // 顯示成功訊息
                 ViewBag.SuccessMessage = TempData["SuccessMessage"];
 
-                return View(songdata.Any()?songdata:null);
+                return View(songdata.Any() ? songdata : null);
             }
             return Content("<script>alert('無權查看'); window.history.back();</script>", "text/html; charset=utf-8");
 
@@ -106,7 +107,7 @@ namespace VocalSpace.Controllers
         }
         [SessionToLogin]
         public async Task<IActionResult> booking(long id)
-        {            
+        {
             long? currentUserId = HttpContext.Session.GetInt32("UserId");
             ViewBag.LoginID = currentUserId;
 
@@ -117,7 +118,7 @@ namespace VocalSpace.Controllers
                     .Select(f => new SongViewModel
                     {
                         UserId = f.PlayList.User!.UserId,
-                        UserName= f.PlayList.User.UserName!,
+                        UserName = f.PlayList.User.UserName!,
                         PlayListId = f.PlayList.PlayListId, // 直接透過關聯屬性取值
                         PlayListName = f.PlayList.Name,
                         PlayListCoverImagePath = f.PlayList.CoverImagePath,
@@ -147,15 +148,15 @@ namespace VocalSpace.Controllers
         }
         [SessionToLogin]
         [HttpPost]
-        public async Task<IActionResult> createlist(PlayList model, IFormFile? CoverImage ,bool IsPublic) 
+        public async Task<IActionResult> createlist(PlayList model, IFormFile? CoverImage, bool IsPublic)
         {
-            TempData["SuccessMessage"] =null;
+            TempData["SuccessMessage"] = null;
             long? currentUserId = HttpContext.Session.GetInt32("UserId");
             if (currentUserId == null) return RedirectToAction("Login", "Account");
-            ViewBag.LoginID = currentUserId;           
+            ViewBag.LoginID = currentUserId;
 
-                if (ModelState.IsValid)
-                {
+            if (ModelState.IsValid)
+            {
                 model.CreateTime = DateTime.Now; // 設定建立時間
 
                 model.UserId = currentUserId.Value;
@@ -178,7 +179,7 @@ namespace VocalSpace.Controllers
                 else { model.CoverImagePath = "/image/playlist/default.jpg"; }
 
 
-                    _context.PlayLists.Add(model);
+                _context.PlayLists.Add(model);
                 await _context.SaveChangesAsync();
 
                 // 設定 TempData 用於顯示成功訊息
@@ -189,7 +190,7 @@ namespace VocalSpace.Controllers
                 return RedirectToAction("mylist", "Collection", new { id = currentUserId.Value });
             }
             return View(model);
-            
+
         }
         [HttpGet("Collection/editlist/{id}")]
         public async Task<IActionResult> editlist(long? id)
@@ -197,13 +198,13 @@ namespace VocalSpace.Controllers
             long? currentUserId = HttpContext.Session.GetInt32("UserId");
             if (currentUserId == null) return RedirectToAction("Login", "Account");
             ViewBag.LoginID = currentUserId;
-            
-                if (id == null)
-                {
-                    return NotFound();
-                }
 
-                var list = await _context.PlayLists.FindAsync(id);
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var list = await _context.PlayLists.FindAsync(id);
             if (currentUserId == list!.UserId)
             {
                 if (list == null)
@@ -212,14 +213,14 @@ namespace VocalSpace.Controllers
                 }
                 return View(list);
             }
-            else 
+            else
             {
                 return Forbid("<script>alert('無權查看'); window.history.back();</script>", "text/html; charset=utf-8");
             }
         }
         [SessionToLogin]
         [HttpPost]
-        public async Task<IActionResult> editlist(long id, PlayList model, IFormFile? CoverImage, bool IsPublic,string PlaylistDescription)
+        public async Task<IActionResult> editlist(long id, PlayList model, IFormFile? CoverImage, bool IsPublic, string PlaylistDescription)
         {
             TempData["SuccessMessage"] = null;
             long? currentUserId = HttpContext.Session.GetInt32("UserId");
@@ -235,7 +236,7 @@ namespace VocalSpace.Controllers
             if (ModelState.IsValid)
             {
                 playlist.Name = model.Name;
-                
+
                 playlist.PlaylistDescription = PlaylistDescription;
                 if (IsPublic == true) { playlist.IsPublic = true; } else { playlist.IsPublic = false; }
                 // 處理圖片上傳
@@ -261,8 +262,8 @@ namespace VocalSpace.Controllers
 
         public async Task<IActionResult> listdetail(long id)
         {
-            var songViewModels = await _context.PlayLists     
-                .Where(p =>p.PlayListId == id)
+            var songViewModels = await _context.PlayLists
+                .Where(p => p.PlayListId == id)
              .Select(p => new SongViewModel
              {
                  UserId = p.UserId,
@@ -277,7 +278,7 @@ namespace VocalSpace.Controllers
                  {
                      SongId = ps.SongId,
                      SongName = ps.Song.SongName,
-                     ArtistId= ps.Song.ArtistNavigation.UserId,
+                     ArtistId = ps.Song.ArtistNavigation.UserId,
                      SongArtist = ps.Song.ArtistNavigation.UserName!, // 歌曲作者
                      SongCoverPhotoPath = ps.Song.CoverPhotoPath // 歌曲封面
                  }).ToList() // 歌單內每首歌曲的詳細資訊
@@ -286,7 +287,7 @@ namespace VocalSpace.Controllers
         }
 
 
-        
+
         [HttpPost("Collection/Delete/{id}")]
         public IActionResult Delete(long id)
         {
@@ -301,5 +302,27 @@ namespace VocalSpace.Controllers
 
             return Ok(new { message = "刪除成功" });
         }
+
+        /// <summary>
+        /// 刪除歌單內的歌曲
+        /// </summary>
+
+        [HttpPost("Collection/DeleteSong/{playlistId}/{songId}")]
+        public async Task<IActionResult> DeleteSong(long playlistId, long songId)
+        {
+            var playlistSong = await _context.PlayListSongs
+                .FirstOrDefaultAsync(ps => ps.PlayListId == playlistId && ps.SongId == songId);
+            if (playlistSong == null)
+            {
+                return NotFound();
+            }
+
+            _context.PlayListSongs.Remove(playlistSong);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "刪除成功" });
+        }
     }
 }
+
+

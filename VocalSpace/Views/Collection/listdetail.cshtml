@@ -1,6 +1,8 @@
 ﻿@model IEnumerable<VocalSpace.Models.ViewModel.Song.SongViewModel>
 @{
 	int count = 1;
+	var userid = ViewData["uid"] ?? null;
+
 }
 
 <div class="page-container mb-5">
@@ -26,13 +28,30 @@
 						</li>
 					</ul>
 					<div class="ui-button">
-						@await Html.PartialAsync("_SongDeleteButtonUI")
+						@if (Model.FirstOrDefault()!.UserId == (long?)userid)
+						{
+							<button class="btn btn-outline-secondary deletelist" data-bs-toggle="modal"
+									data-bs-target="#deleteplaylist" data-user-id="@userid"
+									data-playlist-id="@Model.FirstOrDefault()!.PlayListId">
+								<i class="bi bi-trash"></i>
+							</button>
+							<a class="btn btn-outline-secondary editlist"
+							   href="/Collection/editlist/@Model.FirstOrDefault()!.PlayListId" onclick="editlist()">
+								<i class="bi bi-pencil-square"></i>
+							</a>
+						}
+						<button class="btn btn-outline-secondary book">
+							<i class="bi bi-bookmark-check-fill"></i>
+						</button>
+						<button class="btn btn-outline-secondary random"><i class="bi bi-shuffle"></i></button>
 
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+
+	@await Html.PartialAsync("_Modal_DeletePlayList")
 	<!-- 放在圖片下方的歌手資訊 -->
 	<div class="bottom-container container">
 		<div class="left-container  col-4">
@@ -41,7 +60,9 @@
 			@await Html.PartialAsync("_UserbarContainer_partial", Model.FirstOrDefault()!.UserId)
 			<div class="container">
 				<hr class="mt-5 mb-2">
-				<p class="text-gray-light mb-2 opacity-50">發布日期:@(Model.FirstOrDefault()!.PlayListCreateTime.ToString("yyyy/MM/dd"))</p>
+				<p class="text-gray-light mb-2 opacity-50">
+					發布日期:@(Model.FirstOrDefault()!.PlayListCreateTime.ToString("yyyy/MM/dd"))
+				</p>
 				<hr class="mt-2 mb-5">
 			</div>
 			@* 廣告圖 *@
@@ -50,7 +71,7 @@
 			</div>
 		</div>
 		<div class="right-container col-8">
-			
+
 			@if (Model == null)
 			{
 				<h2 class="no-data">暫無資料</h2>
@@ -78,10 +99,16 @@
 										<a href="/Song/@item.SongId">
 											<p class="song">@item.SongName</p>
 										</a>
-										<a href="/Personal/mymusic/@item.ArtistId"> <p class="artist">@item.SongArtist</p></a>
+										<a href="/Personal/mymusic/@item.ArtistId">
+											<p class="artist">@item.SongArtist</p>
+										</a>
 									</div>
 									<div>
 										@await Component.InvokeAsync("SongButton", new { songId = item.SongId })
+										@if (playlist.UserId == (long?)userid)
+										{
+											<button class="btn btn-outline-secondary deleteSong" data-bs-toggle="modal" data-bs-target="#deleteSongModal" data-playlist-id="@playlist.PlayListId" data-song-id="@item.SongId"><i class="bi bi-trash"></i></button>
+										}
 									</div>
 								</div>
 								count++;
@@ -94,7 +121,27 @@
 	</div>
 </div>
 
+<!-- 刪除曲目彈窗 -->
+<div class="modal fade" id="deleteSongModal" tabindex="-1" aria-labelledby="deleteSongModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h2 class="modal-title" id="deleteSongModalLabel">刪除曲目</h2>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				你確定要刪除這個曲目？
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" data-bs-dismiss="modal">取消</button>
+				<button type="button" class="btn btn-secondary confirmDeleteSong" data-bs-dismiss="modal">確定</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 @section Scripts {
+	<script src="/js/PlayList.js"></script>
 	<script>
 		//AJAX 取得UserBar
 		$(function () {
@@ -107,6 +154,34 @@
 				},
 				error: function (xhr) {
 					$("#userBarContainer").html(`<p class='error-message'>上傳者載入失敗，錯誤訊息${xhr.responseText}</p>`);
+				}
+			});
+
+			let songIdToDelete = null;
+			let playlistIdToDelete = null;
+			// 當點擊刪除按鈕時，取得對應的 SongId 和 PlayListId
+			$(".deleteSong").on("click", function () {
+				songIdToDelete = $(this).data("song-id");
+				playlistIdToDelete = $(this).data("playlist-id");
+				console.log(songIdToDelete, playlistIdToDelete);
+			});
+
+			// 當點擊「確定」按鈕時發送刪除請求
+			$(document).on("click", ".confirmDeleteSong", function () {
+				if (songIdToDelete && playlistIdToDelete) {
+					$.ajax({
+						url: `/Collection/DeleteSong/${playlistIdToDelete}/${songIdToDelete}`,
+						type: "POST",
+						success: function (response) {
+							$('#deleteSongModal').on('hidden.bs.modal', function () {
+								alert("刪除成功");
+								location.reload();
+							});
+						},
+						error: function () {
+							alert("刪除失敗，請稍後再試！");
+						}
+					});
 				}
 			});
 		});

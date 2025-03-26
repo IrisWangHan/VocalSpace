@@ -90,7 +90,7 @@ namespace VocalSpace.Controllers
                 .Select(p => new SongViewModel
                 {
                     UserId = p.UserId,
-                    UserName = p.User.UserName!,
+                    UserName = p.User!.UserName!,
                     PlayListId = p.PlayListId,
                     PlayListName = p.Name,
                     PlayListCoverImagePath = p.CoverImagePath,
