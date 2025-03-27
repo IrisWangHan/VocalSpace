@@ -16,7 +16,7 @@
                 <h2 class="mb-4">類型</h2>
                 <ul class="list-inline">
                     <li>
-                        <a href="/exploreMusic/ExploreMusicAll/0" id="0" class="btn btn-sm btn-tag btn-white mb-2 active">全部</a>
+                        <a href="#" id="0" class="btn btn-sm btn-tag btn-white mb-2 active">全部</a>
                     </li>
                     <li>
                         <a href="#" id="1" class="btn btn-sm btn-tag btn-white mb-2">搖滾</a>
@@ -25,16 +25,16 @@
                         <a href="#" id="2" class="btn btn-sm btn-tag btn-white mb-2">民謠</a>
                     </li>
                     <li>
-                        <a href="/exploreMusic/ExploreMusicAll/3" id="3" class="btn btn-sm btn-tag btn-white mb-2">嘻哈</a>
+                        <a href="#" id="3" class="btn btn-sm btn-tag btn-white mb-2">嘻哈</a>
                     </li>
                     <li>
-                        <a href="/exploreMusic/ExploreMusicAll/4" id="4" class="btn btn-sm btn-tag btn-white mb-2">都會</a>
+                        <a href="#" id="4" class="btn btn-sm btn-tag btn-white mb-2">都會</a>
                     </li>
                     <li>
-                        <a href="/exploreMusic/ExploreMusicAll/5" id="5" class="btn btn-sm btn-tag btn-white mb-2">電子</a>
+                        <a href="#" id="5" class="btn btn-sm btn-tag btn-white mb-2">電子</a>
                     </li>
                     <li>
-                        <a href="/exploreMusic/ExploreMusicAll/6" id="6" class="btn btn-sm btn-tag btn-white mb-2">探索</a>
+                        <a href="#" id="6" class="btn btn-sm btn-tag btn-white mb-2">探索</a>
                     </li>
                 </ul>
                 <hr class="mb-4 mt-4">
@@ -49,7 +49,6 @@
                     <li class="list-inline-item">
                         <a href="#" class="btn btn-sm btn-tag btn-sort" id="mostlike">最多喜歡</a>
                     </li>
-
                 </ul>
             </div>
             <div class="text-center pb-5 d-lg-block">AD</div>
@@ -66,48 +65,56 @@
 </div>
 
 @*<script src="https://kit.fontawesome.com/5eeb73de16.js" crossorigin="anonymous"></script>
-<script src="~/js/exploreMusic.js" asp-append-version="true"></script>
-<script src="~/js/partialViewSong.js" asp-append-version="true"></script>  *@
+  *@
 @section Scripts {
     <script>
-        $('.btn-white').click(function(e){
-            e.preventDefault();
-            $('.btn-white').removeClass('active');
-            $(this).addClass('active');
-			let type = $(this).attr('id');
-            console.log(type);
-			$.ajax({
-				type:'GET',
-                url: `/exploreMusic/MusicType/${type}`,
-				dataType: 'html',
-				success: function (response) {
-					//  更新 #tab-content 內的歌曲
-					$('#tab-content').html(response);
-				},
-                Error: function (err) {
-                    console.log('歌曲類別:'+err);
-                }
-        })
+        $(document).ready(function() {
+                //  Rock / Pop / Jazz / HipHop / Classical ...
+                $('.btn-white').click(function(e){
+                e.preventDefault();
+                $('.btn-white').removeClass('active');
+                $(this).addClass('active');
 
-        $('.btn-sort').click(function(e){
-            
-            e.preventDefault();
-            //  依歌曲發布時間，撥放數，喜歡數排序(由大到小)
-            let rank = $(this).attr('id');
-            console.log(rank);
-            $.ajax({
-                type:'GET',
-                url: `/exploreMusic/RankType/${rank}`,
-                dataType: 'html',
-                success: function (response) {
-                    //  更新 #tab-content 內的歌曲
-                    $('#tab-content').html(response);
-                },
-				Error: function (err) {
-					console.log('歌曲排序:'+err);
-				}
+                let type = $(this).attr('id');
+                console.log(type);
+                $.ajax({
+                    type:'GET',
+                    url: `/exploreMusic/MusicType/${type}`,
+                    dataType: 'html',
+                    success: function (response) {
+                        //  更新 #tab-content 內的歌曲
+                        $('#tab-content').html(response);
+                    },
+                    Error: function (err) {
+                        console.log('歌曲類別:'+err);
+                    }
+               })
             })
-        })      
+
+            //  最新 / 最多撥放 / 最多喜歡(由大到小)
+                $('.btn-sort').click(function(e){
+
+                    e.preventDefault();
+					$('.btn-sort').removeClass('active');
+					$(this).addClass('active');
+                    
+                    let rank = $(this).attr('id');
+                    console.log(rank);
+                    $.ajax({
+                        type:'GET',
+                        url: `/exploreMusic/RankType/${rank}`,
+                        dataType: 'html',
+                        success: function (response) {
+                            //  更新 #tab-content 內的歌曲
+                            $('#tab-content').html(response);
+                        },
+                        Error: function (err) {
+                            console.log('歌曲排序:'+err);
+                        }
+                  })
+               
+            })
+        })
     </script>
 }
             

@@ -146,58 +146,7 @@
     margin-right: 10px;
     border: 1px solid gray;
 }
-    /* 我的最愛 */
-    .btn-outline-secondary.heart {
-        margin-right: 10px;
-        border: 1px solid gray;
-    }
-
-        .btn-outline-secondary.heart:hover {
-            margin-right: 10px;
-            background-color: rgb(255, 87, 87);
-        }
-
-        .btn-outline-secondary.heart.selected {
-            margin-right: 10px;
-            background-color: var(--bg-color);
-            border: 1px solid rgb(255, 87, 87);
-            color: rgb(255, 87, 87);
-        }
-
-
-
-/* 加入歌單按鈕之彈跳視窗 */
-.addpopup {
-    position: fixed;
-    top: 20%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    width: 500px;
-    border-radius: 12px;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-    padding: 25px;
-    z-index: 1001;
-    display: none;
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out, top 0.3s ease-in-out;
-}
-
-    .addpopup h2 {
-        font-size: 22px;
-        margin-bottom: 15px;
-        color: Black;
-    }
-
-/* 搜尋框 */
-.addsearch-box {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 16px;
-    margin-bottom: 20px;
-}
+  
 
 /* 歌單區域 */
 .addplaylist-item {
@@ -256,99 +205,6 @@
         background: #e63946;
     }
 
-/* 加入歌單，分享歌曲按鈕之彈跳視窗 */
-
-.modal-title {
-    margin-bottom: 0;
-    line-height: 1.5;
-    color: black;
-}
-
-.modal-content {
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
-    padding: 30px;
-}
-
-.modal-footer {
-    justify-content: flex-start;
-    padding: 20px 0 0 0;
-}
-
-    .modal-footer .copy {
-        background: #ff4d4f;
-        color: white;
-        border: none;
-        padding: 8px 15px;
-        border-radius: 8px;
-        margin-left: 15px;
-        cursor: pointer;
-        font-size: 16px;
-    }
-
-.sharepopup-content {
-    display: flex;
-    align-items: center;
-    margin-top: 15px;
-    background: linear-gradient(to right, #000, #654321);
-    border-radius: 10px;
-    padding: 15px;
-    color: white;
-}
-
-    .sharepopup-content img {
-        width: 80px;
-        height: 80px;
-        border-radius: 8px;
-        margin-right: 15px;
-    }
-
-    .sharepopup-content div {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .sharepopup-content strong {
-        font-size: 20px;
-    }
-
-.modal-footer input {
-    flex-grow: 1;
-    padding: 5px 0;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 16px;
-}
-
-/* 底部按鈕 */
-.addpopup-footer {
-    display: flex;
-    margin-top: 20px;
-}
-
-.addbtn-cancel {
-    margin-left: 150px;
-    background: #f0f0f0;
-    margin-right: 12px;
-    justify-content: right;
-}
-
-.addbtn-confirm {
-    margin-left: 15px;
-    background: #ff4d4f;
-    color: white;
-    justify-content: right;
-}
-
-.addbtn-newPlaylist {
-    background: #ff4d4f;
-    color: white;
-    border: none;
-    padding: 10px 18px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-}
 
 /* 歌單，收藏歌單 */
 .btn-outline-secondary.book.selected {
@@ -369,22 +225,18 @@
     box-shadow: 0 1px 4px 0 rgba(0, 0, 0, .1);
 }
 
-/* 追蹤按鈕：背景紅色、白字、略有圓角 */
-.btn-follow {
-    background-color: red;
-    color: #fff;
-    border: 1px solid red;
-    border-radius: 4px;
-    padding: 5px 12px;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-
 .artist-name {
     font-size: 16px;
     font-weight: bold;
     margin: 0;
+}
+
+.sorry-div {
+    justify-content:center;
+}
+.sorry-image {
+    width: 20vw;
+    height: 20vw;
 }
 
 

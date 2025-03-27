@@ -10,31 +10,15 @@
     </h1>
     <hr class="mb-5">
     <div class="row">
-        <div class="col-md-9">
-            <ul class="nav nav-pills mb-3">
-                <li class="nav-item">
-                    <a class="nav-link nav-name type-link" href='/search/searchAll/@( ( TempData.Peek("q") != null ) ? $"?q={TempData.Peek("q")}" : "" )'>全部</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link nav-name type-link active" id="Song" href="#">歌曲</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link nav-name type-link" id="Playlist" href="#">歌單</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link nav-name type-link" id="Artist" href="#">音樂人</a>
-                </li>
-            </ul>
-            <div class="tab-content" id="tab-content">
-                <img src="~/image/Sorrynopage_dark.png" class="" alt="">
+        <div class="col-md-12">
+            <div class="tab-content sorry-div" id="tab-content">
+                <img src="~/image/Sorrynopage_dark.png" class="sorry-image" alt="">
                 <h1>找不到搜尋結果</h1>
             </div>
             <div class="mt-5 mb-5 text-center">
             </div>
         </div>
-        <div class="col-md-3 d-none d-md-block">
-            <img src="~/image/ad.test.jpg" alt="Alternate Text">
-        </div>
+       
     </div>
 </div>
 @*<script src="~/js/search.js" asp-append-version="true"></script>  *@

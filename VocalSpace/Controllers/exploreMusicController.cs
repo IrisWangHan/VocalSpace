@@ -21,7 +21,6 @@ namespace VocalSpace.Controllers
         
         public IActionResult ExploreMusicAll(string id)
         {
-
             type = Convert.ToByte(id);
             ViewData["type"] = type;
             //  透過Service取得歌曲資訊，篩選(Where)，排序(OrderByDescending)
