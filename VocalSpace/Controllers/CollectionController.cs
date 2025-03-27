@@ -236,9 +236,9 @@ namespace VocalSpace.Controllers
             if (ModelState.IsValid)
             {
                 playlist.Name = model.Name;
-
                 playlist.PlaylistDescription = PlaylistDescription;
-                if (IsPublic == true) { playlist.IsPublic = true; } else { playlist.IsPublic = false; }
+                playlist.IsPublic = IsPublic; // 確保布林值不為 null
+
                 // 處理圖片上傳
                 if (CoverImage != null && CoverImage.Length > 0)
                 {
@@ -250,10 +250,19 @@ namespace VocalSpace.Controllers
                     playlist.CoverImagePath = "/image/playlist/" + CoverImage.FileName;
                 }
 
-                _context.PlayLists.Update(playlist);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    _context.PlayLists.Update(playlist);
+                    await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "播放清單更新成功！";
+                }
+                catch (Exception ex)
+                {
+                    // 處理例外狀況
+                    ModelState.AddModelError(string.Empty, "更新播放清單時發生錯誤：" + ex.Message);
+                    return View(model);
+                }
 
-                TempData["SuccessMessage"] = "播放清單更新成功！";
                 return RedirectToAction("mylist", "Collection", new { id = currentUserId.Value });
             }
 

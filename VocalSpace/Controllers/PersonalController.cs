@@ -209,52 +209,7 @@ namespace VocalSpace.Controllers
         }
 
 
-        //[HttpPost("Uploadcover")]
-        //public async Task<IActionResult> Uploadcover(IFormFile file, long userId)
-        //{
-        //    if (file == null || file.Length == 0)
-        //    {
-        //        return Json(new { success = false, message = "無效的文件" });
-        //    }
-
-        //    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/image/Avatar");
-        //    if (!Directory.Exists(uploadsFolder))
-        //    {
-        //        Directory.CreateDirectory(uploadsFolder);
-        //    }
-
-        //    var fileName = Path.GetFileName(file.FileName);
-        //    string extension = Path.GetExtension(file.FileName);
-        //    string finalFileName = fileName + extension;
-        //    string filePath = Path.Combine(uploadsFolder, finalFileName);
-        //    int count = 1;
-
-        //    while (System.IO.File.Exists(filePath))
-        //    {
-        //        finalFileName = $"{fileName}{count}{extension}";
-        //        filePath = Path.Combine(uploadsFolder, finalFileName);
-        //        count++;
-        //    }
-
-        //    using (var stream = new FileStream(filePath, FileMode.Create))
-        //    {
-        //        await file.CopyToAsync(stream);
-        //    }
-
-        //    var dbFilePath = $"wwwroot/image/Avatar/{fileName}";
-
-
-        //        var userInfo = _context.UsersInfos.FirstOrDefault(u => u.UserId == userId);
-        //        if (userInfo != null)
-        //        {
-        //            userInfo.BannerImagePath = dbFilePath;
-        //        await _context.SaveChangesAsync();
-        //        }
-
-
-        //    return Json(new { success = true, filePath = dbFilePath });
-        //}
-
+        
         /// <summary>
         /// 追蹤功能API方法邏輯
         /// </summary>

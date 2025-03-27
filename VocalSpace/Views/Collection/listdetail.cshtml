@@ -28,18 +28,7 @@
 						</li>
 					</ul>
 					<div class="ui-button">
-						@if (Model.FirstOrDefault()!.UserId == (long?)userid)
-						{
-							<button class="btn btn-outline-secondary deletelist" data-bs-toggle="modal"
-									data-bs-target="#deleteplaylist" data-user-id="@userid"
-									data-playlist-id="@Model.FirstOrDefault()!.PlayListId">
-								<i class="bi bi-trash"></i>
-							</button>
-							<a class="btn btn-outline-secondary editlist"
-							   href="/Collection/editlist/@Model.FirstOrDefault()!.PlayListId" onclick="editlist()">
-								<i class="bi bi-pencil-square"></i>
-							</a>
-						}
+						
 						<button class="btn btn-outline-secondary book">
 							<i class="bi bi-bookmark-check-fill"></i>
 						</button>
