@@ -123,13 +123,14 @@ namespace VocalSpace.Services
                             from D in BD.DefaultIfEmpty()  // LEFT JOIN Songs
                             join E in _context.UserVoteds on A.SelectionDetailId equals E.SelectionDetailId into AE
                             from E in AE.DefaultIfEmpty()  // LEFT JOIN Songs
-                            where C.SelectionId == id && B.SongStatus==1
+                            where C.SelectionId == id && B.SongStatus == 1 && A.ReviewStatus == 1
                             select new
                             {
                                 SelectionDetailID = A != null ? (long?)A.SelectionDetailId : 0,
                                 VoteCount = A != null ? A.VoteCount : (int?)0,
                                 CoverPhotoPath = B != null ? B.CoverPhotoPath : "",
                                 SongDescription = B != null ? B.SongDescription : "",
+                                SongID = B != null ? B.SongId : 0,
                                 SongName = B != null ? B.SongName : "",
                                 LikeCount = B != null ? B.LikeCount : (int?)0,
                                 SongPath = B != null ? B.SongPath : "",
@@ -161,6 +162,7 @@ namespace VocalSpace.Services
                         {//'未登入
                             songsList.Add(new SelectionSongs
                             {
+                                SongId= item.SongID,
                                 SelectionDetailId = (long)item.SelectionDetailID,
                                 VoteCount = item.VoteCount,
                                 CoverPhotoPath = item.CoverPhotoPath,
@@ -176,6 +178,7 @@ namespace VocalSpace.Services
                         {
                             songsList.Add(new SelectionSongs
                             {
+                                SongId = item.SongID,
                                 SelectionDetailId = (long)item.SelectionDetailID,
                                 VoteCount = item.VoteCount,
                                 CoverPhotoPath = item.CoverPhotoPath,
@@ -244,10 +247,16 @@ namespace VocalSpace.Services
                 if (UserID != null && UserID != 0)
                 {
                     // 使用 await 查詢使用者資料
-                    var userData = await _context.Users
-                        .FromSqlRaw("SELECT A.UserID,UserName, Email,AvatarPath FROM Users A INNER JOIN UsersInfo B ON A.UserID=B.UserID WHERE A.UserID=@UserID", new SqlParameter("@UserID", UserID))
-                        .Select(u => new { u.UserId, u.UserName, u.UsersInfo!.Email, u.UsersInfo.AvatarPath })  // 使用匿名類型選擇需要的欄位
-                        .FirstOrDefaultAsync();
+                    var userData = await (from u in _context.Users
+                                          join ui in _context.UsersInfos on u.UserId equals ui.UserId
+                                          where u.UserId == UserID
+                                          select new
+                                          {
+                                              u.UserId,
+                                              u.UserName,
+                                              ui.Email,
+                                              ui.AvatarPath
+                                          }).FirstOrDefaultAsync();
 
                     // 檢查是否找到使用者資料
                     if (userData != null)

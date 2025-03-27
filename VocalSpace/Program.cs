@@ -44,6 +44,7 @@ builder.Services.AddControllersWithViews(options =>
 
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<DonateService>();
+builder.Services.AddScoped<IMusicPlayerService, MusicPlayerService>();
 
 builder.Services.AddDbContext<VocalSpaceDbContext>(options =>
 {
@@ -108,7 +109,7 @@ app.UseSession();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller}/{action}/{id?}",
-    defaults: new { controller = "Selection", action = "Index" }
+    defaults: new { controller = "Home", action = "Index" }
     );
 
 app.Run();
