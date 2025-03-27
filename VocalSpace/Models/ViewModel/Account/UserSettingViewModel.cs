@@ -13,5 +13,7 @@
         public string? Password { get; set; }
 
         public string? Email { get; set; }
+        public int totalSpent { get; set; }
+        public int totalIncome { get; set; }
     }
 }

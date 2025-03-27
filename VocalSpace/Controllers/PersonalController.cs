@@ -22,7 +22,7 @@ namespace VocalSpace.Controllers
         private readonly ModalDataService _ModalDataService;
 
 
-        public PersonalController(VocalSpaceDbContext context, UserService UserService, IWebHostEnvironment webHostEnvironment)
+        public PersonalController(VocalSpaceDbContext context, UserService UserService, IWebHostEnvironment webHostEnvironment, ModalDataService modalDataService)
         {
             _context = context;
             _UserService = UserService;

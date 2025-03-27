@@ -358,6 +358,7 @@ namespace VocalSpace.Controllers
         }
 
         //  整合  AccountSettings
+        [SessionToLogin]
         public async Task<IActionResult> memberInformation(string id)
         {
             int currentUserId = Convert.ToInt32(id);
@@ -396,11 +397,14 @@ namespace VocalSpace.Controllers
         {
             return View();
         }
+        
         [SessionToLogin]
-
-        public IActionResult Income()
+        public async Task<IActionResult> Income()
         {
-            return View();
+            // 取得使用者ID
+            long? userId = HttpContext.Session.GetInt32("UserId");
+            var data = await _userService.GetIncomeDataAsync(userId!.Value);
+            return View(data);
         }
         [SessionToLogin]
         public IActionResult changePassword()
@@ -410,6 +414,14 @@ namespace VocalSpace.Controllers
         [SessionToLogin]
         public IActionResult deleteAccount()
         {
+            return View();
+        }
+        [HttpGet]
+        public async Task<IActionResult> deleteAccountButton()
+        {
+            // 取得使用者ID
+            long? userId = HttpContext.Session.GetInt32("UserId");
+            var(isSuccess, isDeleted) = await _userService.DeleteAccountAsync(userId!.Value);
             return View();
         }
     }

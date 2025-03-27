@@ -1,11 +1,7 @@
-﻿
-@{
-}
-
-
-@{
+﻿@{
 
 }
+@model VocalSpace.Models.ViewModel.Account.UserSettingViewModel
 <link rel="stylesheet" href="~/css/memberInformation.css" asp-append-version="true" />
 
 <section>
@@ -16,7 +12,9 @@
             @await Html.PartialAsync("partialViewAccountSettings")
             <div class="col-md-8 col-lg-8">
                 <form>
-                    <h2>收益</h2>
+                    <h2>支出與收益</h2>
+                    <div>現在總支出:NT$@Model.totalSpent</div>
+                    <div>現在總收益:NT$@Model.totalIncome</div>
                 </form>
             </div>
         </div>

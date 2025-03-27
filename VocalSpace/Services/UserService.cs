@@ -167,6 +167,44 @@ namespace VocalSpace.Services
                 return false;
             }
         }
+
+        /// <summary>
+        /// 取得使用者的贊助支出與收入總和
+        /// </summary>
+        public async Task<UserSettingViewModel?> GetIncomeDataAsync(long userId)
+        {
+            var totalSpent = await _context.Ecpays
+                .Where(e => e.SponsorId == userId && e.RtnCode == 1)
+                .SumAsync(e => e.TradeAmt);
+
+            var totalIncome = await _context.Ecpays
+                .Where(e => e.ReceiverId == userId && e.RtnCode == 1)
+                .SumAsync(e => e.TradeAmt);
+
+            var model = new UserSettingViewModel
+            {
+                totalSpent = totalSpent,
+                totalIncome = totalIncome
+            };
+
+            return model;
+        }
+
+        public async Task<(bool isSuccess, bool isDeleted)> DeleteAccountAsync(long userId)
+        {
+            var user = await _context.Users
+                        .FirstOrDefaultAsync(user => user.UserId == userId);
+            //  使用者不存在 or 使用者已停用
+            if ( user == null || user.Status != 1 )
+            {
+                return (false, true);
+            }
+
+            user.Status = 0;
+            await _context.SaveChangesAsync();
+            return (true, true);
+            
+        }
     }
 }
 
