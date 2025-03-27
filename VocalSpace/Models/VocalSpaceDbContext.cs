@@ -438,6 +438,9 @@ public partial class VocalSpaceDbContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
+            // 設定全局過濾器，只選擇 Status 為 1 (啟用) 的用戶
+            modelBuilder.Entity<User>().HasQueryFilter(u => u.Status == 1);
+
             entity.HasKey(e => e.UserId).HasName("PK__Users__1788CCACF244AD17");
 
             entity.HasIndex(e => e.Account, "UQ_Users").IsUnique();

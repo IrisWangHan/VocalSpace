@@ -56,6 +56,13 @@ namespace VocalSpace.Controllers
             var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.Account == account || u.UsersInfo!.Email == account);
 
+            if (user == null)
+            {
+                TempData["loginFailMsg"] = "登入失敗，請輸入正確的帳號與密碼";
+                Console.WriteLine(TempData["loginFailMsg"]);
+                return View();
+            }
+
             Console.WriteLine("開始驗證");
             var isCorrectPwd = VerifyPassword(password, user.Password);
             Console.WriteLine("驗證密碼結果>>> "+ isCorrectPwd);
@@ -74,9 +81,6 @@ namespace VocalSpace.Controllers
 
                 return RedirectToAction("Index", "Home");
             }
-            
-            TempData["loginFailMsg"] = "登入失敗，請輸入正確的帳號與密碼";
-            Console.WriteLine(TempData["loginFailMsg"]);
             return View();
         }
         public IActionResult GoogleLogin()
