@@ -194,20 +194,26 @@
 
 			var eventName = '@(Model.Title)';
 			var eventTime = '@(Model.StartDate)';
+			var endeventTime = '@(Model.EndDate)';
 			var location = "";
 			var details = '@(Model.Description)';
+
 
 			console.log("Original eventTime:", eventTime);
 
 			// 將 eventTime 轉換為 `YYYY-MM-DDTHH:mm:ss`
 			var formattedTime = eventTime.replace(/(\d{4})\/(\d{1,2})\/(\d{1,2})\s+(.+)/, function(match, year, month, day, time) {
 				return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${convertTimeTo24Hour(time)}`;
-			});
 
+			});
+			var formattedTime2 = endeventTime.replace(/(\d{4})\/(\d{1,2})\/(\d{1,2})\s+(.+)/, function(match, year, month, day, time) {
+				return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${convertTimeTo24Hour(time)}`;
+			});
 			console.log("Formatted Time:", formattedTime);
 
 			// 解析成 Date
 			var startDate = new Date(formattedTime);
+			var endDate = new Date(formattedTime2);
 			console.log("Parsed Date:", startDate);
 
 			// 轉換 12 小時制為 24 小時制
@@ -232,8 +238,7 @@
 					var formattedStart = startDate.toISOString().replace(/-|:|\.\d+/g, '');
 
 					//活動沒有設定結束時間，因此設為開始時間加一小時
-					var endDate = new Date(startDate);
-					endDate.setHours(endDate.getHours() + 1);
+
 					var formattedEnd = endDate.toISOString().replace(/-|:|\.\d+/g, '');
 
 					// 組合Google日曆URL
