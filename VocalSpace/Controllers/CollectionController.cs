@@ -158,9 +158,9 @@ namespace VocalSpace.Controllers
                 return BadRequest("檔案格式錯誤");
             }
 
-            long currentUserId;
+            long? currentUserId = HttpContext.Session.GetInt32("UserId");
             // 抓創作人id
-            if (HttpContext.Session.GetInt32("UserId") == null)
+            if (currentUserId == null)
             {
                 return BadRequest("身份有誤");
             }
@@ -174,7 +174,7 @@ namespace VocalSpace.Controllers
                 var newSong = new VocalSpace.Models.Song
                 {
                     SongName = model.songName,
-                    Artist = currentUserId,
+                    Artist = (long)currentUserId,
                     SongCategoryId = model.categoryID,
                     Lyrics = model.lyrics,
                     SongPath = "/audio/sample.mp3",
@@ -182,7 +182,6 @@ namespace VocalSpace.Controllers
                     CreateTime = DateTime.Now
                 };
 
-                Console.WriteLine(newSong.SongCategoryId);
                 if(model.description!=null)
                 {
                     newSong.SongDescription = model.description;
@@ -196,13 +195,11 @@ namespace VocalSpace.Controllers
                 await _context.SaveChangesAsync();
 
                 // **Step 2: 嘗試上傳檔案**
-                string audioPath = await _fileService.UploadAudioFileAsync(model.audioFile);
                 string coverImagePath = await _fileService.UploadSongCoverAsync(model.coverImage);
-                Console.WriteLine("audioPath: " + audioPath);
-                Console.WriteLine("coverImagePath: " + coverImagePath);
+                string audioPath = await _fileService.UploadAudioFileAsync(model.audioFile);
                 if (audioPath == null || coverImagePath == null)
                 {
-                    // 檔案上傳失敗，刪除剛剛的資料庫紀錄，避免資料庫和 `wwwroot` 不同步
+                    // 檔案上傳失敗，刪除剛剛的資料庫紀錄，避免資料庫和 wwwroot 不同步
                     _context.Songs.Remove(newSong);
                     await _context.SaveChangesAsync();
                     return StatusCode(500, "檔案上傳失敗，請重新嘗試");
@@ -218,7 +215,14 @@ namespace VocalSpace.Controllers
             }
             catch(Exception ex)
             {
-                return StatusCode(500, "發生錯誤：" + ex.Message);
+                // 確保在發生異常時也能刪除資料庫中的記錄
+                var songToDelete = await _context.Songs.FirstOrDefaultAsync(s => s.SongName == model.songName && s.Artist == currentUserId);
+                if (songToDelete != null)
+                {
+                    _context.Songs.Remove(songToDelete);
+                    await _context.SaveChangesAsync();
+                }
+                return StatusCode(500, "發生錯誤：" + ex.Message);   
             }
         }
 

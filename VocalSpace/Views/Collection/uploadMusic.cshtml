@@ -37,11 +37,11 @@
                         <div class="col-md-4 responsive-cover">
                             <div class="left-part text-center">
                                 <div class="cover-preview mb-3" id="coverPreview">
-                                    <img src="/music/music-cover.jpg" alt="封面預覽" class="img-fluid">
+                                    <img src="/image/Song/default.jpg" alt="封面預覽" class="img-fluid">
                                 </div>
                                 <p class="small text-muted">圖片檔案大小不可超過 2MB</p>
                                 <label for="coverImageInput" class="btn btn-outline-secondary btn-sm">上傳封面</label>
-                                <input type="file" id="coverImageInput" name="coverImage" class="d-none" accept="image/*" onchange="previewCoverImage(this)">
+                                <input type="file" id="coverImageInput" name="coverImage" class="d-none" accept=".jpeg,.png,.jpg" onchange="previewCoverImage(this)">
                             </div>
                         </div>
                         
@@ -124,7 +124,6 @@
 @section Scripts{
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script>
-        console.log("ok");
         const maxSizeInBytes = 30 * 1024 * 1024; // 30MB 檔案大小限制
         const maxSizePhoto = 2 * 1024 * 1024; // 2MB 封面圖片大小限制
         let coverFile = null;
@@ -141,15 +140,16 @@
             const file = input.files[0];
             coverFile = file;
             const preview = $('#coverPreview');
-            if (file) {
-                if (file.size <= maxSizePhoto) {
+            if (coverFile) {
+                if (coverFile.size <= maxSizePhoto) {
                     const reader = new FileReader();
                     reader.onload = function (e) {
                         preview.html(`<img src="${e.target.result}" alt="封面預覽" class="">`);
                     };
-                    reader.readAsDataURL(file);
+                    reader.readAsDataURL(coverFile);
                 } else {
                     alert("檔案上傳限制為2MB");
+                        input.value = "";
                 }
             }
         }
@@ -172,7 +172,7 @@
                         $(this).removeClass('is-invalid');
                     }
                 });
-                    return false;
+                return false;
             }
 
             if (songGenre.val() === '0') {
@@ -187,7 +187,6 @@
                 });
                 return false;
             }
-
             return true;
         };
 
@@ -288,30 +287,6 @@
                 handleFileSelection(file);
             });
 
-            // 表單提交與音樂檔案上傳
-            // $('#uploadAudioForm').on('submit', function (e) {
-            //     e.preventDefault();
-            //     const formData = new FormData(this);
-
-            //     $.ajax({
-            //         url: '/Collection/UploadAudio',
-            //         method: 'POST',
-            //         data: formData,
-            //         processData: false,
-            //         contentType: false,
-            //         success: function (data) {
-            //             if (data.audioPath) {
-            //                 $('#audioPathInput').val(data.audioPath);
-            //                 $('#uploadSongContainer').show();
-            //                 alert('音樂檔案上傳成功！請繼續填寫歌曲資訊');
-            //             }
-            //         },
-            //         error: function () {
-            //             alert('音樂上傳失敗，請重試');
-            //         }
-            //     });
-            // });
-
             // 取消上傳功能
             $('#cancelUploadBtn').on('click', function () {
                 if (confirm('確定要取消上傳嗎？')) {
@@ -323,21 +298,13 @@
             // 送出表單
             $("#submitSong").click(function () {
                 if (!coverFile || !audioFile) {
-                    alert("請選擇封面圖片和音樂檔案！");
+                    alert("請選擇音樂圖片！");
                     return;
                 }
-
                 
                 if(!checkTitleAndGenre()){
                     return;
                 }
-
-                console.log($('#songTitle').val());
-                console.log($('#songGenre').val());
-                console.log($('#songDescription').val());
-                console.log($('#songLyrics').val());
-                console.log(audioFile);
-
 
                 let formData = new FormData();
                 formData.append("songName", $('#songTitle').val());
@@ -354,7 +321,6 @@
                     processData: false,
                     contentType: false,
                     success: function () {
-                        alert("歌曲上傳成功！");
                         $('#successModal').css('display', 'flex');
                         setTimeout(() => {
                             window.location.href = '/home/index';
