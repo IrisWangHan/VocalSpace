@@ -6,6 +6,8 @@
     var userid = ViewData["uid"];
 
 }
+<link rel="stylesheet" href="~/css/song.css" asp-append-version="true" />
+
 <nav class="menu" id="myList">
     <a href="/Personal/mymusic/@Model.FirstOrDefault()!.UserId">音樂</a>
     @if (Model.FirstOrDefault()!.CurrentUserId == Model.FirstOrDefault()!.UserId) { 
@@ -32,11 +34,14 @@
                         <a asp-controller="Collection" asp-action="listdetail" asp-route-id="@item.PlayListId"><p class="song">@item.PlayListName</p></a>
                         <p class="artist">@item.PlayListSongCount 首歌曲．<a href="/Personal/mymusic/@item.UserId">@item.UserName</a></p>
                 </div>
-                <div class="btnarea d-flex justify-content-between">
+                <div class="btnarea">
                         <button class="btn btn-outline-secondary deletelist" data-bs-toggle="modal" data-bs-target="#deleteplaylist" data-user-id="@userid" data-playlist-id="@item.PlayListId"><i class="bi bi-trash"></i></button>
                         <a class="btn btn-outline-secondary editlist" href="/Collection/editlist/@item.PlayListId" onclick="editlist()"><i class="bi bi-pencil-square"></i></a>
-                    <button class="btn btn-outline-secondary book"><i class="bi bi-bookmark-check-fill"></i></button>
-                    <button class="btn btn-outline-secondary random"><i class="bi bi-shuffle"></i></button>
+                        <div class="btn-display">
+                        @await Component.InvokeAsync("PlayListButton", new { PlayListId = item.PlayListId })
+						</div>
+                        @* <button class="btn btn-outline-secondary book"><i class="bi bi-bookmark-check-fill"></i></button> *@
+                        @* <button class="btn btn-outline-secondary random"><i class="bi bi-shuffle"></i></button> *@
                 </div>
             </div>
 

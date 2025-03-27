@@ -53,6 +53,7 @@ namespace VocalSpace.Controllers
                                                           isFollowing = currentUserId.HasValue && currentUserId != 0  //如果使用者未登入，預設為false
                                                             ? _context.UserFollows.Any(f => f.UserId == currentUserId && f.FollowedUserId == id) : false
                                                       };
+
             return personals;
         }
         [HttpGet("Personal/mymusic/{id}")]
@@ -76,16 +77,31 @@ namespace VocalSpace.Controllers
                     SongCount = SongCount
                 }).ToListAsync();
             ViewData["song"] = songdata.Any() ? songdata : null;
-            return View(personal(id).ToList());
+            var person = personal(id).Any() ? personal(id).ToList() : null;
+            if (person == null) 
+            {
+                return NotFound();
+            }
+            return View(person);
         }
         [HttpGet("Personal/myabout/{id}")]
         public IActionResult myabout(long id)
         {
-            return View(personal(id).ToList());
+            var person = personal(id).Any() ? personal(id).ToList() : null;
+            if (person == null)
+            {
+                return NotFound();
+            }
+            return View(person);
         }
         [HttpGet("Personal/mylist/{id}")]
         public async Task<IActionResult> mylist(long id)
         {
+            var person = personal(id).Any() ? personal(id).ToList() : null;
+            if (person == null)
+            {
+                return NotFound();
+            }
             long? currentUserId = HttpContext.Session.GetInt32("UserId");
             if (currentUserId == id)
             {
@@ -101,7 +117,8 @@ namespace VocalSpace.Controllers
                     PlayListSongCount = p.PlayListSongs.Count() // 計算歌單內歌曲數量
                 }).ToListAsync();
                 ViewData["mylist"] = songdata.Any() ? songdata : null;
-                return View(personal(id).ToList());
+                
+                return View(person);
             }
             return Content("<script>alert('無權查看'); window.history.back();</script>", "text/html; charset=utf-8");
 
@@ -111,7 +128,11 @@ namespace VocalSpace.Controllers
         public async Task<IActionResult> mylike(long id)
         {
             var currentUserId = HttpContext.Session.GetInt32("UserId");
-
+            var person = personal(id).Any() ? personal(id).ToList() : null;
+            if (person == null)
+            {
+                return NotFound();
+            }
 
             if (id == currentUserId) {
 
@@ -135,7 +156,7 @@ namespace VocalSpace.Controllers
                    }).ToListAsync();
             ViewData["likesong"]= songdata.Any()?songdata:null;
 
-            return View(personal(id).ToList());
+            return View(person);
             }
             return Content("<script>alert('無權查看'); window.history.back();</script>", "text/html; charset=utf-8");
 

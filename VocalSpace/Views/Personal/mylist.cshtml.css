@@ -202,8 +202,10 @@
         overflow: hidden;
     }
 
-.btnarea {    
-    margin-right: 10px;
+.btnarea {
+    width:220px;
+    display: flex;
+    justify-content: space-between;
 }
 
 .btn-outline-secondary.book {
@@ -251,11 +253,11 @@
         display: none;
     }
 
-    .btn-outline-secondary.book {
+    .btn-display {
         display: none;
     }
 
-    .btn-outline-secondary.random {
+    .random {
         display: none;
     }
 }

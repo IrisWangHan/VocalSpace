@@ -331,6 +331,23 @@ namespace VocalSpace.Controllers
 
             return Ok(new { message = "刪除成功" });
         }
+
+        [HttpPost("Collection/DeleteSong/{songId}")]
+        public async Task<IActionResult> DeleteSong(long songId)
+        {
+            var Song = await _context.Songs
+                .FirstOrDefaultAsync(s => s.SongId == songId);
+            if (Song == null)
+            {
+                return NotFound();
+            }
+
+            _context.Songs.Remove(Song);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "刪除成功" });
+        }
+
     }
 }
 

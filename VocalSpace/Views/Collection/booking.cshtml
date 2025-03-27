@@ -3,6 +3,7 @@
 @{
     var userid = ViewData["uid"] ?? null;
 }
+<link rel="stylesheet" href="~/css/song.css" asp-append-version="true" />
 
 
 <div class="container">
@@ -49,8 +50,10 @@
                                 <button class="btn btn-outline-secondary deletelist" data-bs-toggle="modal" data-bs-target="#deleteplaylist" data-user-id="@userid" data-playlist-id="@item.PlayListId"><i class="bi bi-trash"></i></button>
                                 <a class="btn btn-outline-secondary editlist" href="/Collection/editlist/@item.PlayListId" onclick="editlist()"><i class="bi bi-pencil-square"></i></a>
                                 }
-                                <button class="btn btn-outline-secondary book"><i class="bi bi-bookmark-check-fill"></i></button>
-                                <button class="btn btn-outline-secondary random"><i class="bi bi-shuffle"></i></button>
+                                @await Component.InvokeAsync("PlayListButton", new { PlayListId = item.PlayListId })
+
+                                @* <button class="btn btn-outline-secondary book"><i class="bi bi-bookmark-check-fill"></i></button> *@
+                                @* <button class="btn btn-outline-secondary random"><i class="bi bi-shuffle"></i></button> *@
                             </div>
                         </div>
 

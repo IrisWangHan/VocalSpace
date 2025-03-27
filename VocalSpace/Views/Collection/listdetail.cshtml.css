@@ -18,6 +18,10 @@ span {
 	max-width: 70px;
 	width: 100%
 }
+.button {
+	display: flex;
+}
+
 
 
 main {
@@ -207,50 +211,9 @@ main {
 	flex-grow: 1;
 }
 
-.btn-outline-secondary.book {
-	margin-right: 10px;
-	border: 1px solid gray;
-	border-radius: 50%;
-}
-
-	.btn-outline-secondary.book:hover {
-		margin-right: 10px;
-		background-color: rgb(255, 87, 87);
-	}
-
-	.btn-outline-secondary.book.selected {
-		margin-right: 10px;
-		background-color: #ffffff;
-		border: 1px solid rgb(255, 87, 87);
-		color: rgb(255, 87, 87);
-	}
-
-.btn-outline-secondary.deletelist {
-	margin-right: 10px;
-	border: 1px solid gray;
-	border-radius: 50%;
-}
-
-.btn-outline-secondary.editlist {
-	margin-right: 10px;
-	border: 1px solid gray;
-	border-radius: 50%;
-}
-
-.btn-outline-secondary.random {
-	border: 1px solid gray;
-	border-radius: 50%;
-}
 
 @media screen and (max-width: 1000px) {
-	.btn-outline-secondary.deletelist {
-		display: none;
-	}
-
-	.btn-outline-secondary.editlist {
-		display: none;
-	}
-
+	
 	.btn-outline-secondary.book {
 		display: none;
 	}
