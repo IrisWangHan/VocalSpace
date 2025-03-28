@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace VocalSpace.Models;
@@ -275,6 +276,10 @@ public partial class VocalSpaceDbContext : DbContext
 
         modelBuilder.Entity<PlayList>(entity =>
         {
+            
+            // 設定全局過濾器，只選擇 IsPublic 為 true 的播放清單，除非當前使用者是歌單擁有者
+            //modelBuilder.Entity<PlayList>().HasQueryFilter(p => p.IsPublic || p.UserId == CurrentUserId);
+
             entity.HasKey(e => e.PlayListId).HasName("PK__PlayList__38709FBB8F33B645");
 
             entity.ToTable("PlayList");
