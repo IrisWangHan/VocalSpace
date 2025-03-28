@@ -5,7 +5,7 @@
 	ViewData["Title"] = Model.FirstOrDefault()!.PlayListName+"播放清單";
 }
 <style>
-	.btn-outline-secondary.book {
+	.book {
 		margin-right: 10px;
 		border: 1px solid gray;
 		border-radius: 50%;
@@ -14,18 +14,18 @@
 		font-size: 25px;
 	}
 
-		.btn-outline-secondary.book:hover {
+		.book:hover {
 			margin-right: 10px;
 			background-color: rgb(255, 87, 87);
 		}
 
-		.btn-outline-secondary.book.selected {
+		.book.selected {
 			margin-right: 10px;			
 			border: 1px solid rgb(255, 87, 87);
 			color: rgb(255, 87, 87);
 		}
 
-	.btn-outline-secondary.random {
+	.random {
 		border: 1px solid gray;
 		border-radius: 50%;
 		width: 50px;
@@ -33,6 +33,14 @@
 		font-size:25px;
 	}
 
+	.editlist {
+		margin-right: 10px;	
+		border: 1px solid gray;
+		border-radius: 50%;
+		width: 50px;
+		height: 50px;
+		font-size: 25px;
+	}
 
 </style>
 <div class="page-container mb-5">
