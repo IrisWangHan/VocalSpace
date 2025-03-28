@@ -32,7 +32,7 @@ namespace VocalSpace.Services
         /// </summary>
         public async Task<string> UploadUserBanner(IFormFile file)
         {
-            return await UploadFile(file, "Avatar");
+            return await UploadFile(file, "banners");
         }
 
         /// <summary>
