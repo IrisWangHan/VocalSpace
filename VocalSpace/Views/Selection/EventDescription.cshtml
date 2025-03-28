@@ -1,5 +1,7 @@
 ﻿@model VocalSpace.Models.ViewModel.Selection.SelectionListViewModel
-
+@{
+	ViewData["Title"] = Model.Title;
+}
 <section class="banner">
 	<div class="banner__left">
 		<img class="banner__left-img" src="@Url.Content("~/image/selection/bannerLightning.png")" />

@@ -1,5 +1,7 @@
 ﻿@model VocalSpace.Models.ViewModel.Activity.ActivityInfoViewModel
-
+@{
+	ViewData["Title"] = Model.Title;
+}
 @section MetaTags {
 	<meta property="og:url" content="@Model.ShareUrl" />
 	<meta property="og:type" content="website" />

@@ -1,4 +1,7 @@
-﻿@if (!ViewData.ModelState.IsValid)
+﻿@{
+    ViewData["Title"] = "創建歌單";
+}
+@if (!ViewData.ModelState.IsValid)
 {
     <div class="alert alert-danger">
         <ul>

@@ -4,7 +4,7 @@
 	Layout = "_PersonalLayout";
 	var song = ViewData["song"] as List<VocalSpace.Models.ViewModel.Song.SongViewModel>;
 	var userid = ViewData["uid"] ?? null;
-
+	ViewData["Title"] = Model.FirstOrDefault()!.UserName;
 }
 
 <nav class="menu" id="myList">

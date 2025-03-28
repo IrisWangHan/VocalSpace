@@ -4,7 +4,7 @@
     Layout = "_PersonalLayout";  
     var mylist = ViewData["mylist"] as List<VocalSpace.Models.ViewModel.Song.SongViewModel>;
     var userid = ViewData["uid"];
-
+    ViewData["Title"] = Model.FirstOrDefault()!.UserName;
 }
 <link rel="stylesheet" href="~/css/song.css" asp-append-version="true" />
 

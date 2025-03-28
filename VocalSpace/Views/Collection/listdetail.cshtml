@@ -2,7 +2,7 @@
 @{
 	int count = 1;
 	var userid = ViewData["uid"] ?? null;
-
+	ViewData["Title"] = Model.FirstOrDefault()!.PlayListName+"播放清單";
 }
 <style>
 	.btn-outline-secondary.book {

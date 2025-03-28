@@ -3,6 +3,7 @@
 @{
 	Layout = "_PersonalLayout";
 	var likesong = ViewData["likesong"] as List<VocalSpace.Models.ViewModel.Song.SongViewModel>;
+	ViewData["Title"] = Model.FirstOrDefault()!.UserName;
 }
 <link rel="stylesheet" href="~/css/PersonalSongButton.css" asp-append-version="true" />
 <nav class="menu" id="myList">

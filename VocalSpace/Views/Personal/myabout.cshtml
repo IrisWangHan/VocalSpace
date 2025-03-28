@@ -1,7 +1,8 @@
 ﻿@model IEnumerable<VocalSpace.Models.ViewModel.Personal.PersonalViewModel>
 
 @{
-	Layout = "_PersonalLayout";  
+	Layout = "_PersonalLayout";
+    ViewData["Title"] = Model.FirstOrDefault()!.UserName;
 }
  <nav class="menu" id="myList">
         <a href="/Personal/mymusic/@Model.FirstOrDefault()!.UserId">音樂</a>
