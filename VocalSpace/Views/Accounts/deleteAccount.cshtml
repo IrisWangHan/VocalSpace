@@ -60,11 +60,14 @@
                 type:'GET',
                 url: `/Accounts/deleteAccountButton`,
                 success: function (response) {
-                    //  更新 #tab-content 內的歌曲
-                    $('#tab-content').html(response);
+					if (response.isSuccess) {
+						alert("刪除帳號成功");
+					}
+
+                    //  頁面出現彈窗，訊息:"刪除帳號成功"
                 },
                 Error: function (err) {
-                    console.log('歌曲排序:'+err);
+                    console.log(err);
                 }
             })  
         })
