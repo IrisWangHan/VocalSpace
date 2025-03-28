@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using VocalSpace.Models;
+using VocalSpace.Models.ViewModel.Account;
 using VocalSpace.Models.ViewModel.Global;
 
 namespace VocalSpace.Services
@@ -113,6 +115,95 @@ namespace VocalSpace.Services
                 Console.WriteLine($"GetUserBarData 執行時發生錯誤: {ex.Message}");
                 return null;
             }
+        }
+
+        /// <summary>
+        /// 取得 memberInformation 頁面需要的資料
+        /// </summary>
+        public async Task<UserSettingViewModel?> GetUserDataAsync(long? currentUserId )
+        {
+            try
+            {
+                var user = await _context.Users
+                    .Include(u => u.UsersInfo)
+                    .Where(u => u.UserId == currentUserId)
+                    .Select(u => new UserSettingViewModel
+                    {
+                        UserId = u.UserId,
+                        UserName = u.UserName,
+                        Birthday = u.UsersInfo!.Birthday.ToString("yyyy-MM-dd"),
+                        PersonalIntroduction = u.UsersInfo!.PersonalIntroduction,
+                        
+                    })
+                    .FirstOrDefaultAsync();
+
+                return user;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"GetUserData 執行時發生錯誤: {ex.Message}");
+                return null;
+            }
+        }
+        //  更新使用者資料，名稱、生日、個人介紹
+        public async Task<bool> UpdateUserDataAsync(UserSettingViewModel model)
+        {
+            try
+            {
+                var user = await _context.Users
+                    .Include(u => u.UsersInfo)
+                    .Where(u => u.UserId == model.UserId)
+                    .FirstOrDefaultAsync();
+                                   
+                user!.UserName = model.UserName;
+                user.UsersInfo!.Birthday = DateOnly.Parse(model.Birthday!);
+                user.UsersInfo!.PersonalIntroduction = model.PersonalIntroduction;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"UpdateUserDataAsync 執行時發生錯誤: {ex.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 取得使用者的贊助支出與收入總和
+        /// </summary>
+        public async Task<UserSettingViewModel?> GetIncomeDataAsync(long userId)
+        {
+            var totalSpent = await _context.Ecpays
+                .Where(e => e.SponsorId == userId && e.RtnCode == 1)
+                .SumAsync(e => e.TradeAmt);
+
+            var totalIncome = await _context.Ecpays
+                .Where(e => e.ReceiverId == userId && e.RtnCode == 1)
+                .SumAsync(e => e.TradeAmt);
+
+            var model = new UserSettingViewModel
+            {
+                totalSpent = totalSpent,
+                totalIncome = totalIncome
+            };
+
+            return model;
+        }
+
+        public async Task<(bool isSuccess, bool isDeleted)> DeleteAccountAsync(long userId)
+        {
+            var user = await _context.Users
+                        .FirstOrDefaultAsync(user => user.UserId == userId);
+            //  使用者不存在 or 使用者已停用
+            if ( user == null || user.Status != 1 )
+            {
+                return (false, true);
+            }
+
+            user.Status = 0;
+            await _context.SaveChangesAsync();
+            return (true, true);
+            
         }
     }
 }

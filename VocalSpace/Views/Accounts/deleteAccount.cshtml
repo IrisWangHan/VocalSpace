@@ -43,7 +43,7 @@
                                 </select>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-primary">確認並刪除帳號</button>
+                            <button type="button"  class="btn btn-primary delete">確認並刪除帳號</button>
                             </div>
                         </div>
                     </div>
@@ -52,4 +52,22 @@
 		</div>
    </div>
 </section>
+
+@section Scripts {
+    <script>
+        $('.delete').click(function(e){
+            $.ajax({
+                type:'GET',
+                url: `/Accounts/deleteAccountButton`,
+                success: function (response) {
+                    //  更新 #tab-content 內的歌曲
+                    $('#tab-content').html(response);
+                },
+                Error: function (err) {
+                    console.log('歌曲排序:'+err);
+                }
+            })  
+        })
+    </script>
+}
 

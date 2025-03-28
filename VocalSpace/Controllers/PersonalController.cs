@@ -19,13 +19,15 @@ namespace VocalSpace.Controllers
         private readonly VocalSpaceDbContext _context;
         private readonly UserService _UserService;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly ModalDataService _ModalDataService;
 
 
-        public PersonalController(VocalSpaceDbContext context, UserService UserService, IWebHostEnvironment webHostEnvironment)
+        public PersonalController(VocalSpaceDbContext context, UserService UserService, IWebHostEnvironment webHostEnvironment, ModalDataService modalDataService)
         {
             _context = context;
             _UserService = UserService;
             _webHostEnvironment = webHostEnvironment;
+            _ModalDataService = modalDataService;
         }
 
         private IQueryable<PersonalViewModel> personal(long id) 
@@ -284,7 +286,31 @@ namespace VocalSpace.Controllers
             return PartialView("_Userbar_partial", userBarData);
         }
 
+        /// <summary>
+        /// AJAX 喜歡歌單邏輯
+        /// </summary>
+        [HttpPost("/Personal/AddLikePlaylist")]
+        public async Task<IActionResult> AddLikePlaylist([FromBody] Favoriteplaylist model)
+        {
+            // 取得使用者ID
+            long? userId = HttpContext.Session.GetInt32("UserId");
 
+            // 確保使用者已登入
+            if (userId == null || userId == 0)
+            {
+                return Unauthorized(new { success = false, message = "請先登入！" });
+            }
+            //  判斷歌單是否已喜歡 -> 新增或刪除 Favoriteplaylist 資料
+            var (isSuccess, isliked) = await _ModalDataService.AddLikePlaylistAsync(userId.Value, model.PlayListId);
+
+            if (!isSuccess)
+            {
+                return StatusCode(500, new { message = "操作失敗，請稍後再試。" });
+            }
+
+            return Ok(new { isliked, message = isliked ? "歌單已加入收藏" : "歌單已移除收藏" });
+
+        }
     }
 }
 

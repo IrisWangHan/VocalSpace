@@ -23,12 +23,14 @@ namespace VocalSpace.Controllers
         private readonly VocalSpaceDbContext _context;
         private readonly EmailService _emailService;
         private readonly FileService _fileService;
-        public AccountsController(VocalSpaceDbContext context, EmailService emailService,FileService fileService)
+        private readonly UserService _userService;
+        public AccountsController(VocalSpaceDbContext context, EmailService emailService, UserService userService,FileService fileService)
         {
             _context = context;
             _emailService = emailService;
             _fileService = fileService;
 
+            _userService = userService;
         }
 
         // 確保頁面刷新時拿到最新狀態
@@ -353,14 +355,34 @@ namespace VocalSpace.Controllers
             return Convert.ToBase64String(Encoding.UTF8.GetBytes(tokenPayload)); // 使用 Base64 編碼來生成最終 Token
         }
 
-
-
         //  整合  AccountSettings
         [SessionToLogin]
-        public IActionResult memberInformation()
+        public async Task<IActionResult> memberInformation(string id)
         {
+            int currentUserId = Convert.ToInt32(id);
+            UserSettingViewModel? UserViewModel = await _userService.GetUserDataAsync(currentUserId);
+            return View(UserViewModel);
+        }
+        //  接收 memberInformation表單資料
+        [HttpPost("/Accounts/UserInfo")]
+        public async Task<IActionResult> ChangeUserInfo(IFormCollection form)
+        {
+            long? userId = HttpContext.Session.GetInt32("UserId");
+            UserSettingViewModel UserViewModel = new UserSettingViewModel
+            {
+                UserId = userId!.Value,
+                UserName = form["username"],
+                Birthday = form["birthday"],
+                PersonalIntroduction = form["introduction"]
+            };
+           bool isSuccess = await _userService.UpdateUserDataAsync(UserViewModel);
 
-            return View();
+            if (!isSuccess)
+            {
+                return StatusCode(500, new { message = "操作失敗，請稍後再試。" });
+            }
+            //  導向 /Accounts/memberInformation/{id = userId }
+            return RedirectToAction("memberInformation", new { id = userId });
         }
 
         /// <summary>
@@ -428,11 +450,14 @@ namespace VocalSpace.Controllers
         {
             return View();
         }
+        
         [SessionToLogin]
-
-        public IActionResult Income()
+        public async Task<IActionResult> Income()
         {
-            return View();
+            // 取得使用者ID
+            long? userId = HttpContext.Session.GetInt32("UserId");
+            var data = await _userService.GetIncomeDataAsync(userId!.Value);
+            return View(data);
         }
         [SessionToLogin]
         public IActionResult changePassword()
@@ -442,6 +467,14 @@ namespace VocalSpace.Controllers
         [SessionToLogin]
         public IActionResult deleteAccount()
         {
+            return View();
+        }
+        [HttpGet]
+        public async Task<IActionResult> deleteAccountButton()
+        {
+            // 取得使用者ID
+            long? userId = HttpContext.Session.GetInt32("UserId");
+            var(isSuccess, isDeleted) = await _userService.DeleteAccountAsync(userId!.Value);
             return View();
         }
     }

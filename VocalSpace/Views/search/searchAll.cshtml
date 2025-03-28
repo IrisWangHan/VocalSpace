@@ -1,42 +1,37 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-
+﻿
 @{
     
 }
+@model VocalSpace.Models.ViewModel.Search.SearchViewModel
 <link rel="stylesheet" href="~/css/search.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/song.css" asp-append-version="true" />
 
 <div class="container pb-10 pt-5">
     <h1 class="mb-4 position-relative search-title">
         <i class="bi bi-search mr-2"></i>
-        <span id="search-query"></span>&nbsp;
-        搜尋結果
+        @TempData.Peek("q")的搜尋結果
     </h1>
     <hr class="mb-5">
     <div class="row">
         <div class="col-md-9">
             <ul class="nav nav-pills mb-3">
                 <li class="nav-item">
-                    <a class="nav-link nav-name" href="./searchAll">全部</a>
+                    <a class="nav-link nav-name activate active" id="All" href="/search/searchAll?q=@TempData.Peek("q")">全部</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link nav-name" href="./searchSongs">歌曲</a>
+                    <a class="nav-link nav-name type-link activate" id="Song" href="#">歌曲</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link nav-name" href="./searchSonglists">歌單</a>
+                    <a class="nav-link nav-name type-link activate" id="Playlist" href="#">歌單</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link nav-name" href="./searchArtists">音樂人</a>
+                    <a class="nav-link nav-name type-link activate" id="Artist" href="#">音樂人</a>
                 </li>
             </ul>
-            <div class="tab-content" id="tab-content">                
-                @await Html.PartialAsync("_partialViewSong")
-                @await Html.PartialAsync("_partialViewSong")
-                @await Html.PartialAsync("_partialViewArtist")
-                @await Html.PartialAsync("_partialViewSonglist")
-                @* 按下"點我看更多"button後，插入執行@await Html.PartialAsync("partialViewSong") *@
+            <div class="tab-content" id="tab-content">
+                @await Html.PartialAsync("_partialViewSong", Model.Songs)               
+                @await Html.PartialAsync("_partialViewArtist", Model.Artists)
+                @await Html.PartialAsync("_partialViewSonglist", Model.Playlists)
             </div>
             <div class="mt-5 mb-5 text-center">
                 <button class="btn btn-loadmore" id="btn-loadmore" onclick="loadmore('song')">點我看更多</button>
@@ -47,5 +42,30 @@
         </div>
     </div>
 </div>
-<script src="~/js/search.js" asp-append-version="true"></script>
-<script src="~/js/partialViewSong.js" asp-append-version="true"></script>
+
+@section Scripts {
+    <script>
+        $('.type-link').click(function(e){
+            e.preventDefault();
+
+            // 參數放在 data: { } 會自動附加為 QueryString
+            $.ajax({
+                type:'GET',
+                url: `/search/Searchtype`,
+                data: { type : $(this).attr('id')},
+                success: function (response) {
+                    //  更新 #tab-content 內的歌曲
+                    $('#tab-content').html(response);
+                },
+                Error: function (err) {
+                    console.log('歌曲排序:'+err);
+                }
+            })
+        })
+
+		$('.activate').click(function(e){		
+			$('.activate').removeClass('active');
+			$(this).addClass('active');
+		})
+    </script>
+}

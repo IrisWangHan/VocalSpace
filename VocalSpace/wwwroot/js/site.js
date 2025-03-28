@@ -200,3 +200,67 @@ $(document).on("click", ".btn-play", function () {
     let songName = $(this).data("songname");  // 取得歌曲名稱
     alert(`現正播放：${songName}`);
 });
+
+//  搜尋功能
+let searchText = document.querySelector('.header__search-input');
+
+searchText.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') {
+        console.log('searchText.value:', searchText.value);
+        search();
+    }
+});
+
+function search() {
+    fetch("/search/searchAll/?q=" + searchText.value).
+        then(response => {
+            //  response.ok 為 true
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            
+            //  得到View的URL
+            return response.url;
+        }).
+        then(responseUrl => {
+            //  導向到搜尋結果url
+         
+            window.location.assign(responseUrl);
+            
+            document.getElementById('All').setAttribute('href', '/search/searchAll/?q=' + searchText.value);  
+                      
+        }).
+        catch(error => {
+            console.error("載入歌曲失敗");
+        })
+}
+
+
+//  收藏歌單
+$(document).on("click", ".btn-add-to-Likeplaylist", function () {
+    let button = $(this);
+    let playlistid = button.data("playlistid");
+    // 根據 songId 找到對應的 likeCount
+    //let count = $(`.likeCount[data-songid="${songId}"]`);
+    console.log(button);
+    console.log(playlistid);
+    //console.log(count);
+    $.ajax({
+        url: `/Personal/AddLikePlaylist`,
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({ PlaylistId: playlistid }),
+        success: function (res) {
+            if (res.isliked) {
+                button.addClass("selected");
+            }
+            else {
+                button.removeClass("selected");
+            }
+            
+        },
+        error: function (xhr) {
+            alert(xhr.responseJSON?.message || "發生錯誤，請稍後再試！");
+        }
+    });
+});
