@@ -1,5 +1,6 @@
-﻿
+﻿@model VocalSpace.Models.ViewModel.Account.ImageSettingViewModel
 @{
+    ViewData["Title"] = "頭像與封面設定";
 }
 <link rel="stylesheet" href="~/css/memberInformation.css" asp-append-version="true" />
 
@@ -10,23 +11,23 @@
         <div class="row">
             @await Html.PartialAsync("partialViewAccountSettings")
             <div class="col-md-8 col-lg-8">
-                <form>
+                <form id="imageSettingForm" asp-action="imageSetting" method="post" enctype="multipart/form-data">
                     <div class="form-group">
-						<h2>頭像與封面</h2>
-					</div>
+                        <h2>頭像與封面</h2>
+                    </div>
                     <div class="form-group">
                         <h3>頭像</h3>
                         <small class="form-text text-muted mb-2">建議尺寸：360x360px 以上，圖片檔案大小不可超過 2MB</small>
                     </div>
-					<div class="form-group">
+                    <div class="form-group">
                         <div class="d-flex flex-column">
-                            <div id="avatar" style="width:20vw; height:20vw;">
-                                 <img src="~/image/大頭貼test.png" alt="大頭貼" class="img-thumbnail"> 
+                            <div id="avatar" style="width:360px; height:360px;">
+                                <img id="avatarPreview" src="@(string.IsNullOrEmpty(Model.AvatarPath) ? "/image/大頭貼test.png" : Model.AvatarPath)" alt="大頭貼" class="img-thumbnail" style="width:100%; height:100%; object-fit:cover;">
                             </div>
                             <div>
-                                <button class="btn btn-primary">上傳頭像</button>
-						    </div>
-                        </div>				
+                                <input type="file" name="avatar" accept="image/*" class="form-control-file mt-2" onchange="previewAvatar(event)">
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group">
                         <h3>封面</h3>
@@ -34,16 +35,45 @@
                     </div>
                     <div class="form-group">
                         <div class="d-flex flex-column">
-                            <div>
-                                <img src="~/image/橫式封面test.png" alt="封面" class="img-thumbnail">
+                            <div id="banner" style="width:100%; height:360px;">
+                                <img id="bannerPreview" src="@(string.IsNullOrEmpty(Model.BannerImagePath) ? "/image/橫式封面test.png" : Model.BannerImagePath)" alt="封面" class="img-thumbnail" style="width:100%; height:100%; object-fit:cover;">
                             </div>
                             <div>
-                                <button class="btn btn-primary">上傳封面</button>
+                                <input type="file" name="banner" accept="image/*" class="form-control-file mt-2" onchange="previewBanner(event)">
                             </div>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-danger mt-3">儲存變更</button>
+                    </div>
                 </form>
-            </div></>
+                <div id="uploadSuccessMessage" class="alert alert-success mt-3" style="display: none;">
+                    圖片上傳成功！
+                </div>
+            </div>
         </div>
-   </div>
+    </div>
 </section>
+@section Scripts {
+    <script>
+        //預覽頭像封面
+        let isFileSelected = false;
+        function previewAvatar(event) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                const output = document.getElementById('avatarPreview');
+                output.src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+
+        function previewBanner(event) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                const output = document.getElementById('bannerPreview');
+                output.src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
+}

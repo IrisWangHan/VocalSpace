@@ -10,9 +10,9 @@ using Microsoft.AspNetCore.Authentication.Facebook;
 using System.Security.Cryptography;
 using VocalSpace.Models.ViewModel.Account;
 using System.Text;
+using VocalSpace.Services;
 using System.Web;
 
- 
 
 
 namespace VocalSpace.Controllers
@@ -22,10 +22,13 @@ namespace VocalSpace.Controllers
 
         private readonly VocalSpaceDbContext _context;
         private readonly EmailService _emailService;
-        public AccountsController(VocalSpaceDbContext context, EmailService emailService)
+        private readonly FileService _fileService;
+        public AccountsController(VocalSpaceDbContext context, EmailService emailService,FileService fileService)
         {
             _context = context;
             _emailService = emailService;
+            _fileService = fileService;
+
         }
 
         // 確保頁面刷新時拿到最新狀態
@@ -359,12 +362,67 @@ namespace VocalSpace.Controllers
 
             return View();
         }
+
+        /// <summary>
+        /// 頭像與封面
+        /// </summary>
+        /// <returns></returns>
         [SessionToLogin]
-        public IActionResult imageSetting()
+        public async Task<IActionResult> imageSetting()
         {
-            return View();
+            var userId = HttpContext.Session.GetInt32("UserId");
+
+            var userInfo = await _context.UsersInfos.FirstOrDefaultAsync(u => u.UserId == userId);
+            if (userInfo == null)
+            {
+                return NotFound();
+            }
+
+            var model = new ImageSettingViewModel
+            {
+                AvatarPath = userInfo.AvatarPath,
+                BannerImagePath = userInfo.BannerImagePath
+            };
+
+            return View(model);
+        }
+
+        /// <summary>
+        /// 上傳封面、頭像邏輯
+        /// </summary>
+        /// <returns></returns>
+
+        [HttpPost]
+        public async Task<IActionResult> imageSetting(IFormFile avatar, IFormFile banner)
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            var userInfo = await _context.UsersInfos.FirstOrDefaultAsync(u => u.UserId == userId);
+            if (userInfo == null)
+            {
+                return NotFound();
+            }
+
+            if (avatar != null && avatar.Length > 0)
+            {
+                userInfo.AvatarPath = await _fileService.UploadUserAvatar(avatar);
+            }
+
+            if (banner != null && banner.Length > 0)
+            {
+                userInfo.BannerImagePath = await _fileService.UploadUserBanner(banner);
+            }
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("imageSetting");
         }
         [SessionToLogin]
+
 
         public IActionResult changeEmail()
         {

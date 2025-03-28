@@ -12,9 +12,34 @@ namespace VocalSpace.Services
         }
 
         /// <summary>
-        /// 上傳活動封面 邏輯
+        /// 上傳活動封面 
         /// </summary>
         public async Task<string> UploadActivityCover(IFormFile file)
+        {
+            return await UploadFile(file, "Activity");
+        }
+
+        /// <summary>
+        /// 上傳User頭像 
+        /// </summary>
+        public async Task<string> UploadUserAvatar(IFormFile file)
+        {
+            return await UploadFile(file, "Avatar");
+        }
+
+        /// <summary>
+        /// 上傳User頭像 
+        /// </summary>
+        public async Task<string> UploadUserBanner(IFormFile file)
+        {
+            return await UploadFile(file, "Avatar");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+
+        private async Task<string> UploadFile(IFormFile file, string folderName)
         {
             if (file == null || file.Length == 0)
                 throw new ArgumentException("無效的檔案");
@@ -24,23 +49,27 @@ namespace VocalSpace.Services
             if (file.Length > maxFileSize)
                 throw new Exception("檔案大小不可超過 2MB");
 
-            // 確保 wwwroot/image/Activity 目錄存在
-            string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "image", "Activity");
+            // 確保目錄存在
+            string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "image", folderName);
             if (!Directory.Exists(uploadsFolder))
                 Directory.CreateDirectory(uploadsFolder);
 
-            // 生成唯一檔案名稱
-            string uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(file.FileName)}";
-            string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+            // 生成檔案名稱
+            string fileName = Path.GetFileName(file.FileName);
+            string filePath = Path.Combine(uploadsFolder, fileName);
 
-            // 儲存檔案
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            // 如果檔案名稱重複，則直接使用現有的檔案
+            if (!File.Exists(filePath))
             {
-                await file.CopyToAsync(fileStream);
+                // 儲存檔案
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(fileStream);
+                }
             }
 
             // 回傳相對路徑，存入資料庫
-            return $"/image/Activity/{uniqueFileName}";
+            return $"/image/{folderName}/{fileName}";
         }
 
         public async Task<string> UploadAudioFileAsync(IFormFile audioFile)

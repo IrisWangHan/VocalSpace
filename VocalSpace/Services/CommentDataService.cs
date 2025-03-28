@@ -44,6 +44,7 @@ namespace VocalSpace.Services
                             Account = c.User.Account,
                             CurrentUserAccount = account ?? string.Empty,
                             UserName = c.User.UserName ?? "",
+                            UserId=c.User.UserId,
                             Avatar = c.User.UsersInfo!.AvatarPath,
                             Comment = c.Comment,
                             CommentTime = c.CommentTime
@@ -66,6 +67,7 @@ namespace VocalSpace.Services
                             CurrentUserAccount = account ?? string.Empty,
                             UserName = c.User.UserName ?? "",
                             Avatar = c.User.UsersInfo!.AvatarPath,
+                            UserId = c.User.UserId,
                             Comment = c.Comment,
                             CommentTime = c.CommentTime
                         });
