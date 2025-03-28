@@ -359,8 +359,8 @@ namespace VocalSpace.Controllers
         [SessionToLogin]
         public async Task<IActionResult> memberInformation(string id)
         {
-            int currentUserId = Convert.ToInt32(id);
-            UserSettingViewModel? UserViewModel = await _userService.GetUserDataAsync(currentUserId);
+            long? userId = HttpContext.Session.GetInt32("UserId");
+            UserSettingViewModel? UserViewModel = await _userService.GetUserDataAsync(userId);
             return View(UserViewModel);
         }
         //  接收 memberInformation表單資料
@@ -475,7 +475,12 @@ namespace VocalSpace.Controllers
             // 取得使用者ID
             long? userId = HttpContext.Session.GetInt32("UserId");
             var(isSuccess, isDeleted) = await _userService.DeleteAccountAsync(userId!.Value);
-            return View();
+            if (!isSuccess)
+            {
+                return StatusCode(500, new { message = "操作失敗，請稍後再試。" });
+            }
+            //  刪除成功，頁面出現彈窗，訊息: "帳號已刪除，將導向首頁"
+            return Ok(new { isSuccess = true, message = "帳號已刪除，將導向首頁" });
         }
     }
 

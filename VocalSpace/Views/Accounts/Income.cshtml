@@ -10,12 +10,13 @@
         <hr>
         <div class="row">
             @await Html.PartialAsync("partialViewAccountSettings")
-            <div class="col-md-8 col-lg-8">
-                <form>
+            <div class="col-md-8 col-lg-8">              
                     <h2>支出與收益</h2>
-                    <div>現在總支出:NT$@Model.totalSpent</div>
-                    <div>現在總收益:NT$@Model.totalIncome</div>
-                </form>
+                    <div class="border-block">
+                        <h3>現在總支出:NT$@Model.totalSpent</h3>
+                        <div class="money-container"><img class="money" src="~/image/錢錢.png" alt="Alternate Text" /></div>
+                    </div>
+                    <div class="border-block">現在總收益:NT$@Model.totalIncome</div>
             </div>
         </div>
     </div>
