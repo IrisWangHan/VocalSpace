@@ -480,6 +480,9 @@ namespace VocalSpace.Controllers
             {
                 return StatusCode(500, new { message = "操作失敗，請稍後再試。" });
             }
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);      // 清除認證
+            HttpContext.Session.Clear();
+            Console.WriteLine("已清空session");
             //  刪除成功，頁面出現彈窗，訊息: "帳號已刪除，將導向首頁"
             return Ok(new { isSuccess = true, message = "帳號已刪除，將導向首頁" });
         }
