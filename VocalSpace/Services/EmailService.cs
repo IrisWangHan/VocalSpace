@@ -1,22 +1,25 @@
 ﻿using MailKit.Net.Smtp;
 using MailKit.Security;
+using Microsoft.Extensions.Options;
 using MimeKit;
 using System;
 using System.Threading.Tasks;
+using VocalSpace.Models;
 
 public class EmailService
 {
-    private readonly string smtpServer = "smtp.gmail.com";
-    private readonly int smtpPort = 587; // Gmail 使用 587 (TLS) 或 465 (SSL)
-    private readonly string senderEmail = "su3cl32000@gmail.com"; // 你的 Gmail
-    private readonly string senderPassword = "uhknxryminnvaibf"; // Gmail 應用程式密碼
+    private readonly EmailSettings _emailSettings;
+    public EmailService(IOptions<EmailSettings> emailSettings)
+    {
+        _emailSettings = emailSettings.Value;
+    }
 
     public async Task<bool> SendVerificationCodeAsync(string recipientEmail, string verificationCode)
     {
         try
         {
             var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("聲維宇宙", senderEmail));
+            message.From.Add(new MailboxAddress("聲維宇宙", _emailSettings.SenderEmail));
             message.To.Add(new MailboxAddress("", recipientEmail));
             message.Subject = "VocalSpace - 註冊驗證碼";
 
@@ -27,8 +30,8 @@ public class EmailService
 
             using (var client = new SmtpClient())
             {
-                await client.ConnectAsync(smtpServer, smtpPort, SecureSocketOptions.StartTls);
-                await client.AuthenticateAsync(senderEmail, senderPassword);
+                await client.ConnectAsync(_emailSettings.SmtpServer, _emailSettings.SmtpPort, SecureSocketOptions.StartTls);
+                await client.AuthenticateAsync(_emailSettings.SenderEmail, _emailSettings.SenderPassword);
                 await client.SendAsync(message);
                 await client.DisconnectAsync(true);
             }
@@ -48,7 +51,7 @@ public class EmailService
         try
         {
             var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("聲維宇宙", senderEmail));
+            message.From.Add(new MailboxAddress("聲維宇宙", _emailSettings.SenderEmail));
             message.To.Add(new MailboxAddress("", recipientEmail));
             message.Subject = "密碼重設通知";
 
@@ -70,8 +73,8 @@ public class EmailService
 
             using (var client = new SmtpClient())
             {
-                await client.ConnectAsync(smtpServer, smtpPort, SecureSocketOptions.StartTls);
-                await client.AuthenticateAsync(senderEmail, senderPassword);
+                await client.ConnectAsync(_emailSettings.SmtpServer, _emailSettings.SmtpPort, SecureSocketOptions.StartTls);
+                await client.AuthenticateAsync(_emailSettings.SenderEmail, _emailSettings.SenderPassword);
                 await client.SendAsync(message);
                 await client.DisconnectAsync(true);
             }
@@ -89,7 +92,7 @@ public class EmailService
         try
         {
             var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("聲維宇宙", senderEmail));
+            message.From.Add(new MailboxAddress("聲維宇宙", _emailSettings.SenderEmail));
             message.To.Add(new MailboxAddress("", recipientEmail));
             message.Subject = "VocalSpace - "+subject;
 
@@ -100,8 +103,8 @@ public class EmailService
 
             using (var client = new SmtpClient())
             {
-                await client.ConnectAsync(smtpServer, smtpPort, SecureSocketOptions.StartTls);
-                await client.AuthenticateAsync(senderEmail, senderPassword);
+                await client.ConnectAsync(_emailSettings.SmtpServer, _emailSettings.SmtpPort, SecureSocketOptions.StartTls);
+                await client.AuthenticateAsync(_emailSettings.SenderEmail, _emailSettings.SenderPassword);
                 await client.SendAsync(message);
                 await client.DisconnectAsync(true);
             }

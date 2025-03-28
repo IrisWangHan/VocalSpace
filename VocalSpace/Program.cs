@@ -12,33 +12,34 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// µù¥U¤À§G¦¡¤º¦s§Ö¨ú
+// è¨»å†Šåˆ†ä½ˆå¼å…§å­˜å¿«å–
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
 
 builder.Services.AddSession(options =>
 {
     options.Cookie.Name = ".VocalSpace.Session";
-    options.Cookie.HttpOnly = true;         // ¥u¤¹³\¦øªA¾¹¦s¨ú Cookie¡A´£¤É¦w¥ş©Ê
+    options.Cookie.HttpOnly = true;         // åªå…è¨±ä¼ºæœå™¨å­˜å– Cookieï¼Œæå‡å®‰å…¨æ€§
     options.IdleTimeout = TimeSpan.FromMinutes(30);
 });
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
-// µù¥U SelectionService  //µù¥U¤¶­±­n ¶¶«Kµù¥U¹ê§@Ãş§O
+// è¨»å†Š SelectionService  //è¨»å†Šä»‹é¢è¦ é †ä¾¿è¨»å†Šå¯¦ä½œé¡åˆ¥
 builder.Services.AddScoped<SelectionService>();
 builder.Services.AddSingleton<EmailService>();
 builder.Services.AddScoped<IPaginationService, PaginationService>();
-builder.Services.AddScoped<UserService>();      //µù¥UService¡A¥Î©ó³B²zUserªº¸ê®Æ(Follow¡ALikesong¡Afav_playlist)
-builder.Services.AddScoped<ModalDataService>(); //µù¥UService¡A¥Î©ó³B²zModalªº¸ê®Æ(¥[¤Jºq³æ¡A¤À¨Éºq¦±¡AÃÙ§U¡A¤À¨É¬¡°Ê)
-builder.Services.AddScoped<ActivityDataService>(); //µù¥UService¡A¥Î©ó³B²zActivityªº¸ê®Æ(ActivityList¡BActivityInfo¡BInterested)
-builder.Services.AddScoped<CommentDataService>(); //µù¥UService¡A¥Î©ó³B²z¯d¨¥ªO¸ê®Æ(¯d¨¥¿é¤J®Ø§PÂ_µn¤J¡A¯d¨¥¦Cªí)
-builder.Services.AddScoped<FileService>();//µù¥UService¡A¥Î©ó³B²zÀÉ®×¤W¶Ç(ªí³æ´£¥æ©Ò»İÀÉ®×)
+builder.Services.AddScoped<UserService>();      //è¨»å†ŠServiceï¼Œç”¨æ–¼è™•ç†Userçš„è³‡æ–™(Followï¼ŒLikesongï¼Œfav_playlist)
+builder.Services.AddScoped<ModalDataService>(); //è¨»å†ŠServiceï¼Œç”¨æ–¼è™•ç†Modalçš„è³‡æ–™(åŠ å…¥æ­Œå–®ï¼Œåˆ†äº«æ­Œæ›²ï¼Œè´ŠåŠ©ï¼Œåˆ†äº«æ´»å‹•)
+builder.Services.AddScoped<ActivityDataService>(); //è¨»å†ŠServiceï¼Œç”¨æ–¼è™•ç†Activityçš„è³‡æ–™(ActivityListã€ActivityInfoã€Interested)
+builder.Services.AddScoped<CommentDataService>(); //è¨»å†ŠServiceï¼Œç”¨æ–¼è™•ç†ç•™è¨€æ¿è³‡æ–™(ç•™è¨€è¼¸å…¥æ¡†åˆ¤æ–·ç™»å…¥ï¼Œç•™è¨€åˆ—è¡¨)
+builder.Services.AddScoped<FileService>();//è¨»å†ŠServiceï¼Œç”¨æ–¼è™•ç†æª”æ¡ˆä¸Šå‚³(è¡¨å–®æäº¤æ‰€éœ€æª”æ¡ˆ)
 
 builder.Services.AddControllersWithViews(options =>
 {
-    options.Filters.Add<GetSessionData>();     //Filter¥Î³~: ¦b°õ¦æAction¤§«e©Î¤§«á°õ¦æ¬Y¨Çµ{¦¡½X¡A³oÃä§Ú¥Î¨Ó±aViewDataªº¸ê®Æ
+    options.Filters.Add<GetSessionData>();     //Filterç”¨é€”: åœ¨åŸ·è¡ŒActionä¹‹å‰æˆ–ä¹‹å¾ŒåŸ·è¡ŒæŸäº›ç¨‹å¼ç¢¼ï¼Œé€™é‚Šæˆ‘ç”¨ä¾†å¸¶ViewDataçš„è³‡æ–™
 });
 
 
@@ -53,27 +54,27 @@ builder.Services.AddDbContext<VocalSpaceDbContext>(options =>
 });
 
 
-// ±q User Secrets ©Î appsettings.json ¤¤Åª¨ú Google ªº Client ID ©M Client Secret
+// å¾ User Secrets æˆ– appsettings.json ä¸­è®€å– Google çš„ Client ID å’Œ Client Secret
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 })
-.AddCookie() // Cookie ÅçÃÒ
+.AddCookie() // Cookie é©—è­‰
 .AddGoogle(options =>
 {
-    // ¨Ï¥Î Google µù¥Uªº Client ID ©M Client Secret
+    // ä½¿ç”¨ Google è¨»å†Šçš„ Client ID å’Œ Client Secret
     options.ClientId = builder.Configuration["Authentication:Google:ClientId"]!;
     options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
     options.Scope.Add("email");
-    options.SaveTokens = true; // «O¦s tokens¡A¥H«K«áÄò¨Ï¥Î
+    options.SaveTokens = true; // ä¿å­˜ tokensï¼Œä»¥ä¾¿å¾ŒçºŒä½¿ç”¨
 })
 .AddFacebook(options =>
 {
-    options.AppId = builder.Configuration["Authentication:Facebook:AppId"];
-    options.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"];
+    options.AppId = builder.Configuration["Authentication:Facebook:AppId"]!;
+    options.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"]!;
     options.AccessDeniedPath = "/AccessDeniedPathInfo";
-    options.Scope.Add("email");  // ¨ú±o¨Ï¥ÎªÌ Email
-    options.Fields.Add("email"); // ½T«O¥i¥HÀò¨ú Email ¸ê°T
+    options.Scope.Add("email");  // å–å¾—ä½¿ç”¨è€… Email
+    options.Fields.Add("email"); // ç¢ºä¿å¯ä»¥ç²å– Email è³‡è¨Š
     options.SaveTokens = true;
 });
 

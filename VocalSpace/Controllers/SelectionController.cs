@@ -16,9 +16,11 @@ namespace VocalSpace.Controllers
         /// </summary>
         /// <param name="selectionService"></param>
         private readonly SelectionService _selectionService;
-        public SelectionController(SelectionService selectionService)
+        private readonly EmailService _emailService;
+        public SelectionController(SelectionService selectionService, EmailService emailService)
         {
-             _selectionService = selectionService;
+            _selectionService = selectionService;
+            _emailService = emailService;
         }
 
 
@@ -164,8 +166,7 @@ namespace VocalSpace.Controllers
                        "感謝您的提交！";
 
             // 發送通知郵件
-            EmailService emailService = new();
-            var mailState = await emailService.SendNotificationAsync(request.Email, subject, body);
+            var mailState = await _emailService.SendNotificationAsync(request.Email, subject, body);
             if(!mailState)
             {
                 return Json(new { success = false, message = "寄送email失敗" });
