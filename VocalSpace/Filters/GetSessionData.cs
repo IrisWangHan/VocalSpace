@@ -28,6 +28,9 @@ namespace VocalSpace.Filters
             controller.ViewData["uid"] = userId;
             controller.ViewData["acc"] = account;
             controller.ViewData["login"] = isLogin;
+
+            // 將 userId 存入 HttpContext.Items
+            httpContext.Items["UserId"] = userId;
         }
 
 
