@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using VocalSpace.Models;
 using VocalSpace.Models.ViewModel.Account;
 using VocalSpace.Models.ViewModel.Global;
@@ -165,6 +166,29 @@ namespace VocalSpace.Services
             {
                 Console.WriteLine($"UpdateUserDataAsync 執行時發生錯誤: {ex.Message}");
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// 取得使用者的email
+        /// </summary>
+        public async Task<UserSettingViewModel?> GetUserEmailAsync(long? currentUserId) 
+        {
+            try 
+            {
+                var email = await _context.UsersInfos
+                    .Where(user => user.UserId == currentUserId)
+                    .Select(user => new UserSettingViewModel
+                    {
+                        Email = user.Email
+                    })
+                    .FirstOrDefaultAsync();
+                return email;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"GetUserEmailAsync 執行時發生錯誤: {ex.Message}");
+                return null;
             }
         }
 

@@ -444,14 +444,75 @@ namespace VocalSpace.Controllers
 
             return RedirectToAction("imageSetting");
         }
-        [SessionToLogin]
-
-
-        public IActionResult changeEmail()
-        {
-            return View();
-        }
         
+
+        [SessionToLogin]
+        public async Task<IActionResult> changeEmail()
+        { 
+            // 取得使用者ID
+            long? userId = HttpContext.Session.GetInt32("UserId");
+            //  回傳使用者的 舊email
+            var email = await _userService.GetUserEmailAsync(userId);
+
+            //  還沒有更改信箱 "null"
+            if ( TempData["success"] == null) 
+            {
+                TempData["success"] = "null";
+            }
+            
+            return View(email);
+        }
+        //  接收 changeEmail 表單資料
+        [HttpPost]
+        public async Task<IActionResult> ChangeEmailPost(string NewEmail)
+        {
+            // 取得使用者ID
+            long? userId = HttpContext.Session.GetInt32("UserId");
+            
+            //  更新使用者的 email
+
+            string token = GenerateResetToken(NewEmail);
+            string resetLink = $"https://localhost:7145/Accounts/ChangeEmailConfirm?token={token}";
+            Console.WriteLine("token: " + token);
+            var sentSuccess = await _emailService.SendChangeEmailAsync(NewEmail, resetLink);
+            Console.WriteLine("是否寄出成功:" + sentSuccess);
+            
+            if (!sentSuccess)
+            {
+                return StatusCode(500, new { message = "寄信失敗，請稍後再試。" });
+            }
+            return Ok( new { sentSuccess = true , message = "請查收 Email 來更改信箱" });
+            
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ChangeEmailConfirm(string token)
+        {
+            // 取得使用者ID
+            long? userId = HttpContext.Session.GetInt32("UserId");
+
+            string email = ValidateResetToken(token); // 解析 & 驗證 token
+            //  驗證失敗
+            if (email == null)
+            {
+                TempData["success"] = "false";
+                TempData["message"] = "更改信箱連結已過期，請重新再試";
+                return RedirectToAction("changeEmail");
+            }
+            var user = await _context.Users.Include(user => user.UsersInfo).FirstOrDefaultAsync(user => user.UserId  == userId);
+            if (user == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            // 更新信箱
+            user.UsersInfo!.Email = email;
+            await _context.SaveChangesAsync();
+            
+            TempData["success"] = "true";
+            TempData["message"] = "信箱已成功更改";
+            return RedirectToAction("changeEmail");
+        }
+
         [SessionToLogin]
         public async Task<IActionResult> Income()
         {
