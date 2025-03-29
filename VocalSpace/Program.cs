@@ -46,11 +46,10 @@ builder.Services.AddScoped<FileService>();//���UService�A�Ω�B�z�
 
 builder.Services.AddControllersWithViews(options =>
 {
-    options.Filters.Add<GetSessionData>();     //Filter�γ~: �b����Action���e�Τ������Y�ǵ{���X�A�o��ڥΨӱaViewData�����
+    options.Filters.Add<GetSessionData>();     //Filter用途: 在執行Action之前或之後執行某些程式碼，這邊我用來帶ViewData的資料
+    options.Filters.Add<UpdateDbContextFilter>(); //Filter用途: 將目前登入ID傳至DBcontext，確保全局篩選器運作。
 });
 
-// 註冊 IUserContext 及其實作類 UserContext
-builder.Services.AddScoped<IUserContext, UserContext>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<DonateService>();
 builder.Services.AddScoped<SearchExploreService>();
@@ -112,9 +111,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseSession();
 app.UseAuthorization();
 
-app.UseSession();
 
 app.MapControllerRoute(
     name: "default",
