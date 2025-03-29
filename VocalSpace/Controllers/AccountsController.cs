@@ -82,6 +82,7 @@ namespace VocalSpace.Controllers
 
                 return RedirectToAction("Index", "Home");
             }
+            TempData["loginFailMsg"] = "登入失敗，請輸入正確的帳號與密碼";
             return View();
         }
         public IActionResult GoogleLogin()
