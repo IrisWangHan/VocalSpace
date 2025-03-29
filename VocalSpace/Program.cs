@@ -9,6 +9,9 @@ using VocalSpace.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
@@ -21,7 +24,11 @@ builder.Services.AddSession(options =>
     options.Cookie.Name = ".VocalSpace.Session";
     options.Cookie.HttpOnly = true;         // �u���\���A���s�� Cookie�A���ɦw����
     options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.IsEssential = true;  // 使 Session 成為必要的
 });
+
+// 註冊 IHttpContextAccessor 以便可以在服務中使用
+builder.Services.AddHttpContextAccessor();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -42,7 +49,8 @@ builder.Services.AddControllersWithViews(options =>
     options.Filters.Add<GetSessionData>();     //Filter�γ~: �b����Action���e�Τ������Y�ǵ{���X�A�o��ڥΨӱaViewData�����
 });
 
-
+// 註冊 IUserContext 及其實作類 UserContext
+builder.Services.AddScoped<IUserContext, UserContext>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<DonateService>();
 builder.Services.AddScoped<SearchExploreService>();

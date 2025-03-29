@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using VocalSpace.Services;
 
 namespace VocalSpace.Models;
 
 public partial class VocalSpaceDbContext : DbContext
 {
-    public VocalSpaceDbContext(DbContextOptions<VocalSpaceDbContext> options)
+    private readonly IUserContext _userContext;
+    public VocalSpaceDbContext(DbContextOptions<VocalSpaceDbContext> options, IUserContext userContext)
         : base(options)
     {
+        _userContext = userContext;
     }
 
     public virtual DbSet<Activity> Activities { get; set; }
@@ -276,9 +280,11 @@ public partial class VocalSpaceDbContext : DbContext
 
         modelBuilder.Entity<PlayList>(entity =>
         {
-            
+
             // 設定全局過濾器，只選擇 IsPublic 為 true 的播放清單，除非當前使用者是歌單擁有者
-            //modelBuilder.Entity<PlayList>().HasQueryFilter(p => p.IsPublic || p.UserId == CurrentUserId);
+            var userId = _userContext.UserId ?? 0;            
+
+            modelBuilder.Entity<PlayList>().HasQueryFilter(p => p.IsPublic || p.UserId == userId);
 
             entity.HasKey(e => e.PlayListId).HasName("PK__PlayList__38709FBB8F33B645");
 

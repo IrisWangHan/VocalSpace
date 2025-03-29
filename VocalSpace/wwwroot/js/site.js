@@ -198,7 +198,22 @@ $(document).on("click", ".btn-vote-to-selectionSong", function () {
 //歌曲播放功能(尚未開發，僅顯示提示訊息)
 $(document).on("click", ".btn-play", function () {
     let songName = $(this).data("songname");  // 取得歌曲名稱
-    alert(`現正播放：${songName}`);
+    alert(`現正播放：${songName}`);    
+    let songId = $(this).data("songid");    
+    $.ajax({
+        url: `/Song/AddToPlayHistory/${songId}`,
+        type: "POST",        
+        success: function (response) {
+            if (response.success) {
+                console.log('播放列表更新成功');
+            } else {
+                console.log('播放列表更新失敗');
+            }
+        },
+        error: function (error) {
+            console.error('操作失敗');
+        }
+    });
 });
 
 function InitPartialView(data) {
