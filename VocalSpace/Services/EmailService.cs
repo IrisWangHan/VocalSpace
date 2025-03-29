@@ -118,4 +118,41 @@ public class EmailService
         }
 
     }
+    //  寄送更改信箱連結
+    public async Task<bool> SendChangeEmailAsync(string NewEmail, string resetLink)
+    {
+        try
+        {
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress("聲維宇宙", _emailSettings.SenderEmail));
+            message.To.Add(new MailboxAddress("", NewEmail));
+            message.Subject = "更改信箱通知";
+            message.Body = new TextPart("html")
+            {
+                Text = $@"
+                    <p>親愛的用戶，</p>
+                    <p>我們收到您更改信箱的請求。</p>
+                    <p>請點擊以下連結來更改您的信箱：</p>
+                    <p><a href='{resetLink}' style='color: blue;'>更改信箱</a></p>
+                    <p>如果您沒有請求更改信箱，請忽略此郵件。</p>
+                    <p>此連結將在 3 分鐘後失效。</p>
+                    <br>
+                    <p>VocalSpace 團隊敬上</p>
+                "
+            };
+            using (var client = new SmtpClient())
+            {
+                await client.ConnectAsync(_emailSettings.SmtpServer, _emailSettings.SmtpPort, SecureSocketOptions.StartTls);
+                await client.AuthenticateAsync(_emailSettings.SenderEmail, _emailSettings.SenderPassword);
+                await client.SendAsync(message);
+                await client.DisconnectAsync(true);
+            }
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"更改信箱寄信失敗: {ex.Message}");
+            return false;
+        }
+    }
 }
