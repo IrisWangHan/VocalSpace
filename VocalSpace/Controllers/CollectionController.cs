@@ -52,7 +52,7 @@ namespace VocalSpace.Controllers
 
         }
         [SessionToLogin]
-        [HttpGet("/Collection/mylist/{id}")]
+        [HttpGet("/Collection/ list/{id}")]
         public async Task<IActionResult> mylist(long id)
         {
             long? currentUserId = HttpContext.Session.GetInt32("UserId");
