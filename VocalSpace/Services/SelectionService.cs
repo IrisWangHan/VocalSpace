@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Data.Common;
 using VocalSpace.Models;
 using VocalSpace.Models.ViewModel.Selection;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using static VocalSpace.Controllers.SelectionController;
 
 
@@ -108,10 +109,20 @@ namespace VocalSpace.Services
         /// <param name="id">徵選活動ID</param>
         /// <param name="currentPage">點選的頁面</param>
         /// <returns></returns>
-        public async Task<SelectionListViewModel?> GetWorks(int? id, long? UserID , int currentPage = 1)
+        public async Task<SelectionListViewModel?> GetWorks(int? id, long? UserID, int currentPage = 1)
         {
             try
             {
+                //取得活動資料
+                var selectionData = await _context.Selections
+                    .FromSqlRaw(@" SELECT Title, SelectionCoverPath, StartDate, EndDate,Visible,SelectionID,VotingStartDate,VotingEndDate
+                                    FROM Selection
+                                   WHERE SelectionID = @SelectionID 
+                                   AND Visible=1  ", new SqlParameter("@SelectionID", id))
+                    .Select(u => new { u.Title, u.StartDate, u.EndDate, u.SelectionCoverPath, u.SelectionId, u.VotingStartDate, u.VotingEndDate })  // 使用匿名類型選擇需要的欄位
+                    .FirstOrDefaultAsync();
+
+
                 //每頁顯示筆數
                 int pageSize = 10;
                 var query = from C in _context.Selections  // Selections 是主資料表
@@ -138,9 +149,9 @@ namespace VocalSpace.Services
                                 EndDate = C != null ? C.EndDate : (DateTime?)null,
                                 VotingStartDate = C != null ? C.VotingStartDate : (DateTime?)null,
                                 VotingEndDate = C != null ? C.VotingEndDate : (DateTime?)null,
-                                Title = C != null ? C.Title : "" , // Handle null by providing fallbacks
-                                LikeSongUserId =D!= null ? D.UserId :0,
-                                VoteUserId = E!= null ? E.UserId :0
+                                Title = C != null ? C.Title : "", // Handle null by providing fallbacks
+                                LikeSongUserId = D != null ? D.UserId : 0,
+                                VoteUserId = E != null ? E.UserId : 0
                             };
 
 
@@ -162,7 +173,7 @@ namespace VocalSpace.Services
                         {//'未登入
                             songsList.Add(new SelectionSongs
                             {
-                                SongId= item.SongID,
+                                SongId = item.SongID,
                                 SelectionDetailId = (long)item.SelectionDetailID,
                                 VoteCount = item.VoteCount,
                                 CoverPhotoPath = item.CoverPhotoPath,
@@ -190,7 +201,7 @@ namespace VocalSpace.Services
                                 IsVoted = item.VoteUserId == UserID ? true : false
                             });
                         }
-                       
+
                     }
                 }
 
@@ -210,18 +221,23 @@ namespace VocalSpace.Services
                 //        第 [起始頁數]           PaginationSongs.StartPageNumber
                 //        第 [結束頁數]           PaginationSongs.EndPageNumber
                 var PaginationSongs = _pagination.GetPaginationToList(songsListDistinct, currentPage, pageSize);
-
-                var SelectionList = new SelectionListViewModel
+                var SelectionList = new SelectionListViewModel();
+                // 檢查是否找到活動資料
+                if (selectionData != null)
                 {
-                    Title = queryList.FirstOrDefault()?.Title,
-                    StartDate = queryList.FirstOrDefault()?.StartDate,
-                    EndDate = queryList.FirstOrDefault()?.EndDate,
-                    JoinState = GetState(queryList.FirstOrDefault()?.StartDate, queryList.FirstOrDefault()?.EndDate),
-                    VoteState = GetState(queryList.FirstOrDefault()?.VotingStartDate, queryList.FirstOrDefault()?.VotingEndDate),
-                    SelectionId = id.Value,
-                    Songs = PaginationSongs.DataList,
-                    PaginationCount = PaginationSongs.PaginationCount
-                };
+
+                    SelectionList = new SelectionListViewModel
+                    {
+                        Title = selectionData.Title,
+                        StartDate = selectionData.StartDate,
+                        EndDate = selectionData.EndDate,
+                        JoinState = GetState(selectionData.VotingStartDate, selectionData.VotingEndDate),
+                        VoteState = GetState(selectionData.StartDate, selectionData.EndDate),
+                        SelectionId = id!.Value,
+                        Songs = PaginationSongs.DataList,
+                        PaginationCount = PaginationSongs.PaginationCount
+                    };
+                }
 
 
                 return SelectionList;
@@ -338,7 +354,7 @@ namespace VocalSpace.Services
                     .AnyAsync(sd => sd.Selection.SelectionId == id && sd.Song.Artist == userData.UserId);
 
                 List<SelectionSongs> songs;
-                List<SelectionSongs> applySongs = new List<SelectionSongs>(); 
+                List<SelectionSongs> applySongs = new List<SelectionSongs>();
 
                 if (hasJoined)
                 {
@@ -363,9 +379,9 @@ namespace VocalSpace.Services
                         })
                         .ToListAsync();
 
-                     applySongs = applySongs
-                    .Where(song => song.SelectionDetailId != 0)
-                    .ToList();
+                    applySongs = applySongs
+                   .Where(song => song.SelectionDetailId != 0)
+                   .ToList();
                 }
 
                 // 3️ 無論有無報名，查詢該用戶所有歌曲
@@ -412,8 +428,8 @@ namespace VocalSpace.Services
                         data.ApplyStatusText = "報名失敗";
                         break;
                 }
-               
-                
+
+
                 return data;
             }
             catch (Exception ex)
@@ -435,9 +451,9 @@ namespace VocalSpace.Services
                 var sd = new SelectionDetail
                 {
                     SelectionId = data.SelectionId,
-                    SongId = songsId,  
+                    SongId = songsId,
                     VoteCount = 0,
-                    CreateTime = DateTime.Now, 
+                    CreateTime = DateTime.Now,
                     ReviewStatus = 0
                 };
 
@@ -481,7 +497,7 @@ namespace VocalSpace.Services
                     _context.UserVoteds.Remove(songVote);
                     selectionSong.IsVoted = false;
                     // 確保 VoteCount 不會小於 0
-                     newVoteCount = Math.Max(0, song.VoteCount - 1);
+                    newVoteCount = Math.Max(0, song.VoteCount - 1);
                     await _context.Database.ExecuteSqlRawAsync("UPDATE SelectionDetail SET VoteCount = {0} WHERE SelectionDetailID = {1}", newVoteCount, selectionDetailId);
                 }
                 else
@@ -494,7 +510,7 @@ namespace VocalSpace.Services
                     });
                     selectionSong.IsVoted = true;
                     // 增加 VoteCount
-                     newVoteCount = song.VoteCount + 1;
+                    newVoteCount = song.VoteCount + 1;
                     await _context.Database.ExecuteSqlRawAsync("UPDATE SelectionDetail SET VoteCount = {0} WHERE SelectionDetailID = {1}", newVoteCount, selectionDetailId);
                 }
 

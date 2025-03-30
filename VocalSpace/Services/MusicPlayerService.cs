@@ -37,10 +37,10 @@ namespace VocalSpace.Services
                     PlayListId = 0,
                     PlayListName = "",
                     SongId = 0,
-                    SongName = "Morning",
-                    ArtistName = "Nonody",
+                    SongName = "目前尚未撥放",
+                    ArtistName = "",
                     CoverPhotoPath = "/image/Song/default.jpg",
-                    SongPath = "/audio/default.mp3",
+                    SongPath = "",
                 },
             };
 

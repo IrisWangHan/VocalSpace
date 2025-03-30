@@ -311,7 +311,7 @@
 								data: { playListId: playListId, songId: songId },
 								success: function (data) {
 									if (data) {
-						
+
 										InitPartialView(data);
 										localStorage.setItem("currentTime", 0);
 									}
@@ -426,10 +426,12 @@
 							// 1. 切換主題 (利用 data-theme 屬性)
 							var currentTheme = $("html").attr("data-theme");
 							if (currentTheme === "dark") {
-								 theme = localStorage.setItem("theme","light");
+								 localStorage.setItem("theme","light");
+								 theme = "light";
 							  $("html").attr("data-theme", "light");
 							} else {
-								theme = localStorage.setItem("theme","dark");
+								localStorage.setItem("theme","dark")
+								theme = "dark";
 							  $("html").attr("data-theme", "dark");
 							}
 
@@ -444,6 +446,8 @@
 												$(this).css("opacity", 1);  // 動畫結束後，恢復不透明
 										});
 										setTimeout(function() {
+											console.log("moveRight");
+											console.log(theme);
 									$(".header__icon-mode-span").text(theme);
 								}, 150);
 							} else {
@@ -459,6 +463,7 @@
 									});
 
 								setTimeout(function() {
+									console.log(theme);
 									$(".header__icon-mode-span").text(theme);
 								}, 150);
 							}
