@@ -210,6 +210,19 @@ namespace VocalSpace.Controllers
                 newSong.CoverPhotoPath = coverImagePath;
 
                 await _context.SaveChangesAsync(); // 第二次存，更新檔案路徑
+                
+                // 新增 SongRank 記錄
+                var newSongRank = new SongRank
+                {
+                    SongId = newSong.SongId, // 使用剛剛儲存的歌曲 ID
+                    CurrentRank = 0,
+                    PreRank = 0,
+                    RankPeriod = DateTime.Now
+                };
+
+                _context.SongRanks.Add(newSongRank);
+                await _context.SaveChangesAsync(); // 儲存排行資料
+                Console.WriteLine("SongRank寫入成功...");
 
                 return Ok(new { message = "歌曲上傳成功", songId = newSong.SongId });
             }
