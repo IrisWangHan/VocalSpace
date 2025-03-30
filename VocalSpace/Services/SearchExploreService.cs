@@ -8,17 +8,18 @@ namespace VocalSpace.Services
     public class SearchExploreService
     {
         private readonly VocalSpaceDbContext _context;
+        private readonly UserService _userService;
         //  ExploreResult : 歌曲資訊 (歌名，歌手名，圖，喜歡數)
         private static List<SongInfoDTO>? ExploreResult;
-        public SearchExploreService(VocalSpaceDbContext context)
+        public SearchExploreService(VocalSpaceDbContext context, UserService userService)
         {
             _context = context;
+            _userService = userService;
         }
 
         //  搜尋歌曲
         public async Task<List<SongInfoDTO>> LINQsong(string q)
         {
-
             //  將資料透過DTO物件傳遞到前端
             var Songs = _context.Songs.Join(
                     _context.Users,
@@ -33,16 +34,31 @@ namespace VocalSpace.Services
             return await Songs.ToListAsync();
         }
 
-        public async Task<List<ArtistDTO>> LINQartist(string q)
+        public async Task<List<ArtistDTO>> LINQartist(string q, long? userid)
         {
             var Artists = from users in _context.Users
                           join infos in _context.UsersInfos on users.UserId equals infos.UserId
                           where users.UserName!.Contains(q!)
-                          select new ArtistDTO { AvatarPath = infos.AvatarPath, UserName = users.UserName };
+                          select new ArtistDTO { UserId = users.UserId, AvatarPath = infos.AvatarPath, UserName = users.UserName };
             //  1.先搜尋歌手名稱完全符合關鍵字
             //  2.有包含關鍵字的歌手
             Artists = Artists.OrderByDescending(data => data.UserName == q).ThenByDescending(data => data.UserName!.Contains(q!));
-            return await Artists.ToListAsync();
+
+            var result = await Artists.ToListAsync();
+
+            //  使用者未登入
+            if (userid == null)
+            {
+                return result;
+            }
+
+            //  使用者已登入，檢查是否追蹤 artist
+            foreach (var artist in result)
+            {
+                //  判斷是否追蹤，true:已追蹤，false:未追蹤
+                artist.isFollowing = await _userService.IsFollowingAsync(userid.Value, artist.UserId);
+            }
+            return result;
         }
 
         public async Task<List<PlaylistDTO>> LINQplaylist(string q)

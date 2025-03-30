@@ -13,8 +13,6 @@
         public string? Password { get; set; }
 
         public string? Email { get; set; }
-        //  還沒有更改信箱 "null"
-        public string ChangeEmailSuccess { get; set; } = "null";
 
         public int totalSpent { get; set; }
         public int totalIncome { get; set; }

@@ -28,6 +28,8 @@ namespace VocalSpace.Controllers
         [HttpGet]
         public async Task<IActionResult> searchAll()
         {
+            // 取得使用者Id
+            long? userId = HttpContext.Session.GetInt32("UserId");
             q = Request.Query["q"];
             string? type = Request.Query["type"];
             //  搜尋關鍵字q 傳到前端 
@@ -35,7 +37,7 @@ namespace VocalSpace.Controllers
             
             AllResult!.Songs = await _SearchExploreService.LINQsong(q!);
 
-            AllResult.Artists = await _SearchExploreService.LINQartist(q!);
+            AllResult.Artists = await _SearchExploreService.LINQartist(q!, userId);
 
             AllResult.Playlists = await _SearchExploreService.LINQplaylist(q!);
 
@@ -50,6 +52,8 @@ namespace VocalSpace.Controllers
         [HttpGet]
         public async Task<IActionResult> SearchType(string type)
         {
+            // 取得使用者Id
+            long? userId = HttpContext.Session.GetInt32("UserId");
             switch (type) 
             {
                 case "Song":
@@ -59,7 +63,7 @@ namespace VocalSpace.Controllers
                     AllResult!.Playlists = await _SearchExploreService.LINQplaylist(q!);
                     return PartialView("_partialViewSonglist", AllResult.Playlists);
                 case "Artist":  
-                    AllResult!.Artists = await _SearchExploreService.LINQartist(q!);
+                    AllResult!.Artists = await _SearchExploreService.LINQartist(q!, userId);
                     return PartialView("_partialViewArtist", AllResult.Artists);
                 default:
                     goto case "Song";
@@ -86,22 +90,5 @@ namespace VocalSpace.Controllers
             return View();
         }
 
-        //[HttpGet]
-        //public IActionResult loadmore()
-        //{
-        //    switch (Request.Query["type"])
-        //    {
-        //        case "song":
-        //            return PartialView("_partialViewSong");
-        //        case "songlist":
-        //            return PartialView("_partialViewSonglist");
-        //        case "artist":
-        //            return PartialView("_partialViewArtist");
-        //        default:
-        //            return PartialView("_partialViewSong");
-        //    }
-        //}
-
-        
         }
 }

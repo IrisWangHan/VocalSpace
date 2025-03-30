@@ -8,14 +8,17 @@
 @for (int k = 0; k < Model.Count; k++){
     <div class="ranking-item">
         <!-- 圖片改為歌手大頭貼 -->
-        <img src=@Model[k].AvatarPath class="artist-cover-block" alt="artist photo">
-
+        <a href="/Personal/mymusic/@Model[k].UserId">
+            <img src=@Model[k].AvatarPath class="artist-cover-block" alt="artist photo">
+        </a>
         <!-- info 區塊：只放「歌手名字」，用原本 .song 樣式即可 -->
         <div class="info">
-            <p class="artist-name">@Model[k].UserName</p>
+            <a href="/Personal/mymusic/@Model[k].UserId">
+                <p class="artist-name">@Model[k].UserName</p>
+			</a>
         </div>
         <!-- 只保留最右邊的一個按鈕，初始文字為「追蹤」，背景為紅色 -->
-        <button class="btn-follow" onclick="">追蹤</button>
+        <button class="btn-follow" data-userid="@Model[k].UserId" onclick="">@(Model[k].isFollowing ? "已追蹤" : "追蹤")</button>
     </div>
 }
 

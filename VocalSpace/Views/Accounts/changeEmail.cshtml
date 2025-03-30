@@ -61,7 +61,9 @@
 			var NewEmail2 = $("#NewEmail2").val();
             if ( NewEmail1 !== NewEmail2 ) {
 				alert("兩次輸入的Email不一致");
+                return;
 			}
+			
             $.ajax({
 				type: "POST",
 				url: "/Accounts/ChangeEmailPost",
