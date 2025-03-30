@@ -423,3 +423,30 @@ $(document).on("click", ".btn-add-to-Likeplaylist", function () {
         }
     });
 });
+
+
+$(".btn-play-playlist").on("click", function () {
+    var playListId = $(this).attr("data-playListId");
+    var songId = $(this).attr("data-songId");
+
+    if (!playListId) {
+        console.error("playListId 無效！");
+        return;
+    }
+    $.ajax({
+        url: '/MusicPlayer/GetPlayListSong',
+        method: "GET",
+        data: { playListId: playListId, songId: songId },
+        success: function (data) {
+            if (data) {
+                //初始化音樂撥放器
+                InitPartialView(data);
+                var audioPlayer = document.getElementById("audioPlayer");
+                localStorage.setItem("currentTime", 0);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("AJAX Error:", error);
+        }
+    });
+});

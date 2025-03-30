@@ -25,7 +25,7 @@
 			color: rgb(255, 87, 87);
 		}
 
-	.random {
+	.btn-play-playlist {
 		border: 1px solid gray;
 		border-radius: 50%;
 		width: 50px;
@@ -108,10 +108,7 @@
 			{
 				<div id="realtime" class="ranking-list">
 					<div class="Randomplay">
-						<h3>曲目</h3>
-						<button class="btn btn-danger" onclick="RandomPlay()">
-							<i class="bi bi-shuffle"></i>隨機播放
-						</button>
+						<h3>曲目</h3>						
 					</div>
 					@{
 						foreach (var playlist in Model)

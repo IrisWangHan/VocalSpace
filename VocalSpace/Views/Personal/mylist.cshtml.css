@@ -203,7 +203,7 @@
     }
 
 .btnarea {
-    width:25%;
+    width:220px;
     display: flex;
     justify-content: space-between;
 }
