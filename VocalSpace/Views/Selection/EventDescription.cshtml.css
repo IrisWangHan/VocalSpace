@@ -64,8 +64,9 @@
 .content__header-title {
     /*width: 300px;*/
     height: 100%;
-    color: black;
+    /*color: black;*/
     flex: 1;
+    font-size: 20px;
 }
 
     .content__header-title h1 {
@@ -73,7 +74,7 @@
     }
 
     .content__header-title p {
-        padding-left: 2%;
+        /*padding-left: 2%;*/
     }
 
     .content__header-title a {
@@ -116,6 +117,7 @@
     flex-direction: column;
     flex-grow: 1; /* 讓 div 撐開，推動按鈕到底部 */
     width: 100%;
+    color: var(--text-color);
 }
 
     .content__header-aside div h5 {
@@ -126,7 +128,7 @@
     .content__header-aside div p {
         /*padding: 10px 0px 0px 10px;*/
         font-weight: bold;
-        color: red;
+        color: gray;
         width: 100%;
     }
 
@@ -134,11 +136,13 @@
         height: 45px;
         /*margin-top: auto;*/
         width: auto;
+        font-size: 16px;
     }
 
 .content__menu-item a {
     display: inline-block;
     width: 100%;
+    color:white;
 }
 
 .content__menu--click {
@@ -194,7 +198,7 @@ ul .content__menu-item.showMenu_bgc {
     height: 100%;
     display: flex;
     flex-direction: column;
-    background-color: white;
+    /*background-color: white;*/
     padding: 70px 10%;
 }
 
@@ -220,8 +224,8 @@ ul .content__menu-item.showMenu_bgc {
     border-radius: 10px;
     background-color: #152153;
     color: black;
-    background-color: var(--bg-color);
-    color: var(--text-color);
+    background-color: var(--text-color);
+    color: var(--bg-color);
     padding: 60px 20px;
     position: relative;
 }
