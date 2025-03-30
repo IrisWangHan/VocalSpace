@@ -6,9 +6,10 @@
 		new { id = "002", name = "Lively Night", artist = "Artist 2" },
 		new { id = "003", name = "Dreamy Melody", artist = "Artist 3" }
 	};
+
 }
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" >
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -401,8 +402,10 @@
 					let searchHistory = localStorage.getItem("searchList");
 					let searchArray = searchHistory ? JSON.parse(searchHistory) : [];
 					let theme = localStorage.getItem("theme");
+					console.log("localStorage");
+					console.log(theme);
 					 $("html").attr("data-theme",theme);
-
+					MoveTheme(theme === "dark");
 
 					// 搜尋紀錄
 					$(".search-record").html("");
@@ -419,57 +422,57 @@
 					}
 
 
-				  //【當用戶點下mode icon,交換icon及文字 位置的效果】
-				  let moveRight = true; // 記錄方向
-					$(".header__icon-mode").on("click", function() {
+						  //【當用戶點下mode icon,交換icon及文字 位置的效果】
+		$(".header__icon-mode").on("click", function () {
+			// 1. 切換主題 (利用 data-theme 屬性)
+			var currentTheme = $("html").attr("data-theme");
+			if (currentTheme === "dark") {
+				localStorage.setItem("theme", "light");
+				theme = "light";
+				$("html").attr("data-theme", "light");
+			} else {
+				localStorage.setItem("theme", "dark");
+				theme = "dark";
+				$("html").attr("data-theme", "dark");
+			}
 
-							// 1. 切換主題 (利用 data-theme 屬性)
-							var currentTheme = $("html").attr("data-theme");
-							if (currentTheme === "dark") {
-								 localStorage.setItem("theme","light");
-								 theme = "light";
-							  $("html").attr("data-theme", "light");
-							} else {
-								localStorage.setItem("theme","dark")
-								theme = "dark";
-							  $("html").attr("data-theme", "dark");
-							}
+			MoveTheme(theme === "dark");
+		});
 
-							if (moveRight) {
-									$(".header__icon-mode-svg").animate(
-										{ left: "42px" }, 300);
+		function MoveTheme(isDarkTheme) {
+			if (isDarkTheme) {
+				$(".header__icon-mode-svg").animate(
+					{ left: "42px" }, 300);
 
-									$(".header__icon-mode-span").animate({
-											left: "10px",          // 移動元素
-											opacity: 0             // 改變透明度為 0（完全透明）
-										},150,function() {                 // 動畫結束後的回調函數
-												$(this).css("opacity", 1);  // 動畫結束後，恢復不透明
-										});
-										setTimeout(function() {
-											console.log("moveRight");
-											console.log(theme);
-									$(".header__icon-mode-span").text(theme);
-								}, 150);
-							} else {
-								$(".header__icon-mode-svg").animate({ left: "0px" }, 150);
-								$(".header__icon-mode-span").animate(
-									{
-										left: "28px",          // 移動元素
-										opacity: 0             // 改變透明度為 0（完全透明）
-									},
-									150,                        // 1秒（1000毫秒）動畫
-									function() {                 // 動畫結束後的回調函數
-										$(this).css("opacity", 1);  // 動畫結束後，恢復不透明
-									});
+				$(".header__icon-mode-span").animate({
+					left: "10px",          // 移動元素
+					opacity: 0             // 改變透明度為 0（完全透明）
+				}, 150, function () {                 // 動畫結束後的回調函數
+					$(this).css("opacity", 1);  // 動畫結束後，恢復不透明
+				});
+				setTimeout(function () {
+					console.log("moveRight");
+					console.log(theme);
+					$(".header__icon-mode-span").text("Dark");
+				}, 150);
+			} else {
+				$(".header__icon-mode-svg").animate({ left: "0px" }, 150);
+				$(".header__icon-mode-span").animate(
+					{
+						left: "28px",          // 移動元素
+						opacity: 0             // 改變透明度為 0（完全透明）
+					},
+					150,                        // 1秒（1000毫秒）動畫
+					function () {                 // 動畫結束後的回調函數
+						$(this).css("opacity", 1);  // 動畫結束後，恢復不透明
+					});
 
-								setTimeout(function() {
-									console.log(theme);
-									$(".header__icon-mode-span").text(theme);
-								}, 150);
-							}
-							moveRight = !moveRight; // 切換方向
-						});
-
+				setTimeout(function () {
+					console.log(theme);
+					$(".header__icon-mode-span").text("Light");
+				}, 150);
+			}
+		}
 
 						//【當滑鼠移到icon上,給予使用者時間移到清單】
 						let hideTimeout;
