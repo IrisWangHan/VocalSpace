@@ -12,14 +12,14 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// 註冊分佈式內存快取
+// ���U���G�����s�֨�
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
 
 builder.Services.AddSession(options =>
 {
     options.Cookie.Name = ".VocalSpace.Session";
-    options.Cookie.HttpOnly = true;         // 只允許伺服器存取 Cookie，提升安全性
+    options.Cookie.HttpOnly = true;         // �u���\���A���s�� Cookie�A���ɦw����
     options.IdleTimeout = TimeSpan.FromMinutes(30);
 });
 
@@ -27,25 +27,26 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
-// 註冊 SelectionService  //註冊介面要 順便註冊實作類別
+// ���U SelectionService  //���U�����n ���K���U��@���O
 builder.Services.AddScoped<SelectionService>();
 builder.Services.AddSingleton<EmailService>();
 builder.Services.AddScoped<IPaginationService, PaginationService>();
-builder.Services.AddScoped<UserService>();      //註冊Service，用於處理User的資料(Follow，Likesong，fav_playlist)
-builder.Services.AddScoped<ModalDataService>(); //註冊Service，用於處理Modal的資料(加入歌單，分享歌曲，贊助，分享活動)
-builder.Services.AddScoped<ActivityDataService>(); //註冊Service，用於處理Activity的資料(ActivityList、ActivityInfo、Interested)
-builder.Services.AddScoped<CommentDataService>(); //註冊Service，用於處理留言板資料(留言輸入框判斷登入，留言列表)
-builder.Services.AddScoped<FileService>();//註冊Service，用於處理檔案上傳(表單提交所需檔案)
+builder.Services.AddScoped<UserService>();      //���UService�A�Ω�B�zUser�����(Follow�ALikesong�Afav_playlist)
+builder.Services.AddScoped<ModalDataService>(); //���UService�A�Ω�B�zModal�����(�[�J�q��A���ɺq���A�٧U�A���ɬ���)
+builder.Services.AddScoped<ActivityDataService>(); //���UService�A�Ω�B�zActivity�����(ActivityList�BActivityInfo�BInterested)
+builder.Services.AddScoped<CommentDataService>(); //���UService�A�Ω�B�z�d���O���(�d����J�اP�_�n�J�A�d���C��)
+builder.Services.AddScoped<FileService>();//���UService�A�Ω�B�z�ɮפW��(��洣��һ��ɮ�)
 
 builder.Services.AddControllersWithViews(options =>
 {
-    options.Filters.Add<GetSessionData>();     //Filter用途: 在執行Action之前或之後執行某些程式碼，這邊我用來帶ViewData的資料
+    options.Filters.Add<GetSessionData>();     //Filter�γ~: �b����Action���e�Τ������Y�ǵ{���X�A�o��ڥΨӱaViewData�����
 });
 
 
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<DonateService>();
 builder.Services.AddScoped<SearchExploreService>();
+builder.Services.AddScoped<IMusicPlayerService, MusicPlayerService>();
 
 builder.Services.AddDbContext<VocalSpaceDbContext>(options =>
 {
@@ -54,27 +55,27 @@ builder.Services.AddDbContext<VocalSpaceDbContext>(options =>
 });
 
 
-// 從 User Secrets 或 appsettings.json 中讀取 Google 的 Client ID 和 Client Secret
+// �q User Secrets �� appsettings.json ��Ū�� Google �� Client ID �M Client Secret
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 })
-.AddCookie() // Cookie 驗證
+.AddCookie() // Cookie ����
 .AddGoogle(options =>
 {
-    // 使用 Google 註冊的 Client ID 和 Client Secret
+    // �ϥ� Google ���U�� Client ID �M Client Secret
     options.ClientId = builder.Configuration["Authentication:Google:ClientId"]!;
     options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
     options.Scope.Add("email");
-    options.SaveTokens = true; // 保存 tokens，以便後續使用
+    options.SaveTokens = true; // �O�s tokens�A�H�K����ϥ�
 })
 .AddFacebook(options =>
 {
     options.AppId = builder.Configuration["Authentication:Facebook:AppId"]!;
     options.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"]!;
     options.AccessDeniedPath = "/AccessDeniedPathInfo";
-    options.Scope.Add("email");  // 取得使用者 Email
-    options.Fields.Add("email"); // 確保可以獲取 Email 資訊
+    options.Scope.Add("email");  // ���o�ϥΪ� Email
+    options.Fields.Add("email"); // �T�O�i�H��� Email ��T
     options.SaveTokens = true;
 });
 
@@ -110,7 +111,7 @@ app.UseSession();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller}/{action}/{id?}",
-    defaults: new { controller = "Selection", action = "Index" }
+    defaults: new { controller = "Home", action = "Index" }
     );
 
 app.Run();

@@ -220,7 +220,7 @@
   【header__search-btn】查詢清單的清空button
 */
 .header__search-input, .header__search-btn {
-    border-radius:px;
+    border-radius:2px;
 }
 
 .header__search-input {
@@ -569,7 +569,7 @@ button.accept-policy {
 
 
 /*音樂撥放器 外框*/
-.music-player {
+/*.music-player {
     width: 160px;
     height: 35px;
     border-radius: 5px;
@@ -585,25 +585,25 @@ button.accept-policy {
     .music-player {
         background-color: transparent;
     }
-}
+}*/
 
 /*將所有icon都設置hover*/
-.bi {
+/*.bi {
     cursor: pointer;
 }
 
     .bi:active {
         transform: scale(0.9);
-    }
+    }*/
 
 
 /*音樂撥放器(展開/未展開視窗時:預設先隱藏暫停按鈕)*/
-.icon__stop-circle {
+/*.icon__stop-circle {
     display: none;
     transition: opacity 0.3s ease-in-out;
-}
+}*/
 /*音樂撥放器(展開/未展開視窗時:文字顯示區)*/
-.playlist__info {
+/*.playlist__info {
     margin: 0px 5px;
     line-height: 10px;
 }
@@ -619,18 +619,18 @@ button.accept-policy {
     }
 .music-player i{
     color:white;
-}
+}*/
 /*音樂撥放器(未展開視窗時)*/
-.music-player__for-lg {
+/*.music-player__for-lg {
     display: flex;
     justify-content: space-around;
     align-items: center;
     width: 100%;
-}
+}*/
 
 
 /*音樂撥放器(未展開視窗時:封面圖片)*/
-.music-player__img-cover {
+/*.music-player__img-cover {
     border-radius: 5px;
     box-shadow: -2px 2px #595757;
     width: 25px;
@@ -650,10 +650,10 @@ button.accept-policy {
         height: 55px;
         border-radius: 5px;
         background-image: url('/image/playerLogo.png');
-        background-size: cover; /* 讓圖片填滿 */
-        background-position: center; /* 讓圖片置中 */
-        background-repeat: no-repeat; /* 防止圖片重複 */
-        cursor:pointer;
+        background-size: cover;*/ /* 讓圖片填滿 */
+        /*background-position: center;*/ /* 讓圖片置中 */
+        /*background-repeat: no-repeat;*/ /* 防止圖片重複 */
+        /*cursor:pointer;
     }
         .music-player__for-md:hover{
             transform:scale(1.1);
@@ -661,10 +661,10 @@ button.accept-policy {
         .music-player__for-lg {
             display: none;
         }
-}
+}*/
 
 /*音樂撥放器(展開視窗時)*/
-.music-player__window {
+/*.music-player__window {
     width: 200px;
     height: 300px;
     bottom: calc( var(--footer-height) + 10px);
@@ -684,10 +684,10 @@ button.accept-policy {
         bottom: 50%;
         height: 300px;
     }
-}
+}*/
 
 /*音樂撥放器(展開視窗時的header)*/
-.window__header {
+/*.window__header {
     width: 100%;
     height: 20px;
     background-color: #2a2a2a;
@@ -697,43 +697,43 @@ button.accept-policy {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-}
+}*/
 /*音樂撥放器(展開視窗時的header功能:縮小視窗)*/
-.window__header-zoom-out {
+/*.window__header-zoom-out {
     width: 15px;
     height: 3px;
     background-color: rgba(240, 248, 255, 0.4);
     margin-right: 15px;
     border-radius: 2px;
     cursor:pointer;
-}
+}*/
 /*音樂撥放器(展開視窗時的區塊顯示:當前播放的音樂)*/
-.window__playlist-current {
+/*.window__playlist-current {
     width: 100%;
     padding: 10px 10px 0px 10px;
-}
+}*/
 
 /*音樂撥放器(展開視窗時的區塊顯示:音樂時長)*/
-#songTimeText {
+/*#songTimeText {
     margin-left: auto;
     margin-right:5px;
     font-size:10px;
     color:aliceblue;
-}
+}*/
 /*音樂撥放器(展開視窗時的icon控制區)*/
-.window__controls {
+/*.window__controls {
     width: 100%;
     height: 25px;
     padding: 0px 15px;
     display: flex;
     justify-content: space-around;
     align-items: center;
-    position: relative;
+    position: relative;*/
     /*margin-bottom: 20px;*/
-}
+/*}*/
 
 /*音樂撥放器(展開視窗時的icon控制區: 音樂撥放器進度條)*/
-.window__controls-range {
+/*.window__controls-range {
     position: absolute;
     bottom: -15px;
     left: 50%;
@@ -745,41 +745,41 @@ button.accept-policy {
     border-radius: 5px;
     outline: none;
     transition: width 0.2s ease; 
-}
+}*/
 /* 自訂滑動紐（Chrome、Edge、Safari） */
-.window__controls-range::-webkit-slider-thumb {
+/*.window__controls-range::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 10px; /* 圓形大小 */
-    height: 10px;
-    background: red; /* 滑動紐顏色 */
-    border-radius: 50%;
+    width: 10px;*/ /* 圓形大小 */
+    /*height: 10px;
+    background: red;*/ /* 滑動紐顏色 */
+    /*border-radius: 50%;
     cursor: pointer;
-    position: relative;
+    position: relative;*/
     /*top: 2px;*/ /* 調整滑動紐與軌道的距離 */
-}
+/*}*/
 
 /*音樂撥放器(開啟視窗時的撥放清單區: 文字描述-撥放清單名稱/icon)*/
-.window__playlist-descrition {
+/*.window__playlist-descrition {
     width: 90%;
-    height: 30px;
+    height: 30px;*/
     /*background-color: #212121;*/
-    border-radius: 5px;
+    /*border-radius: 5px;*/
     /*background-color: antiquewhite;*/
-    margin: 20px 10px 0px 10px;
+    /*margin: 20px 10px 0px 10px;
     display: flex;
     align-items: center;
     color: #808080;
-}
+}*/
 /*音樂撥放器(展開視窗時的區塊顯示:音樂時長)*/
-#songListText {
+/*#songListText {
     font-size: 10px;
 
 }
 .music-player__circle-list{
     margin-left:5px;
-}
+}*/
 /*音樂撥放器(開啟視窗時的撥放清單區)*/
-.window__playlist {
+/*.window__playlist {
     height: 120px;
     display: flex;
     justify-content: flex-start;
@@ -795,9 +795,9 @@ button.accept-policy {
     .window__playlist {
         height: 120px;
     }
-}
+}*/
 /*音樂撥放器(開啟視窗時的撥放清單區: scrollbar)*/
-.window__playlist::-webkit-scrollbar {
+/*.window__playlist::-webkit-scrollbar {
     height: 2px;
     width: 6px; 
 }
@@ -809,11 +809,11 @@ button.accept-policy {
 .window__playlist::-webkit-scrollbar-thumb {
     border-radius: 10px;
     background-color: #2196F3; 
-}
+}*/
 
 
 /*音樂撥放器(展開視窗時的撥放清單區: 內容區塊(封面圖 詳細資訊)*/
-.playlist__item {
+/*.playlist__item {
     width: 100%;
     display: flex;
     align-items: center;
@@ -821,23 +821,23 @@ button.accept-policy {
     padding: 5px 5px 0px 5px;
     font-size: 14px;
     cursor: pointer;
-}
+}*/
 
 /*音樂撥放器(展開視窗時的[下方撥放清單列表]區: 內容區塊(封面圖 詳細資訊)*/
-    .playlist__song-list:active {
+    /*.playlist__song-list:active {
         border-radius: 5px;
         background-color: #2a2a2a;
         transform:scale(0.9);
-    }
+    }*/
 
 
 /*音樂撥放器(展開視窗時的撥放清單區: 專輯封面圖)*/
-.playlist__img-cover {
+/*.playlist__img-cover {
     width: 35px;
     height: 35px;
     border-radius: 2px;
     margin-right: 10px;
-}
+}*/
 
 
 

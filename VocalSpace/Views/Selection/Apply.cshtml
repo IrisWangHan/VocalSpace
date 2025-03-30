@@ -355,9 +355,14 @@
 					processData: false,
 					success: function(res) {
 						alert(res.message);
+						console.log("AA1");
+						setTimeout(function() {
+							console.log("AA");
+							location.reload();
+						}, 2000); // 2秒後跳轉
 					},
 					error: function(err) {
-						alert(res.message);
+						alert(err.message);
 					}
 				});
 			});
