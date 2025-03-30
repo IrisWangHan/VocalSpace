@@ -318,7 +318,7 @@ namespace VocalSpace.Controllers
         }
         [SessionToLogin]
         [HttpPost]
-        public async Task<IActionResult> editlist(long id, PlayList model, IFormFile? CoverImage, bool IsPublic, string PlaylistDescription)
+        public async Task<IActionResult> editlist(long id, PlayList model, IFormFile? CoverImage, bool IsPublic, string? PlaylistDescription)
         {
             TempData["SuccessMessage"] = null;
             long? currentUserId = HttpContext.Session.GetInt32("UserId");
