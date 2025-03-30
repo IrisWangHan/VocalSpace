@@ -214,7 +214,7 @@
 					method: 'GET',
 					data: { playedDuration: currentTime }, // 傳遞播放時間
 					success: function (data) {
-							InitPartialView(data);
+							$('#musicPlayerContainer').html(data);
 						},
 						error: function (xhr, status, error) {
 							console.error("AJAX Error:", error);
