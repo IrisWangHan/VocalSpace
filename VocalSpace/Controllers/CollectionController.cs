@@ -97,8 +97,6 @@ namespace VocalSpace.Controllers
                         SongName = s.SongName,
                         UserName = s.ArtistNavigation.UserName!,
                         UserId = s.ArtistNavigation!.UserId,
-                        LikeId = s.LikeSongs.FirstOrDefault()!.LikeId,
-
                     }).ToListAsync();
                 return View(songdata.Any() ? songdata : null);
 

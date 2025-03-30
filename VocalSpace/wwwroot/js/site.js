@@ -197,30 +197,34 @@ $(document).on("click", ".btn-vote-to-selectionSong", function () {
 
 //歌曲播放功能(尚未開發，僅顯示提示訊息)
 $(document).on("click", ".btn-play", function () {
-    let songName = $(this).data("songname");  // 取得歌曲名稱
-    alert(`現正播放：${songName}`);    
-    let songId = $(this).data("songid");    
+    let songId = $(this).data("songid");
+    //檢查有取得id
+    if (!songId) {
+        console.error("songId 無效！");
+        return;
+    }
     $.ajax({
-        url: `/Song/AddToPlayHistory/${songId}`,
-        type: "POST",        
-        success: function (response) {
-            if (response.success) {
-                console.log('播放列表更新成功');
-            } else {
-                console.log('播放列表更新失敗');
+        url: '/MusicPlayer/GetSong',
+        method: "GET",
+        data: { songId: songId },
+        success: function (data) {
+            if (data) {
+                //初始化音樂撥放器
+                InitPartialView(data);
+                localStorage.setItem("currentTime", 0);
             }
         },
-        error: function (error) {
-            console.error('操作失敗');
+        error: function (xhr, status, error) {
+            console.error("AJAX Error:", error);
         }
     });
 });
 
-function InitPartialView(data) {
+function InitPartialView(data,continueFromLast = false) {
     // 時間軸計時器
     let songTimer;
     // 取得localStorage播放時間
-    var currentTime = localStorage.getItem("currentTime") || 0;
+    var currentTime = continueFromLast ? (localStorage.getItem("currentTime") || 0) : 0;
     console.log(typeof (data));
     $('#musicPlayerContainer').html(data);
     var audioPlayer = document.getElementById("audioPlayer");
