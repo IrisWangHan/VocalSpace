@@ -160,6 +160,7 @@
         function checkTitleAndGenre() {
             const songTitle = $('#songTitle');
             const songGenre = $('#songGenre');
+            const songDescription = $('#songDescription');
             if (!$('#fileInput').val()) {
                 alert('請先上傳音樂檔案！');
                 return false;
@@ -175,6 +176,9 @@
                     }
                 });
                 return false;
+            } else if (songTitle.val().length > 20) {
+                alert('歌曲名稱不能超過 20 個字！');
+                return false;
             }
 
             if (songGenre.val() === '0') {
@@ -187,6 +191,11 @@
                         return true;
                     }
                 });
+                return false;
+            }
+
+            if (songDescription.val().length > 200) {
+                alert('歌曲介紹不能超過 200 個字！');
                 return false;
             }
             return true;
