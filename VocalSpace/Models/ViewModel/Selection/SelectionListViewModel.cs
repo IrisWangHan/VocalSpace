@@ -41,6 +41,8 @@ namespace VocalSpace.Models.ViewModel.Selection
     }
     public class SelectionSongs
     {
+        public long OldSelectionDetailId { get; set; }
+        public int? OldVoteCount { get; set; }
         public long SelectionDetailId { get; set; }
         public long SongId { get; set; }
         public int? VoteCount { get; set; }

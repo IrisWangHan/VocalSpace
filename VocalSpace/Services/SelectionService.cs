@@ -478,18 +478,23 @@ namespace VocalSpace.Services
             SelectionSongs selectionSong = new();
             try
             {
+               
+                //找到該音樂作品的投票數
                 var song = await _context.SelectionDetails
                    .Where(s => s.SelectionDetailId == selectionDetailId)
-                   .Select(s => new { s.VoteCount })
+                   .Select(s => new { s.VoteCount,s.SelectionId })
                    .FirstOrDefaultAsync();
-                int newVoteCount = song.VoteCount;
+
                 if (song == null)
                 {
                     return null;
                 }
-
+                int newVoteCount = song.VoteCount;
+                int selectionId = (int)song.SelectionId;
+                //找到使用者是否有對該作品按讚
                 var songVote = await _context.UserVoteds
                     .FirstOrDefaultAsync(sd => sd.SelectionDetailId == selectionDetailId && sd.UserId == userid);
+
 
                 if (songVote != null)
                 {
@@ -502,6 +507,18 @@ namespace VocalSpace.Services
                 }
                 else
                 {
+                    //檢查是否有按讚該活動下其他作品
+                    var songedVote = await _context.UserVoteds
+                        .Join(_context.SelectionDetails, uv => uv.SelectionDetailId, sd => sd.SelectionDetailId, (uv, sd) => new { uv, sd })
+                        .FirstOrDefaultAsync(joined => joined.sd.SelectionId == selectionId && joined.uv.UserId == userid);
+                    if (songedVote!= null) { 
+                        _context.UserVoteds.Remove(songedVote.uv);
+                        var oldVoteCount = songedVote.sd.VoteCount - 1;
+                        await _context.Database.ExecuteSqlRawAsync("UPDATE SelectionDetail SET VoteCount = {0} WHERE SelectionDetailID = {1}", oldVoteCount, songedVote.sd.SelectionDetailId);
+                        selectionSong.OldSelectionDetailId = songedVote.sd.SelectionDetailId;
+                        selectionSong.OldVoteCount = oldVoteCount;
+                    }
+                    
                     // 沒有按讚 → 新增讚
                     _context.UserVoteds.Add(new UserVoted
                     {
