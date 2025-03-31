@@ -175,10 +175,14 @@ $(document).on("click", ".btn-vote-to-selectionSong", function () {
             if (res.success) {
                 if (res.message.isVoted) {
                     button.addClass("selected");
+                    if (res.message.oldSelectionDetailId!=null) {
+                        $(`.btn-vote-to-selectionSong[data-selectionDetailId="${res.message.oldSelectionDetailId}"]`).removeClass("selected");
+                    }
                 } else {
                     button.removeClass("selected");
                 }
                 $(`span[data-selectionDetailId="${selectionDetailId}"]`).text(res.message.voteCount);
+                $(`span[data-selectionDetailId="${res.message.oldSelectionDetailId}"]`).text(res.message.oldVoteCount);
             } else {
                 alert("投票失敗，請稍後再試！");
             }
