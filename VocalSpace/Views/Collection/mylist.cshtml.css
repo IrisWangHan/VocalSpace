@@ -92,10 +92,15 @@ img {
 .info {
     flex-grow: 1;
 }
-.btnarea {    
-    width:220px;
-    margin-right:10px;
+
+.btnarea {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px; /* 設定按鈕之間的間距 */
+    margin: 0 10px; /* 設定左右邊距 */
 }
+
 .btn-outline-secondary.book {
    
     border: 1px solid gray;

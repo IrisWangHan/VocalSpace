@@ -6,12 +6,12 @@
 @for (int k = 0; k < Model.Count; k++)
 {
     <div class="ranking-item">
-        <img src="@Model[k].CoverImagePath" class="cover-block" alt="song cover">
+        <a href="/Collection/listdetail/@Model[k].PlayListId"><img src="@Model[k].CoverImagePath" class="cover-block" alt="song cover"></a>
         <div class="info">
-            <p class="song">@Model[k].Name</p>
-            <p class="artist">1 首歌曲．@Model[k].UserName</p>
+            <a href="/Collection/listdetail/@Model[k].PlayListId"><p class="song">@Model[k].Name</p></a>
+            <p class="artist">@Model[k].SongCount 首歌曲．@Model[k].UserName</p> <!-- 顯示正確的歌曲數量 -->
         </div>
-		@await Component.InvokeAsync("PlayListButton", new { PlayListId = Model[k].PlayListId })
+        @await Component.InvokeAsync("PlayListButton", new { PlayListId = Model[k].PlayListId })
     </div>
 }
 

@@ -423,7 +423,12 @@ $(document).on("click", ".btn-add-to-Likeplaylist", function () {
             
         },
         error: function (xhr) {
-            alert(xhr.responseJSON?.message || "發生錯誤，請稍後再試！");
+            if (xhr.status === 401) {
+                alert(xhr.responseJSON?.message || "請先登入");
+                nologin();
+            } else {
+                alert(xhr.responseJSON?.message || "發生錯誤，請稍後再試！");
+            }
         }
     });
 });
@@ -432,7 +437,6 @@ $(document).on("click", ".btn-add-to-Likeplaylist", function () {
 $(".btn-play-playlist").on("click", function () {
     var playListId = $(this).attr("data-playListId");
     var songId = $(this).attr("data-songId");
-
     if (!playListId) {
         console.error("playListId 無效！");
         return;
@@ -454,3 +458,4 @@ $(".btn-play-playlist").on("click", function () {
         }
     });
 });
+

@@ -1,5 +1,12 @@
 ﻿ @model VocalSpace.Models.ViewModel.Global.PlayListButtonViewModel
 <div>
-    <button class="btn btn-outline-secondary book btn-add-to-Likeplaylist @(Model.isliked ? "selected" : "")" data-playlistid="@Model.PlayListId"><i class="bi bi-bookmark-check-fill"></i></button>
-    <button class="btn btn-outline-secondary btn-play-playlist" data-playListId="@Model.PlayListId" data-songId="@Model.SongId"><i class="bi bi-play"></i></button>
+    <button class="btn btn-outline-secondary book btn-add-to-Likeplaylist @(Model.isliked ? "selected" : "")" data-playlistid="@Model.PlayListId">
+        <i class="bi bi-bookmark-check-fill"></i>
+    </button>
+    @if (Model.SongCount > 0)
+    {
+        <button class="btn btn-outline-secondary btn-play-playlist" data-playListId="@Model.PlayListId" data-songId="@Model.SongId">
+            <i class="bi bi-play"></i>
+        </button>
+    }
 </div>

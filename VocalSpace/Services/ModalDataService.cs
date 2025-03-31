@@ -190,12 +190,14 @@ namespace VocalSpace.Services
                 {
                     p.PlayListId,
                     p.Name,
+                    SongCount = p.PlayListSongs.Count() // 統計播放清單中的歌曲數量
                 })
                 .FirstOrDefaultAsync();
             return new PlayListButtonViewModel
             {    
                 PlayListId = playListId,
                 Name = playlist!.Name,
+                SongCount = playlist.SongCount, // 設置 SongCount
                 //  isliked = true 代表已喜歡
                 isliked = (UserId.HasValue) ? await IsLikedPlayListAsync(UserId.Value, playListId) : false
             };        

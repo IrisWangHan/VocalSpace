@@ -45,27 +45,60 @@
 
 @section Scripts {
     <script>
-        $('.type-link').click(function(e){
-            e.preventDefault();
+        function bindEvents() {
+            $('.btn-play-playlist').off('click').on('click', function () {
+                var playListId = $(this).attr("data-playListId");
+                var songId = $(this).attr("data-songId");
 
-            // 參數放在 data: { } 會自動附加為 QueryString
-            $.ajax({
-                type:'GET',
-                url: `/search/Searchtype`,
-                data: { type : $(this).attr('id')},
-                success: function (response) {
-                    //  更新 #tab-content 內的歌曲
-                    $('#tab-content').html(response);
-                },
-                Error: function (err) {
-                    console.log('歌曲排序:'+err);
+                if (!playListId) {
+                    console.error("playListId 無效！");
+                    return;
                 }
-            })
-        })
+                $.ajax({
+                    url: '/MusicPlayer/GetPlayListSong',
+                    method: "GET",
+                    data: { playListId: playListId, songId: songId },
+                    success: function (data) {
+                        if (data) {
+                            //初始化音樂撥放器
+                            InitPartialView(data);
+                            var audioPlayer = document.getElementById("audioPlayer");
+                            localStorage.setItem("currentTime", 0);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("AJAX Error:", error);
+                    }
+                });
+            });
+        }
 
-		$('.activate').click(function(e){		
-			$('.activate').removeClass('active');
-			$(this).addClass('active');
-		})
+        $(document).ready(function () {
+            bindEvents();
+
+            $('.type-link').click(function (e) {
+                e.preventDefault();
+
+                // 參數放在 data: { } 會自動附加為 QueryString
+                $.ajax({
+                    type: 'GET',
+                    url: `/search/Searchtype`,
+                    data: { type: $(this).attr('id') },
+                    success: function (response) {
+                        //  更新 #tab-content 內的歌曲
+                        $('#tab-content').html(response);
+                        bindEvents(); // 重新綁定按鈕事件
+                    },
+                    error: function (err) {
+                        console.log('歌曲排序:' + err);
+                    }
+                });
+            });
+
+            $('.activate').click(function (e) {
+                $('.activate').removeClass('active');
+                $(this).addClass('active');
+            });
+        });
     </script>
 }

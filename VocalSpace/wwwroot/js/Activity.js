@@ -189,11 +189,6 @@
         $('#activityListTitle').text(`活動列表：${start} ~ ${end}`);
     }
 
-    // 格式化日期 (yyyy-MM-dd)
-    function formatDate(date) {
-        return date.toISOString().split('T')[0];
-    }
-
     // 增加天數
     function addDays(date, days) {
         let result = new Date(date);

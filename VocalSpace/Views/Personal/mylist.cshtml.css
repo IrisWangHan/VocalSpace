@@ -203,9 +203,11 @@
     }
 
 .btnarea {
-    width:220px;
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px; /* 設定按鈕之間的間距 */
+    margin: 0 10px; /* 設定左右邊距 */
 }
 
 .btn-outline-secondary.book {

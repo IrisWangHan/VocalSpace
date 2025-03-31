@@ -65,19 +65,30 @@ namespace VocalSpace.Services
         {
             var Playlists = from user in _context.Users
                             join playlist in _context.PlayLists on user.UserId equals playlist.UserId
-                            join playlistsong in _context.PlayListSongs on playlist.PlayListId equals playlistsong.PlayListId
+                            join playlistsong in _context.PlayListSongs on playlist.PlayListId equals playlistsong.PlayListId into playlistGroup
                             where playlist.Name.Contains(q!) || user.UserName!.Contains(q!)
-                            group new { user, playlist, playlistsong } by new
+                            group new { user, playlist, playlistGroup } by new
                             {
                                 user.UserName,
                                 playlist.PlayListId,
                                 playlist.Name,
                                 playlist.CoverImagePath
                             } into g
-                            select new PlaylistDTO { PlayListId = g.Key.PlayListId, Name = g.Key.Name, UserName = g.Key.UserName, CoverImagePath = g.Key.CoverImagePath };
+                            select new PlaylistDTO
+                            {
+                                PlayListId = g.Key.PlayListId,
+                                Name = g.Key.Name,
+                                UserName = g.Key.UserName,
+                                CoverImagePath = g.Key.CoverImagePath,
+                                SongCount = g.SelectMany(x => x.playlistGroup).Count() // 統計播放清單中的歌曲數量
+                            };
+
+            // 排序播放清單
             Playlists = Playlists.OrderByDescending(data => data.Name == q)
-                 .ThenByDescending(data => data.UserName == q)
-                 .ThenByDescending(data => data.Name!.Contains(q!));
+                                 .ThenByDescending(data => data.UserName == q)
+                                 .ThenByDescending(data => data.Name!.Contains(q!));
+
+            // 執行查詢並返回結果
             return await Playlists.ToListAsync();
         }
 
