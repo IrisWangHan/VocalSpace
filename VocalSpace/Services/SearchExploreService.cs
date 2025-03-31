@@ -25,7 +25,7 @@ namespace VocalSpace.Services
                     _context.Users,
                     song => song.Artist,
                     user => user.UserId,
-                    (song, user) => new SongInfoDTO { SongId = song.SongId, SongName = song.SongName, UserName = user.UserName, CoverPhotoPath = song.CoverPhotoPath, LikeCount = song.LikeCount })
+                    (song, user) => new SongInfoDTO { UserId=user.UserId,SongId = song.SongId, SongName = song.SongName, UserName = user.UserName, CoverPhotoPath = song.CoverPhotoPath, LikeCount = song.LikeCount })
                 .Where(data => data.SongName!.Contains(q!) || data.UserName!.Contains(q!))
                 .OrderByDescending(data => data.SongName == q)                 //  1.先搜尋歌曲名稱完全符合關鍵字
                 .ThenByDescending(data => data.UserName == q)                   //  2.歌手名稱完全符合關鍵字的歌曲
@@ -69,6 +69,7 @@ namespace VocalSpace.Services
                             where playlist.Name.Contains(q!) || user.UserName!.Contains(q!)
                             group new { user, playlist, playlistGroup } by new
                             {
+                                user.UserId,
                                 user.UserName,
                                 playlist.PlayListId,
                                 playlist.Name,
@@ -78,6 +79,7 @@ namespace VocalSpace.Services
                             {
                                 PlayListId = g.Key.PlayListId,
                                 Name = g.Key.Name,
+                                UserId=g.Key.UserId,
                                 UserName = g.Key.UserName,
                                 CoverImagePath = g.Key.CoverImagePath,
                                 SongCount = g.SelectMany(x => x.playlistGroup).Count() // 統計播放清單中的歌曲數量
@@ -102,7 +104,7 @@ namespace VocalSpace.Services
                                         on song.SongCategoryId equals category.SongCategoryId
                                         select new SongInfoDTO
                                         //  LikeCount = song.LikeCount(預設值) + 後續增加的喜歡數
-                                        { SongId = song.SongId, CoverPhotoPath = song.CoverPhotoPath, SongName = song.SongName, UserName = user.UserName, LikeCount = song.LikeCount + _context.LikeSongs.Count(ls => ls.SongId == song.SongId) , CreateTime = song.CreateTime, PlayCount = song.PlayCount, SongCategoryId = category.SongCategoryId };
+                                        { SongId = song.SongId, CoverPhotoPath = song.CoverPhotoPath, SongName = song.SongName, UserName = user.UserName, LikeCount = song.LikeCount + _context.LikeSongs.Count(ls => ls.SongId == song.SongId) , CreateTime = song.CreateTime, PlayCount = song.PlayCount, SongCategoryId = category.SongCategoryId,UserId=song.Artist};
             return a;
         }
         //  對LINQ結果進行篩選(Where)，排序(OrderByDescending)

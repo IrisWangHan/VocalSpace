@@ -11,5 +11,7 @@
         public long PlayListID { get; set; }
         public string? PlayListName { get; set; }
         public bool SonginPlaylist { get; set; }
+
+        public string? CoverImagePath { get; set; }
     }
 }

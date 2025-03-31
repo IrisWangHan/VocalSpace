@@ -21,7 +21,7 @@
 			<span>音樂好朋友 前往 [ 發現音樂 ]</span><br />
 			<span>分享好聲音 前往 [ 上傳作品 ]</span><br />
 			<span>屬於你的音樂選秀 前往 [ 徵選 ]</span><br />
-			<button class="btn  banner_btn">
+			<button class="btn banner_btn" onclick="window.location.href='/Home/HotRank/0'">
 				<span>踏上屬於你的音樂之旅</span>
 			</button>
 		</div>
@@ -54,12 +54,6 @@
 	  typeEffect(".typing", text1).then(() => {
 		return typeEffect(".typing2", text2);
 	  });
-
-	  $(".banner_btn").on('click',function(){
-		 window.location.href = '/Home/Index'; // 跳轉到指定 URL
-
-	  });
-
 
 	//    // 監聽視窗大小變化，讓 canvas 自適應
 	// function resizeCanvas() {

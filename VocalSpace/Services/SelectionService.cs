@@ -454,7 +454,7 @@ namespace VocalSpace.Services
                     SongId = songsId,
                     VoteCount = 0,
                     CreateTime = DateTime.Now,
-                    ReviewStatus = 0
+                    ReviewStatus = 1
                 };
 
                 selectionDetails.Add(sd);

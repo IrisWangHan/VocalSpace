@@ -52,7 +52,8 @@ namespace VocalSpace.Services
                 {
                     PlayListID = p.PlayListId,
                     PlayListName = p.Name,
-                    SonginPlaylist = p.PlayListSongs.Any(ps => ps.SongId == songId)
+                    SonginPlaylist = p.PlayListSongs.Any(ps => ps.SongId == songId),
+                    CoverImagePath= p.CoverImagePath
                 })
                 .ToListAsync();
 

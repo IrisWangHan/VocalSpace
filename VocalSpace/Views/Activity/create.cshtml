@@ -151,7 +151,7 @@
 				const coverImageInput = document.getElementById("coverImageInput");
 
 				if (title || eventDate || location || city || description || coverImageInput.files.length > 0) {
-					if (confirm("表單有內容，是否儲存草稿到LocalStorage？")) {
+					if (confirm("表單有內容，是否儲存草稿？")) {
 						const draft = {
 							title: title,
 							eventDate: eventDate,

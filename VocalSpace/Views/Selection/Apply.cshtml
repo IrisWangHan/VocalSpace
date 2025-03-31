@@ -358,7 +358,7 @@
 						console.log("AA1");
 						setTimeout(function() {
 							console.log("AA");
-							location.reload();
+							window.location.href = `/selection/EventDescription/${SelectionId}`
 						}, 2000); // 2秒後跳轉
 					},
 					error: function(err) {
