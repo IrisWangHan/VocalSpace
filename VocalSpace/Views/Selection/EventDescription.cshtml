@@ -67,8 +67,50 @@
 		@if (ViewBag.section != null && ViewBag.section.ToString() == "EventDescription")
 		{
 			<div class="content-section descrition" id="descriptionSection">
-				<p>活動說明</p><br /><br />
-				<span>@(Model.Description)</span>
+				<p>活動說明</p>
+				<span>@(Model.Description)</span><br />
+
+				<span>🎶作品規格:時長 5 分鐘內，限以 MP3 音檔,若尚未上傳過作品,請先至上傳作品區上傳音樂,本活動不限制上傳作品數</span><br />
+				<span>🎶活動規則:創作具共鳴與影響力精神、傳遞鼓舞人心正向力量的歌曲。作品曲風不限</span><br />
+				<span>🎶報名資格：不限個人、團體</span>
+				<br />	<br />
+				<hr />
+				<h5>報名方式</h5>
+				<span>
+					採網路報名,
+					註冊成為VocalSpace會員，並將作品上傳至 StreetVoice 平台。
+					回到此徵選頁面，按下「我要報名」，選擇參賽作品投稿，並耐心等候審核。
+					主辦單位將於收到投稿作品 3-5 個工作天審核後上刊於『參加作品』，即代表成功報名。（若遇假日則遞延，投稿前請詳讀活動規範避免不符參選資格）
+				</span>
+				<br />	<br />
+				<h5>活動獎勵</h5>
+				<ol>
+					<li>
+						最佳主題曲創作獎： 百萬代言合約（內含獎金新台幣 10 萬元）
+					</li>					
+					<li>
+						最佳創意獎：新台幣 10 萬元
+					</li>
+					<li>
+						最佳表演獎：新台幣 10 萬元
+					</li>
+					<li>
+						最佳人氣獎：新台幣 10 萬元（由決賽階段網路票選票數最高者獲得）
+					</li>
+				</ol>
+				<br />
+				<h5>聯絡方式</h5>
+				<ul>
+					<li>
+						主辦單位：臺灣搖滾股份有限公司
+					</li>
+					<li>
+						聯絡人：呂小姐
+					</li>
+					<li>
+						聯絡人信箱： taiwan.event@gmail.com
+					</li>
+				</ul>
 			</div>
 		}
 		@if (ViewBag.section != null && ViewBag.section.ToString() == "Works")
