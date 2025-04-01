@@ -231,12 +231,19 @@
     margin: 0;
 }
 
-.sorry-div {
-    justify-content:center;
+.container {
+    text-align: center;
 }
+
+.image-container {
+    position: relative;
+}
+
 .sorry-image {
-    width: 20vw;
-    height: 20vw;
+
+width:40%;
+max-width:40%;
+
 }
 
 
