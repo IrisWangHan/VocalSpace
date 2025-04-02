@@ -3,6 +3,7 @@
 @{
 	Layout = "_PersonalLayout";
 	var likesong = ViewData["likesong"] as List<VocalSpace.Models.ViewModel.Song.SongViewModel>;
+	ViewData["Title"] = Model.FirstOrDefault()!.UserName;
 }
 <link rel="stylesheet" href="~/css/PersonalSongButton.css" asp-append-version="true" />
 <nav class="menu" id="myList">
@@ -18,7 +19,6 @@
 	<div class="title mb-4">
 		<div class="littletitle">
 			<h2>歌曲(@likesong.FirstOrDefault()!.LikeSongCount)</h2>
-			<div class="playAll"><button class="btn btn-danger playall"><i class="bi bi-play"></i>全部播放</button></div>
 		</div>
 	</div>
 	

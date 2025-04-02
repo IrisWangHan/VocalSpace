@@ -11,6 +11,8 @@
         public string CurrentUserAccount { get; set; } = null!;
         public string UserName { get; set; } = null!;
 
+        public long UserId { get; set; }
+
         public string Avatar { get; set; } = null!;
 
         public string Comment { get; set; } = null!;

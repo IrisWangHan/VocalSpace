@@ -1,5 +1,7 @@
 ﻿@model VocalSpace.Models.ViewModel.Activity.ActivityInfoViewModel
-
+@{
+	ViewData["Title"] = Model.Title;
+}
 @section MetaTags {
 	<meta property="og:url" content="@Model.ShareUrl" />
 	<meta property="og:type" content="website" />
@@ -150,7 +152,7 @@
 					error: function (xhr) {
 						if (xhr.status === 401) {
 							alert(xhr.responseJSON?.message || "請先登入！");
-							window.location.href = "/Accounts/Login";
+							nologin();
 						}
 						else
 							alert(xhr.responseJSON?.message || "發生錯誤，請稍後再試！");

@@ -67,10 +67,10 @@
 		<div class="about_content portrait-center" style="flex-direction: column;">
 			<h1 class="glow">在「聲維宇宙 VocalSpace」</h1>
 			<p class="glow">
-				創作者不只是發表作品<br/>
-				和其他音樂人一起掀起創意風暴品<br/>
-				我們定期舉辦音樂活動<br/>
-				讓你有機會大放異彩<br/>
+				創作者不只是發表作品<br />
+				和其他音樂人一起掀起創意風暴品<br />
+				我們定期舉辦音樂活動<br />
+				讓你有機會大放異彩<br />
 			</p>
 		</div>
 	</section>
@@ -79,48 +79,56 @@
 	<section class="about_layer">
 		<div class="about_content portrait-center" style="flex-direction: column;">
 			<img class="landscape" src="/image/logo3.png">
-			<h1 class="glow">聲維宇宙 VocalSpace</h1>
+			<a href="/Home/Index"><h1 class="glow">聲維宇宙 VocalSpace</h1></a>
 		</div>
 	</section>
 </div>
 
 @section Scripts {
-<script>
-	const about_layers = document.querySelectorAll('.about_layer');
-	const about_layer_spacing = -1200;
-	const z_values = [];
+    <script>
+					document.addEventListener('DOMContentLoaded', () => {
+						const aboutLayers = document.querySelectorAll('.about_layer');
+						const aboutLayerSpacing = -1200;
+						const zValues = Array.from({ length: aboutLayers.length }, (_, index) => aboutLayerSpacing * index);
 
-	let prev_scroll_pos = about_layer_spacing / about_layers.length;
-	handlescroll();
+						let prevScrollPos = window.scrollY;
 
-	function handlescroll() {
-		const curr_scroll_pos = window.scrollY;
-		const scroll_delta = prev_scroll_pos - curr_scroll_pos;
-		prev_scroll_pos = curr_scroll_pos;
+						function handleScroll() {
+							const currScrollPos = window.scrollY;
+							const scrollDelta = prevScrollPos - currScrollPos;
+							prevScrollPos = currScrollPos;
 
-		about_layers.forEach((about_layer, index) => {
-			z_values.push(about_layer_spacing + (about_layer_spacing * index));
-			z_values[index] += (scroll_delta * -about_layers.length) * 1;
+							aboutLayers.forEach((aboutLayer, index) => {
+								zValues[index] += scrollDelta * -aboutLayers.length * 0.3; // 調慢速度
+								const currZValue = zValues[index];
+								aboutLayer.style.transform = `translateZ(${currZValue}px)`;
 
-			let curr_z_value = z_values[index];
-			about_layer.style.transform = `translateZ(${curr_z_value}px)`;
+								// 透明度控制
+								const opacity = Math.min(1, Math.max(0, (1250 - Math.abs(currZValue)) / 1000));
+								aboutLayer.querySelector(".about_content").style.opacity = opacity;
 
-			// 透明度控制
-			let opacity = Math.min(1, Math.max(0, (1250 - Math.abs(curr_z_value)) / 1000));
-			about_layer.querySelector(".about_content").style.opacity = opacity;
+								const isAboutLayerHidden = currZValue > aboutLayerSpacing / -4;
+								aboutLayer.classList.toggle('hide', isAboutLayerHidden);
+							});
+						}
 
-			let is_about_layer_hidden = curr_z_value > (about_layer_spacing) / -4;
-			about_layer.classList.toggle('hide', is_about_layer_hidden);
-		});
-	}
+						function onScroll() {
+							requestAnimationFrame(handleScroll);
+						}
 
-	window.addEventListener('scroll', handlescroll);
-	if ('scrollRestoration' in history) {
-		history.scrollRestoration = 'manual';
-	}
-	window.onload = function () {
-		window.scrollTo(0, 0);
-	};
-</script>
+						window.addEventListener('scroll', onScroll);
 
+						if ('scrollRestoration' in history) {
+							history.scrollRestoration = 'manual';
+						}
+
+						// 頁面載入完成後顯示內容
+						window.onload = function () {
+							document.querySelector('.about_container').style.visibility = 'visible';
+							window.scrollTo(0, 0);
+							handleScroll(); // 初始化滾動處理
+						};
+					});
+    </script>
 }
+

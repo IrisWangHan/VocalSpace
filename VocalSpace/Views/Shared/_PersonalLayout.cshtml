@@ -1,4 +1,5 @@
-﻿@model IEnumerable<VocalSpace.Models.ViewModel.Personal.PersonalViewModel>
+﻿@using System.Globalization
+@model IEnumerable<VocalSpace.Models.ViewModel.Personal.PersonalViewModel>
 
 @{
     Layout = "_Layout";  // 引用全域的 _Layout.cshtml
@@ -66,15 +67,16 @@
                  } 
                 <div class="osinfo">
                         <h2>@Model.First().UserName</h2>
-                        <p>@@@Model.FirstOrDefault()!.Account ・ 會員</p>
-                        <p>於 2025 年 2 月 加入</p>
+                        <p>@@@Model.FirstOrDefault()!.Account</p>
+
+                    <p>於 @Model.FirstOrDefault()!.CreateTime.ToString("yyyy年MM月", DateTimeFormatInfo.InvariantInfo) 加入</p>
                     </div>
                 </div>
                 <div class="stats">
                     <ul b-lmw9bnkxzw="" class="list-inline opacity-75">
                         <li b-lmw9bnkxzw="" class="list-inline-item">
                             <h4 b-lmw9bnkxzw="" class="fs-6"> 粉絲數</h4>
-                            <h4 b-lmw9bnkxzw="">0</h4>
+                            <h4 b-lmw9bnkxzw="">@Model.FirstOrDefault()!.FollowCount</h4>
                         </li>
                     </ul>
                 </div>
@@ -85,49 +87,88 @@
     
     @RenderBody()
 
-    @section Scripts{
-<script>
-    // 頭貼預覽
+@section Scripts {
+    <script>
+        // 頭貼預覽
+        let tgtuserid = @Model.FirstOrDefault()!.UserId;
+        let crtuserid = @Model.FirstOrDefault()!.CurrentUserId;
+        if (tgtuserid == crtuserid) {
+                   document.getElementById("headfileInput").addEventListener("change", function (event) {
+                       const file = event.target.files[0];
+                       if (file) {
+                           const reader = new FileReader();
+                           reader.onload = function (e) {
+                               const img = document.getElementById("headpreview");
+                               img.src = e.target.result;
+                               img.style.display = "block";
+                           };
+                           reader.readAsDataURL(file);
 
-    let tgtuserid=@Model.FirstOrDefault()!.UserId;
+                           // 上傳頭貼
+                           const formData = new FormData();
+                           formData.append("avatarFile", file);
 
-    let crtuserid=@Model.FirstOrDefault()!.CurrentUserId;
+                           fetch('/Personal/UploadAvatar', {
+                               method: 'POST',
+                               body: formData
+                           })
+                           .then(response => response.json())
+                           .then(data => {
+                               if (data.filePath) {
+                                   const img = document.getElementById("headpreview");
+                                   img.src = data.filePath; 
+                                   alert(data.message || "上傳成功");
+                               } else {
+                                   alert(data.message || "上傳失敗");
+                               }
+                           })
+                           .catch(error => {
+                               console.error("上傳失敗", error);
+                               alert("上傳失敗，請稍後再試！");
+                           });
+                       }
+                   });
 
-        if(tgtuserid == crtuserid)
-        {
-        document.getElementById("headfileInput").addEventListener("change", function(event) {
-            const file = event.target.files[0];
-            const fileNameDisplay = document.getElementById("headfileName");
+            // 封面預覽
+            document.getElementById("coverfileInput").addEventListener("change", function (event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const img = document.getElementById("coverpreview");
+                        img.src = e.target.result;
+                        img.style.display = "block";
+                    };
+                    reader.readAsDataURL(file);
 
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = document.getElementById("headpreview");
-                    img.src = e.target.result;
-                    img.style.display = "block";
-                };
-                reader.readAsDataURL(file);
+                    // 上傳封面
+                    const formData = new FormData();
+                    formData.append("bannerFile", file);
 
-        }});
-
-        // 封面預覽
-        document.getElementById("coverfileInput").addEventListener("change", function(event) {
-            const file = event.target.files[0];
-
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = document.getElementById("coverpreview");
-                    img.src = e.target.result;
-                    img.style.display = "block";
-                };
-                reader.readAsDataURL(file);
-                
-        
-    }});
+                    fetch('/Personal/UploadBanner', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.filePath) {
+                            const img = document.getElementById("coverpreview");
+                            img.src = data.filePath;
+                             alert(data.message || "上傳成功");
+                        } else {
+                            alert(data.message || "上傳失敗");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("上傳失敗", error);
+                        alert("上傳失敗，請稍後再試！");
+                    });
+                }
+            });
         }
-</script>
+    </script>
 }
+
 
 
 

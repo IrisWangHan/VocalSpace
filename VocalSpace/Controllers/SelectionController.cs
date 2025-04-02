@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using VocalSpace.Filters;
 using VocalSpace.Models;
 using VocalSpace.Models.ViewModel.Selection;
 using VocalSpace.Services;
@@ -15,9 +16,11 @@ namespace VocalSpace.Controllers
         /// </summary>
         /// <param name="selectionService"></param>
         private readonly SelectionService _selectionService;
-        public SelectionController(SelectionService selectionService)
+        private readonly EmailService _emailService;
+        public SelectionController(SelectionService selectionService, EmailService emailService)
         {
-             _selectionService = selectionService;
+            _selectionService = selectionService;
+            _emailService = emailService;
         }
 
 
@@ -83,15 +86,12 @@ namespace VocalSpace.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [SessionToLogin]
         public async Task<IActionResult> Apply(int id)
         {
             // 取得使用者ID
             long? UserID = HttpContext.Session.GetInt32("UserId");
 
-            if (UserID == null|| UserID==0)
-            {
-                return RedirectToAction("Login", "Accounts"); // 重導讓 View 收到 TempData
-            }
             //取得user資料
             SelectionFormViewModel userData = await _selectionService.CheckUser(UserID);
 
@@ -166,8 +166,7 @@ namespace VocalSpace.Controllers
                        "感謝您的提交！";
 
             // 發送通知郵件
-            EmailService emailService = new();
-            var mailState = await emailService.SendNotificationAsync(request.Email, subject, body);
+            var mailState = await _emailService.SendNotificationAsync(request.Email, subject, body);
             if(!mailState)
             {
                 return Json(new { success = false, message = "寄送email失敗" });

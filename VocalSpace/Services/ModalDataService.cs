@@ -52,7 +52,8 @@ namespace VocalSpace.Services
                 {
                     PlayListID = p.PlayListId,
                     PlayListName = p.Name,
-                    SonginPlaylist = p.PlayListSongs.Any(ps => ps.SongId == songId)
+                    SonginPlaylist = p.PlayListSongs.Any(ps => ps.SongId == songId),
+                    CoverImagePath= p.CoverImagePath
                 })
                 .ToListAsync();
 
@@ -178,5 +179,75 @@ namespace VocalSpace.Services
             return await _context.LikeSongs
                 .AnyAsync(ls => ls.UserId == userId && ls.SongId == songId);
         }
+
+        /// <summary>
+        /// 取得 PlayListButtonViewModel 的資料，以便Controller使用
+        /// </summary>
+        public async Task<PlayListButtonViewModel> GetPlayListButtonViewModel(long playListId, long? UserId)
+        {
+           var playlist = await _context.PlayLists
+                .Where(p => p.PlayListId == playListId)
+                .Select(p => new
+                {
+                    p.PlayListId,
+                    p.Name,
+                    SongCount = p.PlayListSongs.Count() // 統計播放清單中的歌曲數量
+                })
+                .FirstOrDefaultAsync();
+            return new PlayListButtonViewModel
+            {    
+                PlayListId = playListId,
+                Name = playlist!.Name,
+                SongCount = playlist.SongCount, // 設置 SongCount
+                //  isliked = true 代表已喜歡
+                isliked = (UserId.HasValue) ? await IsLikedPlayListAsync(UserId.Value, playListId) : false
+            };        
+        }
+
+        /// <summary>
+        /// 判斷歌單是否已喜歡
+        /// </summary>
+        public async Task<bool> IsLikedPlayListAsync(long userId, long playlistid)
+        {
+            //  true 代表存在(已喜歡)
+            return await _context.Favoriteplaylists
+                .AnyAsync(p => p.UserId == userId && p.PlayListId == playlistid);
+        }
+
+        /// <summary>
+        /// 判斷喜歡歌單是否已喜歡
+        /// </summary>
+        public async Task<(bool isSuccess, bool isliked)> AddLikePlaylistAsync(long userId, long playlistid)
+        {
+            try
+            {
+                var playlist = await _context.Favoriteplaylists
+                    .FirstOrDefaultAsync(p => p.UserId == userId && p.PlayListId == playlistid);
+                if (playlist != null)
+                {
+                    // 已經喜歡 → 取消喜歡
+                    _context.Favoriteplaylists.Remove(playlist);
+                }
+                else
+                {
+                    // 沒有喜歡 → 新增喜歡
+                    _context.Favoriteplaylists.Add(new Favoriteplaylist
+                    {
+                        UserId = userId,
+                        PlayListId = playlistid
+                    });
+                }
+                await _context.SaveChangesAsync();
+                //  isliked = true 代表已喜歡
+                return (true, playlist == null);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"處理喜歡歌單時發生錯誤: {ex.Message}");
+                return (false, false);
+            }
+        }
+
+        
     }
 }

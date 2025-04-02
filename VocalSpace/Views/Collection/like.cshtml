@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<VocalSpace.Models.ViewModel.Song.SongViewModel>
 @{
 	int count = 1;
+	ViewData["Title"] = "喜歡的歌曲";
 }
 <link rel="stylesheet" href="~/css/song.css" asp-append-version="true">
 <title>蒐藏庫</title>
@@ -34,10 +35,7 @@
 			{
 				<div id="realtime" class="ranking-list">
 					<div class="Randomplay">
-						<h3>歌曲</h3>
-						<button class="btn btn-danger" onclick="RandomPlay()">
-							<i class="bi bi-shuffle"></i>隨機播放
-						</button>
+						<h3>歌曲</h3>						
 					</div>
 					@{
 						foreach (var item in Model)
@@ -52,10 +50,11 @@
 										<p class="song">@item.SongName</p>
 									</a>
 									<a href="/Personal/mymusic/@item.UserId"> <p class="artist">@item.UserName</p></a>
-									<div>
-										@await Component.InvokeAsync("SongButton", new { songId = item.SongId })
-									</div>
 									
+									
+								</div>
+								<div>
+									@await Component.InvokeAsync("SongButton", new { songId = item.SongId })
 								</div>
 							</div>
 							count ++;

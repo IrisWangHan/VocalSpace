@@ -6,10 +6,10 @@
 		new { id = "002", name = "Lively Night", artist = "Artist 2" },
 		new { id = "003", name = "Dreamy Melody", artist = "Artist 3" }
 	};
-	// TempData["isLogin"] = isLogin;
+
 }
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" >
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -26,7 +26,6 @@
 
 
 <body>
-
 	<header class="header">
 		<nav class=" navbar-expand-lg navbar-light  box-shadow ">
 			<div class="container-fluid header__container">
@@ -46,7 +45,7 @@
 				<div class=" d-lg-inline-flex header__menu">
 					<ul class="navbar-nav ms-auto align-items-center header__menu-list">
 						<li class="nav-item header__menu-item">
-							<a class=" header__menu-item--theme" href="/exploreMusic/ExploreMusicAll">發現音樂</a>
+							<a class=" header__menu-item--theme" href="/exploreMusic/ExploreMusicAll?musicType=0">發現音樂</a>
 						</li>
 						<li><hr class="header__menu-hr" /></li>
 
@@ -79,7 +78,7 @@
 								<a class="header__menu-item--theme" href="/Personal/mymusic/@loginuid">個人頁面</a>
 							</li>
 							<li class="nav-item header__menu-item header__menu-item2">
-								<a class="header__menu-item--theme" href="/Accounts/memberInformation">帳號設定</a>
+								<a class="header__menu-item--theme" href="/Accounts/memberInformation/@loginuid">帳號設定</a>
 							</li>
 							<li class="nav-item header__menu-item header__menu-item2">
 								<a class="header__menu-item--theme" href="/Collection/like/@loginuid">蒐藏庫</a>
@@ -140,7 +139,7 @@
 					<ul class="header__menu-list-profile">
 						<li><a class="header__menu-item-profile" href="/Personal/mymusic/@loginuid">個人頁面</a></li>
 						<li><hr class="header__menu-hr" /></li>
-						<li><a class="header__menu-item-profile" href="/Accounts/memberInformation">帳號設定</a></li>
+						<li><a class="header__menu-item-profile" href="/Accounts/memberInformation/@loginuid">帳號設定</a></li>
 						<li><hr class="header__menu-hr" /></li>
 						<li><a class="header__menu-item-profile" href="/Collection/like/@loginuid">蒐藏庫</a></li>
 					</ul>
@@ -163,90 +162,12 @@
 			</div>
 		</nav>
 	</header>
+
 	<main role="main">
 		@RenderBody()
 		@await Html.PartialAsync("_Modal_for_AJAXLoading") @*用來AJAX載入彈窗*@
-		<section class="music-player">
-			<div class="music-player__for-md"></div>
-			@* 大螢幕 音樂撥放器會顯示在右下角 長條 *@
-			<div class="music-player__for-lg">
-				<img src="/image/logo.png" class="music-player__img-cover" />
-				<div class="playlist__info">
-					<p>@(musicList[0].name)</p>
-					<span>@(musicList[0].artist)</span>
-				</div>
-				@* 撥放按鈕 *@
-				<i class="bi bi-play-fill  icon__play-circle"></i>
-				@* 暫停按鈕 *@
-				<i class="bi bi-pause  icon__stop-circle"></i>
-				@* 下一首按鈕 *@
-				<i class="bi bi-skip-end-fill  music-player__img-play"></i>
-				@* 展開視窗 *@
-				<i class="bi bi-three-dots-vertical music-player__for-lg-dots"></i>	
-			</div>
-			@* 開啟音樂撥放視窗 *@
-			<div class="music-player__window">
-				<header class="window__header">
-					<div class="window__header-zoom-out"></div>
-				</header>
-
-				@* 當前撥放歌曲顯示區 *@
-				<section class="window__playlist-current">
-					<div class="playlist__item" data-musicID="@(musicList[0].id)">
-						<img src="/image/logo.png" class="playlist__img-cover playlist__img-cover-current" alt="Album cover" />
-						<div class="playlist__info">
-							<p>@(musicList[0].name)</p>
-							<span>@(musicList[0].artist)</span>
-						</div>
-						<span id="songTimeText">00:00</span>
-						@* 循環撥放單首按鈕 *@
-						<i class="bi bi-arrow-repeat  music-player__circle-one"></i>
-					</div>
-				</section>
-
-				@* 音樂撥放器icon 控制區 *@
-				<section class="window__controls">
-
-  				   @* 上一首按鈕 *@
-					<i class="bi bi-skip-start-fill music-player__pre"></i>
-					@* 撥放按鈕 *@
-					<i class="bi bi-play-fill  icon__play-circle"></i>
-					@* 暫停按鈕 *@
-					<i class="bi bi-pause  icon__stop-circle"></i>
-					@* 下一首按鈕 *@
-					<i class="bi bi-skip-end-fill  music-player__next"></i>
-					
-
-					<audio id="audioPlayer" autoplay>
-						<source src="/audio/sample.mp3" type="audio/mpeg" id="musicSource">
-						您的瀏覽器不支援音樂播放。
-					</audio>
-					@* 進度條 *@
-					<input type="range" class="window__controls-range"  />
-				</section>
-				@* 音樂撥放器下方顯示撥放清單區 *@
-				<div class="window__playlist-descrition">
-					<span id="songListText">AAA撥放清單</span>
-					@* 循環撥放清單按鈕 *@
-					<i class="bi bi-arrow-repeat  music-player__circle-list"></i>
-				</div>
-				@* 下方撥放清單 *@
-				<section class="window__playlist">
-
-					@foreach (var song in musicList)
-					{
-						<div class="playlist__item playlist__song-list" data-musicID="@(song.id)">
-							<img src="/image/logo.png" class="playlist__img-cover" alt="Album cover" />
-							<div class="playlist__info">
-								<p>@(song.name)</p>
-								<span>@(song.artist)</span>
-							</div>
-						</div>
-					}
-
-				</section>
-			</div>
-		</section>
+		<!-- 音樂播放器的容器 -->
+		<div id="musicPlayerContainer"></div>
 	</main>
 
 	<footer class="border-top footer text-muted">
@@ -278,336 +199,376 @@
 			</div>
 		</div>
 	</footer>
+
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>
 	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="~/js/site.js" asp-append-version="true"></script>
 	<script>
+			$(document).ready(function () {
 
-		// 手動點選撥放音樂
-		function playMusic(trackUrl) {
-				console.log("loading update");
-				// 取得時間文本並將其轉換為秒數
-				var timeText = document.getElementById("songTimeText").textContent;
-				var timeParts = timeText.split(':');
-				var timeInSeconds = parseInt(timeParts[0]) * 60 + parseInt(timeParts[1]);
-				console.log("timeText",timeText);
-				console.log("timeParts",timeParts);
-				console.log("timeInSeconds",timeInSeconds);
-			// 傳送更新請求給 API
-			fetch('/Player/UpdateTrack', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ track: trackUrl, time: timeInSeconds })
+			 // 取得localStorage播放時間
+				var currentTime = localStorage.getItem("currentTime") || 0;
+
+				// 取得音樂播放器的資料並渲染到 Partial View
+				$.ajax({
+					url: '/MusicPlayer/GetDefaultMusic',
+					method: 'GET',
+					data: { playedDuration: currentTime }, // 傳遞播放時間
+					success: function (data) {
+							$('#musicPlayerContainer').html(data);
+						},
+						error: function (xhr, status, error) {
+							console.error("AJAX Error:", error);
+						}
+					});
+
+			// 點選撥放清單中的指定歌曲
+				$(document).on("click", ".playlist__song-list", function () {
+
+						var item = $(this);
+						var songId = item.attr("data-SongId");
+						var playListId = item.attr("data-PlayListId");
+
+						var url=(playListId!=null) ? "/MusicPlayer/GetPlayListSong":"/MusicPlayer/GetSong";
+
+						if(songId==null)
+						{
+							alert("取得音樂失敗,請稍後在試....");
+							return;
+						}
+						$.ajax({
+							url: url,
+							method: "GET",
+							data: { playListId: playListId, songId: songId },
+							success: function (data) {
+								if (data) {
+
+									InitPartialView(data);
+									var audioPlayer = document.getElementById("audioPlayer");
+									// audioPlayer.play();
+									localStorage.setItem("currentTime", 0);
+								}
+							},
+							error: function (xhr, status, error) {
+								console.error("AJAX Error:", error);
+							}
+						});
+					});
+			// 點選撥放清單中的下一首
+				$(document).on("click", ".music-player__next", function () {
+
+						$.ajax({
+							url: '/MusicPlayer/PlayNextSong',
+							method: "GET",
+							success: function (data) {
+								if (data) {
+
+									InitPartialView(data);
+									var audioPlayer = document.getElementById("audioPlayer");
+									localStorage.setItem("currentTime", 0);
+								}
+							},
+							error: function (xhr, status, error) {
+								console.error("AJAX Error:", error);
+							}
+						});
+					});
+			// 點選撥放清單中的上一首
+				$(document).on("click", ".music-player__pre", function () {
+						$.ajax({
+							url: '/MusicPlayer/PlayPreSong',
+							method: "GET",
+							success: function (data) {
+								if (data) {
+
+									InitPartialView(data);
+									var audioPlayer = document.getElementById("audioPlayer");
+									localStorage.setItem("currentTime", 0);
+								}
+							},
+							error: function (xhr, status, error) {
+								console.error("AJAX Error:", error);
+							}
+						});
+					});
+			// 點選單首循環撥放
+				$(document).on("click", ".music-player__circle-one", function () {
+					var audioPlayer = document.getElementById("audioPlayer");
+
+					//監聽音樂播放結束事件
+					audioPlayer.addEventListener('ended', function () {
+							var item = $(this);
+							var songId = item.attr("data-SongId");
+							var playListId = item.attr("data-PlayListId");
+
+							if(songId==null)
+							{
+								alert("取得音樂失敗,請稍後在試....");
+								return;
+							}
+							$.ajax({
+								url: "/MusicPlayer/GetSong",
+								method: "GET",
+								data: { playListId: playListId, songId: songId },
+								success: function (data) {
+									if (data) {
+
+										InitPartialView(data);
+										localStorage.setItem("currentTime", 0);
+									}
+								},
+								error: function (xhr, status, error) {
+									console.error("AJAX Error:", error);
+								}
+								});
+							});
+					});
+			// 點選撥放清單循環撥放
+				$(document).on("click", ".music-player__circle-list", function () {
+					var audioPlayer = document.getElementById("audioPlayer");
+							//監聽音樂播放結束事件
+							audioPlayer.addEventListener('ended', function () {
+								$.ajax({
+									url: '/MusicPlayer/PlayNextSong',
+									method: "GET",
+									success: function (data) {
+										if (data) {
+											InitPartialView(data);
+											localStorage.setItem("currentTime", 0);
+										}
+									},
+									error: function (xhr, status, error) {
+										console.error("AJAX Error:", error);
+									}
+								});
+							});
+					});
+
+			// 時間軸計時器
+			let songTimer;
+			function startSongTimer(){
+					let Interval = 1000;
+					songTimer = setInterval(sliderProgress, Interval);
+				}
+			// 停止時間軸計時器
+			function stopSongTimer(){
+				if(songTimer){
+					clearInterval(songTimer);
+					songTimer = null;
+				}
+			}
+			// 時間軸進度條
+			function sliderProgress(){
+				let duration = $('#audioPlayer').get(0).duration;
+				let currentTime = $('#audioPlayer')[0].currentTime;
+				let sliderPercent = (currentTime / duration) * 100;
+				$('.window__controls-range').val(sliderPercent);
+				songTimeText();
+			}
+
+			// 更新歌曲現在時間，parseint()轉整數
+			function songTimeText(){
+				let currentTime = $('#audioPlayer')[0].currentTime;
+				let min =  parseInt(currentTime / 60);
+				let seconds = parseInt(currentTime % 60);
+				// 10秒內，text呈現'00:00'
+				if(seconds < 10){
+					$('#songTimeText').text('0' + min + ':' + '0' + seconds);
+				}else{
+					$('#songTimeText').text('0' + min + ':' + seconds);
+				}
+			}
+
+			function updatePlayedDurationToServer(playedDuration) {
+				localStorage.setItem("currentTime", playedDuration);
+			}
+				// 節流函式：確保 `fn` 只在 `delay` 毫秒內執行一次
+				function throttle(fn, delay) {
+					let lastCall = 0;
+					return function (...args) {
+						let now = Date.now();
+						if (now - lastCall >= delay) {
+							lastCall = now;
+							fn(...args);
+						}
+					};
+				}
 			});
 
-			// 更新音樂來源並播放
-			var audioPlayer = document.getElementById("audioPlayer");
-			console.log("audioPlayer",audioPlayer);
-			document.getElementById("musicSource").src = trackUrl;
-			audioPlayer.load();
-			audioPlayer.play();
+
+
+			$(document).ready(function() {
+					// 取得當前搜尋紀錄，轉為陣列
+					let searchHistory = localStorage.getItem("searchList");
+					let searchArray = searchHistory ? JSON.parse(searchHistory) : [];
+					let theme = localStorage.getItem("theme");
+					console.log("localStorage");
+					console.log(theme);
+					 $("html").attr("data-theme",theme);
+					MoveTheme(theme === "dark");
+
+					// 搜尋紀錄
+					$(".search-record").html("");
+
+					if(searchArray.length>0){
+							// 遍歷搜尋紀錄陣列，並將每個項目顯示出來
+							searchArray.forEach(function(item) {
+								$(".search-record").append(`<p class="header__menu-item-search header__search-record" style="line-height:5px;">
+									<a style="color:gray;font-size=14px;" href="/search/searchAll?q=${encodeURIComponent(item)}">${item}</a>
+								</p>`);
+							});
+					}else{
+							$(".search-record").append(`<p class="header__menu-item-search header__search-record"  style="color:gray">你還沒有搜尋紀錄....</p>`);
+					}
+
+
+						  //【當用戶點下mode icon,交換icon及文字 位置的效果】
+		$(".header__icon-mode").on("click", function () {
+			// 1. 切換主題 (利用 data-theme 屬性)
+			var currentTheme = $("html").attr("data-theme");
+			if (currentTheme === "dark") {
+				localStorage.setItem("theme", "light");
+				theme = "light";
+				$("html").attr("data-theme", "light");
+			} else {
+				localStorage.setItem("theme", "dark");
+				theme = "dark";
+				$("html").attr("data-theme", "dark");
+			}
+
+			MoveTheme(theme === "dark");
+		});
+
+		function MoveTheme(isDarkTheme) {
+			if (isDarkTheme) {
+				$(".header__icon-mode-svg").animate(
+					{ left: "42px" }, 300);
+
+				$(".header__icon-mode-span").animate({
+					left: "10px",          // 移動元素
+					opacity: 0             // 改變透明度為 0（完全透明）
+				}, 150, function () {                 // 動畫結束後的回調函數
+					$(this).css("opacity", 1);  // 動畫結束後，恢復不透明
+				});
+				setTimeout(function () {
+					console.log("moveRight");
+					console.log(theme);
+					$(".header__icon-mode-span").text("Dark");
+				}, 150);
+			} else {
+				$(".header__icon-mode-svg").animate({ left: "0px" }, 150);
+				$(".header__icon-mode-span").animate(
+					{
+						left: "28px",          // 移動元素
+						opacity: 0             // 改變透明度為 0（完全透明）
+					},
+					150,                        // 1秒（1000毫秒）動畫
+					function () {                 // 動畫結束後的回調函數
+						$(this).css("opacity", 1);  // 動畫結束後，恢復不透明
+					});
+
+				setTimeout(function () {
+					console.log(theme);
+					$(".header__icon-mode-span").text("Light");
+				}, 150);
+			}
 		}
 
-		// 等待 DOM 完全加載後執行
-		document.addEventListener("DOMContentLoaded", function () {
-			$(".window__controls-range").prop("value", 0);
+						//【當滑鼠移到icon上,給予使用者時間移到清單】
+						let hideTimeout;
+						 // 取消隱藏計時
+						$(".header__icon-search").mouseenter(function () {
+							clearTimeout(hideTimeout);
+							$(".header__menu-list-search").show();
+						});
+						$(".header__icon-profile").mouseenter(function () {
+							clearTimeout(hideTimeout);
+							$(".header__menu-list-profile").show();
+						});
+						// 如果滑鼠進入選單，取消隱藏計時
+						$(".header__menu-list-search").mouseenter(function () {
+							clearTimeout(hideTimeout);
+						});
+						$(".header__menu-list-profile").mouseenter(function () {
+							clearTimeout(hideTimeout);
+						});
+						// 延遲 300ms 隱藏
+						$(".header__icon-search, .header__menu-list-search").mouseleave(function () {
+							hideTimeout = setTimeout(function () {
+								$(".header__menu-list-search").hide();
+							}, 300);
+						});
+						$(".header__icon-profile, .header__menu-list-profile").mouseleave(function () {
+							hideTimeout = setTimeout(function () {
+								$(".header__menu-list-profile").hide();
+							}, 300);
+						});
 
 
+				let search = document.querySelector('.header__search-input');
+				search.addEventListener('keydown', function (e) {
+				if (e.key === 'Enter') {
+					console.log('searchText.value:', search.value);
+					let searchValue = search.value.trim();
+					if (!searchValue) return; // 避免存入空值
 
-			// 請求當前音樂的資料
-			fetch('/Player/GetCurrentTrack')
-				.then(response => response.json())
-				.then(data => {
-					if (data.track) {
-						console.log(data);
+					// 取得當前搜尋紀錄，轉為陣列
+					let searchHistory = localStorage.getItem("searchList");
+					let searchArray = searchHistory ? JSON.parse(searchHistory) : [];
 
-						// 更新音樂來源並從指定時間播放
-						var audioPlayer = document.getElementById("audioPlayer");
-						document.getElementById("musicSource").src = data.track;
-						audioPlayer.load();
-						audioPlayer.currentTime = parseFloat(data.time);
-						audioPlayer.play();
+					// 限制最多 5 筆紀錄，超過則刪除最舊的
+					if (searchArray.length >= 5) {
+						searchArray.shift();
 					}
-				});
-		});
+					searchArray.push(searchValue);
+					console.log("searchValue",searchValue);
+					console.log("searchArray",searchArray);
+					// 清空現有搜尋紀錄
+					$(".search-record").html("");
 
-
-		$(document).ready(function() {
-			    // 取得當前搜尋紀錄，轉為陣列
-				let searchHistory = localStorage.getItem("searchList");
-				let searchArray = searchHistory ? JSON.parse(searchHistory) : [];
-				let theme = localStorage.getItem("theme");
-				 $("html").attr("data-theme",theme);
-
-
-				// 搜尋紀錄
-				$(".search-record").html("");
-
-				if(searchArray.length>0){
+					if(searchArray.length<=0){
+						$(".search-record").append(`<p class="header__menu-item-search header__search-record" style="color:gray">你還沒有搜尋紀錄....</p>`);
+					}else{
 						// 遍歷搜尋紀錄陣列，並將每個項目顯示出來
 						searchArray.forEach(function(item) {
-							$(".search-record").append(`<p class="header__menu-item-search header__search-record" style="line-height:5px;">
-								<a style="color:gray;font-size=14px;" href="/search/searchAll?q=${encodeURIComponent(item)}">${item}</a>
-							</p>`);
+							$(".search-record").append(`<p class="header__menu-item-search header__search-record">
+								<a style="color:black;" href="/search/searchAll?q=${encodeURIComponent(item)}">${item}</a>
+							</p><hr/>`);
 						});
-				}else{
-						$(".search-record").append(`<p class="header__menu-item-search header__search-record"  style="color:gray">你還沒有搜尋紀錄....</p>`);
+					}
+
+					// 存回 localStorage (轉成 JSON)
+					localStorage.setItem("searchList", JSON.stringify(searchArray));
+					console.log(`/search/searchAll?q=${encodeURIComponent(search.value)}`);
+					// 重定向到搜尋結果頁面
+					window.location.href = `/search/searchAll?q=${encodeURIComponent(search.value)}`;
 				}
+			});
 
 
-			  //【當用戶點下mode icon,交換icon及文字 位置的效果】
-			  let moveRight = true; // 記錄方向
-				$(".header__icon-mode").on("click", function() {
 
-						// 1. 切換主題 (利用 data-theme 屬性)
-						var currentTheme = $("html").attr("data-theme");
-						if (currentTheme === "dark") {
-							 theme = localStorage.setItem("theme","light");
-						  $("html").attr("data-theme", "light");
-						} else {
-							theme = localStorage.setItem("theme","dark");
-						  $("html").attr("data-theme", "dark");
-						}
-
-						if (moveRight) {
-								$(".header__icon-mode-svg").animate(
-									{ left: "42px" }, 300);
-
-								$(".header__icon-mode-span").animate({
-										left: "10px",          // 移動元素
-										opacity: 0             // 改變透明度為 0（完全透明）
-									},150,function() {                 // 動畫結束後的回調函數
-											$(this).css("opacity", 1);  // 動畫結束後，恢復不透明
-									});
-									setTimeout(function() {
-								$(".header__icon-mode-span").text(theme);
-							}, 150);
-						} else {
-							$(".header__icon-mode-svg").animate({ left: "0px" }, 150);
-							$(".header__icon-mode-span").animate(
-								{
-									left: "28px",          // 移動元素
-									opacity: 0             // 改變透明度為 0（完全透明）
-								},
-								150,                        // 1秒（1000毫秒）動畫
-								function() {                 // 動畫結束後的回調函數
-									$(this).css("opacity", 1);  // 動畫結束後，恢復不透明
-								});
-
-							setTimeout(function() {
-								$(".header__icon-mode-span").text(theme);
-							}, 150);
-						}
-						moveRight = !moveRight; // 切換方向
-					});
-
-
-					//【當滑鼠移到icon上,給予使用者時間移到清單】
-					let hideTimeout;
-					 // 取消隱藏計時
-					$(".header__icon-search").mouseenter(function () {
-						clearTimeout(hideTimeout);
-						$(".header__menu-list-search").show();
-					});
-					$(".header__icon-profile").mouseenter(function () {
-						clearTimeout(hideTimeout);
-						$(".header__menu-list-profile").show();
-					});
-					// 如果滑鼠進入選單，取消隱藏計時
-					$(".header__menu-list-search").mouseenter(function () {
-						clearTimeout(hideTimeout);
-					});
-					$(".header__menu-list-profile").mouseenter(function () {
-						clearTimeout(hideTimeout);
-					});
-					// 延遲 300ms 隱藏
-					$(".header__icon-search, .header__menu-list-search").mouseleave(function () {
-						hideTimeout = setTimeout(function () {
-							$(".header__menu-list-search").hide();
-						}, 300);
-					});
-					$(".header__icon-profile, .header__menu-list-profile").mouseleave(function () {
-						hideTimeout = setTimeout(function () {
-							$(".header__menu-list-profile").hide();
-						}, 300);
-					});
-
-
- 		let search = document.querySelector('.header__search-input');
-
-	   	    search.addEventListener('keydown', function (e) {
-			if (e.key === 'Enter') {
-				console.log('searchText.value:', search.value);
-				let searchValue = search.value.trim();
-				if (!searchValue) return; // 避免存入空值
-
-				// 取得當前搜尋紀錄，轉為陣列
-				let searchHistory = localStorage.getItem("searchList");
-				let searchArray = searchHistory ? JSON.parse(searchHistory) : [];
-
-				// 限制最多 5 筆紀錄，超過則刪除最舊的
-				if (searchArray.length >= 5) {
-					searchArray.shift();
-				}
-				searchArray.push(searchValue);
-				console.log("searchValue",searchValue);
-				console.log("searchArray",searchArray);
-				// 清空現有搜尋紀錄
-				$(".search-record").html("");
-
-				if(searchArray.length<=0){
-					$(".search-record").append(`<p class="header__menu-item-search header__search-record" style="color:gray">你還沒有搜尋紀錄....</p>`);
-				}else{
-					// 遍歷搜尋紀錄陣列，並將每個項目顯示出來
-					searchArray.forEach(function(item) {
-						$(".search-record").append(`<p class="header__menu-item-search header__search-record">
-							<a style="color:black;" href="/search/searchAll?q=${encodeURIComponent(item)}">${item}</a>
-						</p><hr/>`);
-					});
-				}
-
-				// 存回 localStorage (轉成 JSON)
-				localStorage.setItem("searchList", JSON.stringify(searchArray));
-				console.log(`/search/searchAll?q=${encodeURIComponent(search.value)}`);
-				// 重定向到搜尋結果頁面
-				window.location.href = `/search/searchAll?q=${encodeURIComponent(search.value)}`;
-			}
-		});
-
-
-	
-
-				//【當用戶點下(search icon/profile icon/漢堡條) 顯示或隱藏選單】
-				$(".header__menu-btn").on("click",function(){
-					$(".header__menu").toggle().toggleClass("show--element");
-				})
-
-				//【當用戶點下 清除-搜尋紀錄按鈕】 只保留預設文字
-				$(".header__search-btn").on("click",function(){
-					localStorage.removeItem("searchList"); // 刪除 `searchList`
-					$(".search-record").html("");
-					$(".search-record").append(`<p class="header__menu-item-search header__search-record" style="color:gray">你還沒有搜尋紀錄....</p>`);
-				})
-
-					//【音樂撥放器-點選縮小 展開】
-					$(".window__header-zoom-out").on("click",function(){
-						$(".music-player__window").fadeOut();
-					})
-					$(".music-player__for-lg-dots,.music-player__for-md").on("click",function(){
-						$(".music-player__window").fadeIn();
-					})
-
-					//【音樂撥放器-播放/暫停按鈕切換】
-					$(".icon__play-circle, .icon__stop-circle").on("click", function () {
-						$(this).toggle(); // 隱藏當前按鈕
-						let $nextIcon = $(this).siblings(".icon__play-circle, .icon__stop-circle").toggle(); // 顯示另一個按鈕
-
-						// 檢查顯示的是暫停按鈕，才變紅
-						if ($nextIcon.hasClass("icon__stop-circle")) {
-							$nextIcon.attr("fill", "red");
-							console.log("撥放");
-							$("#audioPlayer")[0].play();  // 播放音樂
-							startSongTimer();
-
-						}else{
-													console.log("為撥放");
-							$("#audioPlayer")[0].pause();  // 播放音樂
-							stopSongTimer();
-						}
-					});
-
-					/******點選循環撥放時的效果****/
-					$(".music-player__circle-list, .music-player__circle-one").on("click", function () {
-								$(this).toggleClass("active");
-					});
-
-
-					/*****清單中的音樂被點選後要更新到[當前撥放]的文字*****/
-					$(".playlist__song-list").click(function () {
-						// 取得被點擊的歌曲資訊
-						var songName = $(this).find("p").text();  // 取得歌名
-						var artist = $(this).find("span").text(); // 取得歌手名稱
-						var musicID = $(this).data("musicid");    // 取得音樂 ID
-
-						// 更新上方播放區的資訊
-						$(".window__playlist-current .playlist__info p").text(songName);
-						$(".window__playlist-current .playlist__info span").text(artist);
-
-						// 更新音樂播放器音檔的 src
-						// var audioPlayer = $("#audioPlayer");
-						// audioPlayer.attr("src", "/Music/Play/" + musicID); // 假設你的 Controller 播放路徑為 /Music/Play/{id}
-						// audioPlayer[0].play(); // 自動播放音樂
-					});
-
-					// 當點擊登出，會 clear session
-					$(".header__btn-logout").click(function () {
-						$.post("/Accounts/Logout", function () {
-							console.log("Logout API called successfully!");
-							window.location.href = "/Home/Index";
-								}).fail(function () {
-							console.error("Failed to call Logout API.");
-						});
-					});
-
-				// 時間軸計時器
-				let songTimer;
-				let TimeText;
-					function startSongTimer(){
-						let Interval = 1000;
-						songTimer = setInterval(sliderProgress, Interval);
-						// TimeText = setInterval(songTimeText, Interval);
-					}
-
-					// 停止時間軸計時器
-					function stopSongTimer(){
-						if(songTimer){
-							clearInterval(songTimer);
-							songTimer = null;
-						}
-					}
-					// 時間軸進度條
-					function sliderProgress(){
-						// duration：音源的時間, in seconds(用get方式取得)
-						let duration = $('#audioPlayer').get(0).duration;
-
-						let currentTime = $('#audioPlayer')[0].currentTime;
-
-						let sliderPercent = (currentTime / duration) * 100;
-
-						$('.window__controls-range').val(sliderPercent);
-						// $('#slider').attr('value', sliderPercent);
-
-						songTimeText();
-					}
-					// function sliderProgress(){
-					// 	// duration：音源的時間, in seconds(用get方式取得)
-					// 	let duration = $('#audioPlayer').get(0).duration;
-
-					// 	let currentTime = $('#audioPlayer')[0].currentTime;
-
-					// 	let sliderPercent = (currentTime / duration) * 100;
-
-					// 	$('.window__controls-range').val(sliderPercent);
-					// 	// $('#slider').attr('value', sliderPercent);
-
-					// 	songTimeText();
-					// }
-
-					// 更新歌曲現在時間，parseint()轉整數
-					function songTimeText(){
-						let currentTime = $('#audioPlayer')[0].currentTime;
-						let min =  parseInt(currentTime / 60);
-						let seconds = parseInt(currentTime % 60);
-
-						// 10秒內，text呈現'00:00'
-						if(seconds < 10){
-							$('#songTimeText').text('0' + min + ':' + '0' + seconds);
-						}else{
-							$('#songTimeText').text('0' + min + ':' + seconds);
-						}
-					}
-
+			//【當用戶點下(search icon/profile icon/漢堡條) 顯示或隱藏選單】
+			$(".header__menu-btn").on("click",function(){
+				$(".header__menu").toggle().toggleClass("show--element");
 			})
+
+			//【當用戶點下 清除-搜尋紀錄按鈕】 只保留預設文字
+			$(".header__search-btn").on("click",function(){
+				localStorage.removeItem("searchList"); // 刪除 `searchList`
+				$(".search-record").html("");
+				$(".search-record").append(`<p class="header__menu-item-search header__search-record" style="color:gray">你還沒有搜尋紀錄....</p>`);
+			})
+
+			// 當點擊登出，會 clear session
+			$(".header__btn-logout").click(function () {
+				$.post("/Accounts/Logout", function () {
+					console.log("Logout API called successfully!");
+					window.location.href = "/Home/Index";
+						}).fail(function () {
+					console.error("Failed to call Logout API.");
+				});
+			});
+		});
 	</script>
 
 	@await RenderSectionAsync("Scripts", required: false)

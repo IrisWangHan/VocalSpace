@@ -1,4 +1,7 @@
-﻿<div class="container-fluid">
+﻿@{
+    ViewData["Title"] = "上傳音樂";
+}
+<div class="container-fluid">
     <div class="row justify-content-center">
         <!-- 上傳區域 -->
         <div class="col-md-6 mb-4">
@@ -6,13 +9,13 @@
                 <div class="text-center">
                     <i class="bi bi-cloud-arrow-up" style="font-size: 5rem; color:#F9595F;"></i>
                     <h4 class="mt-3 mb-3">上傳檔案或將檔案拖曳到這裡</h4>
-                    <p class="text-muted small">※ 上傳格式限 MP3，檔案大小上限為 150MB</p>
+                    <p class="text-muted small">※ 上傳格式限 MP3，檔案大小上限為 30MB</p>
                     
-                    <form id="uploadForm" asp-action="UploadFile" asp-controller="File" method="post" enctype="multipart/form-data" class="mt-4">
+                    <div id="uploadAudioForm" class="mt-4">
                         <div class="d-grid gap-2 col-md-6 mx-auto">
-                            <input type="file" id="fileInput" name="audioFile" class="d-none" accept=".mp3" onchange="handleFileSelection(this)">
+                            <input type="file" id="fileInput" name="audioFile" class="d-none" accept=".mp3">
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -35,13 +38,13 @@
                     <div class="row responsive-layout ">
                         <!-- 左側封面區域 -->
                         <div class="col-md-4 responsive-cover">
-                            <div class="text-center">
+                            <div class="left-part text-center">
                                 <div class="cover-preview mb-3" id="coverPreview">
-                                    <img src="/music/music-cover.jpg" alt="封面預覽" class="img-fluid">
+                                    <img src="/image/Song/default.jpg" alt="封面預覽" class="img-fluid">
                                 </div>
                                 <p class="small text-muted">圖片檔案大小不可超過 2MB</p>
                                 <label for="coverImageInput" class="btn btn-outline-secondary btn-sm">上傳封面</label>
-                                <input type="file" id="coverImageInput" class="d-none" accept="image/*" onchange="previewCoverImage(this)">
+                                <input type="file" id="coverImageInput" name="coverImage" class="d-none" accept=".jpeg,.png,.jpg" onchange="previewCoverImage(this)">
                             </div>
                         </div>
                         
@@ -67,15 +70,16 @@
                             <!-- 歌曲資訊表單 -->
                             <div class="mt-4">
                                 <h5>歌曲資訊</h5>
-                                <form id="songInfoForm"  action="/Home/Index">
+                                <div id="songInfoForm">
                                     <div class="row mb-3">
                                         <div class="col-md-11">
-                                            <input type="text" class="form-control" id="songTitle" value="" placeholder="歌曲標題">
+                                            <input type="text" class="form-control" name="songName" id="songTitle" value="" placeholder="歌曲標題">
+                                            <div class="error-feedback mt-1" style="color:#F9595F; font-size:15px ;display: none;" id="titleError">請輸入歌曲標題</div>
                                         </div>
                                     </div>
                                     <div class="row mb-3">
                                         <div class="col-md-11">
-                                            <select class="form-select" id="songGenre" required>
+                                            <select class="form-select" id="songGenre" name="categoryID" required>
                                                 <option value="0">分類：未分類</option>
                                                 <option value="1">搖滾</option>
                                                 <option value="2">民謠</option>
@@ -88,18 +92,18 @@
                                     </div>
                                     <div class="row mb-3">
                                         <div class="col-md-11">
-                                            <textarea class="form-control" id="songDescription" rows="6" placeholder="請輸入歌曲介紹"></textarea>
+                                            <textarea class="form-control" id="songDescription" name="description" rows="6" placeholder="請輸入歌曲介紹"></textarea>
                                         </div>
                                     </div>
                                     <div class="row mb-3">
                                         <div class="col-md-11">
-                                            <textarea class="form-control" id="songLyrics" rows="6" placeholder="請輸入歌詞"></textarea>
+                                            <textarea class="form-control" id="songLyrics" name="lyrics" rows="6" placeholder="請輸入歌詞"></textarea>
                                         </div>
                                     </div>
                                     <div class="text-end">
-                                        <button type="submit" class="btn btn-primary" style="background-color:#F9595F;border: 0px">送出</button>
+                                        <button id="submitSong" class="btn btn-primary" style="background-color:#F9595F;border: 0px">送出</button>
                                     </div>
-                                </form>
+                                </div>
                             </div>
                             <!-- 上傳成功彈窗 -->
                             <div class="custom-modal" id="successModal">
@@ -108,7 +112,6 @@
                                         <i class="bi bi-check2-circle"></i>
                                     </div>
                                     <div class="success-text">上傳成功</div>
-                                    <div class="processing-text">作品審核中</div>
                                     <p class="mt-3" style="color: #333;font-size:12px;" >跳轉到首頁中...</p>
                                 </div>
                             </div>
@@ -121,82 +124,114 @@
 </div>
 
 @section Scripts{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script>
-            // 檔案選擇處理
-            function handleFileSelection(input) { 
-                const maxSizeInBytes = 150 * 1024 * 1024; 
+        const maxSizeInBytes = 30 * 1024 * 1024; // 30MB 檔案大小限制
+        const maxSizePhoto = 2 * 1024 * 1024; // 2MB 封面圖片大小限制
+        let coverFile = null;
+        let audioFile = null;
 
-                // 判斷 > 上傳格式限 MP3，檔案大小上限為 150MB 
-                    if (input.files && input.files[0] && input.files.length == 1) { 
-                        const file = input.files[0];
+        // 重置上傳界面
+        function resetUpload() {
+                $('#errorArea').hide();
+                $('#fileInput').val('');
+                $('#uploadArea').show();
+        }
+        // 封面圖片預覽
+        function previewCoverImage(input) {
+            const file = input.files[0];
+            coverFile = file;
+            const preview = $('#coverPreview');
+            if (coverFile) {
+                if (coverFile.size <= maxSizePhoto) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        preview.html(`<img src="${e.target.result}" alt="封面預覽" class="">`);
+                    };
+                    reader.readAsDataURL(coverFile);
+                } else {
+                    alert("檔案上傳限制為2MB");
+                        coverFile="";
+                }
+            }
+        }
 
-                        // 檢查檔案類型和大小
-                        if (file.type === "audio/mpeg" && file.size <= maxSizeInBytes) { 
-                            // fileNameElement.textContent = file.name; 
-                            submitForm(); 
-                        } else { 
-                            // 顯示錯誤訊息
-                            let errorMsg = "";
-                            if (file.type !== "audio/mpeg") {
-                                errorMsg = "很抱歉！你的檔案不是合格的 MP3，要不要修改後再試試呢？";
-                            } else if (file.size > maxSizeInBytes) {
-                                errorMsg = "很抱歉！你的檔案大小超過 150MB 限制，請上傳較小的檔案。";
-                            }
-                            showErrorMessage(errorMsg);; 
-                        } 
-                    }else{
-                        errorMsg = "很抱歉！一次請上傳一份檔案。";
-                        showErrorMessage(errorMsg);
+        // 提交歌曲資訊表單
+        function checkTitleAndGenre() {
+            const songTitle = $('#songTitle');
+            const songGenre = $('#songGenre');
+            const songDescription = $('#songDescription');
+            if (!$('#fileInput').val()) {
+                alert('請先上傳音樂檔案！');
+                return false;
+            }
+
+            if (songTitle.val() === '') {
+                $('#titleError').show();
+                songTitle.addClass('is-invalid');
+                songTitle.on('change', function () {
+                    if ($(this).val() !== '') {
+                        $('#titleError').hide();
+                        $(this).removeClass('is-invalid');
                     }
-            } 
-            // 顯示錯誤訊息函數
+                });
+                return false;
+            } else if (songTitle.val().length > 20) {
+                alert('歌曲名稱不能超過 20 個字！');
+                return false;
+            }
+
+            if (songGenre.val() === '0') {
+                $('#genreError').show();
+                songGenre.addClass('is-invalid');
+                songGenre.on('change', function () {
+                    if ($(this).val() !== '0') {
+                        $('#genreError').hide();
+                        $(this).removeClass('is-invalid');
+                        return true;
+                    }
+                });
+                return false;
+            }
+
+            if (songDescription.val().length > 200) {
+                alert('歌曲介紹不能超過 200 個字！');
+                return false;
+            }
+            return true;
+        };
+
+        $(document).ready(function () {
+            // 顯示錯誤訊息
             function showErrorMessage(message) {
-                // 隱藏上傳區域
-                document.getElementById('uploadArea').style.display = 'none';
-
-                // 設置錯誤訊息
-                document.getElementById('errorMessage').textContent = message;
-
-                // 顯示錯誤區域
-                document.getElementById('errorArea').style.display = 'block';
+                $('#uploadArea').hide();
+                $('#errorMessage').text(message);
+                $('#errorArea').show();
             }
-
-            // 重置上傳界面函數
-            function resetUpload() {
-                document.getElementById('errorArea').style.display = 'none';    // 隱藏錯誤區域
-                document.getElementById('fileInput').value = '';                // 重置檔案輸入
-                document.getElementById('uploadArea').style.display = 'block';  // 顯示上傳區域
-            }
-
 
             // 模擬表單提交並顯示上傳進度
             function submitForm() {
-                const fileInput = document.getElementById('fileInput');
+                const fileInput = $('#fileInput')[0];
+                console.log(fileInput.files.length);
                 if (!fileInput.files || fileInput.files.length === 0) {
                     alert('請先選擇一個檔案');
                     return;
                 }
 
-                // 顯示上傳結果區域
-                document.getElementById('uploadResultContainer').style.display = 'block';
-                document.getElementById('uploadArea').style.display = 'none';
+                $('#uploadResultContainer').show();
+                $('#uploadArea').hide();
 
-                // 設置檔案名稱
-
-                const fullFileName = fileInput.files[0].name;   // 獲取完整檔案名稱
- 
-                document.getElementById('uploadedFileName').textContent = fullFileName;
-                document.getElementById('songTitle').value = fullFileName.substring(0, fullFileName.lastIndexOf('.'));
-
-                // 模擬上傳進度
+                const fullFileName = fileInput.files[0].name;
+                $('#uploadedFileName').text(fullFileName);
+                $('#songTitle').val(fullFileName.substring(0, fullFileName.lastIndexOf('.')));
                 simulateUploadProgress();
             }
 
             // 模擬上傳進度
             function simulateUploadProgress() {
                 let progress = 0;
-                const progressBar = document.getElementById('uploadProgress');
-                const statusMessage = document.getElementById('uploadStatusMessage');
+                const progressBar = $('#uploadProgress');
+                const statusMessage = $('#uploadStatusMessage');
 
                 const interval = setInterval(() => {
                     progress += Math.floor(Math.random() * 10) + 1;
@@ -204,145 +239,110 @@
                         progress = 100;
                         clearInterval(interval);
 
-                        // 上傳完成，更新界面
-                        progressBar.style.width = progress + '%';
-                        progressBar.textContent = progress + '%';
-                        progressBar.classList.remove('bg-danger');
-                        progressBar.classList.add('bg-success');
+                        progressBar.css('width', progress + '%').text(progress + '%')
+                            .removeClass('bg-danger').addClass('bg-success');
 
-                        statusMessage.classList.remove('alert-info');
-                        statusMessage.classList.add('alert-success');
-                        statusMessage.innerHTML = '<i class="bi bi-check-circle me-2"></i>檔案上傳成功';
+                        statusMessage.removeClass('alert-info').addClass('alert-success')
+                            .html('<i class="bi bi-check-circle me-2"></i>檔案上傳成功');
 
-                        // 隱藏取消按鈕
-                        document.getElementById('cancelUploadBtn').style.display = 'none';
+                        $('#cancelUploadBtn').hide();
                     } else {
-                        progressBar.style.width = progress + '%';
-                        progressBar.textContent = progress + '%';
+                        progressBar.css('width', progress + '%').text(progress + '%');
                     }
                 }, 300);
             }
 
-            // 封面圖片預覽
-            function previewCoverImage(input) {
-                const preview = document.getElementById('coverPreview');
-                const maxSizePhoto = 2 * 1024 * 1024;
 
-                if (input.files && input.files[0]) {
-                    if(input.files[0].size <=maxSizePhoto){
-                        const reader = new FileReader();
-
-                        reader.onload = function(e) {
-                            preview.innerHTML = `<img src="${e.target.result}" alt="封面預覽" class="img-fluid">`;
-                        }
-                        reader.readAsDataURL(input.files[0]);
-                    }else{
-                        alert("檔案上傳限制為2MB");
+            // 檔案選擇處理
+            function handleFileSelection(file) {
+                if (file) {
+                    if (file.type === "audio/mpeg" && file.size <= maxSizeInBytes) {
+                        audioFile = file;
+                        submitForm();
+                    } else {
+                        let errorMsg = file.type !== "audio/mpeg"
+                            ? "很抱歉！你的檔案不是合格的 MP3，要不要修改後再試試呢？"
+                            : "很抱歉！你的檔案大小超過 30MB 限制，請上傳較小的檔案。";
+                        showErrorMessage(errorMsg);
                     }
+                } else {
+                    showErrorMessage("很抱歉！一次請上傳一份檔案。");
                 }
-                    console.log(maxSizePhoto);
-                console.log(input.files[0]);
             }
+            // 點擊觸發檔案選擇器
+            $('.upload-container').off('click').on('click', function () {
+                $('#fileInput')[0].click(); // 直接觸發檔案選擇器
+            });
 
-            // 點擊整個上傳區域觸發檔案選擇
-            document.getElementById('uploadArea').addEventListener('click', function(e) {
-                // 避免點擊按鈕時觸發
-                if (e.target.id !== 'uploadButton' && !e.target.closest('#uploadButton')) {
-                    document.getElementById('fileInput').click();
+            // 檔案選擇後的處理
+            $('#fileInput').on('change', function () {
+                const file = this.files[0];
+                console.log("選擇的檔案：", file);
+                if (file) {
+                    handleFileSelection(file);
                 }
             });
 
             // 拖放功能
-            const uploadContainer = document.querySelector('.upload-container');
-            const fileInput = document.getElementById('fileInput');
-
-            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-                uploadContainer.addEventListener(eventName, preventDefaults, false);
-            });
-
-            function preventDefaults(e) {
+            $('.upload-container').on('dragenter dragover', function (e) {
                 e.preventDefault();
-                e.stopPropagation();
-            }
-
-            ['dragenter', 'dragover'].forEach(eventName => {
-                uploadContainer.addEventListener(eventName, highlight, false);
+                $(this).addClass('border-primary');
+            }).on('dragleave drop', function (e) {
+                e.preventDefault();
+                $(this).removeClass('border-primary');
             });
 
-            ['dragleave', 'drop'].forEach(eventName => {
-                uploadContainer.addEventListener(eventName, unhighlight, false);
+            $('.upload-container').on('drop', function (e) {
+                const files = e.originalEvent.dataTransfer.files;
+                const file = files[0];
+                handleFileSelection(file);
             });
 
-            function highlight() {
-                uploadContainer.classList.add('border-primary');
-            }
+            // 取消上傳功能
+            $('#cancelUploadBtn').on('click', function () {
+                if (confirm('確定要取消上傳嗎？')) {
+                    $('#uploadResultContainer').hide();
+                    $('#uploadArea').show();
+                }
+            });
 
-            function unhighlight() {
-                uploadContainer.classList.remove('border-primary');
-            }
+            // 送出表單
+            $("#submitSong").click(function () {
+                if (!coverFile || !audioFile) {
+                    alert("請選擇音樂圖片！");
+                    return;
+                }
+                
+                if(!checkTitleAndGenre()){
+                    return;
+                }
 
-            uploadContainer.addEventListener('drop', handleDrop, false);
+                let formData = new FormData();
+                formData.append("songName", $('#songTitle').val());
+                formData.append("categoryID", $('#songGenre').val());
+                formData.append("description", $('#songDescription').val());
+                formData.append("lyrics", $('#songLyrics').val());
+                formData.append("coverImage", coverFile);
+                formData.append("audioFile", audioFile);
 
-            function handleDrop(e) {
-                const dt = e.dataTransfer;
-                const files = dt.files;
-                fileInput.files = files;
-                handleFileSelection(fileInput);
-            }
-
-            // 初始化工具提示
-            document.addEventListener('DOMContentLoaded', function() {
-                // 啟用所有工具提示
-                const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-                tooltipTriggerList.map(function (tooltipTriggerEl) {
-                    return new bootstrap.Tooltip(tooltipTriggerEl);
-                });
-
-                // 取消上傳按鈕事件
-                document.getElementById('cancelUploadBtn').addEventListener('click', function() {
-                    if (confirm('確定要取消上傳嗎？')) {
-                        document.getElementById('uploadResultContainer').style.display = 'none';
-                        document.getElementById('uploadArea').style.display = 'block';
+                $.ajax({
+                    url: "/Collection/UploadMusic",
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function () {
+                        $('#successModal').css('display', 'flex');
+                        setTimeout(() => {
+                            window.location.href = '/home/index';
+                        }, 5000);
+                    },
+                    error: function () {
+                        alert("歌曲上傳失敗！");
                     }
                 });
             });
-            // 送出上傳作品後跳出審核中的彈窗
-            document.getElementById('songInfoForm').addEventListener('submit', function(event) {
-                // 獲取select元素
-                const songGenre = document.getElementById('songGenre');
-                const genreError = document.getElementById('genreError');
-
-                // 檢查select的值是否為0
-                if (songGenre.value === '0') {
-                    // 阻止表單提交
-                    event.preventDefault();
-
-                    // 顯示錯誤提示
-                    genreError.style.display = 'block';
-                    songGenre.classList.add('is-invalid');
-
-                    // 當用戶更改選擇時隱藏錯誤提示
-                    songGenre.addEventListener('change', function() {
-                        if (this.value !== '0') {
-                            genreError.style.display = 'none';
-                            this.classList.remove('is-invalid');
-                        }
-                    });
-
-                    return;
-                }
-                // 阻止表單默認提交行為
-                event.preventDefault();
-
-                // 顯示成功彈窗
-                const modal = document.getElementById('successModal');
-                modal.style.display = 'flex';
-
-                // 5秒後跳轉到/home/index
-                setTimeout(function() {
-                    window.location.href = '/home/index';
-                },5000);
-            });
-
+    });
     </script>
+    
 }

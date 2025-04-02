@@ -1,47 +1,21 @@
 ﻿
 @{
 }
+@model List<VocalSpace.Models.ViewModel.Search.PlaylistDTO>
 
-<div class="ranking-item">
-        <img src="./image/idol.jpg" class="cover-block" alt="song cover">
+@for (int k = 0; k < Model.Count; k++)
+{
+    <div class="ranking-item">
+        <a href="/Collection/listdetail/@Model[k].PlayListId"><img src="@Model[k].CoverImagePath" class="cover-block" alt="song cover"></a>
         <div class="info">
-            <p class="song">打不通的電話</p>
-            <p class="artist">1 首歌曲．Sean Ko 高翔</p>
+            <a href="/Collection/listdetail/@Model[k].PlayListId"><p class="song">@Model[k].Name</p></a>
+            <a href="/Personal/mymusic/@Model[k].UserId"><p class="artist">@Model[k].SongCount 首歌曲．@Model[k].UserName</p></a> <!-- 顯示正確的歌曲數量 -->
         </div>
-    @await Html.PartialAsync("_SongListButtonModal")
- </div>
-<div class="ranking-item">
-    <img src="./image/idol.jpg" class="cover-block" alt="song cover">
-    <div class="info">
-        <p class="song">打不通的電話</p>
-        <p class="artist">1 首歌曲．Sean Ko 高翔</p>
+        @await Component.InvokeAsync("PlayListButton", new { PlayListId = Model[k].PlayListId })
     </div>
-    @await Html.PartialAsync("_SongListButtonModal")
-</div>
-<div class="ranking-item">
-    <img src="./image/idol.jpg" class="cover-block" alt="song cover">
-    <div class="info">
-        <p class="song">打不通的電話</p>
-        <p class="artist">1 首歌曲．Sean Ko 高翔</p>
-    </div>
-    @await Html.PartialAsync("_SongListButtonModal")
-    </div>
-<div class="ranking-item">
-    <img src="./image/idol.jpg" class="cover-block" alt="song cover">
-    <div class="info">
-        <p class="song">打不通的電話</p>
-        <p class="artist">1 首歌曲．Sean Ko 高翔</p>
-    </div>
-    @await Html.PartialAsync("_SongListButtonModal")
-</div>
-<div class="ranking-item">
-    <img src="./image/idol.jpg" class="cover-block" alt="song cover">
-    <div class="info">
-        <p class="song">打不通的電話</p>
-        <p class="artist">1 首歌曲．Sean Ko 高翔</p>
-    </div>
-    @await Html.PartialAsync("_SongListButtonModal")
-    </div>
+}
+
+
     
 
 

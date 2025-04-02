@@ -1,0 +1,376 @@
+﻿
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model VocalSpace.Models.ViewModel.MusicPlayer.MusicPlayModel
+<section class="music-player">
+	<div class="music-player__for-md"></div>
+	@* 大螢幕 音樂撥放器會顯示在右下角 長條 *@
+	<div class="music-player__for-lg">
+		<img src="@(Model.CurrentCoverPhotoPath)" class="music-player__img-cover" />
+		<div class="playlist__info" data-src="@(Model.CurrentSongPath)">
+			<p data-PlayListId="@(Model.musicModels[0].PlayListId)" data-SongId="@(Model.CurrentSongId)">@(Model.CurrentSongName)</p>
+			<span>@(Model.CurrentArtistName)</span>
+		</div>
+		@* 撥放按鈕 *@
+		<i class="bi bi-play-fill  icon__play-circle"></i>
+		@* 暫停按鈕 *@
+		<i class="bi bi-pause  icon__stop-circle"></i>
+		@* 下一首按鈕 *@
+		<i class="bi bi-skip-end-fill  music-player__img-play music-player__next"></i>
+		@* 展開視窗 *@
+		<i class="bi bi-three-dots-vertical music-player__for-lg-dots"></i>
+	</div>
+	@* 開啟音樂撥放視窗 *@
+	<div class="music-player__window">
+		<header class="window__header">
+			<div class="window__header-zoom-out"></div>
+		</header>
+
+		@* 當前撥放歌曲顯示區 *@
+		<section class="window__playlist-current">
+			<div class="playlist__item" data-PlayListId="@(Model.musicModels[0].PlayListId)" data-SongId="@(Model.CurrentSongId)">
+				<img src="@(Model.CurrentCoverPhotoPath)" class="playlist__img-cover playlist__img-cover-current" alt="Album cover" />
+				<div class="playlist__info" data-src="@(Model.CurrentSongPath)">
+					<p data-PlayListId="@(Model.musicModels[0].PlayListId)" data-SongId="@(Model.CurrentSongId)">@(Model.CurrentSongName)</p>
+					<span>@(Model.CurrentArtistName)</span>
+				</div>
+				<span id="songTimeText" data-CurrentPlayedDuration="@(Model.CurrentPlayedDuration)" ></span>
+				@* 循環撥放單首按鈕 *@
+				<i class="bi bi-arrow-repeat music-player__circle-one" data-PlayListId="@(Model.musicModels[0].PlayListId)" data-SongId="@(Model.CurrentSongId)"></i>
+			</div>
+		</section>
+
+		@* 音樂撥放器icon 控制區 *@
+		<section class="window__controls">
+
+			@* 上一首按鈕 *@
+			<i class="bi bi-skip-start-fill music-player__pre"></i>
+			@* 撥放按鈕 *@
+			<i class="bi bi-play-fill  icon__play-circle"></i>
+			@* 暫停按鈕 *@
+			<i class="bi bi-pause  icon__stop-circle"></i>
+			@* 下一首按鈕 *@
+			<i class="bi bi-skip-end-fill  music-player__next"></i>
+
+
+			<audio id="audioPlayer" autoplay data-PlayListId="@(Model.musicModels[0].PlayListId)" data-SongId="@(Model.CurrentSongId)">
+				<source src="@(Model.CurrentSongPath)" type="audio/mpeg" id="musicSource">
+				您的瀏覽器不支援音樂播放。
+			</audio>
+			@* 進度條 *@
+			<input type="range" class="window__controls-range" />
+		</section>
+		@* 音樂撥放器下方顯示撥放清單區 *@
+		<div class="window__playlist-descrition">
+			@if (Model.musicModels[0].PlayListName!=""){
+			<span id="songListText">@(Model.musicModels[0].PlayListName)</span>
+			@* 循環撥放清單按鈕 *@
+			<i class="bi bi-arrow-repeat  music-player__circle-list"></i>
+			}
+		</div>
+		@* 下方撥放清單 *@
+		<section class="window__playlist">
+
+			@foreach (var song in Model.musicModels)
+			{
+				<div class="playlist__item playlist__song-list" data-PlayListId="@(song.PlayListId)" data-SongId="@(song.SongId)">
+					<img src="@(song.CoverPhotoPath)" class="playlist__img-cover" alt="Album cover" />
+					<div class="playlist__info" data-src="@(song.SongPath)">
+						<p data-PlayListId="@(song.PlayListId)" data-SongId="@(song.SongId)">@(song.SongName)</p>
+						<span>@(song.ArtistName)</span>
+					</div>
+				</div>
+			}
+
+		</section>
+	</div>
+</section>
+<style>
+	.music-player__for-lg i, .window__controls  i{
+		font-size: 30px;
+	}
+	/*音樂撥放器 外框*/
+	.music-player {
+		width: 320px;
+		height:60px;
+		border-radius: 5px;
+		box-shadow: inset 0 0 10px gray;
+		background-color: #2a2a2a;
+		position: fixed;
+		right: 5px;
+		bottom: calc( var(--footer-height) + 6px);
+		padding: 0px 10px;
+		line-height: 60px;
+	}
+
+	@@media (max-width: 768px) {
+		.music-player {
+			background-color: transparent;
+		}
+	}
+
+	/*將所有icon都設置hover*/
+	.bi {
+		cursor: pointer;
+	}
+
+		.bi:active {
+			transform: scale(0.9);
+		}
+
+
+	/*音樂撥放器(展開/未展開視窗時:預設先隱藏暫停按鈕)*/
+	.icon__stop-circle {
+		display: none;
+		transition: opacity 0.3s ease-in-out;
+	}
+	/*音樂撥放器(展開/未展開視窗時:文字顯示區)*/
+	.playlist__info {
+		margin: 0px 5px;
+		line-height: 20px;
+	}
+
+		.playlist__info p, .playlist__info span {
+			font-size: 16px;
+		}
+
+		.playlist__info p {
+			margin: 0;
+			color: aliceblue;
+		}
+
+		.playlist__info span {
+			color: gray;
+		}
+
+	.music-player i {
+		color: white;
+	}
+	/*音樂撥放器(未展開視窗時)*/
+	.music-player__for-lg {
+		display: flex;
+		justify-content: space-around;
+		align-items: center;
+		width: 100%;
+	}
+
+
+	/*音樂撥放器(未展開視窗時:封面圖片)*/
+	.music-player__img-cover {
+		border-radius: 5px;
+		box-shadow: -2px 2px #595757;
+		width: 35px;
+		height: 35px;
+		border: 2px solid gray;
+		border-radius: 5px;
+	}
+
+	@@media (max-width: 768px) {
+		.music-player {
+			width: 60px;
+			height: 60px;
+			box-shadow: initial;
+		}
+
+		.music-player__for-md {
+			width: 55px;
+			height: 55px;
+			border-radius: 5px;
+			background-image: url('/image/playerLogo.png');
+			background-size: cover; /* 讓圖片填滿 */
+			background-position: center; /* 讓圖片置中 */
+			background-repeat: no-repeat; /* 防止圖片重複 */
+			cursor: pointer;
+		}
+
+			.music-player__for-md:hover {
+				transform: scale(1.1);
+			}
+
+		.music-player__for-lg {
+			display: none;
+		}
+	}
+
+	/*音樂撥放器(展開視窗時)*/
+	.music-player__window {
+		width: 320px;
+		height: 360px;
+		bottom: calc( var(--footer-height) + 10px);
+		border-radius: 5px;
+		box-shadow: inset 0 0 10px gray;
+		background-color: #2a2a2a;
+		position: fixed;
+		right: 5px;
+		display: none;
+		z-index: 999;
+	}
+
+	@@media (max-width: 576px) {
+		.music-player__window {
+			width: 80%;
+			right: 50%;
+			transform: translate(50%, 50%);
+			bottom: 50%;
+			height: 350px;
+		}
+	}
+
+	/*音樂撥放器(展開視窗時的header)*/
+	.window__header {
+		width: 100%;
+		height: 20px;
+		background-color: #2a2a2a;
+		border-top-left-radius: 5px;
+		border-top-right-radius: 5px;
+		box-shadow: inset 0 0 10px gray;
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+	}
+	/*音樂撥放器(展開視窗時的header功能:縮小視窗)*/
+	.window__header-zoom-out {
+		width: 15px;
+		height: 3px;
+		background-color: rgba(240, 248, 255, 0.4);
+		margin-right: 15px;
+		border-radius: 2px;
+		cursor: pointer;
+	}
+	/*音樂撥放器(展開視窗時的區塊顯示:當前播放的音樂)*/
+	.window__playlist-current {
+		width: 100%;
+		padding: 10px 10px 0px 10px;
+	}
+
+	/*音樂撥放器(展開視窗時的區塊顯示:音樂時長)*/
+	#songTimeText {
+		margin-left: auto;
+		margin-right: 5px;
+		font-size: 10px;
+		color: aliceblue;
+	}
+	/*音樂撥放器(展開視窗時的icon控制區)*/
+	.window__controls {
+		width: 100%;
+		height: 25px;
+		padding: 0px 15px;
+		display: flex;
+		justify-content: space-around;
+		align-items: center;
+		position: relative;
+		/*margin-bottom: 20px;*/
+	}
+
+	/*音樂撥放器(展開視窗時的icon控制區: 音樂撥放器進度條)*/
+	.window__controls-range {
+		position: absolute;
+		bottom: -15px;
+		left: 50%;
+		transform: translateX(-50%);
+		-webkit-appearance: none;
+		width: 90%;
+		height: 3px;
+		background: #ddd;
+		border-radius: 5px;
+		outline: none;
+		transition: width 0.2s ease;
+	}
+		/* 自訂滑動紐（Chrome、Edge、Safari） */
+		.window__controls-range::-webkit-slider-thumb {
+			-webkit-appearance: none;
+			width: 10px; /* 圓形大小 */
+			height: 10px;
+			background: red; /* 滑動紐顏色 */
+			border-radius: 50%;
+			cursor: pointer;
+			position: relative;
+			/*top: 2px;*/ /* 調整滑動紐與軌道的距離 */
+		}
+
+
+	/*音樂撥放器(開啟視窗時的撥放清單區: 文字描述-撥放清單名稱/icon)*/
+	.window__playlist-descrition {
+		width: 90%;
+		height: 30px;
+		/*background-color: #212121;*/
+		border-radius: 5px;
+		/*background-color: antiquewhite;*/
+		margin: 20px 10px 0px 10px;
+		display: flex;
+		align-items: center;
+		color: #808080;
+		padding: 10px 20px 0px 15px;
+		/* height: 55px; */
+	}
+	/*音樂撥放器(展開視窗時的區塊顯示:音樂時長)*/
+	#songListText {
+		font-size: 10px;
+		color: #d3caca;
+		font-size: 14px;
+	}
+
+	.music-player__circle-list {
+		margin-left: 5px;
+	}
+	/*音樂撥放器(開啟視窗時的撥放清單區)*/
+	.window__playlist {
+		height: 170px;
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+		padding: 5px 10px;
+		flex-direction: column;
+		overflow-y: scroll;
+		background-color: #212121;
+		margin: 0px 10px;
+		border-radius: 5px;
+	}
+
+	@@media (max-width: 576px) {
+		.window__playlist {
+			height: 160px;
+		}
+	}
+	/*音樂撥放器(開啟視窗時的撥放清單區: scrollbar)*/
+	.window__playlist::-webkit-scrollbar {
+		height: 2px;
+		width: 6px;
+	}
+
+	.window__playlist::-webkit-scrollbar-track {
+		background-color: #37474F;
+		border-radius: 10px;
+		margin: 20px 130px;
+	}
+
+	.window__playlist::-webkit-scrollbar-thumb {
+		border-radius: 10px;
+		background-color: #2196F3;
+	}
+	/*音樂撥放器(展開視窗時的撥放清單區: 內容區塊(封面圖 詳細資訊)*/
+	.playlist__item {
+		width: 100%;
+		display: flex;
+		align-items: center;
+		margin-bottom: 5px;
+		padding: 5px 5px 0px 5px;
+		font-size: 14px;
+		cursor: pointer;
+	}
+	/*音樂撥放器(展開視窗時的[下方撥放清單列表]區: 內容區塊(封面圖 詳細資訊)*/
+	.playlist__song-list:active {
+		border-radius: 5px;
+		background-color: #2a2a2a;
+		transform: scale(0.9);
+	}
+	/*音樂撥放器(展開視窗時的撥放清單區: 專輯封面圖)*/
+	.playlist__img-cover {
+		width: 45px;
+		height: 45px;
+		border-radius: 2px;
+		margin-right: 10px;
+	}
+
+</style>

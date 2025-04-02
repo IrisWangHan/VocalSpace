@@ -1,8 +1,4 @@
-﻿.no-data {
-    text-align: center;
-    margin-top: 50px;
-    color: cornflowerblue
-}
+﻿
 
 .menu {
     display: flex;
@@ -175,7 +171,7 @@ p {
     }
 }*/
 
-@media screen and (max-width: 992px) {
+@media screen and (max-width: 1620px) {
 
     .menu {
         display: flex;
@@ -248,13 +244,17 @@ p {
             align-items: center;
             justify-content: center;
         }
-}
-
-@media screen and (max-width: 576px) { /* 適用於小於 576px (超小手機) */
     .col-sm-6 {
         flex: 0 0 100%; /* 讓圖片單獨一列 */
         max-width: 100%;
     }
+}
+
+@media screen and (max-width: 576px) { /* 適用於小於 576px (超小手機) */
+    /*.col-sm-6 {
+        flex: 0 0 100%;*/ /* 讓圖片單獨一列 */
+        /*max-width: 100%;
+    }*/
 
     .song img {
         max-width: 200px; /* 限制圖片最大寬度，避免過大 */

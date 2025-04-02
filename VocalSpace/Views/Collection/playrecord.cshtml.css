@@ -178,17 +178,18 @@ img {
     color: lightslategray;
 }
 
+
 .Randomplay {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: flex-start;
+    justify-content: left;
     margin: auto;
 }
 
-    .Randomplay .btn-danger {
-        display: flex;
-        justify-content: right;
+    .Randomplay h3 {
+        margin: 0px 0px 0px;
     }
+  
 
 .h2-row {
     display: flex;

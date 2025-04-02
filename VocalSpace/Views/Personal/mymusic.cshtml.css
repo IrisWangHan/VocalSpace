@@ -1,4 +1,5 @@
-﻿.menu {
+﻿
+.menu {
     display: flex;
     justify-content: center;
     gap: 20px;
@@ -99,22 +100,9 @@ hr {
 
 .button {
     display:flex;
-    justify-content:flex-end;
+    justify-content:flex-start;
 }
 
-.btn-outline-secondary.deletelist {
-
-    margin-right: 10px;
-    border: 1px solid gray;
-    border-radius:30%;
-}
-
-.btn-outline-secondary.editlist {
-
-    margin-right: 10px;
-    border: 1px solid gray;
-    border-radius: 30%;
-}
 .modal-title, .modal-body {
     color: black;
 }
@@ -138,7 +126,7 @@ p {
         width: 19%;
     }
 }
-@media screen and (max-width:1250px) {
+/*@media screen and (max-width:1250px) {
 
     .row {
         column-gap: 65px;
@@ -153,8 +141,15 @@ p {
         column-gap: 60px;
     }
 
+}*/
+
+@media screen and (max-width:1000px) {
+
+    .deleteSong {
+        display:none;
+    }
 }
-@media screen and (max-width: 992px) {
+/*@media screen and (max-width: 992px) {
     .song img {
         width: 150px;
         height: 150px;
@@ -163,8 +158,8 @@ p {
     .row {
         column-gap: 0px;
     }
-}
-    @media screen and (max-width: 768px) {
+}*/
+    @media screen and (max-width: 1440px) {
 
         .menu {
             display: flex;
@@ -217,21 +212,18 @@ p {
             gap: 5px; /* 按鈕間距 */
             flex-shrink: 0; /* 防止按鈕被壓縮 */
             margin-top: auto; /* 讓按鈕向下對齊 */
+            justify-content: flex-end;
         }
 
         .btn-outline-secondary {
 
             font-size: 14px; /* 減小字體大小 */
         }
+        .col-sm-5{
+            flex: 0 0 100%; /* 讓圖片單獨一列 */
+            max-width: 100%;
+        }
 
-            .btn-outline-secondary.deletelist,
-            .btn-outline-secondary.editlist {
-                width: 36px; /* 設定固定寬度 */
-                height: 36px; /* 設定固定高度 */
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
     }
 
 @media screen and (max-width: 576px) { /* 適用於小於 576px (超小手機) */
@@ -248,5 +240,6 @@ p {
     .playlist-card {
         width: 95%; /* 增加手機適應度 */
     }
+
 }
 

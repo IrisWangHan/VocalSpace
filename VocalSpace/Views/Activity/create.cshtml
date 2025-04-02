@@ -74,7 +74,7 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="shareModalLabel">活動申請提交 - 上傳進度</h5>
+				<h5 class="modal-title" id="shareModalLabel">活動- 上傳進度</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
@@ -83,8 +83,7 @@
 						<i class="text-black bi bi-cloud-check display-1"></i>
 					</div>
 					<div class="col-6 text-black d-flex flex-column justify-content-center align-items-center">
-						<p class="fs-4">您的活動已申請提交</p>
-						<p class="fs-4">等待管理員審核中!</p>
+						<p class="fs-4 mt-0 mb-0">您的活動已申請提交</p>
 					</div>
 				</div>
 			</div>
@@ -102,7 +101,7 @@
 		// 檢查用戶是否登入
 		if (!userId) {
 			alert("請先登入！");
-			window.location.href = '/Accounts/Login';
+			nologin();
 		}
 
 		// 封面圖片預覽與檔案大小驗證
@@ -152,7 +151,7 @@
 				const coverImageInput = document.getElementById("coverImageInput");
 
 				if (title || eventDate || location || city || description || coverImageInput.files.length > 0) {
-					if (confirm("表單有內容，是否儲存草稿到LocalStorage？")) {
+					if (confirm("表單有內容，是否儲存草稿？")) {
 						const draft = {
 							title: title,
 							eventDate: eventDate,
@@ -225,6 +224,7 @@
 					contentType: false,
 					processData: false,
 					success: function (data) {
+						$("#shareModalLabel").text(`活動 ${title} - 上傳進度`);
 						$("#ActivityCommitModal").modal("show");
 						localStorage.removeItem("eventDraft"); //清除草稿資料
 					},

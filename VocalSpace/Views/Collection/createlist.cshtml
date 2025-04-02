@@ -1,63 +1,81 @@
-﻿<div class="container">
+﻿@{
+    ViewData["Title"] = "創建歌單";
+}
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <ul>
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <li>@error.ErrorMessage</li>
+            }
+        </ul>
+    </div>
+}
+<div class="container">
     <div class="h1"><h1>蒐藏庫</h1></div>
     <hr />
     <div class="cont">
         <div class="sidebar">
             <ul id="myList">                    
-                <a asp-action ="like"><li>我的喜歡<i class="bi bi-bookmark-heart"></i></li></a>
-                <a asp-action="mylist"><li class="selected">我的歌單</li></a>
-                <a asp-action="playrecord"><li>播放紀錄</li></a>
-                <a asp-action="booking"><li >我訂閱的歌單</li></a>
+                <a asp-action ="like" asp-route-id="@ViewBag.LoginId"><li>我的喜歡<i class="bi bi-bookmark-heart"></i></li></a>
+                <a asp-action="mylist" asp-route-id="@ViewBag.LoginId"><li class="selected">我的歌單</li></a>
+                <a asp-action="playrecord" asp-route-id="@ViewBag.LoginId"><li>播放紀錄</li></a>
+                <a asp-action="booking" asp-route-id="@ViewBag.LoginId"><li >我訂閱的歌單</li></a>
             </ul>
         </div>
 
 
         <div class="createform">
             <div class="title"><h2>蒐藏庫 / 我的歌單 /</h2><h2 class="red">新增歌單</h2></div>
-            <div class="content">
+            <form method="post" asp-controller="Collection" asp-action="createlist" enctype="multipart/form-data">
 
-                <div class="leftcontent">
-                    <!-- <div class="cover-upload">封面</div>
-                    <input type="file" class="upload-btn" value="上傳封面"> -->
+                <div class="content">
+
+                    <div class="leftcontent">
+                        <!-- <div class="cover-upload">封面</div>
+                        <input type="file" class="upload-btn" value="上傳封面"> -->
 
 
-                    <div class="cover-container">
-                        <div class="cover">
-                            <img id="preview" alt="封面圖片">
+                        <div class="cover-container">
+                            <div class="cover">
+                                <img id="preview" alt="封面圖片">
+                            </div>
+                            <label class="upload-btn">
+                                選擇圖片
+                                <input type="file" id="fileInput" name="CoverImage" accept="image/*">
+                            </label>
                         </div>
-                        <label class="upload-btn">
-                            選擇圖片
-                            <input type="file" id="fileInput" accept="image/*">
-                        </label>
+
+                        <div id="fileName">未選擇圖片</div>
                     </div>
 
-                    <div id="fileName">未選擇圖片</div>
-                </div>
+                    <div class="rightcontent">
+                        <input type="text" class="input-field" name="Name" placeholder="請輸入歌單名稱">
+                        <div class="introduce">
+                            <h4>介紹</h4>
+                            <textarea class="input-field" name="PlaylistDescription" placeholder="請輸入歌單介紹文字"></textarea>
+                        </div>
 
-                <div class="rightcontent">
-                    <input type="text" class="input-field" placeholder="請輸入歌單名稱">
-                    <div class="introduce">
-                        <h4>介紹</h4>
-                        <textarea class="input-field" placeholder="請輸入歌單介紹文字"></textarea>
-                    </div>
-                    
-                    <div class="status-toggle">
-                        <h4>歌單狀態</h4>
-                        <label class="switch">
-                            <input type="checkbox" id="toggleSwitch">
-                            <span class="slider"></span>
+                        <div class="status-toggle">
+                            <h4>歌單狀態</h4>
+                            <label class="switch">
+                                <input type="checkbox" id="toggleSwitch" name="IsPublic">
+                                <span class="slider"></span>
                         </label>
                     </div>
-                    <button class="create-btn">新增歌單</button>
+                    <button type="submit" class="create-btn">新增歌單</button>
                 </div>
             </div>
-        </div>
+			</form>
+		</div>
+        
     </div>
 </div>
 <script>
     const list = document.getElementById('myList');
     const items = list.getElementsByTagName('li');
-
+    
     // 為每個 list 項目加上 click 事件監聽器
     for (let i = 0; i < items.length; i++) {
       items[i].addEventListener('click', function() {
@@ -88,5 +106,9 @@
         } else {
             fileNameDisplay.textContent = "未選擇圖片";
         }
+    });
+
+        document.getElementById('toggleSwitch').addEventListener('change', function() {
+      this.value = this.checked ? true : false;
     });
 </script>

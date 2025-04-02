@@ -7,14 +7,11 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Facebook;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System.Security.Cryptography;
-using Org.BouncyCastle.Crypto.Generators;
-using BCrypt.Net;
 using VocalSpace.Models.ViewModel.Account;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
-using System.Net;
 using System.Text;
+using VocalSpace.Services;
+using System.Web;
 
 
 
@@ -25,28 +22,50 @@ namespace VocalSpace.Controllers
 
         private readonly VocalSpaceDbContext _context;
         private readonly EmailService _emailService;
-        public AccountsController(VocalSpaceDbContext context, EmailService emailService)
+        private readonly FileService _fileService;
+        private readonly UserService _userService;
+        public AccountsController(VocalSpaceDbContext context, EmailService emailService, UserService userService,FileService fileService)
         {
             _context = context;
             _emailService = emailService;
+            _fileService = fileService;
+
+            _userService = userService;
         }
 
         // 確保頁面刷新時拿到最新狀態
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [SessionAuthorize]
-        public IActionResult Login()
+        [HttpGet]
+        public IActionResult Login(string returnUrl = null)
         {
+            if (!string.IsNullOrEmpty(returnUrl))
+            {
+                Uri uri;
+                if (Uri.TryCreate(returnUrl, UriKind.Absolute, out uri))
+                {
+                    returnUrl = uri.PathAndQuery;
+                }
+            }
+            ViewData["ReturnUrl"] = returnUrl;
             return View();
-        }
+        }   
 
         [HttpPost]
-        public async Task<IActionResult> Login(string account, string password)
+        public async Task<IActionResult> Login(string account, string password, string returnUrl = null)
         {
             var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.Account == account || u.UsersInfo!.Email == account);
 
+            if (user == null)
+            {
+                TempData["loginFailMsg"] = "登入失敗，請輸入正確的帳號與密碼";
+                Console.WriteLine(TempData["loginFailMsg"]);
+                return View();
+            }
+
             Console.WriteLine("開始驗證");
-            var isCorrectPwd = VerifyPassword(password, user.Password);
+            var isCorrectPwd = VerifyPassword(password, user!.Password);
             Console.WriteLine("驗證密碼結果>>> "+ isCorrectPwd);
 
             if ( user != null  && isCorrectPwd)
@@ -55,11 +74,15 @@ namespace VocalSpace.Controllers
                 HttpContext.Session.SetInt32("UserId", (int)user.UserId);
                 HttpContext.Session.SetString("IsLoggedIn", "true");
                 Console.WriteLine("登入成功!!");
+                // 檢查 returnUrl 是否為有效的本地 URL
+                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                {
+                    return Redirect(returnUrl);
+                }
+
                 return RedirectToAction("Index", "Home");
             }
-            
             TempData["loginFailMsg"] = "登入失敗，請輸入正確的帳號與密碼";
-            Console.WriteLine(TempData["loginFailMsg"]);
             return View();
         }
         public IActionResult GoogleLogin()
@@ -139,7 +162,7 @@ namespace VocalSpace.Controllers
         public async Task<IActionResult> ForgetPassword(string userEmail)
         {
             var userInfo = await _context.UsersInfos.FirstOrDefaultAsync(u => u.Email == userEmail);
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userInfo.UserId);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userInfo!.UserId);
             if (userInfo == null)
             {
                 Console.WriteLine("後端查無此email");
@@ -166,7 +189,7 @@ namespace VocalSpace.Controllers
                 return Json(new { success = false, message = "重設密碼連結已過期..." });
             }
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.UsersInfo.Email == email);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UsersInfo!.Email == email);
             if (user == null)
             {
                 return Json(new { success = false, message = "找不到使用者" });
@@ -215,7 +238,7 @@ namespace VocalSpace.Controllers
             {
                 // Token 無效或過期
                 Console.WriteLine(ex.Message);
-                return null;
+                return "Token 已過期";
             }
         }
 
@@ -250,7 +273,7 @@ namespace VocalSpace.Controllers
 
         public async Task<IActionResult> VerifyCode(string code)
         {
-            var correctCode = HttpContext.Session.GetString("VerificationCode");
+            var correctCode = await Task.FromResult(HttpContext.Session.GetString("VerificationCode"));
             if (correctCode == code)
             {
                 Console.WriteLine("輸入驗證碼OK");
@@ -272,13 +295,13 @@ namespace VocalSpace.Controllers
             {
                 return Json(new { success = false, message = "帳號已被使用" });
             }
-            string hashedPassword = HashPasswordWithBcrypt(model.SignupPassword);
+            string hashedPassword = await Task.FromResult(HashPasswordWithBcrypt(model.SignupPassword!));
 
             var user = new User
             {
                 UserName = model.SignupUserName,
                 AuthorityId = 2,
-                Account = model.SignupAccount,
+                Account = model.SignupAccount!,
                 Password = hashedPassword,
                 CreateTime = DateTime.Now
             };
@@ -292,7 +315,7 @@ namespace VocalSpace.Controllers
                 UserId = user.UserId,
                 Birthday = model.SignupUserBirthdate,
                 PersonalIntroduction = model.SignupUserBio,
-                Email = model.SignupEmail
+                Email = model.SignupEmail!
             };
             Console.WriteLine("寫入userinfo start");
             _context.UsersInfos.Add(userInfo);
@@ -333,36 +356,222 @@ namespace VocalSpace.Controllers
             return Convert.ToBase64String(Encoding.UTF8.GetBytes(tokenPayload)); // 使用 Base64 編碼來生成最終 Token
         }
 
-
-
         //  整合  AccountSettings
-        public IActionResult memberInformation()
+        [SessionToLogin]
+        public async Task<IActionResult> memberInformation(string id)
         {
-
-            return View();
+            long? userId = HttpContext.Session.GetInt32("UserId");
+            UserSettingViewModel? UserViewModel = await _userService.GetUserDataAsync(userId);
+            return View(UserViewModel);
         }
-        public IActionResult imageSetting()
+        //  接收 memberInformation表單資料
+        [HttpPost("/Accounts/UserInfo")]
+        public async Task<IActionResult> ChangeUserInfo(IFormCollection form)
         {
-            return View();
+            long? userId = HttpContext.Session.GetInt32("UserId");
+            UserSettingViewModel UserViewModel = new UserSettingViewModel
+            {
+                UserId = userId!.Value,
+                UserName = form["username"],
+                Birthday = form["birthday"],
+                PersonalIntroduction = form["introduction"]
+            };
+           bool isSuccess = await _userService.UpdateUserDataAsync(UserViewModel);
+
+            if (!isSuccess)
+            {
+                return StatusCode(500, new { message = "操作失敗，請稍後再試。" });
+            }
+            //  導向 /Accounts/memberInformation/{id = userId }
+            return RedirectToAction("memberInformation", new { id = userId });
         }
 
-        public IActionResult changeEmail()
+        /// <summary>
+        /// 頭像與封面
+        /// </summary>
+        /// <returns></returns>
+        [SessionToLogin]
+        public async Task<IActionResult> imageSetting()
         {
-            return View();
+            var userId = HttpContext.Session.GetInt32("UserId");
+
+            var userInfo = await _context.UsersInfos.FirstOrDefaultAsync(u => u.UserId == userId);
+            if (userInfo == null)
+            {
+                return NotFound();
+            }
+
+            var model = new ImageSettingViewModel
+            {
+                AvatarPath = userInfo.AvatarPath,
+                BannerImagePath = userInfo.BannerImagePath
+            };
+
+            return View(model);
         }
 
-        public IActionResult Income()
+        /// <summary>
+        /// 上傳封面、頭像邏輯
+        /// </summary>
+        /// <returns></returns>
+
+        [HttpPost]
+        public async Task<IActionResult> imageSetting(IFormFile avatar, IFormFile banner)
         {
-            return View();
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            var userInfo = await _context.UsersInfos.FirstOrDefaultAsync(u => u.UserId == userId);
+            if (userInfo == null)
+            {
+                return NotFound();
+            }
+
+            if (avatar != null && avatar.Length > 0)
+            {
+                userInfo.AvatarPath = await _fileService.UploadUserAvatar(avatar);
+            }
+
+            if (banner != null && banner.Length > 0)
+            {
+                userInfo.BannerImagePath = await _fileService.UploadUserBanner(banner);
+            }
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("imageSetting");
+        }
+        
+
+        [SessionToLogin]
+        public async Task<IActionResult> changeEmail()
+        { 
+            // 取得使用者ID
+            long? userId = HttpContext.Session.GetInt32("UserId");
+            //  回傳使用者的 舊email
+            var email = await _userService.GetUserEmailAsync(userId);
+
+            //  還沒有更改信箱 "null"
+            if ( TempData["success"] == null) 
+            {
+                TempData["success"] = "null";
+            }
+            
+            return View(email);
+        }
+        //  接收 changeEmail 表單資料
+        [HttpPost]
+        public async Task<IActionResult> ChangeEmailPost(string NewEmail)
+        {
+            // 取得使用者ID
+            long? userId = HttpContext.Session.GetInt32("UserId");
+            
+            //  更新使用者的 email
+            string token = GenerateResetToken(NewEmail);
+            string resetLink = $"https://localhost:7145/Accounts/ChangeEmailConfirm?id={userId}&token={token}";
+            Console.WriteLine("token: " + token);
+            var sentSuccess = await _emailService.SendChangeEmailAsync(NewEmail, resetLink);
+            Console.WriteLine("是否寄出成功:" + sentSuccess);
+            
+            if (!sentSuccess)
+            {
+                return StatusCode(500, new { message = "寄信失敗，請稍後再試。" });
+            }
+            return Ok( new { sentSuccess = true , message = "請查收 Email 來更改信箱" });
+            
         }
 
+        [HttpGet]
+        public async Task<IActionResult> ChangeEmailConfirm(long id, string token)
+        {
+            
+
+            string email = ValidateResetToken(token); // 解析 & 驗證 token
+            //  驗證失敗
+            if (email == null)
+            {
+                TempData["success"] = "false";
+                TempData["message"] = "更改信箱連結已過期，請重新再試";
+                return RedirectToAction("changeEmail");
+            }
+            var user = await _context.Users.Include(user => user.UsersInfo).FirstOrDefaultAsync(user => user.UserId  == id);
+            if (user == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            // 更新信箱
+            user.UsersInfo!.Email = email;
+            await _context.SaveChangesAsync();
+            
+            TempData["success"] = "true";
+            TempData["message"] = "信箱已成功更改";
+            return RedirectToAction("changeEmail");
+        }
+
+        [SessionToLogin]
+        public async Task<IActionResult> Income()
+        {
+            // 取得使用者ID
+            long? userId = HttpContext.Session.GetInt32("UserId");
+            var data = await _userService.GetIncomeDataAsync(userId!.Value);
+            return View(data);
+        }
+        [SessionToLogin]
         public IActionResult changePassword()
         {
             return View();
         }
-        public IActionResult deleteAccount()
+
+        //  接收 changePassword 表單資料
+        [HttpPost]
+        public async Task<IActionResult> ChangePasswordPost(string NewPassword, string Oldpassword)
         {
+            // 取得使用者ID
+            long? userId = HttpContext.Session.GetInt32("UserId");
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+            if (user == null)
+            {
+                return Unauthorized("請先登入");
+            }
+            // 驗證舊密碼
+            bool isCorrectPwd = VerifyPassword(Oldpassword, user.Password);
+            if (!isCorrectPwd)
+            {
+                return BadRequest(new { success = false, message = "舊密碼錯誤" });
+            }
+            // 更新密碼
+            user.Password = HashPasswordWithBcrypt(NewPassword);
+            await _context.SaveChangesAsync();
+            return Ok(new { success = true, message = "密碼已成功更改" });
+        }
+
+        [SessionToLogin]
+        public async Task<IActionResult> deleteAccount()
+        {
+            // 取得使用者ID
+            long? userId = HttpContext.Session.GetInt32("UserId");
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+            ViewData["UserName"] = user!.UserName;
             return View();
+        }
+        [HttpGet]
+        public async Task<IActionResult> deleteAccountButton()
+        {
+            // 取得使用者ID
+            long? userId = HttpContext.Session.GetInt32("UserId");
+            var(isSuccess, isDeleted) = await _userService.DeleteAccountAsync(userId!.Value);
+            if (!isSuccess)
+            {
+                return StatusCode(500, new { message = "操作失敗，請稍後再試。" });
+            }
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);      // 清除認證
+            HttpContext.Session.Clear();
+            Console.WriteLine("已清空session");
+            //  刪除成功，頁面出現彈窗，訊息: "帳號已刪除，將導向首頁"
+            return Ok(new { isSuccess = true, message = "帳號已刪除，將導向首頁" });
         }
     }
 

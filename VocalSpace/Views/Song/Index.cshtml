@@ -2,33 +2,6 @@
 @{
 	ViewData["Title"] = Model.Song.SongName+" by "+ Model.User.Account;
 }
-@{
-	var category = "";
-	switch (Model.SongCategory.SongCategoryId)
-	{
-		case 1:
-			category = "/exploreMusic/ExploreMusicRock";
-			break;
-		case 2:
-			category = "/exploreMusic/ExploreMusicFolk";
-			break;
-		case 3:
-			category = "/exploreMusic/ExploreMusicHiphop";
-			break;
-		case 4:
-			category = "/exploreMusic/ExploreMusicCitypop";
-			break;
-		case 5:
-			category = "/exploreMusic/ExploreMusicEDM";
-			break;
-		case 6:
-			category = "/exploreMusic/ExploreMusicExplore";
-			break;
-		default:
-			category = "#";
-			break;
-	}
-}
 <div class="page-container mb-5">
 	<div class="top-container container">
 		<!-- 左側圖片區域 -->
@@ -37,10 +10,10 @@
 		</div>
 		<!-- 右側音樂介紹區域 -->
 		<div class="row col-md-8 songinfo">
-			<h1>@Model.Song.SongName 歌曲路徑為:@Model.Song.SongPath</h1>
+			<h1>@Model.Song.SongName</h1>
 			<div class="opacity-50">
 				<div>
-					<a href="@category">@Model.SongCategory.CategoryName</a>
+					<a href="/exploreMusic/ExploreMusicAll?musicType=@Model.SongCategory.SongCategoryId">@Model.SongCategory.CategoryName</a>
 				</div>
 			</div>
 			<div class="cols-2">
@@ -69,7 +42,7 @@
 							<button class="btn btn-outline-secondary btn-circle btn-lg" data-bs-toggle="modal" data-bs-target="#donateModal" title="贊助">
 								<i class="bi bi-gem"></i>
 							</button>
-							<button class="btn btn-danger btn-circle btn-lg btn-play" data-songname=@Model.Song.SongName title="播放">
+							<button class="btn btn-danger btn-circle btn-lg btn-play" data-songname=@Model.Song.SongName data-songid=@Model.Song.SongId title="播放">
 								<i class="bi bi-play-fill"></i>
 							</button>
 						</div>
@@ -78,12 +51,12 @@
 			</div>
 		</div>
 	</div>
-	@await Html.PartialAsync("_Modal_Donate") @*暫時不做成AJAX載入，等Kevin弄完金流*@
+	@await Html.PartialAsync("_Modal_Donate")
 	<!-- 放在圖片下方的歌手資訊 -->
 	<div class="bottom-container container">
 		<div class="left-container  col-4">
 			<!-- AJAX動態載入-UserBar -->
-			<!--用個假趴秀先封裝AJAX用的div-->
+			<!--用個假趴秀先封裝AJAX用的div容器-->
 			@await Html.PartialAsync("_UserbarContainer_partial",Model.User.UserId)
 			<div class="container">
 				<hr class="mt-5 mb-2">

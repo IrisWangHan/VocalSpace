@@ -1,8 +1,8 @@
 ﻿@model IEnumerable<VocalSpace.Models.ViewModel.Song.SongViewModel>
 @{
+    ViewData["Title"] = "最Hot排行榜!";
     int count = 1;
 }
-<link rel="stylesheet" href="~/css/song.css" asp-append-version="true" />
 
 <title>聲維宇宙排行榜</title>
 <div class="container">
@@ -34,9 +34,7 @@
                 <h2 class="no-data">暫無資料</h2>
             }
             else
-            {
-                <div class="playAll"><button class="btn btn-danger" onclick="playAll()"><i class="bi bi-play"></i>全部播放</button></div>
-                <br />
+            {               
                 <div id="realtime" class="ranking-list">
                     @{@foreach(var item in Model){
                             <div class="ranking-item">
@@ -78,3 +76,28 @@
         </main>
     </div>
 </div>
+<script>
+    
+     document.addEventListener("DOMContentLoaded", function () {
+            // 取得當前網址的路徑，例如 `/3` 或 `/HotRank/3`
+            const pathSegments = window.location.pathname.split("/").filter(segment => segment);
+
+            // 取得最後一個段落作為 ID，若不存在則預設為 "0"
+            let currentId = pathSegments.length > 0 ? pathSegments[pathSegments.length - 1] : "0";
+
+            // 確保 currentId 是數字，否則預設為 "0"
+            if (isNaN(currentId)) {
+                currentId = "0";
+            }
+
+            // 清除所有 .selected
+            document.querySelectorAll("#myList li").forEach(li => li.classList.remove("selected"));
+
+            // 找到對應的 <li>，加上 .selected
+            const activeLi = document.querySelector(`#myList li[data-id="${currentId}"]`);
+            if (activeLi) {
+                activeLi.classList.add("selected");
+            }
+        });
+
+</script>

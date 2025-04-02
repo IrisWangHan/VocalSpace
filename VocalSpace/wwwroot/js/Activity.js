@@ -23,7 +23,7 @@
 
         if (type === "mine" && !userId) {
             alert("請先登入會員！");
-            window.location.href = "/Accounts/Login";
+            nologin();
         } else {
             // 更新活動列表
             isFilterMyActivities = (type === "mine");
@@ -81,7 +81,8 @@
             error: function (xhr) {
                 if (xhr.status === 401) {
                     // 未登入，導向登入頁面
-                    window.location.href = "/Accounts/Login";
+                    alert("請先登入!");
+                    nologin();
                 } else {
                     alert("發生錯誤，請稍後再試！");
                 }
@@ -186,11 +187,6 @@
         filters.endDate = end;
         loadActivityList(userId, isFilterMyActivities);
         $('#activityListTitle').text(`活動列表：${start} ~ ${end}`);
-    }
-
-    // 格式化日期 (yyyy-MM-dd)
-    function formatDate(date) {
-        return date.toISOString().split('T')[0];
     }
 
     // 增加天數

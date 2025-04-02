@@ -73,8 +73,10 @@ main {
 
 /*上方區塊*/
 .songpfp img {
+    object-fit: cover;
     width: 100%;
     max-width: 380px;
+    max-height: 380px;
     border: 5px solid;
     border-radius: 2px;
 }

@@ -34,10 +34,11 @@ namespace VocalSpace.Controllers
             IQueryable<SongViewModel> result = from song in _context.Songs
                                             join rank in _context.SongRanks on song.SongId equals rank.SongId
                                             join user in _context.Users on song.Artist equals user.UserId
-                                            join category in _context.SongCategories on song.SongCategoryId equals category.SongCategoryId
-                                            where rank.RankPeriod == (DateTime.Parse("2025-02-01"))
+                                            join category in _context.SongCategories on song.SongCategoryId equals category.SongCategoryId                                            
                                             group new { song, rank, user, category } by song.SongId into grouped
-                                            orderby grouped.Min(g => g.rank.CurrentRank)
+                                            orderby
+                                               grouped.All(g => g.rank.CurrentRank == 0 && (g.rank.PreRank ?? 0) == 0) ascending, // 讓 (PreRank 和 CurrentRank 皆為 0) 的排最後
+                                               grouped.Min(g => g.rank.CurrentRank)
                                             select new SongViewModel
                                             {
                                                 SongId = grouped.First().song.SongId,

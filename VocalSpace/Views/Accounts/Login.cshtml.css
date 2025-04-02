@@ -9,7 +9,7 @@
     justify-content: center; /* 垂直置中 */
     align-items: center; /* 水平置中 */
     width: 100%; /* 設定一個最大寬度，避免過大 */
-    margin: 5vh auto; /* 水平置中 */
+    margin: 4vh auto; /* 水平置中 */
 }
 
 .button-container > button, a {
@@ -58,17 +58,14 @@
     margin-bottom: 10px; /*按鈕間距*/
 }
 
-.form-check-input {
-    margin-right: 3px;
-}
-
-.form-check-label{
-    font-weight: bold;
-}
-
 .form-group {
     margin-top: 20px;
-    /*    position: relative;*/
+}
+
+.forget-text {
+    margin-right: 12px;
+    font-weight: normal;
+    color: #bab8b3;
 }
 
 .login-fail-msg {

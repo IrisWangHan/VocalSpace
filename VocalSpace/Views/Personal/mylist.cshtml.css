@@ -6,6 +6,7 @@
     text-align: center;
 }
 
+
 .profile-header {
     background: #f9f9f9;
     color: rgb(0, 0, 0);
@@ -201,30 +202,38 @@
         overflow: hidden;
     }
 
+.btnarea {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px; /* 設定按鈕之間的間距 */
+    margin: 0 10px; /* 設定左右邊距 */
+}
+
 .btn-outline-secondary.book {
-    margin-right: 10px;
+    
     border: 1px solid gray;
 }
 
     .btn-outline-secondary.book:hover {
-        margin-right: 10px;
+        
         background-color: rgb(255, 87, 87);
     }
 
     .btn-outline-secondary.book.selected {
-        margin-right: 10px;
+        
         background-color: #ffffff;
         border: 1px solid rgb(255, 87, 87);
         color: rgb(255, 87, 87);
     }
 
 .btn-outline-secondary.deletelist {
-    margin-right: 10px;
+   
     border: 1px solid gray;
 }
 
 .btn-outline-secondary.editlist {
-    margin-right: 10px;
+   
     border: 1px solid gray;
 }
 
@@ -246,11 +255,11 @@
         display: none;
     }
 
-    .btn-outline-secondary.book {
+    .btn-display {
         display: none;
     }
 
-    .btn-outline-secondary.random {
+    .random {
         display: none;
     }
 }

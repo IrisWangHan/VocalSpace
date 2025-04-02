@@ -4,9 +4,23 @@
     }
     
 }
+@media screen and (max-width: 1000px) {
+    .btn-outline-secondary.heart {
+        display: none;
+    }
 
+    .btn-outline-secondary.play {
+        display: none;
+    }
 
+    .btn-outline-secondary.add {
+        display: none;
+    }
 
+    .btn-outline-secondary.share {
+        display: none;
+    }
+}
 
 /* 當 `data-theme="light"` 時，變成亮色模式 */
 [data-theme="light"] {
@@ -50,7 +64,7 @@
 .nav-name {
     color: var(--text-color);
     font-size: 1.5rem;
-        background-color: var(--bg-color);
+    background-color: var(--bg-color);
         border-color: var(--bg-color);
     transition: all 0.1s ease;
 }
@@ -67,12 +81,15 @@
             background-color: #f9595f;
         }
 
-    .nav-name:hover {
+.nav-name:hover {
         color: red;
         border-bottom: 1px solid red;
 }
 
-
+.nav-name:active {
+    background-color: #f9595f;
+    color: var(--text-color);
+}
 
 
     /*  點我看更多 */
@@ -81,3 +98,154 @@
         border-radius: .65rem;
         border: 1px solid gray;
     }
+
+/* song.css */
+/* 歌曲區塊 */
+.ranking-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+/* .cover-block 專輯圖  */
+.cover-block {
+    overflow: hidden;
+    display: block;
+    position: static;
+    width: 50px;
+    height: 50px;
+    /*  padding-bottom: 100%;*/
+    margin: 0 10px;
+    border-radius: 5px;
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, .1);
+}
+
+.info {
+    flex-grow: 1;
+}
+
+
+.artist {
+    font-size: small;
+    color: lightslategray;
+}
+
+@media (max-width: 576px) {
+    .artist {
+        font-size: 10px;
+    }
+
+    .btn {
+        padding: .35rem .5rem;
+    }
+}
+
+/* 加入歌單按鈕 */
+.btn-outline-secondary {
+    margin-right: 10px;
+    border: 1px solid gray;
+}
+  
+
+/* 歌單區域 */
+.addplaylist-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    margin-bottom: 12px;
+}
+
+    .addplaylist-item img {
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
+        margin-right: 12px;
+    }
+
+.addplaylist-info {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.addplaylist-name {
+    font-size: 16px;
+    font-weight: bold;
+    color: black;
+}
+
+.addplaylist-song {
+    font-size: 14px;
+    color: #666;
+}
+
+/* 按鈕 */
+.addbtn-add {
+    background: #ff4d4f;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease-in-out;
+}
+
+    .addbtn-add.selected {
+        background: white;
+        color: #ff4d4f;
+        border: 1px solid #ff4d4f;
+    }
+
+    .addbtn-add:hover {
+        background: #e63946;
+    }
+
+
+/* 歌單，收藏歌單 */
+.btn-outline-secondary.book.selected {
+    margin-right: 10px;
+    background-color: var(--bg-color);
+    border: 1px solid rgb(255, 87, 87);
+    color: rgb(255, 87, 87);
+}
+
+/* 音樂人區塊 */
+/* 圓形大頭貼 */
+.artist-cover-block {
+    display: block;
+    width: 50px;
+    height: 50px;
+    margin: 0 10px;
+    border-radius: 50%; /* 變圓形 */
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, .1);
+}
+
+.artist-name {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.container {
+    text-align: center;
+}
+
+.image-container {
+    position: relative;
+}
+
+.sorry-image {
+
+width:40%;
+max-width:40%;
+
+}
+
+
+
+

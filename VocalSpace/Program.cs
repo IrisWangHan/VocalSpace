@@ -9,41 +9,51 @@ using VocalSpace.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// µù¥U¤À§G¦¡¤º¦s§Ö¨ú
+// ï¿½ï¿½ï¿½Uï¿½ï¿½ï¿½Gï¿½ï¿½ï¿½ï¿½ï¿½sï¿½Ö¨ï¿½
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
 
 builder.Services.AddSession(options =>
 {
     options.Cookie.Name = ".VocalSpace.Session";
-    options.Cookie.HttpOnly = true;         // ¥u¤¹³\¦øªA¾¹¦s¨ú Cookie¡A´£¤É¦w¥ş©Ê
+    options.Cookie.HttpOnly = true;         // ï¿½uï¿½ï¿½ï¿½\ï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½sï¿½ï¿½ Cookieï¿½Aï¿½ï¿½ï¿½É¦wï¿½ï¿½ï¿½ï¿½
     options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.IsEssential = true;  // ä½¿ Session æˆç‚ºå¿…è¦çš„
 });
+
+// è¨»å†Š IHttpContextAccessor ä»¥ä¾¿å¯ä»¥åœ¨æœå‹™ä¸­ä½¿ç”¨
+builder.Services.AddHttpContextAccessor();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
-// µù¥U SelectionService  //µù¥U¤¶­±­n ¶¶«Kµù¥U¹ê§@Ãş§O
+// ï¿½ï¿½ï¿½U SelectionService  //ï¿½ï¿½ï¿½Uï¿½ï¿½ï¿½ï¿½ï¿½n ï¿½ï¿½ï¿½Kï¿½ï¿½ï¿½Uï¿½ï¿½@ï¿½ï¿½ï¿½O
 builder.Services.AddScoped<SelectionService>();
 builder.Services.AddSingleton<EmailService>();
 builder.Services.AddScoped<IPaginationService, PaginationService>();
-builder.Services.AddScoped<UserService>();      //µù¥UService¡A¥Î©ó³B²zUserªº¸ê®Æ(Follow¡ALikesong¡Afav_playlist)
-builder.Services.AddScoped<ModalDataService>(); //µù¥UService¡A¥Î©ó³B²zModalªº¸ê®Æ(¥[¤Jºq³æ¡A¤À¨Éºq¦±¡AÃÙ§U¡A¤À¨É¬¡°Ê)
-builder.Services.AddScoped<ActivityDataService>(); //µù¥UService¡A¥Î©ó³B²zActivityªº¸ê®Æ(ActivityList¡BActivityInfo¡BInterested)
-builder.Services.AddScoped<CommentDataService>(); //µù¥UService¡A¥Î©ó³B²z¯d¨¥ªO¸ê®Æ(¯d¨¥¿é¤J®Ø§PÂ_µn¤J¡A¯d¨¥¦Cªí)
-builder.Services.AddScoped<FileService>();//µù¥UService¡A¥Î©ó³B²zÀÉ®×¤W¶Ç(ªí³æ´£¥æ©Ò»İÀÉ®×)
+builder.Services.AddScoped<UserService>();      //ï¿½ï¿½ï¿½UServiceï¿½Aï¿½Î©ï¿½Bï¿½zUserï¿½ï¿½ï¿½ï¿½ï¿½(Followï¿½ALikesongï¿½Afav_playlist)
+builder.Services.AddScoped<ModalDataService>(); //ï¿½ï¿½ï¿½UServiceï¿½Aï¿½Î©ï¿½Bï¿½zModalï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½[ï¿½Jï¿½qï¿½ï¿½Aï¿½ï¿½ï¿½Éºqï¿½ï¿½ï¿½Aï¿½Ù§Uï¿½Aï¿½ï¿½ï¿½É¬ï¿½ï¿½ï¿½)
+builder.Services.AddScoped<ActivityDataService>(); //ï¿½ï¿½ï¿½UServiceï¿½Aï¿½Î©ï¿½Bï¿½zActivityï¿½ï¿½ï¿½ï¿½ï¿½(ActivityListï¿½BActivityInfoï¿½BInterested)
+builder.Services.AddScoped<CommentDataService>(); //ï¿½ï¿½ï¿½UServiceï¿½Aï¿½Î©ï¿½Bï¿½zï¿½dï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½(ï¿½dï¿½ï¿½ï¿½ï¿½Jï¿½Ø§Pï¿½_ï¿½nï¿½Jï¿½Aï¿½dï¿½ï¿½ï¿½Cï¿½ï¿½)
+builder.Services.AddScoped<FileService>();//ï¿½ï¿½ï¿½UServiceï¿½Aï¿½Î©ï¿½Bï¿½zï¿½É®×¤Wï¿½ï¿½(ï¿½ï¿½æ´£ï¿½ï¿½Ò»ï¿½ï¿½É®ï¿½)
 
 builder.Services.AddControllersWithViews(options =>
 {
-    options.Filters.Add<GetSessionData>();     //Filter¥Î³~: ¦b°õ¦æAction¤§«e©Î¤§«á°õ¦æ¬Y¨Çµ{¦¡½X¡A³oÃä§Ú¥Î¨Ó±aViewDataªº¸ê®Æ
+    options.Filters.Add<GetSessionData>();     //Filterç”¨é€”: åœ¨åŸ·è¡ŒActionä¹‹å‰æˆ–ä¹‹å¾ŒåŸ·è¡ŒæŸäº›ç¨‹å¼ç¢¼ï¼Œé€™é‚Šæˆ‘ç”¨ä¾†å¸¶ViewDataçš„è³‡æ–™
+    options.Filters.Add<UpdateDbContextFilter>(); //Filterç”¨é€”: å°‡ç›®å‰ç™»å…¥IDå‚³è‡³DBcontextï¼Œç¢ºä¿å…¨å±€ç¯©é¸å™¨é‹ä½œã€‚
 });
-
 
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<DonateService>();
+builder.Services.AddScoped<SearchExploreService>();
+builder.Services.AddScoped<IMusicPlayerService, MusicPlayerService>();
 
 builder.Services.AddDbContext<VocalSpaceDbContext>(options =>
 {
@@ -52,27 +62,27 @@ builder.Services.AddDbContext<VocalSpaceDbContext>(options =>
 });
 
 
-// ±q User Secrets ©Î appsettings.json ¤¤Åª¨ú Google ªº Client ID ©M Client Secret
+// ï¿½q User Secrets ï¿½ï¿½ appsettings.json ï¿½ï¿½Åªï¿½ï¿½ Google ï¿½ï¿½ Client ID ï¿½M Client Secret
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 })
-.AddCookie() // Cookie ÅçÃÒ
+.AddCookie() // Cookie ï¿½ï¿½ï¿½ï¿½
 .AddGoogle(options =>
 {
-    // ¨Ï¥Î Google µù¥Uªº Client ID ©M Client Secret
+    // ï¿½Ï¥ï¿½ Google ï¿½ï¿½ï¿½Uï¿½ï¿½ Client ID ï¿½M Client Secret
     options.ClientId = builder.Configuration["Authentication:Google:ClientId"]!;
     options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
     options.Scope.Add("email");
-    options.SaveTokens = true; // «O¦s tokens¡A¥H«K«áÄò¨Ï¥Î
+    options.SaveTokens = true; // ï¿½Oï¿½s tokensï¿½Aï¿½Hï¿½Kï¿½ï¿½ï¿½ï¿½Ï¥ï¿½
 })
 .AddFacebook(options =>
 {
-    options.AppId = builder.Configuration["Authentication:Facebook:AppId"];
-    options.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"];
+    options.AppId = builder.Configuration["Authentication:Facebook:AppId"]!;
+    options.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"]!;
     options.AccessDeniedPath = "/AccessDeniedPathInfo";
-    options.Scope.Add("email");  // ¨ú±o¨Ï¥ÎªÌ Email
-    options.Fields.Add("email"); // ½T«O¥i¥HÀò¨ú Email ¸ê°T
+    options.Scope.Add("email");  // ï¿½ï¿½ï¿½oï¿½Ï¥Îªï¿½ Email
+    options.Fields.Add("email"); // ï¿½Tï¿½Oï¿½iï¿½Hï¿½ï¿½ï¿½ Email ï¿½ï¿½T
     options.SaveTokens = true;
 });
 
@@ -101,14 +111,14 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseSession();
 app.UseAuthorization();
 
-app.UseSession();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller}/{action}/{id?}",
-    defaults: new { controller = "Selection", action = "Index" }
+    defaults: new { controller = "Home", action = "Index" }
     );
 
 app.Run();

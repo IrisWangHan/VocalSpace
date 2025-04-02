@@ -2,63 +2,79 @@
 
 @{
 	Layout = "_PersonalLayout";
+	var song = ViewData["song"] as List<VocalSpace.Models.ViewModel.Song.SongViewModel>;
+	var userid = ViewData["uid"] ?? null;
+	ViewData["Title"] = Model.FirstOrDefault()!.UserName;
 }
 
 <nav class="menu" id="myList">
 	<a href="/Personal/mymusic/@Model.FirstOrDefault()!.UserId" class="active">音樂</a>
-		@if (Model.FirstOrDefault()!.CurrentUserId == Model.FirstOrDefault()!.UserId) { 
+	@if (Model.FirstOrDefault()!.CurrentUserId == Model.FirstOrDefault()!.UserId)
+	{
 
-	 <a href="/Personal/mylist/@Model.FirstOrDefault()!.UserId">歌單</a>
-	 <a href="/Personal/mylike/@Model.FirstOrDefault()!.UserId">喜歡</a>
-		}
+		<a href="/Personal/mylist/@Model.FirstOrDefault()!.UserId">歌單</a>
+		<a href="/Personal/mylike/@Model.FirstOrDefault()!.UserId">喜歡</a>
+	}
 	<a href="/Personal/myabout/@Model.FirstOrDefault()!.UserId">關於</a>
 </nav>
 
-<div class="w80"><hr></div>
-<div class="title mb-4">
-	<div class="littletitle">
-		<h2>歌曲(8)</h2>
-		<div class="playAll"><button class="btn btn-danger playall"><i class="bi bi-play"></i>全部播放</button></div>
+@if (song != null)
+{
+
+	<div class="w80"><hr></div>
+	<div class="title mb-4">
+		<div class="littletitle">
+			<h2>歌曲(@song.FirstOrDefault()!.SongCount)</h2>
+		</div>
 	</div>
-</div>
-@{
+
 	<div class="playlist">
 		<div class="playlist-card">
 			<div class="songs">
 
 				<div class="row">
-						
-							<div class="col-lg-2 col-md-4 col-sm-5 p-1">
+					@foreach (var item in song)
+					{
+						<div class="col-lg-3 col-md-5 col-sm-5 p-1">
 
-								<div class="song">
-								<a href=#>
-									<img src="/image/p1.jpg" class="img-fluid" style="object-fit: cover;" alt="俘留"></a>
-									<div class="songbutton">
-										<div class="songdetail">
-										<a href="#"><h5>俘留 (影集《化外之聲》插曲)</h5></a>
-										<a asp-controller="Song" asp-action="Index"><p>LaDY</p></a>
-										</div>
-										<div class="button">
-											<button class="btn btn-outline-secondary editlist"><i class="bi bi-pencil-square"></i></button>
-											<button class="btn btn-outline-secondary deletelist" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-trash"></i></button>
-										</div>
+							<div class="song">
+								<a href="/Song/@item.SongId"><img src="@item.SongCoverPhotoPath" class="img-fluid" style="object-fit: cover;"></a>
+								<div class="songbutton">
+									<div class="songdetail">
+										<a href="/Song/@item.SongId"><h5>@item.SongName</h5></a>
+										<a href="/Personal/mymusic/@item.UserId"> <p class="artist">@item.UserName</p></a>
+									</div>
+									<div class="button d-flex">
+										@await Component.InvokeAsync("SongButton", new { songId = item.SongId })
+										@if (item.UserId == (long?)userid)
+										{
+											<button class="btn btn-outline-secondary deleteSong" data-bs-toggle="modal" data-bs-target="#deleteSongModal" data-song-id="@item.SongId"><i class="bi bi-trash"></i></button>
+										}
 									</div>
 								</div>
 							</div>
-						
-					</div>
+						</div>
+					}
+				</div>
 
 			</div>
 		</div>
 	</div>
 }
-<div class="w80"><hr></div>
-<div class="title mb-4">
-	<div class="littletitle">
-		<h2>審核中歌曲(5)</h2>
+else
+{
+	<h2 class="no-data">暫無歌曲</h2>
+}
+@if (Model.FirstOrDefault()!.CurrentUserId == Model.FirstOrDefault()!.UserId)
+{
+
+	@* <div class="w80"><hr></div>
+	<div class="title mb-4">
+		<div class="littletitle">
+			<h2>審核中歌曲(5)</h2>
+		</div>
 	</div>
-</div>
-@{
+
 	<div class="playlist">
 		<div class="playlist-card">
 			<div class="songs">
@@ -82,23 +98,54 @@
 			</div>
 		</div>
 	</div>
+ *@
 }
-
-<!-- 刪除歌單彈窗 -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- 刪除曲目彈窗 -->
+<div class="modal fade" id="deleteSongModal" tabindex="-1" aria-labelledby="deleteSongModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
-		<div class="modal-content webtheme">
+		<div class="modal-content">
 			<div class="modal-header">
-				<h2 class="modal-title" id="exampleModalLabel">刪除</h2>
+				<h2 class="modal-title" id="deleteSongModalLabel">刪除歌曲</h2>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				你確定要刪除這個歌單？
+				你確定要刪除這個歌曲？
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-danger" data-bs-dismiss="modal">取消</button>
-				<button type="button" class="btn btn-secondary">確定</button>
+				<button type="button" class="btn btn-secondary confirmDeleteSong" data-bs-dismiss="modal">確定</button>
 			</div>
 		</div>
 	</div>
 </div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+
+	let songIdToDelete = null;
+	// 當點擊刪除按鈕時，取得對應的 SongId 和 PlayListId
+	$(".deleteSong").on("click", function () {
+		songIdToDelete = $(this).data("song-id");
+	});
+
+	// 當點擊「確定」按鈕時發送刪除請求
+	$(document).on("click", ".confirmDeleteSong", function () {
+		if (songIdToDelete) {
+			$.ajax({
+				url: `/Collection/DeleteSong/${songIdToDelete}`,
+				type: "POST",
+				success: function (response) {
+					$('#deleteSongModal').on('hidden.bs.modal', function () {
+						alert("刪除成功");
+						location.reload();
+					});
+				},
+				error: function () {
+					alert("刪除失敗，請稍後再試！");
+				}
+			});
+		}
+	});
+
+</script>
+

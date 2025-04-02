@@ -1,14 +1,154 @@
-﻿
-@{
-	Layout = "_ExploreMusicLayout";
+﻿@{
+	ViewData["Title"] = "發現音樂";
+}
+@model List<VocalSpace.Models.ViewModel.Search.SongInfoDTO>
+<link rel="stylesheet" href="~/css/exploreMusic.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/song.css" asp-append-version="true" />
+
+
+<div class="container pb-10 pt-5">
+	<h1 class="mb-4">發現音樂</h1>
+	<hr class="mb-4">
+	<div class="row">
+		<div class="col-md-4 col-lg-4 col-xl-4">
+			<div class="border-block mb-4">
+				<h2 class="mb-4">類型</h2>
+				<ul class="list-inline">
+					<li>
+						<a href="#" id="0" class="btn btn-sm btn-tag btn-white mb-2 active">全部</a>
+					</li>
+					<li>
+						<a href="#" id="1" class="btn btn-sm btn-tag btn-white mb-2">搖滾</a>
+					</li>
+					<li>
+						<a href="#" id="2" class="btn btn-sm btn-tag btn-white mb-2">民謠</a>
+					</li>
+					<li>
+						<a href="#" id="3" class="btn btn-sm btn-tag btn-white mb-2">嘻哈</a>
+					</li>
+					<li>
+						<a href="#" id="4" class="btn btn-sm btn-tag btn-white mb-2">都會</a>
+					</li>
+					<li>
+						<a href="#" id="5" class="btn btn-sm btn-tag btn-white mb-2">電子</a>
+					</li>
+					<li>
+						<a href="#" id="6" class="btn btn-sm btn-tag btn-white mb-2">探索</a>
+					</li>
+				</ul>
+				<hr class="mb-4 mt-4">
+				<h2 class="mb-4">排序</h2>
+				<ul class="list-inline">
+					<li class="list-inline-item">
+						<a href="#" class="btn btn-sm btn-tag btn-sort active" id="new">最新</a>
+					</li>
+					<li class="list-inline-item">
+						<a href="#" class="btn btn-sm btn-tag btn-sort" id="mostplay">最多撥放</a>
+					</li>
+					<li class="list-inline-item">
+						<a href="#" class="btn btn-sm btn-tag btn-sort" id="mostlike">最多喜歡</a>
+					</li>
+				</ul>
+			</div>
+			<div class="text-center pb-5 d-lg-block"></div>
+		</div>
+		<div class="col-md-8 col-lg-8 col-xl-8">
+			<div id="tab-content" class="ranking-list">
+				@await Html.PartialAsync("_partialViewSong", Model)
+			</div>
+			<div class="mt-5 mb-5 text-center">
+				
+			</div>
+		</div>
+	</div>
+</div>
+
+@*<script src="https://kit.fontawesome.com/5eeb73de16.js" crossorigin="anonymous"></script>
+  *@
+@section Scripts {
+	<script>
+			$(document).ready(function() {
+		// Rock / Pop / Jazz / HipHop / Classical ...
+		$('.btn-white').click(function(e) {
+			e.preventDefault(); // 阻止預設行為（如果是 <a> 會阻止跳轉）
+
+			$('.btn-white').removeClass('active');
+			$(this).addClass('active');
+			//  切換音樂類型，排序改為"最新"
+			$('.btn-sort').removeClass('active');
+			$('#new').addClass('active');
+
+			let type = $(this).attr('id'); // 取得按鈕 ID 作為 musicType
+
+			console.log('選擇的類型:', type); // 確認 type 是否正確
+
+			$.ajax({
+				type: 'GET',
+				url: `/exploreMusic/MusicType/${type}`,
+				dataType: 'html',
+				success: function(response) {
+					// 更新 #tab-content 內的歌曲
+					$('#tab-content').html(response);
+				},
+				error: function(err) { // 修正 Error → error
+					console.log('歌曲類別錯誤:', err);
+				}
+			});
+		});
+
+		// 🔹 如果網址有 ?musicType=xxx，則自動發送 AJAX
+		const urlParams = new URLSearchParams(window.location.search);
+		const typeFromURL = urlParams.get("musicType"); // 讀取 ?musicType=1
+
+		$('.btn-white').removeClass('active'); // 先移除所有 active 樣式
+		$('.btn-white[id="'+typeFromURL+'"]').addClass('active'); // 讓對應的按鈕變 active
+
+		if (typeFromURL) {
+			console.log('從 URL 讀取音樂類型:', typeFromURL);
+
+			$.ajax({
+				type: 'GET',
+				url: `/exploreMusic/MusicType/${typeFromURL}`,
+				dataType: 'html',
+				success: function(response) {
+					$('#tab-content').html(response); // 更新內容
+				},
+				error: function(err) {
+					console.log('歌曲類別錯誤:', err);
+				}
+			});
+		}
+
+
+
+			//  最新 / 最多撥放 / 最多喜歡(由大到小)
+				$('.btn-sort').click(function(e){
+
+					e.preventDefault();
+					$('.btn-sort').removeClass('active');
+					$(this).addClass('active');
+
+					let rank = $(this).attr('id');
+					console.log(rank);
+					$.ajax({
+						type:'GET',
+						url: `/exploreMusic/RankType/${rank}`,
+						dataType: 'html',
+						success: function (response) {
+							//  更新 #tab-content 內的歌曲
+							$('#tab-content').html(response);
+						},
+						Error: function (err) {
+							console.log('歌曲排序:'+err);
+						}
+				  })
+
+			})
+		})
+	</script>
 }
 
 
-@await Html.PartialAsync("_partialViewSong")
-@await Html.PartialAsync("_partialViewSong")
-@await Html.PartialAsync("_partialViewSong")
-            
-            
 
 
 

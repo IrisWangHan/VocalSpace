@@ -10,7 +10,8 @@ namespace VocalSpace.Filters
             var session = context.HttpContext.Session;
             if (session.GetString("IsLoggedIn") != "true")
             {
-                context.Result = new RedirectToActionResult("Login", "Accounts", null);
+                var originalUrl = context.HttpContext.Request.Path + context.HttpContext.Request.QueryString;
+                context.Result = new RedirectToActionResult("Login", "Accounts", new { returnUrl = originalUrl });
             }
 
             base.OnActionExecuting(context);

@@ -10,8 +10,8 @@
 }
 
 .cover-preview img {
-  width: 100%;
-  height: 100%;
+  width: 60%;
+  height: 60%;
   object-fit: cover;
 }
 
@@ -82,7 +82,7 @@ textarea {
   color: #666;
 }
 
-@media (max-width: 1500px) {
+@media (max-width: 1000px) {
   /* 移除原本的欄位寬度限制 */
   .col-md-4,
   .col-md-8 {

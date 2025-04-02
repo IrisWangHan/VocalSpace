@@ -1,14 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace VocalSpace.Models;
 
 public partial class VocalSpaceDbContext : DbContext
 {
+    private long _currentUserId;
     public VocalSpaceDbContext(DbContextOptions<VocalSpaceDbContext> options)
         : base(options)
     {
+
+    }
+    //此方法用於配合Filter取得UserId
+    public void SetUserId(long userId)
+    {
+        _currentUserId = userId;
+        Console.WriteLine("DBcontextUserID:"+_currentUserId);
     }
 
     public virtual DbSet<Activity> Activities { get; set; }
@@ -275,6 +285,9 @@ public partial class VocalSpaceDbContext : DbContext
 
         modelBuilder.Entity<PlayList>(entity =>
         {
+            // 設定全局過濾器，只選擇 IsPublic 為 true 的播放清單，除非當前使用者是歌單擁有者
+            entity.HasQueryFilter(p => p.IsPublic || p.UserId == _currentUserId);
+
             entity.HasKey(e => e.PlayListId).HasName("PK__PlayList__38709FBB8F33B645");
 
             entity.ToTable("PlayList");
@@ -438,6 +451,9 @@ public partial class VocalSpaceDbContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
+            // 設定全局過濾器，只選擇 Status 為 1 (啟用) 的用戶
+            modelBuilder.Entity<User>().HasQueryFilter(u => u.Status == 1);
+
             entity.HasKey(e => e.UserId).HasName("PK__Users__1788CCACF244AD17");
 
             entity.HasIndex(e => e.Account, "UQ_Users").IsUnique();
