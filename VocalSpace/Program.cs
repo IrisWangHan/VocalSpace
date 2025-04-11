@@ -15,14 +15,14 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// ���U���G�����s�֨�
+// 註冊分佈式內存快取
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
 
 builder.Services.AddSession(options =>
 {
     options.Cookie.Name = ".VocalSpace.Session";
-    options.Cookie.HttpOnly = true;         // �u���\���A���s�� Cookie�A���ɦw����
+    options.Cookie.HttpOnly = true;         // 只允許伺服器存取 Cookie，提升安全性
     options.IdleTimeout = TimeSpan.FromMinutes(30);
     options.Cookie.IsEssential = true;  // 使 Session 成為必要的
 });
@@ -34,15 +34,15 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
-// ���U SelectionService  //���U�����n ���K���U��@���O
+// ���U SelectionService  //註冊介面要 順便註冊實作類別
 builder.Services.AddScoped<SelectionService>();
 builder.Services.AddSingleton<EmailService>();
 builder.Services.AddScoped<IPaginationService, PaginationService>();
-builder.Services.AddScoped<UserService>();      //���UService�A�Ω�B�zUser�����(Follow�ALikesong�Afav_playlist)
-builder.Services.AddScoped<ModalDataService>(); //���UService�A�Ω�B�zModal�����(�[�J�q��A���ɺq���A�٧U�A���ɬ���)
-builder.Services.AddScoped<ActivityDataService>(); //���UService�A�Ω�B�zActivity�����(ActivityList�BActivityInfo�BInterested)
-builder.Services.AddScoped<CommentDataService>(); //���UService�A�Ω�B�z�d���O���(�d����J�اP�_�n�J�A�d���C��)
-builder.Services.AddScoped<FileService>();//���UService�A�Ω�B�z�ɮפW��(��洣��һ��ɮ�)
+builder.Services.AddScoped<UserService>();      //註冊Service，用於處理User的資料(Follow，Likesong，fav_playlist)
+builder.Services.AddScoped<ModalDataService>(); //註冊Service，用於處理Modal的資料(加入歌單，分享歌曲，贊助，分享活動)
+builder.Services.AddScoped<ActivityDataService>(); //註冊Service，用於處理Activity的資料(ActivityList、ActivityInfo、Interested)
+builder.Services.AddScoped<CommentDataService>(); //註冊Service，用於處理留言板資料(留言輸入框判斷登入，留言列表)
+builder.Services.AddScoped<FileService>();//註冊Service，用於處理檔案上傳(表單提交所需檔案)
 
 builder.Services.AddControllersWithViews(options =>
 {
@@ -62,27 +62,27 @@ builder.Services.AddDbContext<VocalSpaceDbContext>(options =>
 });
 
 
-// �q User Secrets �� appsettings.json ��Ū�� Google �� Client ID �M Client Secret
+// 從 User Secrets 或 appsettings.json 中讀取 Google 的 Client ID 和 Client Secret
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 })
-.AddCookie() // Cookie ����
+.AddCookie() // Cookie 驗證
 .AddGoogle(options =>
 {
-    // �ϥ� Google ���U�� Client ID �M Client Secret
+    // 使用 Google 註冊的 Client ID 和 Client Secret
     options.ClientId = builder.Configuration["Authentication:Google:ClientId"]!;
     options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
     options.Scope.Add("email");
-    options.SaveTokens = true; // �O�s tokens�A�H�K����ϥ�
+    options.SaveTokens = true; // 保存 tokens，以便後續使用
 })
 .AddFacebook(options =>
 {
     options.AppId = builder.Configuration["Authentication:Facebook:AppId"]!;
     options.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"]!;
     options.AccessDeniedPath = "/AccessDeniedPathInfo";
-    options.Scope.Add("email");  // ���o�ϥΪ� Email
-    options.Fields.Add("email"); // �T�O�i�H��� Email ��T
+    options.Scope.Add("email");  // 取得使用者 Email
+    options.Fields.Add("email"); // 確保可以獲取 Email 資訊
     options.SaveTokens = true;
 });
 
